@@ -1,0 +1,113 @@
+
+.signupSpace{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  background-color: #040d21;
+
+  .signupStars{
+    background-image: radial-gradient(2px 2px at 10px 20px, #eee, rgba(0, 0, 0, 0)),radial-gradient(2px 2px at 40px 70px, #fff, rgba(0, 0, 0, 0)),radial-gradient(2px 2px at 90px 40px, #ddd, rgba(0, 0, 0, 0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    opacity: 0;
+    animation: zoom 15s infinite;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+  }
+  
+  .signupStars:nth-child(1) {
+    background-position: 50% -40%;
+    animation-delay: 0s;
+  }
+  
+  .signupStars:nth-child(2) {
+    background-position: 20% 60%;
+    animation-delay: 2s;
+  }
+  
+  .signupStars:nth-child(3) {
+    background-position: 40% -80%;
+    animation-delay: 4s;
+  }
+  
+  .signupStars:nth-child(4) {
+    background-position: -20% -30%;
+    animation-delay: 6s;
+  }
+  
+  .signupStars:nth-child(5) {
+    background-position: 80% 30%;
+    animation-delay: 8s;
+  }
+}
+
+.brand{
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+  color: #fff;
+  text-align: center;
+}
+
+.loginBox{
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 500px;
+  padding: 24px;
+  background: #0c162d;
+  border: 1px solid #202637;
+  color: #627597;
+  font-size: 18px;
+  .account{
+    input{
+      background-color: #0c162d;
+      -webkit-text-fill-color: #fff;
+      outline:none;
+      border: 0px;
+    }
+
+  }
+  .password{
+    input{
+      background-color: #0c162d;
+      -webkit-text-fill-color: #fff;
+      outline:none;
+      border: 0px;
+    }
+  }
+  .loginButton{
+    cursor: pointer;
+  }
+}
+
+
+@keyframes zoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+    animation-timing-function: ease-in;
+  }
+
+  85% {
+    opacity: 1;
+    transform: scale(1.8);
+    animation-timing-function: linear;
+  }
+
+  100% {
+    opacity: 0.2;
+    transform: scale(2.2);
+  }
+}
+

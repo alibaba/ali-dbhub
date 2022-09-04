@@ -1,0 +1,62 @@
+{
+    // 使能每一种语言默认格式化规则
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[less]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    /*  prettier的配置 */
+    "prettier.printWidth": 80, // 超过最大值换行
+    "prettier.tabWidth": 2, // 缩进字节数
+    "prettier.semi": true, // 句尾添加分号
+    "prettier.singleQuote": true, // 使用单引号代替双引号
+    "prettier.bracketSpacing": true, // 在对象，数组括号与文字之间加空格 "{ foo: bar }"
+    "prettier.htmlWhitespaceSensitivity": "ignore",
+    "prettier.ignorePath": ".prettierignore", // 不使用prettier格式化的文件填写在项目的.prettierignore文件中
+    "prettier.jsxBracketSameLine": true, // 在jsx中把'>' 是否单独放一行
+    "prettier.jsxSingleQuote": false, // 在jsx中使用单引号代替双引号
+    "prettier.requireConfig": false,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": true, // Require a 'prettierconfig' to format prettier
+    "editor.quickSuggestions": {
+        "comments": "on",
+        "strings": "on",
+        "other": "on"
+    },
+    // "javascript.implicitProjectConfig.experimentalDecorators": true,
+    "editor.formatOnSave": true,
+    "editor.fontSize": 14,
+    "prettier.arrowParens": "avoid",
+    "prettier.trailingComma": "none",
+    "editor.wordWrap": "on",
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "workbench.iconTheme": "vscode-icons-mac",
+    "emmet.includeLanguages": {
+        "visionx": "html"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "explorer.confirmDelete": false,
+    "[apits]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "settingsSync.ignoredExtensions": [],
+    "editor.fontLigatures": null
+}
