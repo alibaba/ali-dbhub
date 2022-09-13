@@ -1,0 +1,29 @@
+
+swagger:
+  # 是否启用swagger，默认：true
+  enabled: true
+  # 标题
+  title: "Spring Boot 测试使用 Swagger2 构建RESTful API"
+  contact:
+    # 维护人
+    name: "yunlingfly"
+    email: "508821881@qq.com"
+    url: "https://www.yunlingfly.cn"
+  # 版本
+  version: "1.0"
+  # 描述
+  description: "API 描述"
+  # swagger扫描的基础包，默认：全扫描
+  base-package: "cn.yunlingfly.springbootswaggerstarter.controller"
+  # 需要处理的基础URL规则，默认：/**
+  base-path: /**
+  # 需要排除的URL规则，默认：空
+  #  exclude-path: ""
+  license: "Apache License, Version 2.0"
+  license-url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

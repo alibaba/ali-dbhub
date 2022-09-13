@@ -14,5 +14,13 @@
     <artifactId>data-ops-server-domain-core-core</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.alibaba.data-ops</groupId>
+            <artifactId>data-ops-server-domain-core-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.data-ops</groupId>
+            <artifactId>data-ops-server-domain-core-repository</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -1,8 +1,5 @@
 package com.alibaba.ctoo.opensource.domain.api.param.article;
 
-import com.alibaba.ctoo.opensource.domain.api.enums.ArticleTypeEnum;
-import com.alibaba.ctoo.opensource.domain.api.param.resource.RichTextCreateOrUpdateParam;
-
 import lombok.Data;
 
 /**
@@ -15,8 +12,6 @@ public class ArticleCreateParam {
 
     /**
      * 文章类型
-     *
-     * @see ArticleTypeEnum
      */
     private String type;
 
@@ -36,14 +31,8 @@ public class ArticleCreateParam {
     private String author;
 
     /**
-     * 内容
-     */
-    private RichTextCreateOrUpdateParam contentRichText;
-
-    /**
      * 文字摘要
      */
     private String description;
-
 
 }

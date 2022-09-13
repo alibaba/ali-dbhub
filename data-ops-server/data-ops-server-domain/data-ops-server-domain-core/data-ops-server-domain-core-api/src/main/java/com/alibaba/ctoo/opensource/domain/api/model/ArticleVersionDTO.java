@@ -35,10 +35,6 @@ public class ArticleVersionDTO {
      */
     private Long contentRichTextId;
 
-    /**
-     * 富文本
-     */
-    private RichTextDTO contentRichText;
 
     /**
      * 文章类型
@@ -53,7 +49,6 @@ public class ArticleVersionDTO {
 
     /**
      * 是否激活
-     * @see com.alibaba.ctoo.opensource.domain.api.enums.ActivatedEnum
      */
     private String activated;
 

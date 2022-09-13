@@ -13,5 +13,19 @@
     <artifactId>data-ops-server-domain-core-api</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.alibaba.data-ops</groupId>
+            <artifactId>data-ops-server-tools-base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

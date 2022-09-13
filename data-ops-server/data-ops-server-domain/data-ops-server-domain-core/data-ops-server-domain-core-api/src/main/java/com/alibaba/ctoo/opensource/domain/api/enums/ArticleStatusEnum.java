@@ -1,6 +1,6 @@
 package com.alibaba.ctoo.opensource.domain.api.enums;
 
-import com.alibaba.easytools.base.enums.BaseEnum;
+import com.alibaba.dataops.server.tools.base.enums.BaseEnum;
 
 import lombok.Getter;
 

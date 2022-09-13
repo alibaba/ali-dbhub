@@ -18,4 +18,14 @@
         <module>data-ops-server-domain-core-repository</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.data-ops</groupId>
+            <artifactId>data-ops-server-tools-common</artifactId>
+        </dependency>
+    </dependencies>
 </project>
