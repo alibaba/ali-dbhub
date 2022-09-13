@@ -16,11 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Jiaju Zhuang
  */
 @Slf4j
-@RestController("api/test")
+@RestController("/api/test")
 public class TestController {
 
     /**
      * 测试接口
+     *
+     * 1.0.0
+     * <ul>
+     *     <li>新增接口</li>
+     * </ul>
      *
      * @return 无
      * @tag 1.0.0
