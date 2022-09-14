@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    # 配置自带数据库的相对路径
+    url: jdbc:sqlite:data-ops.sqlite
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    # 展示sql
+    show-sql: true
+  sql:
+    init:
+      # 初始化执行
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+      mode: always

@@ -59,6 +59,11 @@
             </dependency>
             <dependency>
                 <groupId>com.alibaba.data-ops</groupId>
+                <artifactId>data-ops-server-domain-core-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.data-ops</groupId>
                 <artifactId>data-ops-server-domain-core-repository</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -103,11 +108,28 @@
                 <version>1.5.2.Final</version>
             </dependency>
 
-            <!--lombok  -->
+            <!-- 自带数据库 -->
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>1.18.20</version>
+                <groupId>org.xerial</groupId>
+                <artifactId>sqlite-jdbc</artifactId>
+                <version>3.39.3.0</version>
+            </dependency>
+
+            <!-- mybatis-plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.5.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>3.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>2.3.31</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

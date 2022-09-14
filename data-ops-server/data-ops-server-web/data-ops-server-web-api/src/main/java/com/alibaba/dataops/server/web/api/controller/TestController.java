@@ -1,13 +1,15 @@
 package com.alibaba.dataops.server.web.api.controller;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
-import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
-import com.alibaba.dataops.server.web.api.request.test.TestGetRequest;
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.dataops.server.domain.core.api.service.TestCoreService;
+import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
+import com.alibaba.dataops.server.web.api.converter.TestWebApiConverter;
+import com.alibaba.dataops.server.web.api.request.test.TestCreateRequest;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,8 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class TestController {
 
+    @Resource
+    private TestCoreService testCoreService;
+    @Resource
+    private TestWebApiConverter testWebApiConverter;
+
     /**
-     * 测试接口
+     * 创建测试
      *
      * 1.0.0
      * <ul>
@@ -32,9 +39,8 @@ public class TestController {
      * @return 无
      * @tag 1.0.0
      */
-    @GetMapping
-    public ActionResult test(@Valid TestGetRequest request) {
-        log.info("请求参数{}", JSON.toJSONString(request));
-        return ActionResult.isSuccess();
+    @PostMapping
+    public DataResult<Long> create(@Valid TestCreateRequest request) {
+        return testCoreService.create(testWebApiConverter.request2Param(request));
     }
 }
