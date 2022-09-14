@@ -91,13 +91,6 @@
                 <version>2.0.12</version>
             </dependency>
 
-            <!-- 日志 -->
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.4.0</version>
-            </dependency>
-
             <!-- mapstruct -->
             <dependency>
                 <groupId>org.mapstruct</groupId>
@@ -108,6 +101,13 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct-processor</artifactId>
                 <version>1.5.2.Final</version>
+            </dependency>
+
+            <!--lombok  -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.20</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

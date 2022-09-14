@@ -8,6 +8,7 @@ import com.alibaba.fastjson2.JSON;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -15,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Jiaju Zhuang
  */
+@RestController
+@RequestMapping("/api/test")
 @Slf4j
-@RestController("/api/test")
 public class TestController {
 
     /**
@@ -32,7 +34,7 @@ public class TestController {
      */
     @GetMapping
     public ActionResult test(@Valid TestGetRequest request) {
-        log.info("接收到请求{}", JSON.toJSONString(request));
+        log.info("请求参数{}", JSON.toJSONString(request));
         return ActionResult.isSuccess();
     }
 }

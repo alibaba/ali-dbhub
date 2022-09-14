@@ -2,6 +2,7 @@ package com.alibaba.ctoo.opensource;
 
 import com.alibaba.dataops.server.start.Application;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.FilterType;
     excludeFilters = {
         @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.alibaba.dataops.server.start.Application")
     })
+@Slf4j
 public class TestApplication {
 
     public static void main(String[] args) {

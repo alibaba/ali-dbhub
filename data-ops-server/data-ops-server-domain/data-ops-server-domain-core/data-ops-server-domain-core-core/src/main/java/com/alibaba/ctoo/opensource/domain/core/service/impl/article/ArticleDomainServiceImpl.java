@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 /**
  * 文章实现
  *
- * @author zyb
+ * @author Jiaju Zhuang
  */
 @Service
 public class ArticleDomainServiceImpl implements ArticleDomainService {
