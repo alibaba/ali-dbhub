@@ -21,7 +21,7 @@ public class DatabaseVO {
     private String description;
 
     /**
-     * 表数量
+     * DB下表数量或key数量
      */
-    private Integer tableCount;
+    private Integer count;
 }
