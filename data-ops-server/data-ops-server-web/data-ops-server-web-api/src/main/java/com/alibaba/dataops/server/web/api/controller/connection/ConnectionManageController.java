@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 数据库连接管理类
  *
  * @author moji
- * @version ConnectionController.java, v 0.1 2022年09月16日 14:07 moji Exp $
+ * @version ConnectionManageController.java, v 0.1 2022年09月16日 14:07 moji Exp $
  * @date 2022/09/16
  */
 @RequestMapping("/api/connection/manage")
@@ -52,7 +52,7 @@ public class ConnectionManageController {
     }
 
     /**
-     * 创建连接
+     * 保存连接
      *
      * @param request
      * @return
