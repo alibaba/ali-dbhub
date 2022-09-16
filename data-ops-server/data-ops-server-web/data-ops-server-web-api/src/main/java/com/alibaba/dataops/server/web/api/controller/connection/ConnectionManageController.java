@@ -81,7 +81,7 @@ public class ConnectionManageController {
      * @return
      */
     @PostMapping("/clone")
-    public DataResult<Long> clone(@RequestBody ConnectionCloneRequest request) {
+    public DataResult<Long> copy(@RequestBody ConnectionCloneRequest request) {
         return null;
     }
 
