@@ -2,6 +2,7 @@ package com.alibaba.dataops.server.domain.data.api.service;
 
 import java.util.Map;
 
+import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 
 /**
@@ -14,9 +15,9 @@ public interface JdbcTemplateDataService {
     /**
      * 根据sql查询数据
      *
-     * @param sql
+     * @param param
      * @return
      */
-    ListResult<Map<String, Object>> queryForList(String sql);
+    ListResult<Map<String, Object>> queryForList(TemplateQueryParam param);
 
 }

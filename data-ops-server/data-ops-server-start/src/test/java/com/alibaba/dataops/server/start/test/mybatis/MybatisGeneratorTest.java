@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+import com.alibaba.dataops.server.start.test.common.BaseTest;
+
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
@@ -15,16 +17,14 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * 生成mybatis 的mapper
  *
  * @author Jiaju Zhuang
  */
-@SpringBootTest
 @Slf4j
-public class MybatisGenerator {
+public class MybatisGeneratorTest extends BaseTest {
     @Resource
     private DataSource dataSource;
 

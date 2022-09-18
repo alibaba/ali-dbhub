@@ -30,6 +30,7 @@
     <modules>
         <module>data-ops-server-domain</module>
         <module>data-ops-server-start</module>
+        <module>data-ops-server-test</module>
         <module>data-ops-server-tools</module>
         <module>data-ops-server-web</module>
     </modules>
@@ -80,6 +81,11 @@
             <dependency>
                 <groupId>com.alibaba.data-ops</groupId>
                 <artifactId>data-ops-server-domain-data-repository</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.data-ops</groupId>
+                <artifactId>data-ops-server-start</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -145,6 +151,13 @@
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
                 <version>2.3.31</version>
+            </dependency>
+
+            <!-- druid -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>1.2.12</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

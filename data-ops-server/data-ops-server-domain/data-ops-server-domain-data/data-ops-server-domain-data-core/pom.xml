@@ -22,5 +22,9 @@
             <groupId>com.alibaba.data-ops</groupId>
             <artifactId>data-ops-server-domain-data-repository</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+        </dependency>
     </dependencies>
 </project>
