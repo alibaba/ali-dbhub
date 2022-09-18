@@ -15,7 +15,7 @@ spring:
   messages:
     basename: i18n/messages/messages
     encoding: UTF-8
-    fallbackToSystemLocale: false
+    fallbackToSystemLocale: true
   h2:
     console:
       enabled: true
