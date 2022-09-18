@@ -2,6 +2,8 @@ package com.alibaba.dataops.server.web.api.controller.redis.request;
 
 import javax.validation.constraints.NotNull;
 
+import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceBaseRequest;
+
 import lombok.Data;
 
 /**
@@ -10,19 +12,7 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
-public class KeyQueryRequest {
-
-    /**
-     * 连接id
-     */
-    @NotNull
-    private Long connectionId;
-
-    /**
-     * DB名称
-     */
-    @NotNull
-    private String databaseName;
+public class KeyQueryRequest extends DataSourceBaseRequest {
 
     /**
      * 缓存key名称

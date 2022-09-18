@@ -15,9 +15,9 @@ import lombok.Data;
 public class DdlQueryRequest extends PageQueryRequest {
 
     /**
-     * 连接id
+     * 数据源id
      */
-    private Long connectionId;
+    private Long dataSourceId;
 
     /**
      * DB名称

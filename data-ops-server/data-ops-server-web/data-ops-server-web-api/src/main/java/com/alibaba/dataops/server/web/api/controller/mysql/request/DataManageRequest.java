@@ -2,6 +2,8 @@ package com.alibaba.dataops.server.web.api.controller.mysql.request;
 
 import javax.validation.constraints.NotNull;
 
+import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceBaseRequest;
+
 import lombok.Data;
 
 /**
@@ -10,19 +12,7 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
-public class DataManageRequest {
-
-    /**
-     * 连接id
-     */
-    @NotNull
-    private Long connectionId;
-
-    /**
-     * DB名称
-     */
-    @NotNull
-    private String databaseName;
+public class DataManageRequest extends DataSourceBaseRequest {
 
     /**
      * sql语句

@@ -15,10 +15,10 @@ import lombok.Data;
 public class TableBriefQueryRequest extends PageQueryRequest {
 
     /**
-     * 连接id
+     * 数据源id
      */
     @NotNull
-    private Long connectionId;
+    private Long dataSourceId;
 
     /**
      * DB名称

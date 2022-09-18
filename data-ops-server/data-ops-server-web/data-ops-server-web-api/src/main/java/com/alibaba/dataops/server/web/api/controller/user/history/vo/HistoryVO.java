@@ -23,9 +23,9 @@ public class HistoryVO {
     private String name;
 
     /**
-     * 连接id
+     * 数据源id
      */
-    private Long connectionId;
+    private Long dataSourceId;
 
     /**
      * DB名称
