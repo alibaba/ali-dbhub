@@ -1,11 +1,10 @@
 // 引入electron并创建一个Browserwindow
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
-const reloader = require('electron-reloader');
 const url = require('url');
 
 // 修改main.js实时更新
-reloader(module);
+// reloader(module);
 
 // 保持window对象的全局引用,避免JavaScript对象被垃圾回收时,窗口被自动关闭.
 let mainWindow;
@@ -19,6 +18,11 @@ function createWindow() {
     title: 'dataOps',
     frame: false,
     titleBarStyle: 'hidden',
+    webPreferences:{
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
+    }
   });
 
   /* 
