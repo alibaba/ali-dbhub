@@ -23,21 +23,27 @@
   },
   "dependencies": {
     "@ant-design/pro-layout": "^6.5.0",
+    "monaco-editor": "0.29.1",
+    "monaco-editor-webpack-plugin": "5.0.0",
     "react": "17.x",
     "react-dom": "17.x",
-    "umi": "^3.5.34",
-    "monaco-editor": "0.29.1",
-    "monaco-editor-webpack-plugin": "5.0.0"
+    "umi": "^3.5.34"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.5.34",
+    "classnames": "^2.3.2",
     "electron": "^20.1.4",
+    "electron-reloader": "^1.2.3",
     "lint-staged": "^10.0.7",
     "prettier": "^2.2.0",
     "typescript": "^4.1.2",
     "yorkie": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=14",
+    "pnpm": ">=3"
   }
 }
