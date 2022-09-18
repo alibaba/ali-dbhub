@@ -13,9 +13,3 @@ Start the dev server,
 ```bash
 $ yarn start
 ```
-
-Start electron,
-```
-$ npm i electron -g
-$ electron .
-```

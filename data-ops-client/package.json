@@ -1,10 +1,6 @@
 {
-  "name": "data-ops",
-  "version": "1.0.0",
-  "description": "An awesome project",
-  "main": "main.js",
-  "author": "shanhexi",
   "private": true,
+  "main": "main.js",
   "scripts": {
     "start": "umi dev",
     "build": "umi build",
@@ -12,7 +8,7 @@
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
-    "electron": "electron .."
+    "electron": "electron ."
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
@@ -27,17 +23,16 @@
   },
   "dependencies": {
     "@ant-design/pro-layout": "^6.5.0",
-    "classnames": "^2.3.1",
-    "electron-reloader": "^1.2.3",
     "react": "17.x",
     "react-dom": "17.x",
-    "umi": "^3.5.23"
+    "umi": "^3.5.34"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@umijs/preset-react": "1.x",
-    "@umijs/test": "^3.5.23",
+    "@umijs/test": "^3.5.34",
+    "electron": "^20.1.4",
     "lint-staged": "^10.0.7",
     "prettier": "^2.2.0",
     "typescript": "^4.1.2",

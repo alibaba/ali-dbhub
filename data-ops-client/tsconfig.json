@@ -5,7 +5,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "importHelpers": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "esModuleInterop": true,
     "sourceMap": true,
     "baseUrl": "./",
@@ -17,11 +17,12 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "data-ops-client/mock/**/*",
-    "data-ops-client/src/**/*",
+    "mock/**/*",
+    "src/**/*",
     "config/**/*",
+    "typings.d.ts",
+    "main.js",
     ".umirc.ts",
-    "data-ops-client/typings.d.ts"
   ],
   "exclude": [
     "node_modules",
