@@ -1,65 +1,147 @@
-@import 'src/var.less';
+@import '../../var.less';
 
-.page {
+.box {
+  display: flex;
+  height: 100vh;
 }
 
-.ABookBasic {
+.aside {
+  flex-shrink: 0;
   display: flex;
-  margin: 18px 0px;
+  flex-direction: column;
+  width: 250px;
+  background-color: var(--color-bg-200);
+
+  .header{
+    flex-shrink: 0;
+  }
+
+  .tree{
+    flex: 1;
+    overflow: scroll;
+    ::-webkit-scrollbar{display:none}
+  }
+
+}
+
+.main {
+  flex: 1;
+  overflow: hidden;
+}
+
+.header {
+  margin: 20px 20px 0px 20px;
+}
+
+.overview{
+  margin: 0px 10px;
+  display: flex;
   align-items: center;
-
-  .logo {
-    width: 84px;
-    height: 84px;
-    margin-right: 24px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: @themeColor;
+  margin-top: 15px;
+  height: 30px;
+  border-radius: 6px;
+  padding: 0px 10px;
+  cursor: pointer;
+  i{
+    font-size: 16px;
+    margin-right: 8px;
   }
-  .descBox {
-    .name {
-      line-height: 1.5;
-      font-weight: 600;
-      font-size: 24px;
-    }
+
+  &:hover{
+    background-color: var(--color-primary-8);
   }
 }
 
-.tab {
-  user-select: none;
+.currentNameBox{
   display: flex;
-  margin: 0px -5px;
-  border-bottom: 2px solid var(--color-border);
-  li {
-    position: relative;
-    margin: 0px 10px;
-    line-height: 30px;
-    padding: 0px 5px;
-    cursor: pointer;
-    .activeLine {
-      position: absolute;
-      bottom: -2px;
-      left: 50%;
-      height: 2px;
-      width: 0px;
-      border-radius: 2px;
-      background: @themeColor;
-    }
-  }
-  .activeTab {
-    color: @themeColor;
-    .activeLine {
-      transition: 0.5s;
-      left: 0px;
-      width: 100%;
-    }
+  align-items: center;
+  margin-bottom: 15px;
+  cursor: pointer;
+  font-weight: 500;
+  &:hover{
+    color: var(--custom-primary-color);
   }
 }
 
-.record {
-  margin-top: 30px;
-  .scan {
-    height: 200px;
-    background-size: contain;
+.databaseName{
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.searchBox{
+  width: 100%;
+  display: flex;
+  .inputBox{
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    margin-right: 4px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    i{
+      position: absolute;
+      left: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-right: 10px;
+    }
+    
+  }
+
+  input{
+    display: block;
+    margin-left: 24px;
+    flex: 1;
+    box-shadow: none !important;
+    padding: 0;
+    border: none;
+    outline: none;
+    background-color: transparent;
+
+  }
+
+  .button{
+    margin: 0px 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    background-color: var(--custom-primary-color);
+    &:hover {
+      filter: brightness(1.1);
+    }
+    i{
+      color: var(--color-bg-100);
+    }
+
+  }
+  .refresh{
+  }
+
+  .create{
   }
 }
+
+.databaseQuery{
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 56px);
+}
+
+.monacoEditor{
+  height: 70%;
+}
+
+.searchResult{
+  position:relative;
+  flex: 1;
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg-100);
+}
+
+

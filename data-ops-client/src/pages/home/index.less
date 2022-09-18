@@ -1,86 +1,61 @@
-@import 'src/var.less';
+@import '../../var.less';
 
 .page {
   display: flex;
-  min-height: 100vh;
-  background: var(--color-bg);
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: var(--color-bg-100);
 }
 
 .layoutLeft {
+  flex-shrink: 0;
+  width: 256px;
+  padding: 0px 15px;
+  background-color: var(--color-bg-300);
   -webkit-app-region: drag; //set electron this region Can drag
   user-select: none;
-  width: 140px;
-  background-color: var(--color-bg-subtle);
-  .brandImageBox {
-    margin-top: 30px;
+}
+
+.brandLogo {
+  flex-shrink: 0;
+  margin: 30px auto 20px;
+}
+
+.navList {
+  li {
     display: flex;
     align-items: center;
-    height: 32px;
-  }
-  .database {
-    margin: 0px 12px;
-    padding: 6px 0px 10px 0px;
-    border-bottom: 1px solid var(--bg-highlight-color);
-    li {
-      display: flex;
-      align-items: center;
-      height: 42px;
-      margin: 4px 0px;
-      padding: 0px 12px 0px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      &:hover {
-        background: var(--bg-highlight-color);
-      }
-      .databaseLogo {
-        height: 24px;
-        width: 24px;
-        margin-right: 10px;
-        border-radius: 50%;
-        overflow: hidden;
-        background: @themeColor;
-      }
-    }
-    .activeData {
-      background: var(--bg-highlight-color);
-    }
-  }
-  .createDatabase {
-    display: flex;
-    align-items: center;
-    height: 42px;
-    margin: 4px 12px;
-    padding: 0px 12px 0px 18px;
-    border-radius: 8px;
+    height: 40px;
+    margin-bottom: 10px;
+    padding: 0px 20px;
+    border-radius: 6px;
+    color: var(--color-text-75);
     cursor: pointer;
+
+    .icon {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0px;
+    }
+
     &:hover {
-      background: var(--bg-highlight-color);
+      background: var(--color-bg-hover);
     }
-    .createIcon {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 24px;
-      width: 24px;
-    }
-    span {
-      margin-left: 10px;
-    }
+  }
+  
+  .activeNav{
+    color: var(--custom-primary-color-hover);
+    background: var(--color-bg-hover);
   }
 }
 
-.treeBox{
-  padding-top: 80px;
-  background: var(--color-bg-base);
-  width: 200px;
-}
-
-.layoutRight {
+.layoutRight{
   flex: 1;
-  .main {
-    min-height: calc(100vh - @headerHeight);
-    max-width: @mainWidth;
-    margin: 0 auto;
-    padding: 0px 38px;
-  }
+  overflow: hidden;
 }

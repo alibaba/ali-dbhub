@@ -10,25 +10,50 @@ export default defineConfig({
       path: '/',
       component: '@/components/AppContainer',
       routes: [
+        { path: '/login', exact: true, component: '@/pages/login' },
+        { path: '/demo', exact: true, component: '@/pages/demo' },
+        { path: '/error', component: '@/pages/error' },
         {
-          path: '/',
-          component: '@/pages/home',
+          path: '/database',
+          component: '@/pages/databaseManage',
           routes: [
             {
               exact: true,
               path: '/database/:databaseId',
               component: '@/components/Database',
             },
-            { path: '/login', exact: true, component: '@/pages/login' },
-            { path: '/demo', exact: true, component: '@/pages/demo' },
-            { component: '@/pages/error' },
           ],
         },
-        
-      ]
+        { 
+          path: '/', 
+          component: '@/pages/home',
+          routes:[
+            {
+              path: '/',
+              exact: true,
+              redirect: '/databaseList',
+            },
+            {
+              path: '/databaseList',
+              exact: true,
+              component: '@/components/DatabaseList',
+            },
+            {
+              path: '/SQLHistory',
+              exact: true,
+              component: '@/components/SQLHistory',
+            },
+            {
+              redirect: '/error',
+            },
+          ]
+        }
+      ],
     },
-    
   ],
   fastRefresh: {},
   mfsu: {},
+  dynamicImport: {
+    loading: '@/components/PageLoading/index',
+  },
 });

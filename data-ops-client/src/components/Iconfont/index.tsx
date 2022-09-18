@@ -1,14 +1,11 @@
+import React, { PureComponent } from 'react';
 import classnames from 'classnames';
-import React, { memo } from 'react';
 import styles from './index.less';
 
-export type Iprops = {
-  className?: any;
-  code?: string;
-};
-
-function Iconfont({ code, className }: Iprops) {
-  return <i className={classnames(className, styles.iconfont)}>{code}</i>;
+export default class Iconfont extends PureComponent<{
+  code: string;
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>> {
+  render() {
+    return <i {...this.props} className={classnames(this.props.className, styles.iconfont)}>{this.props.code}</i>
+  }
 }
-
-export default memo(Iconfont);

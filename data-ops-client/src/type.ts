@@ -1,5 +1,6 @@
 export type INavItem = {
-  id: number;
-  name: string;
+  code: string;
+  title: string;
   icon: string;
+  path: string;
 };

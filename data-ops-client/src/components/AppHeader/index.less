@@ -1,0 +1,26 @@
+@import '../../var.less';
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 56px;
+  padding-right: 30px;
+  border-bottom: 1px solid var(--color-border);
+  -webkit-app-region: drag; //set electron this region Can drag
+
+  .refreshBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    color: var(--color-bg-100);
+    background-color: var(--custom-primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+}

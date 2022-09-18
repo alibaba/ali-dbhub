@@ -1,7 +1,52 @@
-@import 'src/theme/dark.less';
-@import 'src/theme/default.less';
-@import 'src/global.less';
+@import './theme/background/dark.less';
+@import './theme/background/default.less';
+@import './theme/primaryColor/polarBlue.less';
+@import './theme/primaryColor/polarGreen.less';
+@import './global.less';
 
 @themeColor: var(--custom-primary-color); // 主题色
 @mainWidth: 1200px; // 主体宽度
 @headerHeight: 56px; // 主体宽度
+
+div,
+ul,
+li {
+  transition: border-color 0.3s, background 0.3s,
+    padding 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.f-single-line() {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.f-lines(@lines) {
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-line-clamp: @lines;
+  line-clamp: @lines;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.f-icon-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--color-text-45);
+
+  &:hover {
+    background-color: var(--color-bg-hover);
+  }
+
+  i {
+    font-size: 22px;
+  }
+}

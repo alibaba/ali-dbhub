@@ -1,0 +1,49 @@
+@import '../../var.less';
+
+.box{
+  .f-icon-button();
+}
+
+.backgroundList{
+  display: flex;
+  margin-bottom: 20px;
+  li{
+    margin-right: 15px;
+    border-radius: 6px;
+    overflow: hidden;
+    width: 64px;
+    height: 48px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+  .current{
+    border: 2px solid var(--custom-primary-color-active);
+  }
+}
+
+.title{
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.primaryColorList{
+  display: flex;
+  margin-bottom: 20px;
+  li{
+    margin-right: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    i{
+      color: #fff;
+      font-size: 18px;
+    }
+  }
+}
+

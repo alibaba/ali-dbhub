@@ -1,92 +1,76 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState, useRef } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import Input from '@/components/Input';
-import { Button, DatePicker } from 'antd';
+import { Button, DatePicker, Input } from 'antd';
 import i18n from '../../i18n';
-
-
+import AppHeader from '@/components/AppHeader';
+import Iconfont from '@/components/Iconfont';
+import Tree from '@/components/Tree';
+import PageLoading from '@/components/PageLoading';
+import MonacoEditor from '@/components/MonacoEditor';
+import DraggableDivider from '@/components/DraggableDivider';
 
 interface IProps {
   className?: any;
 }
 
-
-
 export default memo<IProps>(function Database({ className }) {
-  const tabConfig = [
-    {
-      title: 'xx',
-      code: 'dataBase',
-      component: record,
-    },
-    {
-      title: 'xx',
-      code: 'member',
-      component: record,
-    },
-    {
-      title: 'xxx',
-      code: 'setting',
-      component: record,
-    },
-  ];
-  const [activeTab, setActiveTab] = useState(tabConfig[0]);
 
-  function switchTab(item: any) {
-    setActiveTab(item);
+  const letfRef = useRef<HTMLDivElement | null>(null);
+  const monacoEditorBox = useRef<HTMLDivElement | null>(null);
+  let editor:any = ''
+
+  const callback = (e)=>{
+    editor && editor.layout()
   }
 
-
-  function changeLang(){
-    localStorage.setItem('lang', localStorage.getItem('lang') === 'en' ? 'zh-cn' : 'en')
-    location.reload();
-    console.log(localStorage.getItem('lang'))
-  }
-
-  function record() {
-    return (
-      <div className={styles.record}>
-        <div className={styles.scan}>
-        </div>
-        <div className={styles.recordHeader}>
-          <Button type='primary' onClick={changeLang}>{i18n('database.buttonn.colorSwitch')}</Button>
-          <DatePicker />
-        </div>
-      </div>
-    );
+  function getEditor (e){
+    editor =  e
   }
 
   return (
-    <div className={classnames(className, styles.page)}>
-      <div className={styles.ABookBasic}>
-        <div className={styles.logo}>
-          <img src="@/components/Database/index" alt="" />
+    <div className={classnames(className, styles.box)}>
+      <div ref={letfRef} className={styles.aside}>
+        <div className={styles.header}>
+          <div className={styles.currentNameBox}>
+            <div className={styles.databaseName}>
+              连接1 
+            </div>
+            <Iconfont code="&#xe7b1;"></Iconfont>
+          </div>
+          <div className={styles.searchBox}>
+            <div className={styles.inputBox}>
+              <Iconfont code="&#xe600;"></Iconfont>
+              <Input type="text" placeholder={i18n('database.input.search')}/>
+            </div>
+            <div className={classnames(styles.refresh,styles.button)}> 
+              <Iconfont code="&#xec08;"></Iconfont>
+            </div>
+            <div className={classnames(styles.create,styles.button)}> 
+              <Iconfont code="&#xe631;"></Iconfont>
+            </div>
+          </div>
         </div>
-        <div className={styles.descBox}>
-          <div className={styles.name}>数据库名称</div>
-          <div className={styles.desc}>
-            数据库简介数据库简介数据库简介数据库简介数据库简介数据库简介数据库简介
+        <div className={styles.overview}>
+          <Iconfont code="&#xe63d;"></Iconfont>
+          <span>{i18n('database.button.overview')}</span>
+        </div>
+        <Tree className={styles.tree}></Tree>
+      </div>
+      <DraggableDivider callback={callback} volatileRef={letfRef} />
+      <div className={styles.main}>
+        <AppHeader></AppHeader>
+        <div className={styles.databaseQuery}>
+          <div ref={monacoEditorBox} className={styles.monacoEditor}>
+            <MonacoEditor getEditor={getEditor}></MonacoEditor>
+          </div>
+          <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
+          <div  className={styles.searchResult}>
+            结果区域
+            <PageLoading></PageLoading>
           </div>
         </div>
       </div>
-      <div className={styles.tab}>
-        {tabConfig.map((item) => {
-          return (
-            <li
-              key={item.code}
-              className={classnames({
-                [styles.activeTab]: activeTab.code === item.code,
-              })}
-              onClick={switchTab.bind(null, item)}
-            >
-              <div className={styles.activeLine}></div>
-              {item.title}
-            </li>
-          );
-        })}
-      </div>
-      <div className={styles.main}>{activeTab.component()}</div>
     </div>
   );
 });

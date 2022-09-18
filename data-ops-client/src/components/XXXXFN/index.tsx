@@ -3,10 +3,9 @@ import styles from './index.less';
 import classnames from 'classnames';
 
 interface IProps {
-  className?: any;
+  className?: string;
 }
 
-export default memo<IProps>(function XXXXX(props) {
-  const { className } = props;
-  return <div className={classnames(className, styles.page)}>我是组件</div>;
-});
+export default memo<IProps>(function XXXXX({className}) {
+  return <div className={classnames(className, styles.box)}>我是组件</div>
+})
