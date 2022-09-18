@@ -13,5 +13,13 @@
     <artifactId>data-ops-server-domain-core-repository</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.data-ops</groupId>
+            <artifactId>data-ops-server-tools-common</artifactId>
+        </dependency>
     </dependencies>
 </project>
