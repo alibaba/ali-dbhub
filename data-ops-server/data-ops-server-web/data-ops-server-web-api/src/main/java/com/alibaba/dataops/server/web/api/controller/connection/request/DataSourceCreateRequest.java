@@ -3,6 +3,8 @@ package com.alibaba.dataops.server.web.api.controller.connection.request;
 
 import javax.validation.constraints.NotNull;
 
+import com.alibaba.dataops.server.tools.base.enums.DataSourceTypeEnum;
+
 import lombok.Data;
 
 /**
@@ -11,7 +13,7 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
-public class ConnectionCreateRequest {
+public class DataSourceCreateRequest {
 
     /**
      * 连接别名
@@ -37,7 +39,7 @@ public class ConnectionCreateRequest {
 
     /**
      * 连接类型
-     * @see com.alibaba.dataops.server.tools.base.enums.ConnectionTypeEnum
+     * @see DataSourceTypeEnum
      */
     @NotNull
     private String type;

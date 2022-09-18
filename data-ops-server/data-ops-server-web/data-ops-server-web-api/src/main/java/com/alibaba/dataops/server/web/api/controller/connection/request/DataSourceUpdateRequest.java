@@ -1,18 +1,24 @@
-package com.alibaba.dataops.server.web.api.controller.connection.vo;
+package com.alibaba.dataops.server.web.api.controller.connection.request;
+
+
+import javax.validation.constraints.NotNull;
+
+import com.alibaba.dataops.server.tools.base.enums.DataSourceTypeEnum;
 
 import lombok.Data;
 
 /**
  * @author moji
- * @version ConnectionVO.java, v 0.1 2022年09月16日 14:15 moji Exp $
+ * @version ConnectionCreateRequest.java, v 0.1 2022年09月16日 14:23 moji Exp $
  * @date 2022/09/16
  */
 @Data
-public class ConnectionVO {
+public class DataSourceUpdateRequest {
 
     /**
      * 主键id
      */
+    @NotNull
     private Long id;
 
     /**
@@ -37,6 +43,7 @@ public class ConnectionVO {
 
     /**
      * 连接类型
+     * @see DataSourceTypeEnum
      */
     private String type;
 }

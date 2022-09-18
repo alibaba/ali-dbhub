@@ -67,6 +67,21 @@
                 <artifactId>data-ops-server-domain-core-repository</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.alibaba.data-ops</groupId>
+                <artifactId>data-ops-server-domain-data-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.data-ops</groupId>
+                <artifactId>data-ops-server-domain-data-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.data-ops</groupId>
+                <artifactId>data-ops-server-domain-data-repository</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
             <dependency>

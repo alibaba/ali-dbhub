@@ -4,24 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.alibaba.data-ops</groupId>
-        <artifactId>data-ops-server-domain-core</artifactId>
+        <artifactId>data-ops-server-domain-data</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-
-    <artifactId>data-ops-server-domain-core-core</artifactId>
+    <artifactId>data-ops-server-domain-data-repository</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.alibaba.data-ops</groupId>
-            <artifactId>data-ops-server-domain-core-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.data-ops</groupId>
-            <artifactId>data-ops-server-domain-core-repository</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
