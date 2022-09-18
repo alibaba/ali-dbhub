@@ -13,6 +13,18 @@ import lombok.Data;
 public class KeyCreateRequest {
 
     /**
+     * 连接id
+     */
+    @NotNull
+    private Long connectionId;
+
+    /**
+     * DB名称
+     */
+    @NotNull
+    private String databaseName;
+
+    /**
      * key名称
      */
     @NotNull
