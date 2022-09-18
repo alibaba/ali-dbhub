@@ -1,0 +1,118 @@
+@import '../../var.less';
+
+.box {
+  padding-left: 30px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 30px 0px 15px;
+}
+
+.linkButton i {
+  margin-right: 4px;
+}
+
+.title {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.databaseList {
+  padding: 30px 30px 30px 0px;
+}
+
+.databaseItem {
+  position: relative;
+  display: flex;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-of-type {
+    border-bottom: 0px;
+  }
+
+  &:hover {
+    background-color: var(--color-bg-hover);
+    .name {
+      color: var(--custom-primary-color);
+    }
+    .logo {
+      filter: brightness(1.1);
+    }
+  }
+
+  .left {
+    flex: 1;
+    display: flex;
+    margin-right: 20px;
+    font-size: 12px;
+    color: var(--color-text-75);
+
+    .logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 4px;
+      margin-right: 15px;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .visitedTime {
+      color: var(--color-text-45);
+    }
+  }
+
+  .right {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    .moreActions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 30px;
+      width: 30px;
+      border-radius: 10px;
+      color: var(--color-text-75);
+      &:hover {
+        background-color: var(--color-bg-hover);
+        filter: brightness(1.1);
+      }
+    }
+  }
+}
+
+.formFooter {
+  display: flex;
+  justify-content: space-between;
+  .cancel {
+    margin-right: 20px;
+  }
+}
+
+.menu {
+  padding: 3px;
+  border-radius: 4px;
+  background-color: var(--color-bg-200);
+  box-shadow: 0 1px 8px var(--custom-primary-color-outline);
+  .menuItem {
+    margin: 3px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    i {
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    &:hover {
+      // color: var(--custom-primary-color);
+      background-color: var(--custom-primary-color-hover);
+      color: var(--color-bg-100);
+    }
+  }
+}

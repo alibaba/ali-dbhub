@@ -1,0 +1,61 @@
+@import '../../var.less';
+
+.page {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: var(--color-bg-100);
+}
+
+.layoutLeft {
+  flex-shrink: 0;
+  width: 256px;
+  padding: 0px 15px;
+  background-color: var(--color-bg-300);
+  -webkit-app-region: drag; //set electron this region Can drag
+  user-select: none;
+}
+
+.brandLogo {
+  flex-shrink: 0;
+  margin: 30px auto 20px;
+}
+
+.navList {
+  li {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    margin-bottom: 10px;
+    padding: 0px 20px;
+    border-radius: 6px;
+    color: var(--color-text-75);
+    cursor: pointer;
+
+    .icon {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0px;
+    }
+
+    &:hover {
+      background: var(--color-bg-hover);
+    }
+  }
+  
+  .activeNav{
+    color: var(--custom-primary-color-hover);
+    background: var(--color-bg-hover);
+  }
+}
+
+.layoutRight{
+  flex: 1;
+  overflow: hidden;
+}
