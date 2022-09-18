@@ -25,6 +25,11 @@ public enum DriverClassEnum implements BaseEnum<String> {
      * SQLite
      */
     SQLITE("SQLite", "org.sqlite.JDBC"),
+
+    /**
+     * H2
+     */
+    H2("H2", "org.h2.Driver"),
     ;
 
     final String description;
