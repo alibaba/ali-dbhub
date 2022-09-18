@@ -29,7 +29,7 @@ public class DataSourceTestRequest {
     /**
      * 连接用户
      */
-    private String name;
+    private String user;
 
     /**
      * 密码
