@@ -27,9 +27,9 @@ public class DataSourceCreateRequest {
     private String url;
 
     /**
-     * 连接用户
+     * 连接用户名
      */
-    private String name;
+    private String user;
 
     /**
      * 密码

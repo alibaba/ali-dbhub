@@ -34,7 +34,7 @@ public class DataSourceAttachRequest {
     /**
      * 连接用户
      */
-    private String name;
+    private String user;
 
     /**
      * 密码
