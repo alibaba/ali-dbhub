@@ -1,5 +1,5 @@
 -- 表结构初始化sql
-CREATE TABLE IF NOT EXISTS `test69`
+CREATE TABLE IF NOT EXISTS `test`
 (
     `id`     bigint PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT '主键',
     `name`   VARCHAR(100) COMMENT '名字',
