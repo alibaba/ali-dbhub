@@ -1,8 +1,5 @@
 package com.alibaba.dataops.server.domain.core.core.converter;
 
-import com.alibaba.dataops.server.domain.core.api.test.TestCreateParam;
-import com.alibaba.dataops.server.domain.core.repository.entity.TestDO;
-
 import org.mapstruct.Mapper;
 
 /**
@@ -19,6 +16,6 @@ public abstract class TestCoreConverter {
      * @param param
      * @return
      */
-    public abstract TestDO param2do(TestCreateParam param);
+    //public abstract TestDO param2do(TestCreateParam param);
 
 }

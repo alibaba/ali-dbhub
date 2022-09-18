@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author data-ops
  * @since 2022-09-14
  */
-public interface TestMapper extends BaseMapper<TestDO> {
+public interface Test1Mapper extends BaseMapper<TestDO> {
 
 }
