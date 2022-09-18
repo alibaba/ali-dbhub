@@ -46,4 +46,10 @@ public class DataSourceUpdateRequest {
      * @see DataSourceTypeEnum
      */
     private String type;
+
+    /**
+     * 环境类型
+     * @see com.alibaba.dataops.server.tools.base.enums.EnvTypeEnum
+     */
+    private String envType;
 }
