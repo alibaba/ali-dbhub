@@ -3,11 +3,11 @@ package com.alibaba.dataops.server.web.api.controller.connection;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
-import com.alibaba.dataops.server.web.api.controller.connection.request.ConnectionCloneRequest;
-import com.alibaba.dataops.server.web.api.controller.connection.request.ConnectionCreateRequest;
-import com.alibaba.dataops.server.web.api.controller.connection.request.ConnectionQueryRequest;
-import com.alibaba.dataops.server.web.api.controller.connection.request.ConnectionUpdateRequest;
-import com.alibaba.dataops.server.web.api.controller.connection.vo.ConnectionVO;
+import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceCloneRequest;
+import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceCreateRequest;
+import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceQueryRequest;
+import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceUpdateRequest;
+import com.alibaba.dataops.server.web.api.controller.connection.vo.DataSourceVO;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequestMapping("/api/connection/manage")
 @RestController
-public class ConnectionManageController {
+public class DataSourceManageController {
 
     /**
      * 查询我建立的数据库连接
@@ -36,7 +36,7 @@ public class ConnectionManageController {
      * @return
      */
     @GetMapping("/list")
-    public PageResult<ConnectionVO> list(ConnectionQueryRequest request) {
+    public PageResult<DataSourceVO> list(DataSourceQueryRequest request) {
         return null;
     }
 
@@ -47,7 +47,7 @@ public class ConnectionManageController {
      * @return
      */
     @GetMapping("/{id}")
-    public DataResult<ConnectionVO> queryById(@PathVariable("id") Long id) {
+    public DataResult<DataSourceVO> queryById(@PathVariable("id") Long id) {
         return null;
     }
 
@@ -58,7 +58,7 @@ public class ConnectionManageController {
      * @return
      */
     @PostMapping("/create")
-    public DataResult<Long> create(@RequestBody ConnectionCreateRequest request) {
+    public DataResult<Long> create(@RequestBody DataSourceCreateRequest request) {
         return null;
     }
 
@@ -70,7 +70,7 @@ public class ConnectionManageController {
      * @return
      */
     @PutMapping("/update")
-    public ActionResult update(@RequestBody ConnectionUpdateRequest request) {
+    public ActionResult update(@RequestBody DataSourceUpdateRequest request) {
         return null;
     }
 
@@ -81,7 +81,7 @@ public class ConnectionManageController {
      * @return
      */
     @PostMapping("/clone")
-    public DataResult<Long> copy(@RequestBody ConnectionCloneRequest request) {
+    public DataResult<Long> copy(@RequestBody DataSourceCloneRequest request) {
         return null;
     }
 

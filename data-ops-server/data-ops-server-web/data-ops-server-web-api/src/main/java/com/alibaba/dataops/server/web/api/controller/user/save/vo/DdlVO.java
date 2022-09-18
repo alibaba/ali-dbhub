@@ -1,6 +1,6 @@
 package com.alibaba.dataops.server.web.api.controller.user.save.vo;
 
-import javax.validation.constraints.NotNull;
+import com.alibaba.dataops.server.tools.base.enums.DataSourceTypeEnum;
 
 import lombok.Data;
 
@@ -34,7 +34,7 @@ public class DdlVO {
 
     /**
      * ddl语言类型
-     * @see com.alibaba.dataops.server.tools.base.enums.ConnectionTypeEnum
+     * @see DataSourceTypeEnum
      */
     private String type;
 }

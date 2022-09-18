@@ -10,7 +10,7 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
-public class ConnectionQueryRequest extends PageQueryRequest {
+public class DataSourceQueryRequest extends PageQueryRequest {
 
     /**
      * 别名模糊搜索词

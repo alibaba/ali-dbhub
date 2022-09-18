@@ -8,7 +8,7 @@ import lombok.Getter;
  * @date 2022/09/16
  */
 @Getter
-public enum ConnectionTypeEnum implements BaseEnum<String> {
+public enum DataSourceTypeEnum implements BaseEnum<String> {
 
     /**
      * mysql数据库连接
@@ -24,7 +24,7 @@ public enum ConnectionTypeEnum implements BaseEnum<String> {
 
     final String description;
 
-    ConnectionTypeEnum(String description) {
+    DataSourceTypeEnum(String description) {
         this.description = description;
     }
 

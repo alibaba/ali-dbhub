@@ -1,5 +1,7 @@
 package com.alibaba.dataops.server.web.api.controller.user.history.vo;
 
+import com.alibaba.dataops.server.tools.base.enums.DataSourceTypeEnum;
+
 import lombok.Data;
 
 /**
@@ -32,7 +34,7 @@ public class HistoryVO {
 
     /**
      * ddl语言类型
-     * @see com.alibaba.dataops.server.tools.base.enums.ConnectionTypeEnum
+     * @see DataSourceTypeEnum
      */
     private String type;
 }

@@ -2,8 +2,8 @@ package com.alibaba.dataops.server.web.api.controller.connection;
 
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
-import com.alibaba.dataops.server.web.api.controller.connection.request.ConnectionAttachRequest;
-import com.alibaba.dataops.server.web.api.controller.connection.request.ConnectionTestRequest;
+import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceAttachRequest;
+import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceTestRequest;
 import com.alibaba.dataops.server.web.api.controller.connection.vo.DatabaseVO;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequestMapping("/api/connection")
 @RestController
-public class ConnectionController {
+public class DataSourceController {
 
     /**
      * 数据库连接测试
@@ -28,7 +28,7 @@ public class ConnectionController {
      * @return
      */
     @GetMapping("/test")
-    public ActionResult test(ConnectionTestRequest request) {
+    public ActionResult test(DataSourceTestRequest request) {
         return null;
     }
 
@@ -39,7 +39,7 @@ public class ConnectionController {
      * @return
      */
     @GetMapping("/attach")
-    public ListResult<DatabaseVO> attach(ConnectionAttachRequest request) {
+    public ListResult<DatabaseVO> attach(DataSourceAttachRequest request) {
         return null;
     }
 

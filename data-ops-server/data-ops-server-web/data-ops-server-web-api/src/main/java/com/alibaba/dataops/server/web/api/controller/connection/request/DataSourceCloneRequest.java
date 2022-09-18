@@ -1,8 +1,6 @@
 package com.alibaba.dataops.server.web.api.controller.connection.request;
 
 
-import javax.validation.constraints.NotNull;
-
 import lombok.Data;
 
 /**
@@ -11,7 +9,7 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
-public class ConnectionCloneRequest {
+public class DataSourceCloneRequest {
 
     /**
      * 主键id
