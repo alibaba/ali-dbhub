@@ -25,6 +25,7 @@ public class JdbcTemplateDataServiceImpl implements JdbcTemplateDataService {
     @Override
     public ListResult<Map<String, Object>> queryForList(TemplateQueryParam param) {
         JdbcTemplate jdbcTemplate = JDBC_TEMPLATE_MAP.get(param.getDataSourceId());
+        //jdbcTemplate.u
         if (jdbcTemplate == null) {
             throw new BusinessException("请先连接数据库");
         }

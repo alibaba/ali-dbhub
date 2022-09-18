@@ -1,8 +1,8 @@
 spring:
   datasource:
     # 配置自带数据库的相对路径
-    url: jdbc:sqlite:data-ops.sqlite
-    driver-class-name: org.sqlite.JDBC
+    url: jdbc:h2:~/.data-ops/db/data_ops;MODE=MYSQL
+    driver-class-name: org.h2.Driver
   jpa:
     # 展示sql
     show-sql: true
@@ -12,3 +12,14 @@ spring:
       schema-locations: classpath:db/schema.sql
       data-locations: classpath:db/data.sql
       mode: always
+  messages:
+    basename: i18n/messages/messages
+    encoding: UTF-8
+    fallbackToSystemLocale: true
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+        trace: true
+        web-allow-others: true

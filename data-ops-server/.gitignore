@@ -25,6 +25,3 @@ build/
 nbbuild/
 dist/
 nbdist/
-
-### db
-data-ops.sqlite

@@ -1,17 +1,16 @@
 package com.alibaba.dataops.server.domain.core.repository.entity;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * <p>
- * 测试表
+ * 我的保存表
  * </p>
  *
  * @author data-ops
@@ -19,8 +18,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName("TEST")
-public class TestDO implements Serializable {
+@TableName("USER_SAVED_DDL")
+public class UserSavedDdlDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,17 +30,37 @@ public class TestDO implements Serializable {
     private Long id;
 
     /**
-     * 名字
+     * 创建时间
+     */
+    private LocalDateTime gmtCreate;
+
+    /**
+     * 修改时间
+     */
+    private LocalDateTime gmtModified;
+
+    /**
+     * 数据源连接ID
+     */
+    private Long dataSourceId;
+
+    /**
+     * db名称
+     */
+    private String dataBaseName;
+
+    /**
+     * 保存名称
      */
     private String name;
 
     /**
-     * 时间
+     * 数据库类型
      */
-    private LocalDateTime date;
+    private String type;
 
     /**
-     * 数字
+     * ddl内容
      */
-    private Integer number;
+    private String ddl;
 }
