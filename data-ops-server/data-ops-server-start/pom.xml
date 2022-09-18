@@ -28,6 +28,10 @@
             <groupId>com.alibaba.data-ops</groupId>
             <artifactId>data-ops-server-domain-core-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba.data-ops</groupId>
+            <artifactId>data-ops-server-domain-data-core</artifactId>
+        </dependency>
 
 
         <!-- 日志用logback -->

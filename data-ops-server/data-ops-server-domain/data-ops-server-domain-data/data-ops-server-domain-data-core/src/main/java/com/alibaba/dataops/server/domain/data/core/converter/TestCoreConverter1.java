@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.domain.core.core.converter;
+package com.alibaba.dataops.server.domain.data.core.converter;
 
 import org.mapstruct.Mapper;
 
@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
  * @author zyb
  */
 @Mapper(componentModel = "spring")
-public abstract class TestCoreConverter {
+public abstract class TestCoreConverter1 {
 
     /**
      * 转换
