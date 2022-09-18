@@ -12,6 +12,10 @@ spring:
       schema-locations: classpath:db/schema.sql
       data-locations: classpath:db/data.sql
       mode: always
+  messages:
+    basename: i18n/messages/messages
+    encoding: UTF-8
+    fallbackToSystemLocale: true
   h2:
     console:
       enabled: true
