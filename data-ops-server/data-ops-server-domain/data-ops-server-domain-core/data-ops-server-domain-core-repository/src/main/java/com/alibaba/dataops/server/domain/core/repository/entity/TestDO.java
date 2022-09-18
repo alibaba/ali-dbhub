@@ -11,7 +11,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ * 测试表
  * </p>
  *
  * @author data-ops
@@ -24,15 +24,24 @@ public class TestDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 主键
+     */
     @TableId(value = "ID", type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 名字
+     */
     private String name;
 
+    /**
+     * 时间
+     */
     private LocalDateTime date;
 
     /**
-     * 数据库类型
+     * 数字
      */
     private Integer number;
 }
