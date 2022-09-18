@@ -51,7 +51,8 @@ public class MybatisGeneratorTest extends BaseTest {
         pathInfo.put(OutputFile.controller, null);
 
         FastAutoGenerator
-            .create(new DataSourceConfig.Builder(dataSource).typeConvert(new SqliteTypeConvert()))
+            .create(new DataSourceConfig.Builder(dataSource)
+                .typeConvert(new SqliteTypeConvert()))
             //全局配置
             .globalConfig(builder -> {
                 // 设置作者
@@ -83,7 +84,11 @@ public class MybatisGeneratorTest extends BaseTest {
                     //.addTableFills(new Column("gmt_create", FieldFill.INSERT)) // 表字段填充
                     //.addTableFills(new Column("update_time", FieldFill.INSERT_UPDATE)) // 表字段填充
                     //开启lombok
-                    .enableLombok();
+                    .enableLombok()
+                    .mapperBuilder()
+                    // 覆盖文件
+                    .enableFileOverride()
+                ;
 
             })
             //模板配置
