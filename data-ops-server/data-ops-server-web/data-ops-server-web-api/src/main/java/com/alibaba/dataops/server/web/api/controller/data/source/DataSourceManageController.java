@@ -1,13 +1,13 @@
-package com.alibaba.dataops.server.web.api.controller.connection;
+package com.alibaba.dataops.server.web.api.controller.data.source;
 
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
-import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceCloneRequest;
-import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceCreateRequest;
-import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceQueryRequest;
-import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceUpdateRequest;
-import com.alibaba.dataops.server.web.api.controller.connection.vo.DataSourceVO;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCloneRequest;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCreateRequest;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceQueryRequest;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceUpdateRequest;
+import com.alibaba.dataops.server.web.api.controller.data.source.vo.DataSourceVO;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

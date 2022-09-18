@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceBaseRequest;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceBaseRequest;
 
 import lombok.Data;
 

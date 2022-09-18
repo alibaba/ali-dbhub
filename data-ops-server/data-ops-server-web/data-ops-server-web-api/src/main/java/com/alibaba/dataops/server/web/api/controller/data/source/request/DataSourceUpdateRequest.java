@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.web.api.controller.connection.request;
+package com.alibaba.dataops.server.web.api.controller.data.source.request;
 
 
 import javax.validation.constraints.NotNull;
@@ -13,7 +13,13 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
-public class DataSourceTestRequest {
+public class DataSourceUpdateRequest {
+
+    /**
+     * 主键id
+     */
+    @NotNull
+    private Long id;
 
     /**
      * 连接别名
@@ -23,7 +29,6 @@ public class DataSourceTestRequest {
     /**
      * 连接地址
      */
-    @NotNull
     private String url;
 
     /**
@@ -34,13 +39,11 @@ public class DataSourceTestRequest {
     /**
      * 密码
      */
-    @NotNull
     private String password;
 
     /**
      * 连接类型
      * @see DataSourceTypeEnum
      */
-    @NotNull
     private String type;
 }
