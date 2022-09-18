@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.web.api.controller.connection.request;
+package com.alibaba.dataops.server.web.api.controller.data.source.request;
 
 
 import javax.validation.constraints.NotNull;
@@ -13,7 +13,12 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
-public class DataSourceCreateRequest {
+public class DataSourceAttachRequest {
+
+    /**
+     * 主键id
+     */
+    private Long id;
 
     /**
      * 连接别名

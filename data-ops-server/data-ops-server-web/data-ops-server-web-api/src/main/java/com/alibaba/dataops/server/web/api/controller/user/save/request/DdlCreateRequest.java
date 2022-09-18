@@ -3,6 +3,7 @@ package com.alibaba.dataops.server.web.api.controller.user.save.request;
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dataops.server.tools.base.enums.DataSourceTypeEnum;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceBaseRequest;
 
 import lombok.Data;
 
@@ -12,24 +13,12 @@ import lombok.Data;
  * @date 2022/09/18
  */
 @Data
-public class DdlCreateRequest {
+public class DdlCreateRequest extends DataSourceBaseRequest {
 
     /**
      * 文件别名
      */
     private String name;
-
-    /**
-     * 连接id
-     */
-    @NotNull
-    private Long connectionId;
-
-    /**
-     * DB名称
-     */
-    @NotNull
-    private String databaseName;
 
     /**
      * ddl类型

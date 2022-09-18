@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.web.api.controller.connection.request;
+package com.alibaba.dataops.server.web.api.controller.data.source.request;
 
 
 import lombok.Data;

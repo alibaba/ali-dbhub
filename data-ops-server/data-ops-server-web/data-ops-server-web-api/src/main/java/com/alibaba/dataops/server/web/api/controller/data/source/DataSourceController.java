@@ -1,10 +1,10 @@
-package com.alibaba.dataops.server.web.api.controller.connection;
+package com.alibaba.dataops.server.web.api.controller.data.source;
 
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
-import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceAttachRequest;
-import com.alibaba.dataops.server.web.api.controller.connection.request.DataSourceTestRequest;
-import com.alibaba.dataops.server.web.api.controller.connection.vo.DatabaseVO;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceAttachRequest;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceTestRequest;
+import com.alibaba.dataops.server.web.api.controller.data.source.vo.DatabaseVO;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
