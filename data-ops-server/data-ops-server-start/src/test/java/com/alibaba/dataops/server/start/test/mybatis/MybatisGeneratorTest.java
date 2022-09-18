@@ -12,7 +12,7 @@ import com.alibaba.dataops.server.start.test.common.BaseTest;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
-import com.baomidou.mybatisplus.generator.config.converts.SqliteTypeConvert;
+import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +52,7 @@ public class MybatisGeneratorTest extends BaseTest {
 
         FastAutoGenerator
             .create(new DataSourceConfig.Builder(dataSource)
-                .typeConvert(new SqliteTypeConvert()))
+                .typeConvert(new MySqlTypeConvert()))
             //全局配置
             .globalConfig(builder -> {
                 // 设置作者

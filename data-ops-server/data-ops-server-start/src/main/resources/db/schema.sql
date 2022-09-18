@@ -1,11 +1,11 @@
 -- 表结构初始化sql
-CREATE TABLE IF NOT EXISTS `test`
+CREATE TABLE IF NOT EXISTS `test69`
 (
-    `id`     bigint PRIMARY KEY AUTOINCREMENT NOT NULL COMMENT '主键',
-    `name`   VARCHAR(100) NOT NULL COMMENT '名字',
-     `date`   datetime NOT NULL COMMENT '时间',
-     `number`   integer NOT NULL COMMENT '数字'
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='数据源连接表';
+    `id`     bigint PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT '主键',
+    `name`   VARCHAR(100) COMMENT '名字',
+     `date`   datetime  COMMENT '时间',
+     `number`   int  COMMENT '数字'
+)  ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='测试表';
 
 CREATE TABLE IF NOT EXISTS `data_source` (
     `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
