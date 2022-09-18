@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `data_source` (
     `user` varchar(128) DEFAULT NULL COMMENT '用户名',
     `password` varchar(256) DEFAULT NULL COMMENT '密码',
     `type` varchar(32) DEFAULT NULL COMMENT '数据库类型',
-    `env_type` varchar(32) DEFAULT NULL COMMENT '环境类型'
+    `env_type` varchar(32) DEFAULT NULL COMMENT '环境类型',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='数据源连接表'
 ;
