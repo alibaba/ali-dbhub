@@ -81,6 +81,8 @@ public class H2DataServiceTest extends BaseTest {
         Map<String, Object> data1 = dataList.get(0);
         Assertions.assertEquals(DATA_NAME, data1.get("name"), "未查询到姓名");
 
+        dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+
     }
 
 }
