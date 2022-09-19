@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EnvController {
 
     /**
-     * 查询我建立的数据库连接
+     * 查询环境列表
      *
      * @return
      */
