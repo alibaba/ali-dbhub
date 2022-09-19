@@ -20,6 +20,9 @@ pnpm-lock.yaml
 /src/.umi-test
 /.env.local
 
+#electron
+/electron/dist
+/electron/node_modules
 
 #electron-build
 /electron-build
