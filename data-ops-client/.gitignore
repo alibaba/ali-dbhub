@@ -19,3 +19,9 @@ pnpm-lock.yaml
 /src/.umi-production
 /src/.umi-test
 /.env.local
+
+
+#electron-build
+/electron-build
+
+

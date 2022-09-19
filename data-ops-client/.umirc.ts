@@ -56,4 +56,10 @@ export default defineConfig({
   dynamicImport: {
     loading: '@/components/PageLoading/index',
   },
+  history: {
+    type: 'hash'
+  },
+  base: './',
+  publicPath: './',
+  hash:true,
 });

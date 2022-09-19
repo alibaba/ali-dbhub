@@ -10,24 +10,9 @@
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
-    "electron": "electron .",
-    "electron:builder": "electron-builder"
+    "electron": "electron ."
   },
-  "build": {
-    "appId": "com.example.app",
-    "mac": {
-      "target": [ 
-        "dmg",
-        "zip"
-      ]
-    },
-    "win": {
-      "target": [ 
-        "nsis",
-        "zip"
-      ]
-    }
-  },
+ 
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
@@ -54,8 +39,6 @@
     "@umijs/test": "^3.5.34",
     "classnames": "^2.3.2",
     "electron": "^20.1.4",
-    "electron-builder": "^23.3.3",
-    "electron-packager": "^16.0.0",
     "lint-staged": "^10.0.7",
     "prettier": "^2.2.0",
     "typescript": "^4.1.2",
