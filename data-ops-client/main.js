@@ -18,11 +18,6 @@ function createWindow() {
     title: 'dataOps',
     frame: false,
     titleBarStyle: 'hidden',
-    webPreferences:{
-      nodeIntegration: true,
-      contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
-    }
   });
 
   /* 

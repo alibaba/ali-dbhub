@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useState, useRef } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
+import { history, useParams } from 'umi';
 import { Button, DatePicker, Input } from 'antd';
 import i18n from '../../i18n';
 import AppHeader from '@/components/AppHeader';
@@ -9,23 +10,42 @@ import Tree from '@/components/Tree';
 import PageLoading from '@/components/PageLoading';
 import MonacoEditor from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
+import databaseManageServer from '@/service/databaseManage';
+import { IConnectionItem } from '@/types'
+
 
 interface IProps {
   className?: any;
 }
 
 export default memo<IProps>(function Database({ className }) {
-
+  const params: { id: string } = useParams()
   const letfRef = useRef<HTMLDivElement | null>(null);
+  const [databaseDetaile, setDatabaseDetaile] = useState<IConnectionItem>()
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
-  let editor:any = ''
+  let editor: any = ''
 
-  const callback = (e)=>{
+  useEffect(() => {
+    if (params.id) {
+      getDetaile()
+    }
+  }, [])
+
+  const getDetaile = () => {
+    let p = {
+      id: params.id
+    }
+    databaseManageServer.getConnectionDetaile(p).then(res => {
+      setDatabaseDetaile(res)
+    })
+  }
+
+  const callback = () => {
     editor && editor.layout()
   }
 
-  function getEditor (e){
-    editor =  e
+  function getEditor(e: any) {
+    editor = e
   }
 
   return (
@@ -34,19 +54,19 @@ export default memo<IProps>(function Database({ className }) {
         <div className={styles.header}>
           <div className={styles.currentNameBox}>
             <div className={styles.databaseName}>
-              连接1 
+              {databaseDetaile?.alias}
             </div>
             <Iconfont code="&#xe7b1;"></Iconfont>
           </div>
           <div className={styles.searchBox}>
             <div className={styles.inputBox}>
               <Iconfont code="&#xe600;"></Iconfont>
-              <Input type="text" placeholder={i18n('database.input.search')}/>
+              <Input type="text" placeholder={i18n('database.input.search')} />
             </div>
-            <div className={classnames(styles.refresh,styles.button)}> 
+            <div className={classnames(styles.refresh, styles.button)}>
               <Iconfont code="&#xec08;"></Iconfont>
             </div>
-            <div className={classnames(styles.create,styles.button)}> 
+            <div className={classnames(styles.create, styles.button)}>
               <Iconfont code="&#xe631;"></Iconfont>
             </div>
           </div>
@@ -65,7 +85,7 @@ export default memo<IProps>(function Database({ className }) {
             <MonacoEditor getEditor={getEditor}></MonacoEditor>
           </div>
           <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
-          <div  className={styles.searchResult}>
+          <div className={styles.searchResult}>
             结果区域
             <PageLoading></PageLoading>
           </div>

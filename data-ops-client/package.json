@@ -12,7 +12,6 @@
     "test:coverage": "umi-test --coverage",
     "electron": "electron ."
   },
- 
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
@@ -30,7 +29,8 @@
     "monaco-editor-webpack-plugin": "5.0.0",
     "react": "17.x",
     "react-dom": "17.x",
-    "umi": "^3.5.34"
+    "umi": "^3.5.34",
+    "umi-request": "^1.4.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",

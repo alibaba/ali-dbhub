@@ -15,10 +15,10 @@ const treeList = [
     type: 'database',
     children: [
       {
-        key:'0-1-1',
+        key: '0-1-1',
         name: '表',
         type: 'table',
-        children:[
+        children: [
           {
             key: '1',
             name: 'activity_audio_emp_recode',
@@ -334,10 +334,10 @@ const treeList = [
         ]
       },
       {
-        key:'0-1-1',
+        key: '0-1-1',
         name: '查询',
         type: 'search',
-        children:[
+        children: [
           {
             key: '1',
             name: 'SQL1',
@@ -682,7 +682,7 @@ export function TreeNode({ data, level, show = false }) {
   const [showChildren, setShowChildren] = useState(false);
 
   const indentArr = new Array(level);
-  for(let i=0; i < level; i++){
+  for (let i = 0; i < level; i++) {
     indentArr[i] = 'indent'
   }
 
@@ -690,59 +690,59 @@ export function TreeNode({ data, level, show = false }) {
     setShowChildren(!showChildren);
   };
 
-  const renderMenu = ()=>{
+  const renderMenu = () => {
     return <div className={styles.menu}>
       下拉菜单
     </div>
   }
 
-  const recognizeIcon = (type)=>{
-    switch(type){
-        case 'table':
-          return '\ue63e';
-        case  'database':
-          return '\ue62c';
-        case 'search':
-          return '\uec4c';
-        case  'line':
-          return '\ue611';
-        case 'save':
-          return '\ue936';
-        default:
-          return '\ue936';
-      }
+  const recognizeIcon = (type) => {
+    switch (type) {
+      case 'table':
+        return '\ue63e';
+      case 'database':
+        return '\ue62c';
+      case 'search':
+        return '\uec4c';
+      case 'line':
+        return '\ue611';
+      case 'save':
+        return '\ue936';
+      default:
+        return '\ue936';
+    }
   }
 
   return (
     <>
-    <Dropdown overlay={renderMenu} trigger={['contextMenu']}>
-      <div className={classnames(styles.treeNode, {[styles.hiddenTreeNode]: !show })} onClick={handleClick}>
-        <div className={styles.left}>
-          {
-            indentArr.map(i=>{
-              return <div className={styles.indent}></div>
-            })
-          }
-        </div>
-        <div className={styles.right}>
-          { 
-            data.children?.length && 
-            <div className={styles.arrows} >
-              <Iconfont code={showChildren ? "\ue61e" : "\ue65f"} />
-            </div>
-          }
-          <div className={styles.typeIcon}>
-            <Iconfont code={recognizeIcon(data.type)}></Iconfont> 
+      <Dropdown overlay={renderMenu} trigger={['contextMenu']}>
+        <div className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} onClick={handleClick}>
+          <div className={styles.left}>
+            {
+              indentArr.map((item, i) => {
+                return <div key={i} className={styles.indent}></div>
+              })
+            }
           </div>
-          <div className={styles.name}>{data.name}</div>
+          <div className={styles.right}>
+            {
+              data.children?.length &&
+              <div className={styles.arrows} >
+                <Iconfont code={showChildren ? "\ue61e" : "\ue65f"} />
+              </div>
+            }
+            <div className={styles.typeIcon}>
+              <Iconfont code={recognizeIcon(data.type)}></Iconfont>
+            </div>
+            <div className={styles.name}>{data.name}</div>
+          </div>
         </div>
-      </div>
-    </Dropdown>
+      </Dropdown>
       {
         data.children?.length &&
-        data.children.map((item) => {
+        data.children.map((item: any, i: number) => {
           return (
-            <TreeNode show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
+            <TreeNode key={i} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
           );
         })
       }
@@ -755,7 +755,7 @@ export default memo<IProps>(function Tree(props) {
   return (
     <div className={classnames(className, styles.box)}>
       {treeList.map((item) => {
-        return <TreeNode show={true} level={0} data={item}></TreeNode>
+        return <TreeNode key={item.name} show={true} level={0} data={item}></TreeNode>
       })}
     </div>
   );

@@ -19,7 +19,7 @@ export default defineConfig({
           routes: [
             {
               exact: true,
-              path: '/database/:databaseId',
+              path: '/database/:id',
               component: '@/components/Database',
             },
           ],
