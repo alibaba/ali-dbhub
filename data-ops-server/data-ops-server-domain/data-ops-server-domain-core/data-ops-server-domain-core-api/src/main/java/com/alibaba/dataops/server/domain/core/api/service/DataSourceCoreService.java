@@ -45,6 +45,22 @@ public interface DataSourceCoreService {
     ActionResult delete(@NotNull Long id);
 
     /**
+     * 根据id查询数据源连接详情
+     *
+     * @param id
+     * @return
+     */
+    DataResult<DataSourceDTO> queryById(@NotNull Long id);
+
+    /**
+     * 克隆连接
+     *
+     * @param id
+     * @return
+     */
+    DataResult<Long> copyById(@NotNull Long id);
+
+    /**
      * 分页查询数据源列表
      *
      * @param param

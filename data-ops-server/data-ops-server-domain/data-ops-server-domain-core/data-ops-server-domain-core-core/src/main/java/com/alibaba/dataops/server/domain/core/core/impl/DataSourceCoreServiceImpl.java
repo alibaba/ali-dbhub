@@ -56,6 +56,24 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
     }
 
     @Override
+    public DataResult<DataSourceDTO> queryById(Long id) {
+        DataSourceDO dataSourceDO = dataSourceMapper.selectById(id);
+        return DataResult.of(dataSourceCoreConverter.do2dto(dataSourceDO));
+    }
+
+    @Override
+    public DataResult<Long> copyById(Long id) {
+        DataSourceDO dataSourceDO = dataSourceMapper.selectById(id);
+        dataSourceDO.setId(null);
+        String alias = dataSourceDO.getAlias() + "Copy";
+        dataSourceDO.setAlias(alias);
+        dataSourceDO.setGmtCreate(LocalDateTime.now());
+        dataSourceDO.setGmtModified(LocalDateTime.now());
+        dataSourceMapper.insert(dataSourceDO);
+        return DataResult.of(dataSourceDO.getId());
+    }
+
+    @Override
     public PageResult<DataSourceDTO> queryPage(DataSourcePageQueryParam param, DataSourceSelector selector) {
         return null;
     }
