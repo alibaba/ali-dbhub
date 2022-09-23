@@ -1,8 +1,11 @@
 package com.alibaba.dataops.server.domain.core.api.service;
 
+import javax.validation.constraints.NotNull;
+
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.test.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.core.api.test.DataSourcePageQueryParam;
+import com.alibaba.dataops.server.domain.core.api.test.DataSourceSelector;
 import com.alibaba.dataops.server.domain.core.api.test.DataSourceUpdateParam;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
@@ -34,10 +37,19 @@ public interface DataSourceCoreService {
     ActionResult update(DataSourceUpdateParam param);
 
     /**
+     * 删除数据源连接
+     *
+     * @param id
+     * @return
+     */
+    ActionResult delete(@NotNull Long id);
+
+    /**
      * 分页查询数据源列表
      *
      * @param param
+     * @param selector
      * @return
      */
-    PageResult<DataSourceDTO> queryPage(DataSourcePageQueryParam param);
+    PageResult<DataSourceDTO> queryPage(DataSourcePageQueryParam param, DataSourceSelector selector);
 }
