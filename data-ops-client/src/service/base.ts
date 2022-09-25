@@ -66,18 +66,17 @@ export default function createRequest<P = void, R = {}>(url:string, options:IOpt
   const {method = 'get', mock = false} = options;
   const _baseURL = mock ? mockUrl : baseURL;
 
-  return function(params: P ){
-    const paramsData: {[key:string]:any} = params;
+  return function(params: P){
     const paramsInUrl: string[] = [];
     const _url = url.replace(/:(.+?)\b/, (_, name:string) => {
-      const value = paramsData[name];
+      const value = params[name];
       paramsInUrl.push(name);
       return `${value}`;
     });
 
     if (paramsInUrl.length) {
       paramsInUrl.forEach((name) => {
-        delete paramsData[name];
+        delete params[name];
       });
     }
 
