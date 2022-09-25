@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 查询参数
+ * 修改参数
  *
  * @author Jiaju Zhuang
  */
@@ -18,7 +18,7 @@ import lombok.ToString;
 @Data
 @Builder
 @ToString
-public class TemplateQueryParam {
+public class TemplateUpdateParam {
     /**
      * 对应数据库存储的来源id
      */
