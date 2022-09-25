@@ -1,34 +1,22 @@
-package com.alibaba.dataops.server.domain.core.api.model;
+package com.alibaba.dataops.server.domain.core.api.param;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
 /**
- * <p>
- * 我的保存表
- * </p>
- *
- * @author data-ops
- * @since 2022-09-18
+ * @author moji
+ * @version UserSavedDdlCreateParam.java, v 0.1 2022年09月25日 15:40 moji Exp $
+ * @date 2022/09/25
  */
 @Data
-public class UserSavedDdlDTO {
+public class UserSavedDdlUpdateParam {
 
     /**
      * 主键
      */
+    @NotNull
     private Long id;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime gmtCreate;
-
-    /**
-     * 修改时间
-     */
-    private LocalDateTime gmtModified;
 
     /**
      * 数据源连接ID

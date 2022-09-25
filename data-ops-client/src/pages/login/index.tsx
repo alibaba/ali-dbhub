@@ -4,7 +4,7 @@ import { history } from 'umi';
 
 export default function IndexPage() {
   function login() {
-    history.push('/home');
+    history.push('/');
   }
 
   return (
