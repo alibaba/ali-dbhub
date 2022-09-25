@@ -35,7 +35,7 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
         druidDataSource.setPassword(param.getPassword());
         druidDataSource.setUrl(param.getUrl());
         // 不设置最大连接数
-        druidDataSource.setMaxActive(Integer.MAX_VALUE);
+        druidDataSource.setMaxActive(999);
         druidDataSource.setInitialSize(0);
         // 放入缓存
         DataCenterUtils.DATA_SOURCE_CACHE.put(dataSourceId, druidDataSource);

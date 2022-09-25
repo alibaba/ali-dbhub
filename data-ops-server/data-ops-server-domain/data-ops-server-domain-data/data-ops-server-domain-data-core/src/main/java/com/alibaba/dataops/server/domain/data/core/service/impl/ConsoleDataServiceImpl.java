@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
+import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
@@ -15,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
- * 数据库连接源服务
+ * 控制台服务
  *
  * @author Jiaju Zhuang
  */
@@ -39,19 +40,21 @@ public class ConsoleDataServiceImpl implements ConsoleDataService {
         } catch (SQLException e) {
             throw new BusinessException("连接数据库异常", e);
         }
-        DataCenterUtils.CONNECTION_CACHE.put(consoleId, connection);
+
+        // 这里注意 JdbcTemplate 实际上放的是一个 固定连接的DataSource 不会使用到多个连接
+        DataCenterUtils.JDBC_TEMPLATE_CACHE.put(consoleId, JdbcDataTemplate.builder().connection(connection).build());
         return ActionResult.isSuccess();
     }
 
     @Override
     public ActionResult close(ConsoleCloseParam param) {
-        Connection connection = DataCenterUtils.CONNECTION_CACHE.remove(param.getConsoleId());
-        if (connection == null) {
+        JdbcDataTemplate jdbcDataTemplate = DataCenterUtils.JDBC_TEMPLATE_CACHE.remove(param.getConsoleId());
+        if (jdbcDataTemplate == null) {
             log.info("数据库连接:{}不需要关闭", param.getConsoleId());
             return ActionResult.isSuccess();
         }
         try {
-            connection.close();
+            jdbcDataTemplate.getConnection().close();
         } catch (SQLException e) {
             throw new BusinessException("数据库关闭连接异常", e);
         }

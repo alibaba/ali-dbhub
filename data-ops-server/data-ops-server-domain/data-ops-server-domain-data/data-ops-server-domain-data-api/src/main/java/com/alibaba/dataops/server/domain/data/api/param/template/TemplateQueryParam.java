@@ -21,16 +21,10 @@ import lombok.ToString;
 public class TemplateQueryParam {
 
     /**
-     * 对应数据库存储的来源id
+     * 控制台id
      */
     @NotNull
-    private Long dataSourceId;
-
-    /**
-     * 对应的连接数据库名称
-     * 支持多个database的数据库会调用use xx;来切换来数据库
-     */
-    private String databaseName;
+    private Long consoleId;
 
     /**
      * sql语句
