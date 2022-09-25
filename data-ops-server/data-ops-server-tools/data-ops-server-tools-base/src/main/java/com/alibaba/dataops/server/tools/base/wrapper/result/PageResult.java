@@ -13,6 +13,8 @@ import com.alibaba.dataops.server.tools.base.enums.BaseErrorEnum;
 import com.alibaba.dataops.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.Result;
 import com.alibaba.dataops.server.tools.base.wrapper.param.PageQueryParam;
+import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
+import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult.Page;
 
 import lombok.Data;
 
@@ -261,6 +263,33 @@ public class PageResult<T> implements Serializable, Result<List<T>> {
         return pageResult;
     }
 
+    /**
+     * 将当前的类型转换成另外一个类型
+     * 并且转换成web的类型
+     * 这里注意如果当前项目在web层用的也是 <code>PageResult</code> 则直接使用 <code>map</code>方法接口即可
+     *
+     * @param mapper 转换的方法
+     * @param <R>    返回的类型
+     * @return 分页返回对象
+     */
+    public <R> WebPageResult<R> mapToWeb(Function<T, R> mapper) {
+        List<R> returnData = hasData(this) ? getData().stream().map(mapper).collect(Collectors.toList())
+            : Collections.emptyList();
+        WebPageResult<R> pageResult = new WebPageResult<>();
+        pageResult.setSuccess(getSuccess());
+        pageResult.setErrorCode(getErrorCode());
+        pageResult.setErrorMessage(getErrorMessage());
+        pageResult.setTraceId(getTraceId());
+        // 重新设置一个分页信息
+        Page<R> page = new Page<>();
+        pageResult.setData(page);
+        page.setData(returnData);
+        page.setPageNo(getPageNo());
+        page.setPageSize(getPageSize());
+        page.setTotal(getTotal());
+        pageResult.setData(page);
+        return pageResult;
+    }
 
     @Override
     public boolean success() {
