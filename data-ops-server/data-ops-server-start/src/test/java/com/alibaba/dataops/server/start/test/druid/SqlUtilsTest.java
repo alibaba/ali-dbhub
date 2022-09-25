@@ -16,7 +16,7 @@ public class SqlUtilsTest {
     public void test() {
         List<SQLStatement> sqlStatements = SQLUtils.parseStatements("select 1 from test;", DbType.mysql);
         log.info("解析sql:{}", sqlStatements);
-        sqlStatements = SQLUtils.parseStatements("use xxx;select 1 from test", DbType.mysql);
+        sqlStatements = SQLUtils.parseStatements("use xxx;select 1 from test;explain select 1 from test", DbType.mysql);
         log.info("解析sql:{}", sqlStatements);
         sqlStatements = SQLUtils.parseStatements("select 1 from1 test", DbType.mysql);
         log.info("解析sql:{}", sqlStatements);
