@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.UserExecutedDdlDTO;
 import com.alibaba.dataops.server.domain.core.api.param.UserExecutedDdlCreateParam;
-import com.alibaba.dataops.server.domain.core.api.param.UserExecutedDdlUpdateParam;
 import com.alibaba.dataops.server.domain.core.repository.entity.UserExecutedDdlDO;
 
 import org.mapstruct.Mapper;
@@ -24,14 +23,6 @@ public abstract class UserExecutedDdlCoreConverter {
      * @return
      */
     public abstract UserExecutedDdlDO param2do(UserExecutedDdlCreateParam param);
-
-    /**
-     * 参数转换
-     *
-     * @param param
-     * @return
-     */
-    public abstract UserExecutedDdlDO param2do(UserExecutedDdlUpdateParam param);
 
     /**
      * 模型转换

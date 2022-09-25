@@ -1,6 +1,7 @@
 package com.alibaba.dataops.server.domain.core.core.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
@@ -15,6 +16,10 @@ import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +80,15 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
 
     @Override
     public PageResult<DataSourceDTO> queryPage(DataSourcePageQueryParam param, DataSourceSelector selector) {
-        return null;
+        QueryWrapper<DataSourceDO> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(param.getSearchKey())) {
+            queryWrapper.like("alias", param.getSearchKey());
+        }
+        Integer start = (param.getPageNo() - 1) * param.getPageSize();
+        Integer offset = param.getPageSize();
+        Page<DataSourceDO> page = new Page<>(start, offset);
+        IPage<DataSourceDO> iPage = dataSourceMapper.selectPage(page, queryWrapper);
+        List<DataSourceDTO> dataSourceDTOS = dataSourceCoreConverter.do2dto(iPage.getRecords());
+        return PageResult.of(dataSourceDTOS, iPage.getTotal(), param);
     }
 }
