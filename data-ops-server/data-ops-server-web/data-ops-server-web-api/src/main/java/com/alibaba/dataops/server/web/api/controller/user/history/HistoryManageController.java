@@ -1,12 +1,20 @@
 package com.alibaba.dataops.server.web.api.controller.user.history;
 
+import java.util.List;
+
+import com.alibaba.dataops.server.domain.core.api.model.UserExecutedDdlDTO;
+import com.alibaba.dataops.server.domain.core.api.param.UserExecutedDdlCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.UserExecutedDdlPageQueryParam;
+import com.alibaba.dataops.server.domain.core.api.service.UserExecutedDdlCoreService;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
+import com.alibaba.dataops.server.web.api.controller.user.history.converter.HistoryWebConverter;
 import com.alibaba.dataops.server.web.api.controller.user.history.request.HistoryCreateRequest;
 import com.alibaba.dataops.server.web.api.controller.user.history.request.HistoryQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.user.history.vo.HistoryVO;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HistoryManageController {
 
+    @Autowired
+    private UserExecutedDdlCoreService userExecutedDdlCoreService;
+
+    @Autowired
+    private HistoryWebConverter historyWebConverter;
+
     /**
      * 查询执行记录
      *
@@ -32,7 +46,10 @@ public class HistoryManageController {
      */
     @GetMapping("/list")
     public WebPageResult<HistoryVO> list(HistoryQueryRequest request) {
-        return null;
+        UserExecutedDdlPageQueryParam param = historyWebConverter.req2param(request);
+        PageResult<UserExecutedDdlDTO> result = userExecutedDdlCoreService.queryPage(param);
+        List<HistoryVO> historyVOList = historyWebConverter.dto2vo(result.getData());
+        return WebPageResult.of(historyVOList, result.getTotal(), result.getPageNo(), result.getPageSize());
     }
 
     /**
@@ -43,7 +60,8 @@ public class HistoryManageController {
      */
     @PostMapping("/create")
     public DataResult<Long> create(@RequestBody HistoryCreateRequest request) {
-        return null;
+        UserExecutedDdlCreateParam param = historyWebConverter.createReq2param(request);
+        return userExecutedDdlCoreService.create(param);
     }
 
 }
