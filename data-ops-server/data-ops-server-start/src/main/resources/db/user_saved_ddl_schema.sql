@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS `user_saved_ddl` (
     `data_base_name` varchar(128) DEFAULT NULL COMMENT 'db名称',
     `name` varchar(128) DEFAULT NULL COMMENT '保存名称',
     `type` varchar(32) NOT NULL COMMENT '数据库类型',
+    `status` varchar(32) NOT NULL COMMENT 'ddl语句状态:DRAFT/RELEASE',
     `ddl` text DEFAULT NULL COMMENT 'ddl内容',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='我的保存表'

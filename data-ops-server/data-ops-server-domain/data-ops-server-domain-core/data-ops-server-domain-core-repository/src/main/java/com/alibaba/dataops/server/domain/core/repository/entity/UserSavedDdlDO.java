@@ -14,7 +14,7 @@ import lombok.Setter;
  * </p>
  *
  * @author data-ops
- * @since 2022-09-18
+ * @since 2022-09-25
  */
 @Getter
 @Setter
@@ -58,6 +58,11 @@ public class UserSavedDdlDO implements Serializable {
      * 数据库类型
      */
     private String type;
+
+    /**
+     * ddl语句状态:DRAFT/RELEASE
+     */
+    private String status;
 
     /**
      * ddl内容
