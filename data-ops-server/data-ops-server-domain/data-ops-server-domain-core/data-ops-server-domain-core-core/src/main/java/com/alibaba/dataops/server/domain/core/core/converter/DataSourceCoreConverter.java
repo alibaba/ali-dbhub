@@ -3,8 +3,8 @@ package com.alibaba.dataops.server.domain.core.core.converter;
 import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
-import com.alibaba.dataops.server.domain.core.api.test.DataSourceCreateParam;
-import com.alibaba.dataops.server.domain.core.api.test.DataSourceUpdateParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
 
 import org.mapstruct.Mapper;

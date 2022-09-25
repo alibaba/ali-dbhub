@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.domain.core.api.test;
+package com.alibaba.dataops.server.domain.core.api.param;
 
 import javax.validation.constraints.NotNull;
 
