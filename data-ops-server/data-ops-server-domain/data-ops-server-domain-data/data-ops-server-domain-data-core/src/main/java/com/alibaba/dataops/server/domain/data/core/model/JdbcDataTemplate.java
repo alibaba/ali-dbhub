@@ -132,6 +132,34 @@ public class JdbcDataTemplate extends JdbcTemplate {
         }
     }
 
+    @Override
+    public int update(final String sql) throws DataAccessException {
+        Assert.notNull(sql, "SQL must not be null");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing SQL update [" + sql + "]");
+        }
+
+        /**
+         * Callback to execute the update statement.
+         */
+        class UpdateStatementCallback implements StatementCallback<Integer>, SqlProvider {
+            @Override
+            public Integer doInStatement(Statement stmt) throws SQLException {
+                int rows = stmt.executeUpdate(sql);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("SQL update affected " + rows + " rows");
+                }
+                return rows;
+            }
+            @Override
+            public String getSql() {
+                return sql;
+            }
+        }
+
+        return updateCount(execute(new UpdateStatementCallback(), true));
+    }
+
     /**
      * 修改时的执行器
      *
@@ -197,6 +225,17 @@ public class JdbcDataTemplate extends JdbcTemplate {
         } else {
             return null;
         }
+    }
+
+    /**
+     * 本方法未做任何修改
+     *
+     * @param result
+     * @return
+     */
+    private static int updateCount(@Nullable Integer result) {
+        Assert.state(result != null, "No update count");
+        return result;
     }
 
 }

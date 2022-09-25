@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer;
 import org.springframework.boot.sql.init.DatabaseInitializationSettings;
+import org.springframework.jdbc.BadSqlGrammarException;
 
 /**
  * sqlite的data服测试
@@ -170,23 +171,24 @@ public class H2DataServiceTest extends BaseTest {
     @Test
     @Order(6)
     public void errorSql() {
-        TemplateUpdateParam templateUpdateParam = new TemplateUpdateParam();
-        templateUpdateParam.setConsoleId(CONSOLE_ID);
-        templateUpdateParam.setDataSourceId(DATA_SOURCE_ID);
-        templateUpdateParam.setSql(
-            "delete from1  `test_query` where id=9999;");
-        Integer count = jdbcTemplateDataService.update(templateUpdateParam).getData();
-        log.info("查询数据返回:{}", count);
+        Assertions.assertThrows(BadSqlGrammarException.class, () -> {
+            // 异常sql
+            TemplateUpdateParam templateUpdateParam = new TemplateUpdateParam();
+            templateUpdateParam.setConsoleId(CONSOLE_ID);
+            templateUpdateParam.setDataSourceId(DATA_SOURCE_ID);
+            templateUpdateParam.setSql(
+                "delete from1  `test_query` where id=9999;");
+            jdbcTemplateDataService.update(templateUpdateParam);
+        }, "关闭连接池失败");
 
-        // 查数据
-        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("select * from test_query where1 id=9999;");
-        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
-        log.info("查询数据返回{}", JSON.toJSONString(dataList));
-        Assertions.assertEquals(1, dataList.size(), "查询语句异常");
-        Map<String, Object> data1 = dataList.get(0);
-        Assertions.assertEquals("姓名update", data1.get("name"), "未查询到姓名");
+        Assertions.assertThrows(BadSqlGrammarException.class, () -> {
+            // 异常sql
+            TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+            templateQueryParam.setConsoleId(CONSOLE_ID);
+            templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+            templateQueryParam.setSql("select * from test_query where1 id=9999;");
+            jdbcTemplateDataService.queryForList(templateQueryParam);
+        }, "关闭连接池失败");
+
     }
 }
