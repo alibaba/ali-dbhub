@@ -16,11 +16,14 @@ public class DataCenterUtils {
 
     /**
      * 数据源
+     * key: dataSourceId
      */
     public static final Map<Long, DruidDataSource> DATA_SOURCE_CACHE = Maps.newConcurrentMap();
 
     /**
-     * 执行模板
+     * 数据执行模板列表
+     * key: dataSourceId
      */
-    public static final Map<Long, JdbcDataTemplate> JDBC_TEMPLATE_CACHE = Maps.newConcurrentMap();
+    public static final Map<Long, Map<Long, JdbcDataTemplate>> JDBC_TEMPLATE_CACHE = Maps.newConcurrentMap();
+
 }

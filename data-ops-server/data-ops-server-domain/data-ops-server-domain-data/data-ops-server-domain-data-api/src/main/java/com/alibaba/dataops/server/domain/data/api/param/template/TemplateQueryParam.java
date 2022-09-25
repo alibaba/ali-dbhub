@@ -19,6 +19,11 @@ import lombok.ToString;
 @Builder
 @ToString
 public class TemplateQueryParam {
+    /**
+     * 对应数据库存储的来源id
+     */
+    @NotNull
+    private Long dataSourceId;
 
     /**
      * 控制台id

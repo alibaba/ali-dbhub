@@ -30,6 +30,17 @@ import org.springframework.util.Assert;
 @Builder
 @ToString
 public class JdbcDataTemplate extends JdbcTemplate {
+
+    /**
+     * 对应数据库存储的来源id
+     */
+    private Long dataSourceId;
+
+    /**
+     * 控制台的id
+     */
+    private Long consoleId;
+
     /**
      * 连接
      */

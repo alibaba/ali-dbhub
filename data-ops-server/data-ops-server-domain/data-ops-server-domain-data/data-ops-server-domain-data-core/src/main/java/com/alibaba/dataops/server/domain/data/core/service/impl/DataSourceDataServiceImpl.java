@@ -1,15 +1,20 @@
 package com.alibaba.dataops.server.domain.data.core.service.impl;
 
+import java.sql.SQLException;
+import java.util.Map;
+
 import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
+import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.common.util.EasyEnumUtils;
 import com.alibaba.druid.pool.DruidDataSource;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -37,6 +42,7 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
         // 不设置最大连接数
         druidDataSource.setMaxActive(999);
         druidDataSource.setInitialSize(0);
+
         // 放入缓存
         DataCenterUtils.DATA_SOURCE_CACHE.put(dataSourceId, druidDataSource);
         return ActionResult.isSuccess();
@@ -50,6 +56,19 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
             return ActionResult.isSuccess();
         }
         druidDataSource.close();
+
+        // 关闭连接
+        Map<Long, JdbcDataTemplate> jdbcDataTemplateMap = DataCenterUtils.JDBC_TEMPLATE_CACHE.remove(
+            param.getDataSourceId());
+        if (MapUtils.isNotEmpty(jdbcDataTemplateMap)) {
+            for (JdbcDataTemplate jdbcDataTemplate : jdbcDataTemplateMap.values()) {
+                try {
+                    jdbcDataTemplate.getConnection().close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         return ActionResult.isSuccess();
     }
 }
