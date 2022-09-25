@@ -2,6 +2,7 @@ package com.alibaba.dataops.server.web.api.controller.user.history;
 
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
+import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dataops.server.web.api.controller.user.history.request.HistoryCreateRequest;
 import com.alibaba.dataops.server.web.api.controller.user.history.request.HistoryQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.user.history.vo.HistoryVO;
@@ -30,7 +31,7 @@ public class HistoryManageController {
      * @return
      */
     @GetMapping("/list")
-    public PageResult<HistoryVO> list(HistoryQueryRequest request) {
+    public WebPageResult<HistoryVO> list(HistoryQueryRequest request) {
         return null;
     }
 

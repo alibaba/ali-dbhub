@@ -9,6 +9,7 @@ import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
+import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dataops.server.web.api.controller.data.source.converter.DataSourceWebConverter;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCloneRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCreateRequest;
@@ -50,7 +51,7 @@ public class DataSourceManageController {
      * @return
      */
     @GetMapping("/list")
-    public PageResult<DataSourceVO> list(DataSourceQueryRequest request) {
+    public WebPageResult<DataSourceVO> list(DataSourceQueryRequest request) {
         DataSourcePageQueryParam param = dataSourceWebConverter.queryReq2param(request);
         PageResult<DataSourceDTO> result = dataSourceCoreService.queryPage(param, new DataSourceSelector());
         return null;
