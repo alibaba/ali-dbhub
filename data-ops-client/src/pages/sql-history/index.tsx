@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
-import styles from './index.less';
 import classnames from 'classnames';
-import AppHeader from '../AppHeader';
+import AppHeader from '@/components/AppHeader';
 import { Tabs } from 'antd';
+import styles from './index.less';
 
 interface IProps {
   className?: string;
