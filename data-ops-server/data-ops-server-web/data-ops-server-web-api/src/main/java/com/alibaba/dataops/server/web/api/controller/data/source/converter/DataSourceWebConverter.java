@@ -3,9 +3,9 @@ package com.alibaba.dataops.server.web.api.controller.data.source.converter;
 import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
-import com.alibaba.dataops.server.domain.core.api.test.DataSourceCreateParam;
-import com.alibaba.dataops.server.domain.core.api.test.DataSourcePageQueryParam;
-import com.alibaba.dataops.server.domain.core.api.test.DataSourceUpdateParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCreateRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceUpdateRequest;
