@@ -1,10 +1,34 @@
 import { defineConfig } from 'umi';
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+// const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin');
+
+
+const chainWebpack = (config:any, { webpack }:any) => {
+  config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
+    {
+      languages: [ 'mysql', 'pgsql', 'sql']
+    }
+  ])
+
+  // TODO 汉化
+  // config.module.rules
+  // .test(/\.js/)
+  // .use(MonacoWebpackPlugin.loader)
+  // .loader(MonacoWebpackPlugin.loader)
+  // .options({name: /node_modules[\\\/]monaco-editor[\\\/]esm/ ,esModule: false});
+};
+
+
+
 
 export default defineConfig({
   title: 'dataOps',
-  nodeModulesTransform: {
-    type: 'none',
+  history: {
+    type: 'hash'
   },
+  base: './',
+  publicPath: './',
+  hash:true,
   routes: [
     {
       path: '/',
@@ -31,12 +55,12 @@ export default defineConfig({
             {
               path: '/',
               exact: true,
-              redirect: '/databaseList',
+              redirect: '/connection',
             },
             {
-              path: '/databaseList',
+              path: '/connection',
               exact: true,
-              component: '@/components/DatabaseList',
+              component: '@/components/Connection',
             },
             {
               path: '/SQLHistory',
@@ -51,15 +75,13 @@ export default defineConfig({
       ],
     },
   ],
-  fastRefresh: {},
   mfsu: {},
+  fastRefresh: {},
   dynamicImport: {
-    loading: '@/components/PageLoading/index',
+    loading: '@/components/Loading/index',
   },
-  history: {
-    type: 'hash'
+  nodeModulesTransform: {
+    type: 'none',
   },
-  base: './',
-  publicPath: './',
-  hash:true,
+  chainWebpack,
 });

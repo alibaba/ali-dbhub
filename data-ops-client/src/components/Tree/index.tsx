@@ -25,312 +25,102 @@ const treeList = [
             type: 'table',
             children: [
               {
-                key: '0-1',
-                name: 'role_id',
+                key: '1',
+                name: '列(10)',
                 type: 'line',
+                children: [
+                  {
+                    key: '0-1',
+                    name: 'role_id',
+                    type: 'line',
+                  },
+                  {
+                    key: '0-1',
+                    name: 'remark',
+                    type: 'line',
+                  },
+                  {
+                    key: '0-1',
+                    name: 'deleted',
+                    type: 'line',
+                  },
+                  {
+                    key: '0-1',
+                    name: 'role_id',
+                    type: 'line',
+                  },
+                  {
+                    key: '0-1',
+                    name: 'remark',
+                    type: 'line',
+                  },
+                  {
+                    key: '0-1',
+                    name: 'deleted',
+                    type: 'line',
+                  },
+                  {
+                    key: '0-1',
+                    name: 'role_id',
+                    type: 'line',
+                  },
+                  {
+                    key: '0-1',
+                    name: 'remark',
+                    type: 'line',
+                  },
+                  {
+                    key: '0-1',
+                    name: 'deleted',
+                    type: 'line',
+                  },
+                ]
               },
               {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
+                key: '1',
+                name: '索引(10)',
+                type: 'indexes',
+                children: [
+                  {
+                    key: '1',
+                    name: 'idx_follower_id',
+                    type: 'indexes',
+                  },
+                  {
+                    key: '1',
+                    name: 'idx_follower_id',
+                    type: 'indexes',
+                  },
+                  {
+                    key: '1',
+                    name: 'idx_follower_id',
+                    type: 'indexes',
+                  },
+                  {
+                    key: '1',
+                    name: 'idx_follower_id',
+                    type: 'indexes',
+                  },
+                  {
+                    key: '1',
+                    name: 'idx_follower_id',
+                    type: 'indexes',
+                  },
+                  {
+                    key: '1',
+                    name: 'idx_follower_id',
+                    type: 'indexes',
+                  },
+                  {
+                    key: '1',
+                    name: 'idx_follower_id',
+                    type: 'indexes',
+                  },
+                ]
+              }
             ],
           },
-          {
-            key: '1',
-            name: 'activity_audio_emp_recode',
-            type: 'table',
-            children: [
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-            ],
-          },
-          {
-            key: '1',
-            name: 'activity_audio_emp_recode',
-            type: 'table',
-            children: [
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-            ],
-          },
-          {
-            key: '1',
-            name: 'activity_audio_emp_recode',
-            type: 'table',
-            children: [
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-            ],
-          },
-          {
-            key: '1',
-            name: 'activity_audio_emp_recode',
-            type: 'table',
-            children: [
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-            ],
-          },
-          {
-            key: '1',
-            name: 'activity_audio_emp_recode',
-            type: 'table',
-            children: [
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'role_id',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'remark',
-                type: 'line',
-              },
-              {
-                key: '0-1',
-                name: 'deleted',
-                type: 'line',
-              },
-            ],
-          },
+
         ]
       },
       {
@@ -708,6 +498,8 @@ export function TreeNode({ data, level, show = false }) {
         return '\ue611';
       case 'save':
         return '\ue936';
+      case 'indexes':
+        return '\ue648';
       default:
         return '\ue936';
     }

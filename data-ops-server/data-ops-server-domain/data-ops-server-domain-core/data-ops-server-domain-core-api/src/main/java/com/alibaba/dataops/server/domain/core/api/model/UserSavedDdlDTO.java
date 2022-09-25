@@ -1,12 +1,9 @@
-package com.alibaba.dataops.server.domain.core.repository.entity;
+package com.alibaba.dataops.server.domain.core.api.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.Data;
 
 /**
  * <p>
@@ -14,19 +11,14 @@ import lombok.Setter;
  * </p>
  *
  * @author data-ops
- * @since 2022-09-25
+ * @since 2022-09-18
  */
-@Getter
-@Setter
-@TableName("USER_SAVED_DDL")
-public class UserSavedDdlDO implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@Data
+public class UserSavedDdlDTO {
 
     /**
      * 主键
      */
-    @TableId(value = "ID", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -58,11 +50,6 @@ public class UserSavedDdlDO implements Serializable {
      * 数据库类型
      */
     private String type;
-
-    /**
-     * ddl语句状态:DRAFT/RELEASE
-     */
-    private String status;
 
     /**
      * ddl内容

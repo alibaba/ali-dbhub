@@ -1,3 +1,4 @@
+import { DatabaseTypeCode } from '@/utils/constants'
 export interface INavItem {
   code: string;
   title: string;
@@ -11,14 +12,14 @@ export interface IPageResponse<T> {
   pageSize: number;
   total: number;
 }
-
-export interface IConnectionItem {
-  id:number;
+export interface IConnectionBase{
+  id?:number;
   alias: string;
   url: string;
   user: string;
   password: string;
-  type: string;
+  type: DatabaseTypeCode;
+  envType: string;
 }
 
 

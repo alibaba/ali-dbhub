@@ -13,8 +13,8 @@ const navConfig: INavItem[] = [
   {
     title: i18n('home.nav.database'),
     icon: '\ue759',
-    code: 'databaseAdmin',
-    path: '/databaseList',
+    code: 'connection',
+    path: '/connection',
   },
   {
     title: i18n('home.nav.mySql'),
@@ -25,7 +25,7 @@ const navConfig: INavItem[] = [
 ];
 
 export default function HomePage(props: any) {
-  const [activeNav, setActiveNav] = useState<string>('databaseAdmin');
+  const [activeNav, setActiveNav] = useState<string>('connection');
 
   useEffect(() => { }, []);
 

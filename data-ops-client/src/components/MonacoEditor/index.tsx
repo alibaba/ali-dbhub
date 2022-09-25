@@ -1,22 +1,32 @@
 import React, { memo, useEffect, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import * as monaco from 'monaco-editor'
+import { setLocaleData } from 'monaco-editor-nls';
+import zh_CN from 'monaco-editor-nls/locale/zh-hans.json';
+setLocaleData(zh_CN);
+const monaco = require('monaco-editor/esm/vs/editor/editor.api');
+import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
+const { keywords } = language
 
 interface IProps {
+  id: string;
   className?: string;
   height?: number;
   getEditor: any;
 }
 
-const value = "CREATE TABLE dbo.EmployeePhoto\n(\n    EmployeeId INT NOT NULL PRIMARY KEY,\n    Photo VARBINARY(MAX) FILESTREAM NULL,\n    MyRowGuidColumn UNIQUEIDENTIFIER NOT NULL ROWGUIDCOL\n                    UNIQUE DEFAULT NEWID()\n);\n\nGO\n\n/*\ntext_of_comment\n/* nested comment */\n*/\n\n-- line comment\n\nCREATE NONCLUSTERED INDEX IX_WorkOrder_ProductID\n    ON Production.WorkOrder(ProductID)\n    WITH (FILLFACTOR = 80,\n        PAD_INDEX = ON,\n        DROP_EXISTING = ON);\nGO\n\nWHILE (SELECT AVG(ListPrice) FROM Production.Product) < $300\nBEGIN\n   UPDATE Production.Product\n      SET ListPrice = ListPrice * 2\n   SELECT MAX(ListPrice) FROM Production.Product\n   IF (SELECT MAX(ListPrice) FROM Production.Product) > $500\n      BREAK\n   ELSE\n      CONTINUE\nEND\nPRINT 'Too much for the market to bear';\n\nMERGE INTO Sales.SalesReason AS [Target]\nUSING (VALUES ('Recommendation','Other'), ('Review', 'Marketing'), ('Internet', 'Promotion'))\n       AS [Source] ([NewName], NewReasonType)\nON [Target].[Name] = [Source].[NewName]\nWHEN MATCHED\nTHEN UPDATE SET ReasonType = [Source].NewReasonType\nWHEN NOT MATCHED BY TARGET\nTHEN INSERT ([Name], ReasonType) VALUES ([NewName], NewReasonType)\nOUTPUT $action INTO @SummaryOfChanges;\n\nSELECT ProductID, OrderQty, SUM(LineTotal) AS Total\nFROM Sales.SalesOrderDetail\nWHERE UnitPrice < $5.00\nGROUP BY ProductID, OrderQty\nORDER BY ProductID, OrderQty\nOPTION (HASH GROUP, FAST 10);\n"
+export const hintData = {
+  adbs: ['dim_realtime_recharge_paycfg_range', 'dim_realtime_recharge_range'],
+  dimi: ['ads_adid', 'ads_spec_adid_category'],
+}
 
-export default memo<IProps>(function MonacoEditor({className, getEditor}) {
-  const [editor,setEditor] = useState<any>()
+export default memo<IProps>(function MonacoEditor({ className, getEditor, id = 0 }) {
+  const [editor, setEditor] = useState<any>()
 
-  useEffect(()=>{
-    const editor = monaco.editor.create(document.getElementById('monaco')!, {
-      value,
+  useEffect(() => {
+    registerCompletion()
+    const editor = monaco.editor.create(document.getElementById(`monaco-editor-${id}`)!, {
+      value: '',
       language: 'sql',
       roundedSelection: false,
       scrollBeyondLastLine: false,
@@ -26,16 +36,111 @@ export default memo<IProps>(function MonacoEditor({className, getEditor}) {
       }, // 预览图设置
       theme: localStorage.getItem('theme') == 'dark' ? 'vs-dark' : 'default'
     });
-    
-    window.onresize = function (){
-      editor.layout() 
+    window.onresize = function () {
+      editor.layout()
     };
-
     getEditor(editor)
-    // setEditor(editor)
-  },[])
+    setEditor(editor)
+  }, [])
+
+  const registerCompletion = () => {
+    monaco.languages.registerCompletionItemProvider('sql', {
+      triggerCharacters: ['.', ...keywords],
+      provideCompletionItems: (model, position) => {
+        let suggestions = []
+
+        const { lineNumber, column } = position
+
+        const textBeforePointer = model.getValueInRange({
+          startLineNumber: lineNumber,
+          startColumn: 0,
+          endLineNumber: lineNumber,
+          endColumn: column,
+        })
+
+        const tokens = textBeforePointer.trim().split(/\s+/)
+        const lastToken = tokens[tokens.length - 1] // 获取最后一段非空字符串
+
+        if (lastToken.endsWith('.')) {
+          const tokenNoDot = lastToken.slice(0, lastToken.length - 1)
+          if (Object.keys(hintData).includes(tokenNoDot)) {
+            suggestions = [...getTableSuggest(tokenNoDot)]
+          }
+        } else if (lastToken === '.') {
+          suggestions = []
+        } else {
+          suggestions = [...getDBSuggest(), ...getSQLSuggest()]
+        }
+        return {
+          suggestions,
+        }
+      },
+    })
+  }
+  // 获取DB数据
+  const getDBSuggest = () => {
+    return Object.keys(hintData).map((key) => ({
+      label: key,
+      kind: monaco.languages.CompletionItemKind.Constant,
+      insertText: key,
+    }))
+  }
+
+  // 获取Table数据
+  const getTableSuggest = (dbName) => {
+    const tableNames = hintData[dbName]
+    if (!tableNames) {
+      return []
+    }
+    return tableNames.map((name) => ({
+      label: name,
+      kind: monaco.languages.CompletionItemKind.Constant,
+      insertText: name,
+    }))
+  }
+
+  // 获取 SQL 语法提示
+  const getSQLSuggest = () => {
+    return keywords.map((key: any) => ({
+      label: key,
+      kind: monaco.languages.CompletionItemKind.Enum,
+      insertText: key,
+    }))
+  }
+
+  // 获取选中区域的值
+  const getSelectionVal = () => {
+    const selection = editor.getSelection() // 获取光标选中的值
+    const { startLineNumber, endLineNumber, startColumn, endColumn } = selection
+    const model = editor.getModel(editor)
+    const value = model.getValueInRange({
+      startLineNumber,
+      startColumn,
+      endLineNumber,
+      endColumn,
+    })
+    return value
+  }
+
+  //设置主题
+  const setTheme = () => {
+    monaco.editor.setTheme('vs-dark')
+  }
+
+  // 设置编辑器的值
+  const setValue = (editor, value: string) => {
+    const model = editor.getModel(editor)
+    model.setValue()
+  }
+
+  // 获取编辑器的值
+  const getValue = () => {
+    const model = editor.getModel(editor)
+    const value = model.getValue()
+    return value
+  }
 
   return <div className={classnames(className, styles.box)}>
-    <div id='monaco' className={styles.editorContainer}  />
+    <div id={`monaco-editor-${id}`} className={styles.editorContainer} />
   </div>
 });

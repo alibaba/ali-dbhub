@@ -3,6 +3,7 @@ package com.alibaba.dataops.server.web.api.controller.user.save;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
+import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dataops.server.web.api.controller.user.save.request.DdlCreateRequest;
 import com.alibaba.dataops.server.web.api.controller.user.save.request.DdlQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.user.save.request.DdlUpdateRequest;
@@ -35,7 +36,7 @@ public class DdlManageController {
      * @return
      */
     @GetMapping("/list")
-    public PageResult<DdlVO> list(DdlQueryRequest request) {
+    public WebPageResult<DdlVO> list(DdlQueryRequest request) {
         return null;
     }
 

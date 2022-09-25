@@ -6,16 +6,16 @@ import i18n from '@/i18n';
 import classnames from 'classnames';
 import { history } from 'umi';
 
-export default function HomePage({children}){
+export default function HomePage({ children }) {
 
-  const [activeNav, setActiveNav] = useState<string>('databaseAdmin');
+  const [activeNav, setActiveNav] = useState<string>('connectionAdmin');
 
   const navConfig = [
     {
       title: i18n('home.nav.database'),
       icon: '\ue759',
-      code: 'databaseAdmin',
-      path: '/databaseList',
+      code: 'connectionAdmin',
+      path: '/connection',
     },
     {
       title: '我的',
@@ -23,24 +23,6 @@ export default function HomePage({children}){
       code: 'SQLHistory',
       path: '/SQLHistory', // TODO
     },
-    {
-      title: i18n('home.nav.database'),
-      icon: '\ue759',
-      code: 'databaseAdmin1',
-      path: '/databaseList',
-    },
-    {
-      title: '我的保存',
-      icon: '\ue759',
-      code: 'mySQL1',
-      path: '/', // TODO
-    },
-    {
-      title: i18n('home.nav.database'),
-      icon: '\ue759',
-      code: 'databaseAdmin2',
-      path: '/databaseList',
-    }
   ];
 
   function switchingNav(item) {
@@ -62,7 +44,7 @@ export default function HomePage({children}){
                 [styles.activeNav]: item.code == activeNav,
               })}
               onClick={switchingNav.bind(null, item)}
-            > 
+            >
               <Iconfont className={styles.icon} code={item.icon} />
               <div>{item.title}</div>
             </li>

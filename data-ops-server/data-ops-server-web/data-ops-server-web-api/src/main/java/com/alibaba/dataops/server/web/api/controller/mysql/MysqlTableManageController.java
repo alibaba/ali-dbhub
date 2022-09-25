@@ -3,6 +3,7 @@ package com.alibaba.dataops.server.web.api.controller.mysql;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
+import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableBriefQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableDeleteRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableDetailQueryRequest;
@@ -35,7 +36,7 @@ public class MysqlTableManageController {
      * @return
      */
     @GetMapping("/list")
-    public PageResult<TableVO> list(TableBriefQueryRequest request) {
+    public WebPageResult<TableVO> list(TableBriefQueryRequest request) {
         return null;
     }
 
