@@ -1,6 +1,7 @@
 package com.alibaba.dataops.server.domain.data.core.model;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,6 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ParameterDisposer;
+import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.SqlProvider;
 import org.springframework.jdbc.core.StatementCallback;
@@ -89,6 +93,15 @@ public class JdbcDataTemplate extends JdbcTemplate {
         return execute(new QueryStatementCallback(), true);
     }
 
+    /**
+     * 查询的执行器
+     *
+     * @param action
+     * @param closeResources
+     * @param <T>
+     * @return
+     * @throws DataAccessException
+     */
     @Nullable
     private <T> T execute(StatementCallback<T> action, boolean closeResources) throws DataAccessException {
         Assert.notNull(action, "Callback object must not be null");
@@ -114,6 +127,59 @@ public class JdbcDataTemplate extends JdbcTemplate {
         } finally {
             if (closeResources) {
                 JdbcUtils.closeStatement(stmt);
+                // change 不再关闭连接
+            }
+        }
+    }
+
+    /**
+     * 修改时的执行器
+     *
+     * @param psc
+     * @param action
+     * @param closeResources
+     * @param <T>
+     * @return
+     * @throws DataAccessException
+     */
+    @Nullable
+    private <T> T execute(PreparedStatementCreator psc, PreparedStatementCallback<T> action, boolean closeResources)
+        throws DataAccessException {
+
+        Assert.notNull(psc, "PreparedStatementCreator must not be null");
+        Assert.notNull(action, "Callback object must not be null");
+        if (logger.isDebugEnabled()) {
+            String sql = getSql(psc);
+            logger.debug("Executing prepared SQL statement" + (sql != null ? " [" + sql + "]" : ""));
+        }
+
+        // change 修改连接直接用固定的
+        Connection con = connection;
+        PreparedStatement ps = null;
+        try {
+            ps = psc.createPreparedStatement(con);
+            applyStatementSettings(ps);
+            T result = action.doInPreparedStatement(ps);
+            handleWarnings(ps);
+            return result;
+        } catch (SQLException ex) {
+            // Release Connection early, to avoid potential connection pool deadlock
+            // in the case when the exception translator hasn't been initialized yet.
+            if (psc instanceof ParameterDisposer) {
+                ((ParameterDisposer)psc).cleanupParameters();
+            }
+            String sql = getSql(psc);
+            psc = null;
+            JdbcUtils.closeStatement(ps);
+            ps = null;
+            // change 不再关闭连接
+            throw translateException("PreparedStatementCallback", sql, ex);
+        } finally {
+            if (closeResources) {
+                if (psc instanceof ParameterDisposer) {
+                    ((ParameterDisposer)psc).cleanupParameters();
+                }
+                JdbcUtils.closeStatement(ps);
                 // change 不再关闭连接
             }
         }
