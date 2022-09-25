@@ -2,12 +2,14 @@ package com.alibaba.dataops.server.domain.data.core.service.impl;
 
 import java.util.Map;
 
+import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateUpdateParam;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
+import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.common.enums.ErrorEnum;
@@ -34,6 +36,13 @@ public class JdbcTemplateDataServiceImpl implements JdbcTemplateDataService {
     public DataResult<Integer> update(TemplateUpdateParam param) {
         JdbcDataTemplate jdbcDataTemplate = jdbcDataTemplate(param.getDataSourceId(), param.getConsoleId());
         return DataResult.of(jdbcDataTemplate.update(param.getSql()));
+    }
+
+    @Override
+    public ActionResult execute(TemplateExecuteParam param) {
+        JdbcDataTemplate jdbcDataTemplate = jdbcDataTemplate(param.getDataSourceId(), param.getConsoleId());
+        jdbcDataTemplate.execute(param.getSql());
+        return ActionResult.isSuccess();
     }
 
     private JdbcDataTemplate jdbcDataTemplate(Long dataSourceId, Long consoleId) {
