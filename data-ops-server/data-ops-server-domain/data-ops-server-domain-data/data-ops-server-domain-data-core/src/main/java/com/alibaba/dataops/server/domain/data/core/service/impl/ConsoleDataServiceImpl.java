@@ -2,20 +2,24 @@ package com.alibaba.dataops.server.domain.data.core.service.impl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
+import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
+import com.alibaba.dataops.server.tools.common.enums.ErrorEnum;
 import com.alibaba.druid.pool.DruidDataSource;
 
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
- * 数据库连接源服务
+ * 控制台服务
  *
  * @author Jiaju Zhuang
  */
@@ -27,31 +31,40 @@ public class ConsoleDataServiceImpl implements ConsoleDataService {
     public ActionResult create(ConsoleCreateParam param) {
         DruidDataSource druidDataSource = DataCenterUtils.DATA_SOURCE_CACHE.get(param.getDataSourceId());
         if (druidDataSource == null) {
-            throw new BusinessException("当前数据源已经被关闭请重新打开数据源");
+            throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
         }
         Long consoleId = param.getConsoleId();
         // 尝试关闭
-        close(ConsoleCloseParam.builder().consoleId(consoleId).build());
+        close(ConsoleCloseParam.builder().dataSourceId(param.getDataSourceId()).consoleId(consoleId).build());
 
         Connection connection;
         try {
-            connection = druidDataSource.getConnection().getConnection();
+            connection = druidDataSource.getConnection();
         } catch (SQLException e) {
             throw new BusinessException("连接数据库异常", e);
         }
-        DataCenterUtils.CONNECTION_CACHE.put(consoleId, connection);
+        // 放入连接队列
+        Map<Long, JdbcDataTemplate> jdbcDataTemplateMap = DataCenterUtils.JDBC_TEMPLATE_CACHE.computeIfAbsent(
+            param.getDataSourceId(), key -> Maps.newConcurrentMap());
+        jdbcDataTemplateMap.put(consoleId, JdbcDataTemplate.builder().connection(connection).build());
         return ActionResult.isSuccess();
     }
 
     @Override
     public ActionResult close(ConsoleCloseParam param) {
-        Connection connection = DataCenterUtils.CONNECTION_CACHE.remove(param.getConsoleId());
-        if (connection == null) {
-            log.info("数据库连接:{}不需要关闭", param.getConsoleId());
+        Map<Long, JdbcDataTemplate> jdbcDataTemplateMap = DataCenterUtils.JDBC_TEMPLATE_CACHE.get(
+            param.getDataSourceId());
+        if (jdbcDataTemplateMap == null) {
+            log.info("数据库连接:{}不需要关闭", param.getDataSourceId());
+            return ActionResult.isSuccess();
+        }
+        JdbcDataTemplate jdbcDataTemplate = jdbcDataTemplateMap.remove(param.getConsoleId());
+        if (jdbcDataTemplate == null) {
+            log.info("数据库连接:{}不需要关闭", param.getDataSourceId());
             return ActionResult.isSuccess();
         }
         try {
-            connection.close();
+            jdbcDataTemplate.getConnection().close();
         } catch (SQLException e) {
             throw new BusinessException("数据库关闭连接异常", e);
         }

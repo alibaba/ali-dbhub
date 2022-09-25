@@ -10,7 +10,7 @@ const chainWebpack = (config:any, { webpack }:any) => {
     }
   ])
 
-  // TODO 汉化
+  // TODO: Monaco汉化
   // config.module.rules
   // .test(/\.js/)
   // .use(MonacoWebpackPlugin.loader)
@@ -26,7 +26,7 @@ export default defineConfig({
   history: {
     type: 'hash'
   },
-  base: './',
+  base: '/',
   publicPath: './',
   hash:true,
   routes: [
@@ -39,7 +39,7 @@ export default defineConfig({
         { path: '/error', component: '@/pages/error' },
         {
           path: '/database',
-          component: '@/pages/databaseManage',
+          component: '@/pages/database-manage',
           routes: [
             {
               exact: true,
@@ -50,7 +50,7 @@ export default defineConfig({
         },
         { 
           path: '/', 
-          component: '@/pages/home',
+          component: '@/layout/HomeLayout',
           routes:[
             {
               path: '/',
@@ -60,12 +60,12 @@ export default defineConfig({
             {
               path: '/connection',
               exact: true,
-              component: '@/components/Connection',
+              component: '@/pages/connection',
             },
             {
-              path: '/SQLHistory',
+              path: '/sql-history',
               exact: true,
-              component: '@/components/SQLHistory',
+              component: '@/pages/sql-history',
             },
             {
               redirect: '/error',

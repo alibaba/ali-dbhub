@@ -1,6 +1,6 @@
-DROP TABLE if exists test_query;
+DROP TABLE if exists test_close;
 
-CREATE TABLE  `test_query`
+CREATE TABLE `test_close`
 (
     `id`     bigint PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT '主键',
     `name`   VARCHAR(100) COMMENT '名字',
@@ -9,4 +9,4 @@ CREATE TABLE  `test_query`
 )  ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='测试表';
 
 
-INSERT INTO `test_query` (name,date,number) VALUES ('姓名','2022-01-01',123);
+INSERT INTO `test_close` (name,date,number) VALUES ('姓名','2022-01-01',123);

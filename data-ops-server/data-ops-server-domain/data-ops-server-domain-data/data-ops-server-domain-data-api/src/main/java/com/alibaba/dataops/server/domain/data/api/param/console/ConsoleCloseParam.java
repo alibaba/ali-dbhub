@@ -21,6 +21,12 @@ import lombok.ToString;
 public class ConsoleCloseParam {
 
     /**
+     * 对应数据库存储的来源id
+     */
+    @NotNull
+    private Long dataSourceId;
+
+    /**
      * 控制台的id ，确保全局唯一
      */
     @NotNull

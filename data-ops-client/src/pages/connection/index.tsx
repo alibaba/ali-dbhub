@@ -1,9 +1,8 @@
 import React, { memo, useEffect, useState } from 'react';
-import styles from './index.less';
 import classnames from 'classnames';
 import { formatNaturalDate } from '@/utils/index';
-import Iconfont from '../Iconfont';
-import AppHeader from '../AppHeader';
+import Iconfont from '@/components/Iconfont';
+import AppHeader from '@/components/AppHeader';
 import i18n from '@/i18n';
 import { history } from 'umi';
 import connectionServer from '@/service/connection'
@@ -20,6 +19,9 @@ import {
   Input,
   Checkbox,
 } from 'antd';
+
+import styles from './index.less';
+
 const { Option } = Select;
 
 interface IProps {
