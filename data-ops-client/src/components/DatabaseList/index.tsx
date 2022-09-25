@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { DatabaseType } from '../../utils/constants';
@@ -7,6 +7,8 @@ import Iconfont from '../Iconfont';
 import AppHeader from '../AppHeader';
 import i18n from '@/i18n';
 import { history } from 'umi';
+import databaseManageServer from '@/service/databaseManage'
+import { IConnectionItem } from '@/types'
 import {
   Dropdown,
   Menu,
@@ -38,42 +40,23 @@ const menuList = [
 export default memo<IProps>(function DatabaseList(props) {
   const { className } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [databaseList, setDatabaseList] = useState<IConnectionItem[]>()
 
-  const databaseList = [
-    {
-      name: '连接X号',
-      id: 1,
-      type: DatabaseType.DB2,
-      visitedTime: 1662520397843,
-    },
-    {
-      name: '实例数据库2号',
-      id: 2,
-      type: DatabaseType.MONGODB,
-      visitedTime: 1662520397843,
-    },
-    {
-      name: '实例数据库3号',
-      id: 3,
-      type: DatabaseType.MYSQL,
-      visitedTime: 1662461348043,
-    },
-    {
-      name: '实例数据库4号',
-      id: 4,
-      type: DatabaseType.ORACLE,
-      visitedTime: 1662461348043,
-    },
-    {
-      name: '实例数据库5号',
-      id: 5,
-      type: DatabaseType.REDIS,
-      visitedTime: 1652081517035,
-    },
-  ];
+  useEffect(() => {
+    getDatabaseList()
+  }, [])
 
-  const jumpPage = (item) => {
-    console.log(item.path);
+  const getDatabaseList = () => {
+    let p = {
+      pageNo: 1,
+      pageSize: 10
+    }
+    databaseManageServer.getConnectionDatabaseList(p).then(res => {
+      setDatabaseList(res.data)
+    })
+  }
+
+  const jumpPage = (item: IConnectionItem) => {
     history.push({
       pathname: `/database/${item.id}`,
     });
@@ -84,7 +67,7 @@ export default memo<IProps>(function DatabaseList(props) {
       <ul className={styles.menu}>
         {menuList.map((item) => {
           return (
-            <li className={styles.menuItem}>
+            <li key={item.code} className={styles.menuItem}>
               <Iconfont code={item.icon}></Iconfont>
               {item.text}
             </li>
@@ -94,7 +77,7 @@ export default memo<IProps>(function DatabaseList(props) {
     );
   };
 
-  const linkDatabase = () => {};
+  const linkDatabase = () => { };
 
   const showLinkModal = () => {
     setIsModalVisible(true);
@@ -116,7 +99,7 @@ export default memo<IProps>(function DatabaseList(props) {
     console.log('Failed:', errorInfo);
   };
 
-  const onChange = () => {};
+  const onChange = () => { };
 
   return (
     <div className={classnames(className, styles.box)}>
@@ -133,9 +116,9 @@ export default memo<IProps>(function DatabaseList(props) {
         </Button>
       </div>
       <div className={styles.databaseList}>
-        {databaseList.map((item) => {
+        {databaseList?.map((item) => {
           return (
-            <div className={styles.databaseItem}>
+            <div key={item.id} className={styles.databaseItem}>
               <div className={styles.left} onClick={jumpPage.bind(null, item)}>
                 <div
                   className={styles.logo}
@@ -144,10 +127,10 @@ export default memo<IProps>(function DatabaseList(props) {
                   }}
                 ></div>
                 <div>
-                  <div className={styles.name}>{item.name}</div>
+                  <div className={styles.name}>{item.alias}</div>
                   <div className={styles.visitedTime}>
                     {i18n('home.text.visitedTime')}
-                    {formatNaturalDate(item.visitedTime)}
+                    {/* {formatNaturalDate(item.visitedTime)} */}
                   </div>
                 </div>
               </div>

@@ -1,14 +1,22 @@
 package com.alibaba.dataops.server.web.api.controller.data.source;
 
+import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
+import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
+import com.alibaba.dataops.server.domain.core.api.test.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.core.api.test.DataSourcePageQueryParam;
+import com.alibaba.dataops.server.domain.core.api.test.DataSourceSelector;
+import com.alibaba.dataops.server.domain.core.api.test.DataSourceUpdateParam;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
+import com.alibaba.dataops.server.web.api.controller.data.source.converter.DataSourceWebConverter;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCloneRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCreateRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceUpdateRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.vo.DataSourceVO;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +37,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DataSourceManageController {
 
+    @Autowired
+    private DataSourceCoreService dataSourceCoreService;
+
+    @Autowired
+    private DataSourceWebConverter dataSourceWebConverter;
+
     /**
      * 查询我建立的数据库连接
      *
@@ -37,6 +51,8 @@ public class DataSourceManageController {
      */
     @GetMapping("/list")
     public PageResult<DataSourceVO> list(DataSourceQueryRequest request) {
+        DataSourcePageQueryParam param = dataSourceWebConverter.queryReq2param(request);
+        PageResult<DataSourceDTO> result = dataSourceCoreService.queryPage(param, new DataSourceSelector());
         return null;
     }
 
@@ -48,7 +64,9 @@ public class DataSourceManageController {
      */
     @GetMapping("/{id}")
     public DataResult<DataSourceVO> queryById(@PathVariable("id") Long id) {
-        return null;
+        DataResult<DataSourceDTO> dataResult = dataSourceCoreService.queryById(id);
+        DataSourceVO dataSourceVO = dataSourceWebConverter.dto2vo(dataResult.getData());
+        return DataResult.of(dataSourceVO);
     }
 
     /**
@@ -59,9 +77,9 @@ public class DataSourceManageController {
      */
     @PostMapping("/create")
     public DataResult<Long> create(@RequestBody DataSourceCreateRequest request) {
-        return null;
+        DataSourceCreateParam param = dataSourceWebConverter.createReq2param(request);
+        return dataSourceCoreService.create(param);
     }
-
 
     /**
      * 更新连接
@@ -71,7 +89,8 @@ public class DataSourceManageController {
      */
     @PutMapping("/update")
     public ActionResult update(@RequestBody DataSourceUpdateRequest request) {
-        return null;
+        DataSourceUpdateParam param = dataSourceWebConverter.updateReq2param(request);
+        return dataSourceCoreService.update(param);
     }
 
     /**
@@ -82,7 +101,7 @@ public class DataSourceManageController {
      */
     @PostMapping("/clone")
     public DataResult<Long> copy(@RequestBody DataSourceCloneRequest request) {
-        return null;
+        return dataSourceCoreService.copyById(request.getId());
     }
 
     /**
@@ -93,7 +112,7 @@ public class DataSourceManageController {
      */
     @DeleteMapping("/{id}")
     public ActionResult delete(@PathVariable Long id) {
-        return null;
+        return dataSourceCoreService.delete(id);
     }
 
 }

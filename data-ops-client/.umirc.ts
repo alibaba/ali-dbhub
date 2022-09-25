@@ -19,7 +19,7 @@ export default defineConfig({
           routes: [
             {
               exact: true,
-              path: '/database/:databaseId',
+              path: '/database/:id',
               component: '@/components/Database',
             },
           ],
@@ -56,4 +56,10 @@ export default defineConfig({
   dynamicImport: {
     loading: '@/components/PageLoading/index',
   },
+  history: {
+    type: 'hash'
+  },
+  base: './',
+  publicPath: './',
+  hash:true,
 });

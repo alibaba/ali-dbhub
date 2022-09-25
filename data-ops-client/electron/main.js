@@ -2,7 +2,7 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
-
+const isPro = process.env.NODE_ENV !== 'development';
 // 修改main.js实时更新
 // reloader(module);
 
@@ -13,26 +13,28 @@ function createWindow() {
   //创建浏览器窗口,宽高自定义具体大小你开心就好
   mainWindow = new BrowserWindow({
     width: 1200,
-    minWidth:800,
+    minWidth: 800,
     height: 800,
     title: 'dataOps',
     frame: false,
     titleBarStyle: 'hidden',
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+    },
   });
 
-  /* 
-   * 加载应用-----  electron-quick-start中默认的加载入口
-    mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'index.html'),
-      protocol: 'file:',
-      slashes: true
-    }))
-  */
-  // 加载应用----适用于 react 项目
-  mainWindow.loadURL('http://localhost:8000');
+  //  * 加载应用-----  electron-quick-start中默认的加载入口
+  // mainWindow.loadURL('http://localhost:8000');
+  // if (isPro) {
+    mainWindow.loadFile(`${__dirname}/dist/index.html`);
+  // } else {
 
-  // 打开开发者工具，默认不打开
-  // mainWindow.webContents.openDevTools()
+  
+  //   // 打开开发者工具，默认不打开
+  //   mainWindow.webContents.openDevTools();
+  // }
 
   // 关闭window时触发下列事件.
   mainWindow.on('closed', function () {

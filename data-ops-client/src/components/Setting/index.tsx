@@ -84,7 +84,7 @@ export default memo<IProps>(function Setting({ className }) {
 
   function changeLang() {
     const lang = localStorage.getItem('lang') === 'en' ? 'zh-cn' : 'en'
-    localStorage.setItem('lang',lang);
+    localStorage.setItem('lang', lang);
     location.reload();
   }
 
@@ -93,9 +93,9 @@ export default memo<IProps>(function Setting({ className }) {
       <div className={classnames(className, styles.box)} onClick={showModal}>
         <Iconfont code="&#xe795;"></Iconfont>
       </div>
-      <Modal 
-        visible={isModalVisible} 
-        onOk={handleOk} 
+      <Modal
+        visible={isModalVisible}
+        onOk={handleOk}
         onCancel={handleCancel}
         footer={false}
       >
@@ -111,7 +111,7 @@ export default memo<IProps>(function Setting({ className }) {
         <ul className={styles.backgroundList}>
           {backgroundList.map((item) => {
             return (
-              <li className={classnames({[styles.current]:currentTheme == item.code}) } onClick={changeTheme.bind(null,item)} style={{backgroundImage:`url(${item.img})`}} />
+              <li key={item.code} className={classnames({ [styles.current]: currentTheme == item.code })} onClick={changeTheme.bind(null, item)} style={{ backgroundImage: `url(${item.img})` }} />
             );
           })}
         </ul>
@@ -121,8 +121,8 @@ export default memo<IProps>(function Setting({ className }) {
         <ul className={styles.primaryColorList}>
           {colorList.map((item) => {
             return (
-              <li onClick={changePrimaryColor.bind(null, item)} style={{backgroundColor:item.color}}>
-                { currentPrimaryColor == item.code && <Iconfont code="&#xe617;"></Iconfont> }
+              <li key={item.code} onClick={changePrimaryColor.bind(null, item)} style={{ backgroundColor: item.color }}>
+                {currentPrimaryColor == item.code && <Iconfont code="&#xe617;"></Iconfont>}
               </li>
             );
           })}
@@ -131,10 +131,10 @@ export default memo<IProps>(function Setting({ className }) {
           语言
         </div>
         <div>
-        <Radio.Group onChange={changeLang} value={lang}>
-          <Radio value='zh-cn'>中文</Radio>
-          <Radio value='en'>英文</Radio>
-        </Radio.Group>
+          <Radio.Group onChange={changeLang} value={lang}>
+            <Radio value='zh-cn'>中文</Radio>
+            <Radio value='en'>英文</Radio>
+          </Radio.Group>
         </div>
       </Modal>
     </>

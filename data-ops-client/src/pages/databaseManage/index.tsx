@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import { Button, Menu } from 'antd';
 import Setting from '@/components/Setting';
 import BrandLogo from '@/components/BrandLogo';
-import { INavItem } from '@/type.js';
+import { INavItem } from '@/types.js';
 import i18n from '@/i18n';
 
 const navConfig: INavItem[] = [
@@ -27,7 +27,7 @@ const navConfig: INavItem[] = [
 export default function HomePage(props: any) {
   const [activeNav, setActiveNav] = useState<string>('databaseAdmin');
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   function switchingNav(item: INavItem) {
     history.push({
@@ -49,7 +49,7 @@ export default function HomePage(props: any) {
                   [styles.activeNav]: item.code == activeNav,
                 })}
                 onClick={switchingNav.bind(null, item)}
-              > 
+              >
                 <Iconfont className={styles.icon} code={item.icon} />
                 <div>{item.title}</div>
               </li>

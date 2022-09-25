@@ -1,5 +1,10 @@
 package com.alibaba.dataops.server.web.api.controller.data.source;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.alibaba.dataops.server.tools.base.enums.EnvTypeEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.web.api.controller.data.source.vo.EnvVO;
 
@@ -19,13 +24,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class EnvController {
 
     /**
-     * 查询我建立的数据库连接
+     * 查询环境列表
      *
      * @return
      */
     @GetMapping("/list")
     public ListResult<EnvVO> list() {
-        return null;
+        List<EnvVO> envVOS = Arrays.stream(EnvTypeEnum.values()).map(envTypeEnum -> {
+            EnvVO envVO = new EnvVO();
+            envVO.setCode(envTypeEnum.getCode());
+            envVO.setName(envTypeEnum.getDescription());
+            return envVO;
+        }).collect(Collectors.toList());
+        return ListResult.of(envVOS);
     }
 
 }
