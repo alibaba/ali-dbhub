@@ -1,14 +1,23 @@
 package com.alibaba.dataops.server.web.api.controller.user.save;
 
+import java.util.List;
+
+import com.alibaba.dataops.server.domain.core.api.model.UserSavedDdlDTO;
+import com.alibaba.dataops.server.domain.core.api.param.UserSavedDdlCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.UserSavedDdlPageQueryParam;
+import com.alibaba.dataops.server.domain.core.api.param.UserSavedDdlUpdateParam;
+import com.alibaba.dataops.server.domain.core.api.service.UserSavedDdlCoreService;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
+import com.alibaba.dataops.server.web.api.controller.user.save.converter.DdlManageWebConverter;
 import com.alibaba.dataops.server.web.api.controller.user.save.request.DdlCreateRequest;
 import com.alibaba.dataops.server.web.api.controller.user.save.request.DdlQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.user.save.request.DdlUpdateRequest;
 import com.alibaba.dataops.server.web.api.controller.user.save.vo.DdlVO;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +38,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DdlManageController {
 
+    @Autowired
+    private UserSavedDdlCoreService userSavedDdlCoreService;
+
+    @Autowired
+    private DdlManageWebConverter ddlManageWebConverter;
+
     /**
      * 查询我的保存
      *
@@ -37,7 +52,10 @@ public class DdlManageController {
      */
     @GetMapping("/list")
     public WebPageResult<DdlVO> list(DdlQueryRequest request) {
-        return null;
+        UserSavedDdlPageQueryParam param = ddlManageWebConverter.queryReq2param(request);
+        PageResult<UserSavedDdlDTO> dtoPageResult = userSavedDdlCoreService.queryPage(param);
+        List<DdlVO> ddlVOS = ddlManageWebConverter.dto2vo(dtoPageResult.getData());
+        return WebPageResult.of(ddlVOS, dtoPageResult.getTotal(), request.getPageNo(), request.getPageSize());
     }
 
     /**
@@ -48,7 +66,8 @@ public class DdlManageController {
      */
     @PostMapping("/create")
     public DataResult<Long> create(@RequestBody DdlCreateRequest request) {
-        return null;
+        UserSavedDdlCreateParam param = ddlManageWebConverter.req2param(request);
+        return userSavedDdlCoreService.create(param);
     }
 
     /**
@@ -59,9 +78,9 @@ public class DdlManageController {
      */
     @PutMapping("/update")
     public ActionResult update(@RequestBody DdlUpdateRequest request) {
-        return null;
+        UserSavedDdlUpdateParam param = ddlManageWebConverter.updateReq2param(request);
+        return userSavedDdlCoreService.update(param);
     }
-
 
     /**
      * 删除我的保存
@@ -71,6 +90,6 @@ public class DdlManageController {
      */
     @DeleteMapping("/{id}")
     public ActionResult delete(@PathVariable("id") Long id) {
-        return null;
+        return userSavedDdlCoreService.delete(id);
     }
 }
