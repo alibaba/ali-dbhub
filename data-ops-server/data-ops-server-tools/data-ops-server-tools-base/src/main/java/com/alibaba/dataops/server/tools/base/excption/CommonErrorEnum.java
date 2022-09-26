@@ -38,6 +38,11 @@ public enum CommonErrorEnum implements BaseErrorEnum {
     MAX_UPLOAD_SIZE("上传的文件超过最大限制"),
 
     /**
+     * 数据库驱动类不存在
+     */
+    DRIVER_CLASS_NOT_EXIST("数据库驱动类不存在"),
+
+    /**
      * 需要登陆
      * 前端需要跳转到登陆界面
      */
