@@ -25,6 +25,9 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- 定义包版本 -->
         <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
+
+        <!-- 跳过测试 -->
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <modules>

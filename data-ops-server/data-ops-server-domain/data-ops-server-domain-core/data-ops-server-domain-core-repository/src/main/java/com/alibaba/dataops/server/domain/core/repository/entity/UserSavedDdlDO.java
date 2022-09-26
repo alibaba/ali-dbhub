@@ -47,7 +47,7 @@ public class UserSavedDdlDO implements Serializable {
     /**
      * db名称
      */
-    private String dataBaseName;
+    private String databaseName;
 
     /**
      * 保存名称

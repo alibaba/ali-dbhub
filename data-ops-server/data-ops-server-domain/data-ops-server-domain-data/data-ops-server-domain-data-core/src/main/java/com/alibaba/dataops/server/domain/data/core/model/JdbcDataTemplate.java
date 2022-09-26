@@ -151,6 +151,7 @@ public class JdbcDataTemplate extends JdbcTemplate {
                 }
                 return rows;
             }
+
             @Override
             public String getSql() {
                 return sql;
@@ -211,6 +212,38 @@ public class JdbcDataTemplate extends JdbcTemplate {
                 // change 不再关闭连接
             }
         }
+    }
+
+    /**
+     * 本方法未做修改
+     *
+     * @param sql static SQL to execute
+     * @throws DataAccessException
+     */
+    @Override
+    public void execute(final String sql) throws DataAccessException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing SQL statement [" + sql + "]");
+        }
+
+        /**
+         * Callback to execute the statement.
+         */
+        class ExecuteStatementCallback implements StatementCallback<Object>, SqlProvider {
+            @Override
+            @Nullable
+            public Object doInStatement(Statement stmt) throws SQLException {
+                stmt.execute(sql);
+                return null;
+            }
+
+            @Override
+            public String getSql() {
+                return sql;
+            }
+        }
+
+        execute(new ExecuteStatementCallback(), true);
     }
 
     /**

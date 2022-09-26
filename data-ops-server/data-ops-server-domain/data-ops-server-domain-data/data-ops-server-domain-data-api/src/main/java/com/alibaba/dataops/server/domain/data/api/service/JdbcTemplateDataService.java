@@ -2,8 +2,10 @@ package com.alibaba.dataops.server.domain.data.api.service;
 
 import java.util.Map;
 
+import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateUpdateParam;
+import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 
@@ -29,4 +31,12 @@ public interface JdbcTemplateDataService {
      * @return
      */
     DataResult<Integer> update(TemplateUpdateParam param);
+
+    /**
+     * 执行一条sql
+     *
+     * @param param
+     * @return
+     */
+    ActionResult execute(TemplateExecuteParam param);
 }

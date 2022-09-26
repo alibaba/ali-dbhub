@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `user_saved_ddl` (
     `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `gmt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     `data_source_id` bigint(20) unsigned NOT NULL COMMENT '数据源连接ID',
-    `data_base_name` varchar(128) DEFAULT NULL COMMENT 'db名称',
+    `database_name` varchar(128) DEFAULT NULL COMMENT 'db名称',
     `name` varchar(128) DEFAULT NULL COMMENT '保存名称',
     `type` varchar(32) NOT NULL COMMENT '数据库类型',
     `status` varchar(32) NOT NULL COMMENT 'ddl语句状态:DRAFT/RELEASE',

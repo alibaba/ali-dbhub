@@ -36,7 +36,6 @@ public class ConsoleDataServiceImpl implements ConsoleDataService {
         Long consoleId = param.getConsoleId();
         // 尝试关闭
         close(ConsoleCloseParam.builder().dataSourceId(param.getDataSourceId()).consoleId(consoleId).build());
-
         Connection connection;
         try {
             connection = druidDataSource.getConnection();

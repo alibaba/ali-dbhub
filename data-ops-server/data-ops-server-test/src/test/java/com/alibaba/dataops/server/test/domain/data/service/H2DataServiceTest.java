@@ -1,6 +1,5 @@
 package com.alibaba.dataops.server.test.domain.data.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +29,7 @@ import org.springframework.boot.sql.init.DatabaseInitializationSettings;
 import org.springframework.jdbc.BadSqlGrammarException;
 
 /**
- * sqlite的data服测试
+ * h2的data服测试
  *
  * @author Jiaju Zhuang
  */
@@ -41,8 +40,6 @@ public class H2DataServiceTest extends BaseTest {
     private static final long DATA_SOURCE_ID = TestUtils.nextLong();
     private static final long CONSOLE_ID = TestUtils.nextLong();
     private static final String DATA_NAME = "姓名";
-    private static final Date DATA_DATE = new Date();
-    private static final long DATA_NUMBER = 1L;
     @Resource
     private DataSourceDataService dataSourceDataService;
     @Resource
@@ -189,6 +186,42 @@ public class H2DataServiceTest extends BaseTest {
             templateQueryParam.setSql("select * from test_query where1 id=9999;");
             jdbcTemplateDataService.queryForList(templateQueryParam);
         }, "关闭连接池失败");
+    }
 
+    @Test
+    @Order(7)
+    public void showTables() {
+        // 异常sql
+        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+        templateQueryParam.setConsoleId(CONSOLE_ID);
+        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+        templateQueryParam.setSql("show tables;");
+        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+        log.info("查询数据返回{}", JSON.toJSONString(dataList));
+    }
+
+
+    @Test
+    @Order(8)
+    public void showDatabases() {
+        // 异常sql
+        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+        templateQueryParam.setConsoleId(CONSOLE_ID);
+        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+        templateQueryParam.setSql("show databases;");
+        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+        log.info("查询数据返回{}", JSON.toJSONString(dataList));
+    }
+
+    @Test
+    @Order(9)
+    public void explain() {
+        // 异常sql
+        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+        templateQueryParam.setConsoleId(CONSOLE_ID);
+        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+        templateQueryParam.setSql("explain select * from test_query where id=9999;");
+        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+        log.info("查询数据返回{}", JSON.toJSONString(dataList));
     }
 }
