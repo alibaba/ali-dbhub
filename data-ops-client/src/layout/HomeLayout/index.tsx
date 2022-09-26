@@ -1,47 +1,53 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, PropsWithChildren } from 'react';
 import BrandLogo from '@/components/BrandLogo';
 import Iconfont from '@/components/Iconfont';
 import i18n from '@/i18n';
 import classnames from 'classnames';
 import { history } from 'umi';
 import styles from './index.less';
+interface Iprops {
 
-export default function HomePage({ children }) {
-  const [activeNav, setActiveNav] = useState<string>('connectionAdmin');
+}
 
-  const navConfig = [
-    {
-      title: i18n('home.nav.database'),
-      icon: '\ue759',
-      code: 'connectionAdmin',
-      path: '/connection',
-    },
-    {
-      title: '我的',
-      icon: '\ue759',
-      code: 'SQLHistory',
-      path: '/SQLHistory', // TODO
-    },
-  ];
+interface INavItem {
+  title: string;
+  icon: string,
+  path: string,
+}
 
-  function switchingNav(item) {
-    history.push({
-      pathname: item.path,
-    });
-    setActiveNav(item.code);
+const navConfig: INavItem[] = [
+  {
+    title: i18n('home.nav.database'),
+    icon: '\ue759',
+    path: '/connection'
+  },
+
+  {
+    title: '我的SQL',
+    icon: '\ue759',
+    path: '/sql-history'
+  }
+];
+
+export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
+  const [activeNav, setActiveNav] = useState<string>(navConfig[0].path);
+
+  function switchingNav(item: INavItem) {
+    history.push(item.path);
+    setActiveNav(item.path);
   }
 
   return (
     <div className={styles.page}>
       <div className={styles.layoutLeft}>
-        <BrandLogo className={styles.brandLogo} />
+        <BrandLogo size={70} className={styles.brandLogo} />
         <ul className={styles.navList}>
           {navConfig.map((item) => {
             return (
               <li
-                key={item.code}
+                key={item.path}
                 className={classnames({
-                  [styles.activeNav]: item.code == activeNav,
+                  [styles.activeNav]: item.path == activeNav,
                 })}
                 onClick={switchingNav.bind(null, item)}
               >

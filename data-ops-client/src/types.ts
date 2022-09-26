@@ -1,10 +1,4 @@
 import { DatabaseTypeCode } from '@/utils/constants'
-export interface INavItem {
-  code: string;
-  title: string;
-  icon: string;
-  path: string;
-};
 
 export interface IPageResponse<T> {
   data: T[];

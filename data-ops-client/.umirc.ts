@@ -18,9 +18,6 @@ const chainWebpack = (config:any, { webpack }:any) => {
   // .options({name: /node_modules[\\\/]monaco-editor[\\\/]esm/ ,esModule: false});
 };
 
-
-
-
 export default defineConfig({
   title: 'dataOps',
   history: {
@@ -39,12 +36,12 @@ export default defineConfig({
         { path: '/error', component: '@/pages/error' },
         {
           path: '/database',
-          component: '@/pages/database-manage',
+          component: '@/layout/BaseLayout',
           routes: [
             {
               exact: true,
               path: '/database/:id',
-              component: '@/components/Database',
+              component: '@/pages/database',
             },
           ],
         },
@@ -55,7 +52,7 @@ export default defineConfig({
             {
               path: '/',
               exact: true,
-              redirect: '/connection',
+              component: '@/pages/connection',
             },
             {
               path: '/connection',

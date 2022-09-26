@@ -13,6 +13,10 @@ const getDetaile = createRequest<{id:string}, IConnectionBase>('/api/connection/
 
 const save = createRequest<IConnectionBase, void>('/api/connection/manage/create',{method:'post'});
 
+const update = createRequest<{id: string},void>('/api/connection/manage/update',{method:'put'});
+
+const deleteConnection = createRequest<IConnectionBase,void>('/api/connection/manage/:id',{method:'delete'});
+
 
 export default {
   getList,
