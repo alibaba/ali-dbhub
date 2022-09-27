@@ -66,7 +66,9 @@ export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
         </div>
       </div>
       <div className={styles.layoutRight}>
-        <div className={styles.main}>{children}</div>
+        <div className={styles.main}>
+          {children}
+        </div>
       </div>
     </div>
   );

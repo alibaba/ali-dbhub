@@ -13,6 +13,7 @@ import MonacoEditor from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
 import LoadingContent from '@/components/LoadingContent';
 import connectionServer from '@/service/connection';
+import SearchInput from '@/components/SearchInput';
 import { IConnectionBase } from '@/types'
 
 
@@ -210,10 +211,7 @@ export default memo<IProps>(function Database({ className }) {
             <Iconfont code="&#xe7b1;"></Iconfont>
           </div>
           <div className={styles.searchBox}>
-            <div className={styles.inputBox}>
-              <Iconfont code="&#xe600;"></Iconfont>
-              <Input type="text" placeholder={i18n('database.input.search')} />
-            </div>
+            <SearchInput placeholder='搜索'></SearchInput>
             <div className={classnames(styles.refresh, styles.button)}>
               <Iconfont code="&#xec08;"></Iconfont>
             </div>

@@ -10,6 +10,13 @@
   background: var(--color-bg-100);
 }
 
+.setting{
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
 .layoutLeft {
   flex-shrink: 0;
   width: 256px;
@@ -49,7 +56,7 @@
     }
   }
 
-  .activeNav {
+  .currentNav {
     color: var(--custom-primary-color-hover);
     background: var(--color-bg-hover);
   }
@@ -58,4 +65,7 @@
 .layoutRight {
   flex: 1;
   overflow: hidden;
+  padding-left: 30px;
+  display: flex;
+  flex-direction: column;
 }

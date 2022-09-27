@@ -2,12 +2,12 @@ import React, { memo, useEffect, useState } from 'react';
 import classnames from 'classnames';
 import { formatNaturalDate } from '@/utils/index';
 import Iconfont from '@/components/Iconfont';
-import AppHeader from '@/components/AppHeader';
+import ScrollLoading from '@/components/ScrollLoading';
 import i18n from '@/i18n';
 import { history } from 'umi';
 import connectionServer from '@/service/connection'
 import { IConnectionBase } from '@/types'
-import { DatabaseTypeName, DatabaseTypeCode } from '@/utils/constants'
+import { databaseTypeList, DatabaseTypeCode } from '@/utils/constants'
 import {
   Dropdown,
   Menu,
@@ -18,6 +18,7 @@ import {
   Form,
   Input,
   Checkbox,
+  Pagination
 } from 'antd';
 
 import styles from './index.less';
@@ -40,17 +41,6 @@ const menuList = [
     text: '断开链接',
   },
 ];
-
-const connectionType = [
-  {
-    name: DatabaseTypeName.MYSQL,
-    code: DatabaseTypeCode.MYSQL
-  },
-  {
-    name: DatabaseTypeName.REDIS,
-    code: DatabaseTypeCode.REDIS
-  }
-]
 
 export default memo<IProps>(function Connection(props) {
   const { className } = props;
@@ -121,13 +111,12 @@ export default memo<IProps>(function Connection(props) {
 
   const onChange = () => { };
 
-  const changeForm = (e) => {
+  const changeForm = (e: any) => {
     console.log(e)
   }
 
   return (
     <div className={classnames(className, styles.box)}>
-      <AppHeader></AppHeader>
       <div className={styles.header}>
         <div className={styles.title}>{i18n('home.nav.database')}</div>
         <Button
@@ -139,37 +128,35 @@ export default memo<IProps>(function Connection(props) {
           {i18n('database.input.newLink')}
         </Button>
       </div>
-      <div className={styles.connectionList}>
-        {connectionList?.map((item) => {
-          return (
-            <div key={item.id} className={styles.connectionItem}>
-              <div className={styles.left} onClick={jumpPage.bind(null, item)}>
-                <div
-                  className={styles.logo}
-                  style={{
-                    backgroundImage: `url(https://cdn.apifox.cn/app/project-icon/builtin/9.jpg)`,
-                  }}
-                ></div>
-                <div>
-                  <div className={styles.name}>{item.alias}</div>
-                  <div className={styles.visitedTime}>
-                    {i18n('home.text.visitedTime')}
-                    {/* {formatNaturalDate(item.visitedTime)} */}
+      <div className={styles.scrollBox}>
+        <ScrollLoading onReachBottom={1} threshold={300}>
+          <div className={styles.connectionList}>
+            {connectionList?.map((item) => {
+              return (
+                <div key={item.id} className={styles.connectionItem}>
+                  <div className={styles.left} onClick={jumpPage.bind(null, item)}>
+                    <div
+                      className={styles.logo}
+                      style={{
+                        backgroundImage: `url(https://cdn.apifox.cn/app/project-icon/builtin/9.jpg)`,
+                      }}
+                    ></div>
+                    <div className={styles.name}>{item.alias}</div>
+                  </div>
+                  <div className={styles.right}>
+                    <Dropdown overlay={renderMenu()} trigger={['hover']}>
+                      <a onClick={(e) => e.preventDefault()}>
+                        <div className={styles.moreActions}>
+                          <Iconfont code="&#xe601;" />
+                        </div>
+                      </a>
+                    </Dropdown>
                   </div>
                 </div>
-              </div>
-              <div className={styles.right}>
-                <Dropdown overlay={renderMenu()} trigger={['hover']}>
-                  <a onClick={(e) => e.preventDefault()}>
-                    <div className={styles.moreActions}>
-                      <Iconfont code="&#xe601;" />
-                    </div>
-                  </a>
-                </Dropdown>
-              </div>
-            </div>
-          );
-        })}
+              );
+            })}
+          </div>
+        </ScrollLoading>
       </div>
       <Modal
         title="连接数据库"
@@ -194,7 +181,7 @@ export default memo<IProps>(function Connection(props) {
           >
             <Select>
               {
-                connectionType.map(item => {
+                databaseTypeList.map(item => {
                   return <Option key={item.code} value={item.code}>{item.name}</Option>
                 })
               }

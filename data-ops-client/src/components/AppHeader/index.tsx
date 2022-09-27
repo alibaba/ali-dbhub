@@ -1,7 +1,8 @@
 import React, { memo, PropsWithChildren } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import Iconfont from '../Iconfont';
+import Iconfont from '@/components/Iconfont';
+import Setting from '@/components/Setting';
 
 interface IProps {
   className?: any;

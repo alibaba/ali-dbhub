@@ -1,9 +1,11 @@
 import React, { memo, useState, PropsWithChildren } from 'react';
 import BrandLogo from '@/components/BrandLogo';
 import Iconfont from '@/components/Iconfont';
+import AppHeader from '@/components/AppHeader';
+import Setting from '@/components/Setting';
 import i18n from '@/i18n';
 import classnames from 'classnames';
-import { history } from 'umi';
+import { history, useLocation } from 'umi';
 import styles from './index.less';
 interface Iprops {
 
@@ -18,23 +20,25 @@ interface INavItem {
 const navConfig: INavItem[] = [
   {
     title: i18n('home.nav.database'),
-    icon: '\ue759',
+    icon: '\uec57',
     path: '/connection'
   },
 
   {
     title: '我的SQL',
-    icon: '\ue759',
+    icon: '\ue610',
     path: '/sql-history'
   }
 ];
 
 export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
-  const [activeNav, setActiveNav] = useState<string>(navConfig[0].path);
+
+  const location = useLocation();
+  const [currentNav, setCurrentNav] = useState<string>(location.pathname || navConfig[0].path);
 
   function switchingNav(item: INavItem) {
     history.push(item.path);
-    setActiveNav(item.path);
+    setCurrentNav(item.path);
   }
 
   return (
@@ -47,7 +51,7 @@ export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
               <li
                 key={item.path}
                 className={classnames({
-                  [styles.activeNav]: item.path == activeNav,
+                  [styles.currentNav]: item.path == currentNav,
                 })}
                 onClick={switchingNav.bind(null, item)}
               >
@@ -58,7 +62,12 @@ export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
           })}
         </ul>
       </div>
-      <div className={styles.layoutRight}>{children}</div>
+      <div className={styles.layoutRight}>
+        <AppHeader>
+          <Setting className={styles.setting}></Setting>
+        </AppHeader>
+        {children}
+      </div>
     </div>
   );
 }

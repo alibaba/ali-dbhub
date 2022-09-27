@@ -11,7 +11,7 @@ const chainWebpack = (config:any, { webpack }:any) => {
   ])
 
   // TODO: Monaco汉化
-  // config.module.rules
+  // config.module.rules()
   // .test(/\.js/)
   // .use(MonacoWebpackPlugin.loader)
   // .loader(MonacoWebpackPlugin.loader)
@@ -36,7 +36,7 @@ export default defineConfig({
         { path: '/error', component: '@/pages/error' },
         {
           path: '/database',
-          component: '@/layout/BaseLayout',
+          component: '@/layouts/BaseLayout',
           routes: [
             {
               exact: true,
@@ -47,7 +47,7 @@ export default defineConfig({
         },
         { 
           path: '/', 
-          component: '@/layout/HomeLayout',
+          component: '@/layouts/HomeLayout',
           routes:[
             {
               path: '/',

@@ -26,7 +26,6 @@ export function formatDate(date, fmt = 'yyyy-MM-dd') {
   return fmt;
 }
 
-
 const monthNamesEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export function formatNaturalDate(date: any) {
