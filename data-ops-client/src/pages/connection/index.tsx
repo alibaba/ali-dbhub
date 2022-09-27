@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import { formatNaturalDate } from '@/utils/index';
 import Iconfont from '@/components/Iconfont';
@@ -47,18 +47,24 @@ export default memo<IProps>(function Connection(props) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [connectionList, setConnectionList] = useState<IConnectionBase[]>();
   const [createForm, setCreateForm] = useState<IConnectionBase>()
+  const [finished, setFinished] = useState(false)
+  const scrollerRef = useRef(null)
 
   useEffect(() => {
-    getconnectionList()
+    getConnectionList()
   }, [])
 
-  const getconnectionList = () => {
+  const getConnectionList = () => {
     let p = {
       pageNo: 1,
       pageSize: 10
     }
-    connectionServer.getList(p).then(res => {
-      setConnectionList(res.data)
+    return connectionServer.getList(p).then(res => {
+      if (connectionList?.length) {
+        setConnectionList([...connectionList, ...res.data])
+      } else {
+        setConnectionList(res.data)
+      }
     })
   }
 
@@ -115,6 +121,8 @@ export default memo<IProps>(function Connection(props) {
     console.log(e)
   }
 
+
+
   return (
     <div className={classnames(className, styles.box)}>
       <div className={styles.header}>
@@ -128,8 +136,8 @@ export default memo<IProps>(function Connection(props) {
           {i18n('database.input.newLink')}
         </Button>
       </div>
-      <div className={styles.scrollBox}>
-        <ScrollLoading onReachBottom={1} threshold={300}>
+      <div className={styles.scrollBox} ref={scrollerRef}>
+        <ScrollLoading finished={finished} scrollerElement={scrollerRef.current!} onReachBottom={getConnectionList} threshold={300}>
           <div className={styles.connectionList}>
             {connectionList?.map((item) => {
               return (
