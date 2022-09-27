@@ -3,6 +3,7 @@ package com.alibaba.dataops.server.web.api.controller.data.source.converter;
 import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
+import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
@@ -10,6 +11,7 @@ import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSou
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceUpdateRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.vo.DataSourceVO;
+import com.alibaba.dataops.server.web.api.controller.data.source.vo.DatabaseVO;
 
 import org.mapstruct.Mapper;
 
@@ -60,5 +62,21 @@ public abstract class DataSourceWebConverter {
      * @return
      */
     public abstract List<DataSourceVO> dto2vo(List<DataSourceDTO> dataSourceDTOS);
+
+    /**
+     * 模型转换
+     *
+     * @param databaseDTO
+     * @return
+     */
+    public abstract DatabaseVO databaseDto2vo(DatabaseDTO databaseDTO);
+
+    /**
+     * 模型转换
+     *
+     * @param databaseDTOS
+     * @return
+     */
+    public abstract List<DatabaseVO> databaseDto2vo(List<DatabaseDTO> databaseDTOS);
 
 }

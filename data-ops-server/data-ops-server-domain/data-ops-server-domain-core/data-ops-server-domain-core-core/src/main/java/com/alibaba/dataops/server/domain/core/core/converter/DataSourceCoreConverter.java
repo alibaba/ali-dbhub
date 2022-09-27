@@ -1,13 +1,19 @@
 package com.alibaba.dataops.server.domain.core.core.converter;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
+import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
+import com.alibaba.dataops.server.tools.base.excption.BusinessException;
+import com.alibaba.dataops.server.tools.base.excption.CommonErrorEnum;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 /**
  * @author moji
@@ -32,6 +38,28 @@ public abstract class DataSourceCoreConverter {
      * @return
      */
     public abstract DataSourceDO param2do(DataSourceUpdateParam param);
+
+    /**
+     * 参数转换
+     *
+     * @param dataSourceDO
+     * @return
+     */
+    public com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam do2param(
+        DataSourceDO dataSourceDO) {
+        com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param
+            = new com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam();
+        param.setDataSourceId(dataSourceDO.getId());
+        DriverClassEnum driverClassEnum = DriverClassEnum.getByName(dataSourceDO.getType());
+        if (Objects.isNull(driverClassEnum)) {
+            throw new BusinessException(CommonErrorEnum.DRIVER_CLASS_NOT_EXIST);
+        }
+        param.setDriverClass(driverClassEnum.getClassName());
+        param.setUrl(dataSourceDO.getUrl());
+        param.setUsername(dataSourceDO.getUser());
+        param.setPassword(dataSourceDO.getPassword());
+        return param;
+    }
 
     /**
      * 模型转换

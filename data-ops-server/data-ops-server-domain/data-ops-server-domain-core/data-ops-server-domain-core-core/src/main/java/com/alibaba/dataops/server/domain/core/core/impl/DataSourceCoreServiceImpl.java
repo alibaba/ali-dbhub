@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
+import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
@@ -12,8 +13,10 @@ import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.core.core.converter.DataSourceCoreConverter;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
 import com.alibaba.dataops.server.domain.core.repository.mapper.DataSourceMapper;
+import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
+import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -33,6 +36,9 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
 
     @Autowired
     private DataSourceMapper dataSourceMapper;
+
+    @Autowired
+    private DataSourceDataService dataSourceDataService;
 
     @Autowired
     private DataSourceCoreConverter dataSourceCoreConverter;
@@ -90,5 +96,15 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         IPage<DataSourceDO> iPage = dataSourceMapper.selectPage(page, queryWrapper);
         List<DataSourceDTO> dataSourceDTOS = dataSourceCoreConverter.do2dto(iPage.getRecords());
         return PageResult.of(dataSourceDTOS, iPage.getTotal(), param);
+    }
+
+    @Override
+    public ListResult<DatabaseDTO> attach(Long id) {
+        DataSourceDO dataSourceDO = dataSourceMapper.selectById(id);
+        com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param
+            = dataSourceCoreConverter.do2param(dataSourceDO);
+        ActionResult actionResult = dataSourceDataService.create(param);
+        // TODO 增加获取数据源下database逻辑
+        return null;
     }
 }

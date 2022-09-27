@@ -1,5 +1,7 @@
 package com.alibaba.dataops.server.web.api.controller.data.source;
 
+import java.util.List;
+
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
@@ -54,7 +56,8 @@ public class DataSourceManageController {
     public WebPageResult<DataSourceVO> list(DataSourceQueryRequest request) {
         DataSourcePageQueryParam param = dataSourceWebConverter.queryReq2param(request);
         PageResult<DataSourceDTO> result = dataSourceCoreService.queryPage(param, new DataSourceSelector());
-        return null;
+        List<DataSourceVO> dataSourceVOS = dataSourceWebConverter.dto2vo(result.getData());
+        return WebPageResult.of(dataSourceVOS, result.getTotal(), result.getPageNo(), result.getPageSize());
     }
 
     /**
