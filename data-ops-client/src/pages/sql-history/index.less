@@ -5,6 +5,7 @@
   padding-right: 30px;
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 56px);
 }
 
 .header {
@@ -26,9 +27,14 @@
   width: 200px;
 }
 
+.sqlListBox{
+  flex: 1;
+  overflow: scroll;
+}
+
 .sqlList{
   position: relative;
-  flex: 1;
+  overflow: hidden;
 }
 
 .cardItem {
