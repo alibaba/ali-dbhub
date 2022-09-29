@@ -13,13 +13,23 @@ const getDetaile = createRequest<{id:string}, IConnectionBase>('/api/connection/
 
 const save = createRequest<IConnectionBase, void>('/api/connection/manage/create',{method:'post'});
 
-const update = createRequest<{id: string},void>('/api/connection/manage/update',{method:'put'});
 
-const deleteConnection = createRequest<IConnectionBase,void>('/api/connection/manage/:id',{method:'delete'});
+// TODO: 没有找到测试连接接口
+const test = createRequest<IConnectionBase, void>('/api/connection/manage/create',{method:'post'});
+
+const update = createRequest<IConnectionBase, void>('/api/connection/manage/update',{method:'put'});
+
+const remove = createRequest<{id:number},void>('/api/connection/manage/:id',{method:'delete'});
+
+const clone = createRequest<{id:number},void>('/api/connection/manage/clone',{method:'post'});
 
 
 export default {
   getList,
   getDetaile,
-  save
+  save,
+  test,
+  update,
+  remove,
+  clone
 }

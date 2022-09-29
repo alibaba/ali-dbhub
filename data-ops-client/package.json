@@ -24,8 +24,8 @@
     ]
   },
   "dependencies": {
-    "@ant-design/pro-layout": "^6.5.0",
-    "antd": "^4.23.2",
+    "@ant-design/pro-layout": "6.5.0",
+    "antd": "4.23.2",
     "monaco-editor": "^0.34.0",
     "monaco-editor-esm-webpack-plugin": "^2.1.0",
     "monaco-editor-nls": "^3.0.0",

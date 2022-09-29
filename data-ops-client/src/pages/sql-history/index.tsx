@@ -61,13 +61,15 @@ export default memo<IProps>(function SQLHistory({ className }) {
       databaseName: '1'
     }
     return api(p).then(res => {
+      if (res.data.length) {
+        setFinished(true)
+      }
       if (dataList?.length && !clear) {
         setDataList([...dataList, ...res.data])
       } else {
         setDataList(res.data)
       }
     })
-
   }
 
   const onChange = (key: string) => {

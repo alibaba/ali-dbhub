@@ -18,11 +18,13 @@ import {
   Form,
   Input,
   Checkbox,
+  message,
   Pagination
 } from 'antd';
 
 import styles from './index.less';
 import LoadingContent from '@/components/Loading/LoadingContent';
+import { defaultRenderCollapsedButton } from '@ant-design/pro-layout/lib/components/SiderMenu/SiderMenu';
 
 const { Option } = Select;
 
@@ -30,38 +32,74 @@ interface IProps {
   className?: any;
 }
 
-const menuList = [
+interface IMenu {
+  code: string;
+  icon: string;
+  title: string;
+}
+
+enum submitType {
+  UPDATE = 'update',
+  SAVE = 'save',
+  TEST = 'test'
+}
+
+enum handleType {
+  EDIT = 'edit',
+  DELETE = 'delete',
+  CLONE = 'clone'
+}
+
+const menuList: IMenu[] = [
   {
-    code: 'edit',
+    code: handleType.EDIT,
     icon: '\ue60f',
-    text: '修改名称',
+    title: '修改名称',
   },
   {
-    code: 'delete',
-    icon: '\ue604',
-    text: '断开链接',
+    code: handleType.CLONE,
+    icon: '\ue6ca',
+    title: '克隆连接',
   },
+  {
+    code: handleType.DELETE,
+    icon: '\ue604',
+    title: '删除链接',
+  }
 ];
 
 export default memo<IProps>(function Connection(props) {
   const { className } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [connectionList, setConnectionList] = useState<IConnectionBase[]>();
-  const [createForm, setCreateForm] = useState<IConnectionBase>()
-  const [finished, setFinished] = useState(false)
+  const [finished, setFinished] = useState(false);
+  const [rowData, setRowData] = useState<IConnectionBase | null>();
+  const [form] = Form.useForm();
   const scrollerRef = useRef(null)
 
   useEffect(() => {
     getConnectionList()
   }, [])
 
-  const getConnectionList = () => {
+  type IParams = {
+    superposition: boolean
+  }
+  const getConnectionList = (params?: IParams) => {
+    const { superposition } = params || {}
+    if (!superposition) {
+      setConnectionList(undefined)
+    }
+
     let p = {
       pageNo: 1,
       pageSize: 10
     }
     return connectionServer.getList(p).then(res => {
-      if (connectionList?.length) {
+      if (!res.data?.length) {
+        setFinished(true)
+        return
+      }
+      if (connectionList?.length && superposition) {
         setConnectionList([...connectionList, ...res.data])
       } else {
         setConnectionList(res.data)
@@ -75,14 +113,44 @@ export default memo<IProps>(function Connection(props) {
     });
   };
 
-  const renderMenu = () => {
+  const renderMenu = (rowData: IConnectionBase) => {
+    const editConnection = () => {
+      setRowData(rowData);
+      setIsModalVisible(true);
+      form.setFieldsValue(rowData);
+    }
+
+    const deleteConnection = () => {
+      connectionServer.remove({ id: rowData.id! }).then(res => {
+        message.success('删除成功');
+        getConnectionList();
+      })
+    }
+
+    const cloneConnection = () => {
+      connectionServer.clone({ id: rowData.id! }).then(res => {
+        message.success('克隆成功');
+        getConnectionList();
+      })
+    }
+
+    const clickMenuList = (item: IMenu) => {
+      switch (item.code) {
+        case handleType.EDIT:
+          return editConnection();
+        case handleType.DELETE:
+          return deleteConnection();
+        case handleType.CLONE:
+          return cloneConnection();
+      }
+    }
     return (
       <ul className={styles.menu}>
         {menuList.map((item) => {
           return (
-            <li key={item.code} className={styles.menuItem}>
+            <li onClick={clickMenuList.bind(null, item)} key={item.code} className={styles.menuItem}>
               <Iconfont code={item.icon}></Iconfont>
-              {item.text}
+              {item.title}
             </li>
           );
         })}
@@ -90,10 +158,10 @@ export default memo<IProps>(function Connection(props) {
     );
   };
 
-  const linkDatabase = () => { };
-
   const showLinkModal = () => {
     setIsModalVisible(true);
+    setRowData(null);
+    form.resetFields();
   };
 
   const handleCancel = () => {
@@ -104,25 +172,52 @@ export default memo<IProps>(function Connection(props) {
     setIsModalVisible(true);
   };
 
-  const onFinish = (values: any) => {
+  // 测试、保存、修改连接
+  const saveConnection = (values: IConnectionBase, type: submitType) => {
     let p = values
-    connectionServer.save(p).then(res => {
-      setIsModalVisible(false)
+    connectionServer[type](p).then(res => {
+      closeModal();
     })
-
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
   };
 
   const onChange = () => { };
 
-  const changeForm = (e: any) => {
-    console.log(e)
+  const closeModal = () => {
+    setRowData(null);
+    form.resetFields();
+    setIsModalVisible(false);
   }
 
+  const submitConnection = (type: submitType) => {
+    form.validateFields().then(res => {
+      saveConnection(res, type)
+    }).catch(error => {
+      console.log(error)
+    })
+  }
 
+  const renderCard = (item: IConnectionBase) => {
+    return <div key={item.id} className={styles.connectionItem}>
+      <div className={styles.left} onClick={jumpPage.bind(null, item)}>
+        <div
+          className={styles.logo}
+          style={{
+            backgroundImage: `url(https://cdn.apifox.cn/app/project-icon/builtin/9.jpg)`,
+          }}
+        ></div>
+        <div className={styles.name}>{item.alias}</div>
+      </div>
+      <div className={styles.right}>
+        <Dropdown overlay={renderMenu(item)} trigger={['hover']}>
+          <a onClick={(e) => e.preventDefault()}>
+            <div className={styles.moreActions}>
+              <Iconfont code="&#xe601;" />
+            </div>
+          </a>
+        </Dropdown>
+      </div>
+    </div>
+  }
 
   return (
     <div className={classnames(className, styles.box)}>
@@ -144,34 +239,11 @@ export default memo<IProps>(function Connection(props) {
             <ScrollLoading
               finished={finished}
               scrollerElement={scrollerRef.current}
-              onReachBottom={getConnectionList}
+              onReachBottom={getConnectionList.bind(null, { superposition: true })}
               threshold={300}
             >
               <div className={styles.connectionList}>
-                {connectionList?.map((item) => {
-                  return (
-                    <div key={item.id} className={styles.connectionItem}>
-                      <div className={styles.left} onClick={jumpPage.bind(null, item)}>
-                        <div
-                          className={styles.logo}
-                          style={{
-                            backgroundImage: `url(https://cdn.apifox.cn/app/project-icon/builtin/9.jpg)`,
-                          }}
-                        ></div>
-                        <div className={styles.name}>{item.alias}</div>
-                      </div>
-                      <div className={styles.right}>
-                        <Dropdown overlay={renderMenu()} trigger={['hover']}>
-                          <a onClick={(e) => e.preventDefault()}>
-                            <div className={styles.moreActions}>
-                              <Iconfont code="&#xe601;" />
-                            </div>
-                          </a>
-                        </Dropdown>
-                      </div>
-                    </div>
-                  );
-                })}
+                {connectionList?.map(item => renderCard(item))}
               </div>
             </ScrollLoading>
           }
@@ -185,12 +257,10 @@ export default memo<IProps>(function Connection(props) {
         footer={false}
       >
         <Form
-          name="basic"
+          form={form}
           labelCol={{ span: 5 }}
           // wrapperCol={{ span: 16 }}
           initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
           <Form.Item
@@ -223,7 +293,7 @@ export default memo<IProps>(function Connection(props) {
           <Form.Item
             label="端口"
             name="linkName"
-            rules={[{ required: true, message: '端口不可为空！' }]}
+          // rules={[{ required: true, message: '端口不可为空！' }]}
           >
             <Input />
           </Form.Item>
@@ -250,15 +320,19 @@ export default memo<IProps>(function Connection(props) {
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 0 }}>
             <div className={styles.formFooter}>
-              <div className={styles.ceshi}>
-                <Button className={styles.test}>测试连接</Button>
+              <div className={styles.test}>
+                {
+                  !rowData && <Button onClick={submitConnection.bind(null, submitType.TEST)} className={styles.test}>测试连接</Button>
+                }
               </div>
               <div>
-                <Button className={styles.cancel}>
+                <Button onClick={closeModal} className={styles.cancel}>
                   取消
                 </Button>
-                <Button type="primary" htmlType="submit">
-                  连接
+                <Button type="primary" onClick={submitConnection.bind(null, rowData ? submitType.UPDATE : submitType.SAVE)}>
+                  {
+                    rowData ? '修改' : '连接'
+                  }
                 </Button>
               </div>
             </div>

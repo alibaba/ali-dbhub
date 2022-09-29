@@ -5,11 +5,11 @@ import Loading from '@/components/Loading/Loading'
 
 interface IProps {
   className?: string;
-  children?: React.ReactChild;
-  onReachBottom: () => Promise<unknown>;
-  threshold: number;
-  scrollerElement: HTMLElement;
-  finished: boolean;
+  children?: React.ReactChild; // 滚动的内容
+  onReachBottom: () => Promise<unknown>; // 触底的数据请求
+  threshold: number; // 触底阈值
+  scrollerElement: HTMLElement; // overfollow：scroll 的盒子
+  finished: boolean; // 是否结束
 }
 
 export default memo<IProps>(function ScrollLoading({ className, children, scrollerElement, threshold, onReachBottom, finished }) {
@@ -43,7 +43,7 @@ export default memo<IProps>(function ScrollLoading({ className, children, scroll
         setIsPadding(true)
         onReachBottomRef.current().then(() => {
           pendingRef.current = false;
-          setIsPadding(false)
+          setIsPadding(false);
         });
       }
     }
@@ -58,15 +58,32 @@ export default memo<IProps>(function ScrollLoading({ className, children, scroll
     }
   }, [onScroll]);
 
-  return <div className={classnames(className, styles.box)}>
+  // 当数据没有出现滚动条时处理
+  const replenishData = (a: HTMLElement, b: HTMLElement) => {
+    if (a.clientHeight <= b.clientHeight && !finishedRef.current) {
+      pendingRef.current = true;
+      setIsPadding(true);
+      onReachBottomRef.current().then(() => {
+        pendingRef.current = false;
+        setIsPadding(false);
+        replenishData(a, b);
+      });
+    }
+  }
+
+  const onBoxMounted = useCallback((element: HTMLElement | null) => {
+    if (element) {
+      replenishData(element, scroller)
+    }
+  }, []);
+
+  return <div ref={onBoxMounted} className={classnames(className, styles.box)}>
     {children}
-    {
-      isPending && <div className={styles.tips}>
+    <>
+      {isPending && <div className={styles.tips}>
         <Loading className={styles.loading}></Loading>
-      </div>
-    }
-    {
-      finishedRef.current && <div className={styles.tips}>----列表是有底线的----</div>
-    }
+      </div>}
+      {finishedRef.current && <div className={styles.tips}>----列表是有底线的----</div>}
+    </>
   </div>
 })
