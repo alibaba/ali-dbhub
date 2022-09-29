@@ -14,7 +14,7 @@ import lombok.Setter;
  * </p>
  *
  * @author data-ops
- * @since 2022-09-18
+ * @since 2022-09-29
  */
 @Getter
 @Setter
@@ -52,7 +52,7 @@ public class DataSourceDO implements Serializable {
     /**
      * 用户名
      */
-    private String user;
+    private String userName;
 
     /**
      * 密码
