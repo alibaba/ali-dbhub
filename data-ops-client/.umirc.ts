@@ -75,7 +75,7 @@ export default defineConfig({
   mfsu: {},
   fastRefresh: {},
   dynamicImport: {
-    loading: '@/components/Loading/index',
+    loading: '@/components/Loading/LazyLoading',
   },
   nodeModulesTransform: {
     type: 'none',

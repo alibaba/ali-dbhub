@@ -1,8 +1,7 @@
 import React, { memo, PropsWithChildren } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import Loading from '../Loading'
-import StateIndicator from '../StateIndicator'
+import StateIndicator from '@/components/StateIndicator'
 
 interface IProps<T> {
   className?: string;

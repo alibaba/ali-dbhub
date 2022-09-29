@@ -22,6 +22,7 @@ import {
 } from 'antd';
 
 import styles from './index.less';
+import LoadingContent from '@/components/Loading/LoadingContent';
 
 const { Option } = Select;
 
@@ -137,34 +138,44 @@ export default memo<IProps>(function Connection(props) {
         </Button>
       </div>
       <div className={styles.scrollBox} ref={scrollerRef}>
-        <ScrollLoading finished={finished} scrollerElement={scrollerRef.current!} onReachBottom={getConnectionList} threshold={300}>
-          <div className={styles.connectionList}>
-            {connectionList?.map((item) => {
-              return (
-                <div key={item.id} className={styles.connectionItem}>
-                  <div className={styles.left} onClick={jumpPage.bind(null, item)}>
-                    <div
-                      className={styles.logo}
-                      style={{
-                        backgroundImage: `url(https://cdn.apifox.cn/app/project-icon/builtin/9.jpg)`,
-                      }}
-                    ></div>
-                    <div className={styles.name}>{item.alias}</div>
-                  </div>
-                  <div className={styles.right}>
-                    <Dropdown overlay={renderMenu()} trigger={['hover']}>
-                      <a onClick={(e) => e.preventDefault()}>
-                        <div className={styles.moreActions}>
-                          <Iconfont code="&#xe601;" />
-                        </div>
-                      </a>
-                    </Dropdown>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </ScrollLoading>
+        <LoadingContent data={connectionList} handleEmpty>
+          {
+            scrollerRef.current &&
+            <ScrollLoading
+              finished={finished}
+              scrollerElement={scrollerRef.current}
+              onReachBottom={getConnectionList}
+              threshold={300}
+            >
+              <div className={styles.connectionList}>
+                {connectionList?.map((item) => {
+                  return (
+                    <div key={item.id} className={styles.connectionItem}>
+                      <div className={styles.left} onClick={jumpPage.bind(null, item)}>
+                        <div
+                          className={styles.logo}
+                          style={{
+                            backgroundImage: `url(https://cdn.apifox.cn/app/project-icon/builtin/9.jpg)`,
+                          }}
+                        ></div>
+                        <div className={styles.name}>{item.alias}</div>
+                      </div>
+                      <div className={styles.right}>
+                        <Dropdown overlay={renderMenu()} trigger={['hover']}>
+                          <a onClick={(e) => e.preventDefault()}>
+                            <div className={styles.moreActions}>
+                              <Iconfont code="&#xe601;" />
+                            </div>
+                          </a>
+                        </Dropdown>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </ScrollLoading>
+          }
+        </LoadingContent>
       </div>
       <Modal
         title="连接数据库"

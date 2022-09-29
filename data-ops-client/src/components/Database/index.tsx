@@ -8,10 +8,10 @@ import i18n from '../../i18n';
 import AppHeader from '@/components/AppHeader';
 import Iconfont from '@/components/Iconfont';
 import Tree from '@/components/Tree';
-import Loading from '@/components/Loading';
+import Loading from '@/components/Loading/Loading';
 import MonacoEditor from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
-import LoadingContent from '@/components/LoadingContent';
+import LoadingContent from '@/components/Loading/LoadingContent';
 import connectionServer from '@/service/connection';
 import { IConnectionBase } from '@/types'
 

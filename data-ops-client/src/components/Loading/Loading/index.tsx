@@ -11,7 +11,7 @@ interface IProps {
 // TODO： 首屏以及懒加载Lodding效果
 export default memo(function PageLoadinng(props: IProps) {
   const { className } = props;
-  return <div className='loading-components-box'>
+  return <div className={classnames('loading-components-box', className)}>
     <div className="load-container">
       <div className="container container-1">
         <div className="dot dot-1"></div>
