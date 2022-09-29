@@ -14,6 +14,8 @@ import com.alibaba.dataops.server.web.api.controller.data.source.vo.DataSourceVO
 import com.alibaba.dataops.server.web.api.controller.data.source.vo.DatabaseVO;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 /**
  * @author moji
@@ -29,6 +31,9 @@ public abstract class DataSourceWebConverter {
      * @param request
      * @return
      */
+    @Mappings({
+        @Mapping(source = "user", target = "userName")
+    })
     public abstract DataSourceCreateParam createReq2param(DataSourceCreateRequest request);
 
     /**
@@ -37,6 +42,9 @@ public abstract class DataSourceWebConverter {
      * @param request
      * @return
      */
+    @Mappings({
+        @Mapping(source = "user", target = "userName")
+    })
     public abstract DataSourceUpdateParam updateReq2param(DataSourceUpdateRequest request);
 
     /**
@@ -53,6 +61,9 @@ public abstract class DataSourceWebConverter {
      * @param dataSourceDTO
      * @return
      */
+    @Mappings({
+        @Mapping(target = "user", source = "userName")
+    })
     public abstract DataSourceVO dto2vo(DataSourceDTO dataSourceDTO);
 
     /**

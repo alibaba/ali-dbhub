@@ -56,7 +56,7 @@ public abstract class DataSourceCoreConverter {
         }
         param.setDriverClass(driverClassEnum.getClassName());
         param.setUrl(dataSourceDO.getUrl());
-        param.setUsername(dataSourceDO.getUser());
+        param.setUsername(dataSourceDO.getUserName());
         param.setPassword(dataSourceDO.getPassword());
         return param;
     }

@@ -31,7 +31,7 @@ public class DataSourceUpdateParam {
     /**
      * 用户名
      */
-    private String user;
+    private String userName;
 
     /**
      * 密码
