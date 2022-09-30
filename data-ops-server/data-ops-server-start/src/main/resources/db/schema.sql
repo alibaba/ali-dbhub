@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `test`
      `number`   int  COMMENT '数字'
 )  ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='测试表';
 
-DROP TABLE if exists data_source;
+-- DROP TABLE if exists data_source;
 CREATE TABLE IF NOT EXISTS `data_source` (
     `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
     `gmt_create` datetime NOT NULL COMMENT '创建时间',
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `data_source` (
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='数据源连接表'
 ;
 
-DROP TABLE if exists user_executed_ddl;
+-- DROP TABLE if exists user_executed_ddl;
 CREATE TABLE IF NOT EXISTS `user_executed_ddl` (
     `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
     `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `user_executed_ddl` (
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='我的执行记录表'
 ;
 
-DROP TABLE if exists user_saved_ddl;
+-- DROP TABLE if exists user_saved_ddl;
 CREATE TABLE IF NOT EXISTS `user_saved_ddl` (
     `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
     `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
