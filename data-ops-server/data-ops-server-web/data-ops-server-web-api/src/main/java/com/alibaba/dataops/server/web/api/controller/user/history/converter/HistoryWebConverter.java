@@ -10,6 +10,8 @@ import com.alibaba.dataops.server.web.api.controller.user.history.request.Histor
 import com.alibaba.dataops.server.web.api.controller.user.history.vo.HistoryVO;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 /**
  * @author moji
@@ -41,6 +43,9 @@ public abstract class HistoryWebConverter {
      * @param ddlDTO
      * @return
      */
+    @Mappings({
+        @Mapping(source = "ddl", target = "name")
+    })
     public abstract HistoryVO dto2vo(UserExecutedDdlDTO ddlDTO);
 
     /**
