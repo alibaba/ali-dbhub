@@ -20,4 +20,10 @@ public class TableSqlExportRequest extends DataSourceBaseRequest {
     @NotNull
     private String tableName;
 
+    /**
+     * 控制台id
+     */
+    @NotNull
+    private Long consoleId;
+
 }
