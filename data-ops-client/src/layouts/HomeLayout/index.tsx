@@ -32,9 +32,9 @@ const navConfig: INavItem[] = [
 ];
 
 export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
-
   const location = useLocation();
-  const [currentNav, setCurrentNav] = useState<string>(location.pathname || navConfig[0].path);
+  const defaultNav = location.pathname == '/' ? navConfig[0].path : location.pathname
+  const [currentNav, setCurrentNav] = useState<string>(defaultNav);
 
   function switchingNav(item: INavItem) {
     history.push(item.path);

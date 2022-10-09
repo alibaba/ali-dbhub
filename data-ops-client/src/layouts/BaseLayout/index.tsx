@@ -44,7 +44,9 @@ export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
   return (
     <div className={styles.page}>
       <div className={styles.layoutLeft}>
-        <BrandLogo className={styles.brandLogo} />
+        <a href="/">
+          <BrandLogo className={styles.brandLogo} />
+        </a>
         <ul className={styles.navList}>
           {LNKConfig.map((item) => {
             return (

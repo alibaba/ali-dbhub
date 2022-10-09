@@ -35,7 +35,7 @@ const tabs: ITab[] = [
   }
 ]
 
-export default memo<IProps>(function SQLHistory({ className }) {
+export default memo<IProps>(function SQLHistoryPage({ className }) {
 
   const [currentTab, setCurrentTab] = useState(tabs[0].key);
   const [dataList, setDataList] = useState<IHistoryRecord[] | null>();

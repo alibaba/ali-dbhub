@@ -32,8 +32,8 @@ export default defineConfig({
       component: '@/components/AppContainer',
       routes: [
         { path: '/login', exact: true, component: '@/pages/login' },
-        { path: '/demo', exact: true, component: '@/pages/demo' },
         { path: '/error', component: '@/pages/error' },
+        { path: '/demo', exact: true, component: '@/pages/demo' },
         {
           path: '/database',
           component: '@/layouts/BaseLayout',

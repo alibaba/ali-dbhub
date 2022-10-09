@@ -3,7 +3,18 @@
 
 .page{
   height: 200px;
-  background: url('../../assets/noData.png');
-  background-color: red;
-  background-size: contain;
+ 
+}
+.loading{
+  display: inline-block;
+  animation: loading-animation 1s infinite linear;
+}
+
+@keyframes loading-animation {
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
 }

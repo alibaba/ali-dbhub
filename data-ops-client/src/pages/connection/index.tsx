@@ -23,8 +23,8 @@ import {
 } from 'antd';
 
 import styles from './index.less';
+import globalStyle from '@/global.less';
 import LoadingContent from '@/components/Loading/LoadingContent';
-import { defaultRenderCollapsedButton } from '@ant-design/pro-layout/lib/components/SiderMenu/SiderMenu';
 
 const { Option } = Select;
 
@@ -68,7 +68,7 @@ const menuList: IMenu[] = [
   }
 ];
 
-export default memo<IProps>(function Connection(props) {
+export default memo<IProps>(function ConnectionPage(props) {
   const { className } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [connectionList, setConnectionList] = useState<IConnectionBase[]>();
@@ -145,10 +145,10 @@ export default memo<IProps>(function Connection(props) {
       }
     }
     return (
-      <ul className={styles.menu}>
+      <ul className={globalStyle.menuList}>
         {menuList.map((item) => {
           return (
-            <li onClick={clickMenuList.bind(null, item)} key={item.code} className={styles.menuItem}>
+            <li onClick={clickMenuList.bind(null, item)} key={item.code} className={globalStyle.menuItem}>
               <Iconfont code={item.icon}></Iconfont>
               {item.title}
             </li>

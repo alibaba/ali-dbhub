@@ -43,11 +43,11 @@ const backgroundList = [
     name: '亮色',
     img: 'https://img.alicdn.com/imgextra/i2/O1CN01HCTGD11PF1erPJvXa_!!6000000001810-2-tps-182-137.png'
   },
-  {
-    code: 'eyeshield',
-    name: '护眼',
-    img: 'https://img.alicdn.com/imgextra/i1/O1CN01KGCqY21uJpuFjEQW2_!!6000000006017-2-tps-181-135.png'
-  },
+  // {
+  //   code: 'eyeshield',
+  //   name: '护眼',
+  //   img: 'https://img.alicdn.com/imgextra/i1/O1CN01KGCqY21uJpuFjEQW2_!!6000000006017-2-tps-181-135.png'
+  // },
 ];
 
 export default memo<IProps>(function Setting({ className }) {
@@ -115,7 +115,7 @@ export default memo<IProps>(function Setting({ className }) {
             );
           })}
         </ul>
-        <div className={styles.title}>
+        {/* <div className={styles.title}>
           主题色
         </div>
         <ul className={styles.primaryColorList}>
@@ -126,7 +126,7 @@ export default memo<IProps>(function Setting({ className }) {
               </li>
             );
           })}
-        </ul>
+        </ul> */}
         <div className={styles.title}>
           语言
         </div>

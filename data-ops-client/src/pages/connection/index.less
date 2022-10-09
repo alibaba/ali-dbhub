@@ -102,26 +102,26 @@
   }
 }
 
-.menu {
+.menuList {
   padding: 3px;
   border-radius: 4px;
   background-color: var(--color-bg-200);
-  box-shadow: 0 1px 8px var(--custom-primary-color-outline);
+  box-shadow: var(--color-box-shadow);
   .menuItem {
+    display: flex;
     margin: 3px;
     padding: 5px 10px;
     border-radius: 4px;
-    cursor: pointer;
-    display: flex;
     align-items: center;
+    color: var(--color-text-65);
+    cursor: pointer;
     i {
       font-size: 16px;
       margin-right: 10px;
     }
     &:hover {
-      // color: var(--custom-primary-color);
-      background-color: var(--custom-primary-color-hover);
-      color: var(--color-bg-100);
+      background-color: var(--custom-primary-1);
+      color: var(--custom-primary-color);
     }
   }
 }

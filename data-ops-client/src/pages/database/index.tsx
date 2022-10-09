@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState, useRef } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { history, useParams } from 'umi';
-import { Button, DatePicker, Input, Table, Tabs } from 'antd';
+import { Button, DatePicker, Input, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import i18n from '@/i18n';
 import AppHeader from '@/components/AppHeader';
@@ -13,14 +13,16 @@ import MonacoEditor from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import connectionServer from '@/service/connection';
+import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
-import { IConnectionBase } from '@/types'
-
+import Tabs from '@/components/Tabs';
+import { IConnectionBase, ITreeNode } from '@/types'
+import { TreeNodeType } from '@/utils/constants'
+import { toTreeList } from '@/utils/index'
 
 interface IProps {
   className?: any;
 }
-
 interface DataType {
   key: React.Key;
   name: string;
@@ -43,7 +45,7 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-const data: DataType[] = [
+const tableDataMock: DataType[] = [
   {
     key: '1',
     name: 'John Brown',
@@ -73,7 +75,7 @@ const initialItems = [
   },
 ];
 
-export default memo<IProps>(function Database({ className }) {
+export default memo<IProps>(function DatabasePage({ className }) {
   const params: { id: string } = useParams()
   const letfRef = useRef<HTMLDivElement | null>(null);
   const [databaseDetaile, setDatabaseDetaile] = useState<IConnectionBase>()
@@ -81,14 +83,107 @@ export default memo<IProps>(function Database({ className }) {
   const [activeKey, setActiveKey] = useState(initialItems[0].key);
   const [items, setItems] = useState(initialItems);
   const newTabIndex = useRef(0);
-  const [tableData, setTableDate] = useState()
+  const [tableData, setTableDate] = useState(tableDataMock);
+  const [treeData, setTreeData] = useState<ITreeNode[] | null>(null);
   let editor: any = ''
 
   useEffect(() => {
     if (params.id) {
       getDetaile()
+      getDBList()
     }
   }, [])
+
+  const getDBList = () => {
+    const DBList: ITreeNode[] = [
+      {
+        key: '1',
+        name: 'data-ops',
+        type: TreeNodeType.DATABASE,
+        children: [
+          {
+            key: '1-1',
+            name: '表',
+            type: TreeNodeType.TABLE,
+          },
+          {
+            key: '1-2',
+            name: '查询',
+            type: TreeNodeType.SAVE,
+          },
+        ]
+      },
+      {
+        key: '2',
+        name: 'ata',
+        type: TreeNodeType.DATABASE,
+        children: [
+          {
+            key: '2-1',
+            name: '表',
+            type: TreeNodeType.TABLE,
+          },
+          {
+            key: '2-2',
+            name: '查询',
+            type: TreeNodeType.SAVE,
+          },
+        ]
+      },
+      {
+        key: '3',
+        name: 'grow',
+        type: TreeNodeType.DATABASE,
+        children: [
+          {
+            key: '3-1',
+            name: '表',
+            type: TreeNodeType.TABLE,
+          },
+          {
+            key: '3-2',
+            name: '查询',
+            type: TreeNodeType.SAVE,
+          },
+        ]
+      },
+    ]
+    setTreeData(DBList)
+  }
+
+  const getTableList = () => {
+    let p = {
+      dataSourceId: '11',
+      databaseName: '11',
+      pageNo: 1,
+      pageSize: 10,
+    }
+    return mysqlServer.getList(p).then(res => {
+      const tableList: ITreeNode[] = res.data.map(item => {
+        return {
+          name: item.name,
+          type: TreeNodeType.TABLE,
+          key: item.name,
+          children: [
+            {
+              key: '1',
+              name: '列',
+              type: TreeNodeType.LINE,
+              children: toTreeList(item.columnList, 'name', 'type', TreeNodeType.LINE)
+            },
+            {
+              key: '1',
+              name: '索引',
+              type: TreeNodeType.INDEXES,
+              children: toTreeList(item.indexList, 'name', 'type', TreeNodeType.INDEXES)
+            }
+          ]
+        }
+      })
+      return tableList
+    })
+
+  }
 
   const makerResultHeaderList = () => {
     const list = [
@@ -144,7 +239,7 @@ export default memo<IProps>(function Database({ className }) {
     }
     connectionServer.getDetaile(p).then(res => {
       setDatabaseDetaile(res)
-      setTableDate([])
+      // setTableDate([])
     })
   }
 
@@ -199,6 +294,15 @@ export default memo<IProps>(function Database({ className }) {
     setActiveKey(newActiveKey);
   };
 
+  const loadData = (data: ITreeNode) => {
+    if (!data.children && data.type === TreeNodeType.TABLE) {
+      return getTableList()
+    } else {
+      return new Promise((r) => {
+        r(null)
+      })
+    }
+  }
 
   return (
     <div className={classnames(className, styles.box)}>
@@ -208,7 +312,7 @@ export default memo<IProps>(function Database({ className }) {
             <div className={styles.databaseName}>
               {databaseDetaile?.alias}
             </div>
-            <Iconfont code="&#xe7b1;"></Iconfont>
+            {databaseDetaile?.alias && <Iconfont code="&#xe7b1;"></Iconfont>}
           </div>
           <div className={styles.searchBox}>
             <SearchInput placeholder='搜索'></SearchInput>
@@ -224,7 +328,7 @@ export default memo<IProps>(function Database({ className }) {
           <Iconfont code="&#xe63d;"></Iconfont>
           <span>{i18n('database.button.overview')}</span>
         </div>
-        <Tree className={styles.tree}></Tree>
+        <Tree className={styles.tree} loadData={loadData} treeData={treeData}></Tree>
       </div>
       <DraggableDivider callback={callback} volatileRef={letfRef} />
       <div className={styles.main}>
@@ -252,15 +356,14 @@ export default memo<IProps>(function Database({ className }) {
           <div className={styles.searchResult}>
             <div className={styles.resultHeader}>
               <Tabs
-                defaultActiveKey="6"
                 onChange={onChange}
-                items={makerResultHeaderList()}
+                tabs={makerResultHeaderList()}
               />
             </div>
             <div className={styles.resultContent}>
               <LoadingContent data={tableData} handleEmpty>
                 <div className={styles.tableBox}>
-                  <Table columns={columns} dataSource={data} size="middle" />
+                  <Table columns={columns} dataSource={tableData} size="middle" />
                 </div>
               </LoadingContent>
             </div>

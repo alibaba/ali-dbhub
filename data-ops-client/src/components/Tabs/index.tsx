@@ -11,7 +11,7 @@ export interface ITab {
 interface IProps {
   className?: string;
   tabs: ITab[];
-  currentTab: string;
+  currentTab?: string;
   onChange: (item: string) => void;
   extra?: React.ReactNode;
 

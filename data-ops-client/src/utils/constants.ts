@@ -1,5 +1,5 @@
-import mysqlLogo from '@/assets/mysqlLogo.png';
-import redisLogo from '@/assets/redisLogo.png';
+import mysqlLogo from '@/assets/mysql-logo.png';
+import redisLogo from '@/assets/redis-logo.png';
 import {IDatabase} from '@/types'
 
 export enum DatabaseTypeCode {
@@ -15,7 +15,7 @@ export const databaseType:{
 } = {
   [DatabaseTypeCode.MYSQL]:{
     name: 'MySQL',
-    img: mysqlLogo,
+    img: redisLogo,
     code: DatabaseTypeCode.MYSQL
   },
   [DatabaseTypeCode.REDIS]:{
@@ -29,6 +29,11 @@ export const databaseTypeList = Object.keys(databaseType).map(keys=>{
   return databaseType[keys]
 })
 
-
-
-
+export enum TreeNodeType {
+  TABLE = 'table',
+  DATABASE = 'database',
+  SEARCH = 'search',
+  LINE = 'line',
+  SAVE = 'save',
+  INDEXES = 'indexes'
+}

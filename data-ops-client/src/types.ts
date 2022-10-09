@@ -1,4 +1,4 @@
-import { DatabaseTypeCode } from '@/utils/constants'
+import { DatabaseTypeCode, TreeNodeType} from '@/utils/constants'
 
 export interface IDatabase {
   name: string;
@@ -10,6 +10,8 @@ export interface IPageResponse<T> {
   pageNo: number;
   pageSize: number;
   total: number;
+  hasNextPage?: boolean;
+
 }
 export interface IPageParams {
   searchKey?:string;
@@ -26,11 +28,34 @@ export interface IConnectionBase{
   envType: string;
 }
 export interface IHistoryRecord{
-  id?:number;
+  id?: number;
   name: string;
   dataSourceId: string;
   databaseName: string;
   type: DatabaseTypeCode;
+}
+export interface ITableColumn{
+  name: string;
+  type: string;
+  description: string;
+}
+export interface ITableIndex{
+  name: string;
+  type: string;
+  columns: string;
+}
+export interface ITable{
+  name: string;
+  description: string;
+  columnList: ITableColumn[];
+  indexList: ITableIndex[];
+}
+export interface ITreeNode{
+  key: string;
+  name: string;
+  type: TreeNodeType;
+  isLeaf?: boolean;
+  children?: ITreeNode[];
 }
 
 

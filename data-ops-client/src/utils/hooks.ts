@@ -13,3 +13,8 @@ export function useDebounce<A extends any[]>(callback: (...args: A) => void, tim
     }, timeout);
   }, [callback, timeout]);
 }
+
+export function useLogin(){
+  const [isLogin,setIsLogin] = useState(1)
+  return [isLogin]
+}

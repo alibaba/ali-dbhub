@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './index.less';
 import { history } from 'umi';
 
-export default function IndexPage() {
+export default function LoginPage() {
   function login() {
     history.push('/');
   }
