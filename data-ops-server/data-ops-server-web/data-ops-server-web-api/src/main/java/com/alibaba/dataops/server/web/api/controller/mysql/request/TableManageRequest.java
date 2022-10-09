@@ -19,4 +19,10 @@ public class TableManageRequest extends DataSourceBaseRequest {
      */
     @NotNull
     private String sql;
+
+    /**
+     * 控制台id
+     */
+    @NotNull
+    private Long consoleId;
 }

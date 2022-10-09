@@ -39,7 +39,7 @@ public class UserExecutedDdlDTO {
     /**
      * db名称
      */
-    private String dataBaseName;
+    private String databaseName;
 
     /**
      * 数据库类型

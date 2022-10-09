@@ -1,12 +1,14 @@
 package com.alibaba.dataops.server.web.api.controller.user.save;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.alibaba.dataops.server.domain.core.api.model.UserSavedDdlDTO;
 import com.alibaba.dataops.server.domain.core.api.param.UserSavedDdlCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.UserSavedDdlPageQueryParam;
 import com.alibaba.dataops.server.domain.core.api.param.UserSavedDdlUpdateParam;
 import com.alibaba.dataops.server.domain.core.api.service.UserSavedDdlCoreService;
+import com.alibaba.dataops.server.tools.base.enums.StatusEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
@@ -17,6 +19,7 @@ import com.alibaba.dataops.server.web.api.controller.user.save.request.DdlQueryR
 import com.alibaba.dataops.server.web.api.controller.user.save.request.DdlUpdateRequest;
 import com.alibaba.dataops.server.web.api.controller.user.save.vo.DdlVO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +56,12 @@ public class DdlManageController {
     @GetMapping("/list")
     public WebPageResult<DdlVO> list(DdlQueryRequest request) {
         UserSavedDdlPageQueryParam param = ddlManageWebConverter.queryReq2param(request);
+        if (StringUtils.isNotBlank(request.getDatabaseName()) && Objects.nonNull(request.getDataSourceId())) {
+            // 如果db不为空，则只查询db下面关联的临时保存
+            param.setStatus(StatusEnum.DRAFT.getCode());
+        } else {
+            param.setStatus(StatusEnum.RELEASE.getCode());
+        }
         PageResult<UserSavedDdlDTO> dtoPageResult = userSavedDdlCoreService.queryPage(param);
         List<DdlVO> ddlVOS = ddlManageWebConverter.dto2vo(dtoPageResult.getData());
         return WebPageResult.of(ddlVOS, dtoPageResult.getTotal(), request.getPageNo(), request.getPageSize());
