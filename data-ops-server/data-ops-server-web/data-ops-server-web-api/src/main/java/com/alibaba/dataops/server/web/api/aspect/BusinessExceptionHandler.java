@@ -30,7 +30,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 @Aspect
 @Slf4j
-//@Order(11)
 public class BusinessExceptionHandler {
 
     @Autowired
@@ -52,17 +51,13 @@ public class BusinessExceptionHandler {
         } catch (Throwable t) {
             log.error("invoke method {} error: {}.", proceedingJoinPoint.getSignature().getName(),
                 JSON.toJSONString(proceedingJoinPoint.getArgs()), t);
-            HttpServletRequest servletRequest
-                = ((ServletRequestAttributes)(RequestContextHolder.currentRequestAttributes())).getRequest();
-            Locale locale = servletRequest.getHeaders(LOCALE_HEADER).hasMoreElements() ?
-                new Locale(servletRequest.getHeaders(LOCALE_HEADER).nextElement()) : Locale.CHINA;
+
             if (t instanceof BusinessException) {
                 BusinessException exception = (BusinessException)t;
-                String message = messageSource.getMessage(exception.getCode(), null, exception.getMessage(), locale);
+                String message = getMessage(exception.getCode(),  exception.getMessage());
                 return error(proceedingJoinPoint, exception.getCode(), message);
             }
-            String message = messageSource.getMessage(CommonErrorEnum.COMMON_SYSTEM_ERROR.name(),
-                new Object[] {t.getMessage()}, locale);
+            String message = getMessage(CommonErrorEnum.COMMON_SYSTEM_ERROR.name(), t.getMessage());
             return error(proceedingJoinPoint, CommonErrorEnum.COMMON_SYSTEM_ERROR.name(), message);
         }
     }
@@ -86,5 +81,26 @@ public class BusinessExceptionHandler {
             result.errorMessage(e.getMessage());
             return result;
         }
+    }
+
+    /**
+     * get i18n message
+     *
+     * @param code
+     * @param message
+     * @return
+     */
+    private String getMessage(String code, String message) {
+        try {
+            HttpServletRequest servletRequest
+                = ((ServletRequestAttributes)(RequestContextHolder.currentRequestAttributes())).getRequest();
+            Locale locale = servletRequest.getHeaders(LOCALE_HEADER).hasMoreElements() ?
+                new Locale(servletRequest.getHeaders(LOCALE_HEADER).nextElement()) : Locale.CHINA;
+            return messageSource.getMessage(CommonErrorEnum.COMMON_SYSTEM_ERROR.name(),
+                null, message, locale);
+        } catch (Exception exception) {
+            log.error("get i18n message error", exception);
+        }
+        return code;
     }
 }
