@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.start.config;
+package com.alibaba.dataops.server.start.config.mybatis;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

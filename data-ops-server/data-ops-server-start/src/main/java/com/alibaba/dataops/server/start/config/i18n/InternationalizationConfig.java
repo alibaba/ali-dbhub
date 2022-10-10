@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.start.i18n;
+package com.alibaba.dataops.server.start.config.i18n;
 
 import java.util.Locale;
 
@@ -17,7 +17,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
  * @date 2022/10/10
  */
 @Configuration
-public class Internationalization  implements WebMvcConfigurer {
+public class InternationalizationConfig implements WebMvcConfigurer {
 
     @Bean
     public AcceptHeaderLocaleResolver localeResolver() {
