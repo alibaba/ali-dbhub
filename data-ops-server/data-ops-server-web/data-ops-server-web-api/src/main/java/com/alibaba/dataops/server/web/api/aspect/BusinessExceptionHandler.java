@@ -18,6 +18,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -26,10 +27,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * @version BusinessExceptionHandler.java, v 0.1 2022年10月10日 14:45 moji Exp $
  * @date 2022/10/10
  */
-
+@Component
 @Aspect
 @Slf4j
-@Order(11)
+//@Order(11)
 public class BusinessExceptionHandler {
 
     @Autowired
@@ -43,13 +44,13 @@ public class BusinessExceptionHandler {
             String method = proceedingJoinPoint.getSignature().getDeclaringTypeName() + proceedingJoinPoint
                 .getSignature().getName();
             long s1 = System.currentTimeMillis();
-            log.info("开始调用方法:{},参数为:{}", method, JSON.toJSONString(proceedingJoinPoint.getArgs()));
+            log.info("proceed begin:{} ,param:{}", method, JSON.toJSONString(proceedingJoinPoint.getArgs()));
             Object result = proceedingJoinPoint.proceed();
             long cost = System.currentTimeMillis() - s1;
-            log.info("结束调用方法:{},结果为:{}, cost:{}", method, JSON.toJSONString(result), cost);
+            log.info("proceed end:{}, result:{}, cost:{}", method, JSON.toJSONString(result), cost);
             return result;
         } catch (Throwable t) {
-            log.error("调用方法:{}异常:{}.", proceedingJoinPoint.getSignature().getName(),
+            log.error("invoke method {} error: {}.", proceedingJoinPoint.getSignature().getName(),
                 JSON.toJSONString(proceedingJoinPoint.getArgs()), t);
             HttpServletRequest servletRequest
                 = ((ServletRequestAttributes)(RequestContextHolder.currentRequestAttributes())).getRequest();
@@ -77,7 +78,7 @@ public class BusinessExceptionHandler {
             result.errorMessage(errorMessage);
             return result;
         } catch (Exception e) {
-            log.error("无法获取切面的返回类型!", e);
+            log.error("invalid return type!", e);
             Object resultInstance = new Object();
             Result<Object> result = (Result<Object>)resultInstance;
             result.success(false);
