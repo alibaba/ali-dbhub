@@ -14,6 +14,8 @@ import com.alibaba.dataops.server.domain.core.core.converter.DataSourceCoreConve
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
 import com.alibaba.dataops.server.domain.core.repository.mapper.DataSourceMapper;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
+import com.alibaba.dataops.server.tools.base.excption.BusinessException;
+import com.alibaba.dataops.server.tools.base.excption.DatasourceErrorEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
@@ -104,6 +106,9 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param
             = dataSourceCoreConverter.do2param(dataSourceDO);
         ActionResult actionResult = dataSourceDataService.create(param);
+        if (!actionResult.getSuccess()) {
+            throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
+        }
         // TODO 增加获取数据源下database逻辑
         return null;
     }
