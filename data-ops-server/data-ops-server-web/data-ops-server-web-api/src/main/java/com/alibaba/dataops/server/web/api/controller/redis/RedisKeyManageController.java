@@ -2,6 +2,7 @@ package com.alibaba.dataops.server.web.api.controller.redis;
 
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
+import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dataops.server.web.api.controller.redis.request.KeyCreateRequest;
 import com.alibaba.dataops.server.web.api.controller.redis.request.KeyDeleteRequest;
 import com.alibaba.dataops.server.web.api.controller.redis.request.KeyQueryRequest;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version MysqlTableManageController.java, v 0.1 2022年09月16日 17:41 moji Exp $
  * @date 2022/09/16
  */
+@BusinessExceptionAspect
 @RequestMapping("/api/redis/key")
 @RestController
 public class RedisKeyManageController {

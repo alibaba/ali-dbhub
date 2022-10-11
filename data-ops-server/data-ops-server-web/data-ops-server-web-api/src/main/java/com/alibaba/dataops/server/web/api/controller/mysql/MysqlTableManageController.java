@@ -2,8 +2,8 @@ package com.alibaba.dataops.server.web.api.controller.mysql;
 
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
-import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
+import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableBriefQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableDeleteRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableDetailQueryRequest;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version MysqlTableManageController.java, v 0.1 2022年09月16日 17:41 moji Exp $
  * @date 2022/09/16
  */
+@BusinessExceptionAspect
 @RequestMapping("/api/mysql/table")
 @RestController
 public class MysqlTableManageController {

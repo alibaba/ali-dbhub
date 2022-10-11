@@ -13,6 +13,7 @@ import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
+import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dataops.server.web.api.controller.user.save.converter.DdlManageWebConverter;
 import com.alibaba.dataops.server.web.api.controller.user.save.request.DdlCreateRequest;
 import com.alibaba.dataops.server.web.api.controller.user.save.request.DdlQueryRequest;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version DdlManageController.java, v 0.1 2022年09月16日 19:59 moji Exp $
  * @date 2022/09/16
  */
+@BusinessExceptionAspect
 @RequestMapping("/api/ddl")
 @RestController
 public class DdlManageController {
