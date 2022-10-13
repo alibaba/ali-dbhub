@@ -110,6 +110,6 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
             throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
         }
         // TODO 增加获取数据源下database逻辑
-        return null;
+        return ListResult.empty();
     }
 }
