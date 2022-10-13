@@ -54,7 +54,7 @@ public abstract class DataSourceCoreConverter {
         if (Objects.isNull(driverClassEnum)) {
             throw new BusinessException(CommonErrorEnum.DRIVER_CLASS_NOT_EXIST);
         }
-        param.setDriverClass(driverClassEnum.getClassName());
+        param.setDriverClass(driverClassEnum.name());
         param.setUrl(dataSourceDO.getUrl());
         param.setUsername(dataSourceDO.getUserName());
         param.setPassword(dataSourceDO.getPassword());
