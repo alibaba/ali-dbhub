@@ -6,6 +6,7 @@ import java.util.Objects;
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
 import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
@@ -68,6 +69,27 @@ public abstract class DataSourceCoreConverter {
         param.setUrl(dataSourceDO.getUrl());
         param.setUsername(dataSourceDO.getUserName());
         param.setPassword(dataSourceDO.getPassword());
+        return param;
+    }
+
+    /**
+     * 参数转换
+     *
+     * @param dataSourceTestParam
+     * @return
+     */
+    public com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param2param(
+        DataSourceTestParam dataSourceTestParam) {
+        com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param
+            = new com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam();
+        DriverClassEnum driverClassEnum = DriverClassEnum.getByName(dataSourceTestParam.getType());
+        if (Objects.isNull(driverClassEnum)) {
+            throw new BusinessException(CommonErrorEnum.DRIVER_CLASS_NOT_EXIST);
+        }
+        param.setDriverClass(driverClassEnum.name());
+        param.setUrl(dataSourceTestParam.getUrl());
+        param.setUsername(dataSourceTestParam.getUser());
+        param.setPassword(dataSourceTestParam.getPassword());
         return param;
     }
 

@@ -6,9 +6,11 @@ import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCreateRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceQueryRequest;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceTestRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceUpdateRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.vo.DataSourceVO;
 import com.alibaba.dataops.server.web.api.controller.data.source.vo.DatabaseVO;
@@ -89,5 +91,13 @@ public abstract class DataSourceWebConverter {
      * @return
      */
     public abstract List<DatabaseVO> databaseDto2vo(List<DatabaseDTO> databaseDTOS);
+
+    /**
+     * 参数转换
+     *
+     * @param request
+     * @return
+     */
+    public abstract DataSourceTestParam testRequest2param(DataSourceTestRequest request);
 
 }

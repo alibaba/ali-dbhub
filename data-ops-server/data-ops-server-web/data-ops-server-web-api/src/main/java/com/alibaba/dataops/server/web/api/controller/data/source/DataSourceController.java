@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
@@ -46,7 +47,8 @@ public class DataSourceController {
      */
     @GetMapping("/test")
     public ActionResult test(DataSourceTestRequest request) {
-        return null;
+        DataSourceTestParam param = dataSourceWebConverter.testRequest2param(request);
+        return dataSourceCoreService.test(param);
     }
 
     /**

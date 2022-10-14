@@ -6,6 +6,7 @@ import java.util.List;
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
@@ -108,6 +109,18 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         IPage<DataSourceDO> iPage = dataSourceMapper.selectPage(page, queryWrapper);
         List<DataSourceDTO> dataSourceDTOS = dataSourceCoreConverter.do2dto(iPage.getRecords());
         return PageResult.of(dataSourceDTOS, iPage.getTotal(), param);
+    }
+
+    @Override
+    public ActionResult test(DataSourceTestParam param) {
+        com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam dataSourceCreateParam
+            = dataSourceCoreConverter.param2param(param);
+        ActionResult actionResult = dataSourceDataService.create(dataSourceCreateParam);
+        if (!actionResult.getSuccess()) {
+            throw new BusinessException(DatasourceErrorEnum.DATASOURCE_TEST_ERROR);
+        }
+        // TODO 关闭连接
+        return actionResult;
     }
 
     @Override
