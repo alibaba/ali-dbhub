@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceSelector;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
@@ -78,4 +79,12 @@ public interface DataSourceCoreService {
      * @return
      */
     ListResult<DatabaseDTO> attach(Long id);
+
+    /**
+     * 数据源执行
+     *
+     * @param param
+     * @return
+     */
+    DataResult<Object> execute(DataSourceExecuteParam param);
 }

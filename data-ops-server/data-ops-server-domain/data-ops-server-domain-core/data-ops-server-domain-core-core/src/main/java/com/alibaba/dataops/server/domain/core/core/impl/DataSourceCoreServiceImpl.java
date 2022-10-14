@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
@@ -13,7 +14,10 @@ import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.core.core.converter.DataSourceCoreConverter;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
 import com.alibaba.dataops.server.domain.core.repository.mapper.DataSourceMapper;
+import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
+import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
+import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.excption.DatasourceErrorEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
@@ -41,6 +45,12 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
 
     @Autowired
     private DataSourceDataService dataSourceDataService;
+
+    @Autowired
+    private ConsoleDataService consoleDataService;
+
+    @Autowired
+    private JdbcTemplateDataService jdbcTemplateDataService;
 
     @Autowired
     private DataSourceCoreConverter dataSourceCoreConverter;
@@ -111,5 +121,16 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         }
         // TODO 增加获取数据源下database逻辑
         return ListResult.empty();
+    }
+
+    @Override
+    public DataResult<Object> execute(DataSourceExecuteParam param) {
+        ConsoleCreateParam consoleCreateParam = dataSourceCoreConverter.param2consoleParam(param);
+        ActionResult actionResult = consoleDataService.create(consoleCreateParam);
+        if (!actionResult.getSuccess()) {
+            throw new BusinessException(DatasourceErrorEnum.CONSOLE_CONNECT_ERROR);
+        }
+        // TODO 增加sql执行逻辑
+        return null;
     }
 }

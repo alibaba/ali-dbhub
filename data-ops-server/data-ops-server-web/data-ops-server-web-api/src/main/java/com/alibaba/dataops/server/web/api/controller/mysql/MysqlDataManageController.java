@@ -1,11 +1,15 @@
 package com.alibaba.dataops.server.web.api.controller.mysql;
 
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
+import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
+import com.alibaba.dataops.server.web.api.controller.mysql.converter.MysqlDataConverter;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.DataExportRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.DataManageRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/mysql/data")
 @RestController
 public class MysqlDataManageController {
+
+    @Autowired
+    private DataSourceCoreService dataSourceCoreService;
+
+    @Autowired
+    private MysqlDataConverter mysqlDataConverter;
 
     /**
      * 导出结果集Excel
@@ -65,7 +75,8 @@ public class MysqlDataManageController {
      */
     @PutMapping("/manage")
     public DataResult<Object> manage(@RequestBody DataManageRequest request) {
-        return null;
+        DataSourceExecuteParam param = mysqlDataConverter.request2param(request);
+        return dataSourceCoreService.execute(param);
     }
 
 }

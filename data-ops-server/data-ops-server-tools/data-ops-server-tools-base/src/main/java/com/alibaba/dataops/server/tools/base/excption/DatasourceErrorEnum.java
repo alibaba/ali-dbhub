@@ -15,7 +15,13 @@ public enum DatasourceErrorEnum implements BaseErrorEnum {
     /**
      * 数据源连接错误
      */
-    DATASOURCE_CONNECT_ERROR("数据源连接错误");
+    DATASOURCE_CONNECT_ERROR("数据源连接错误"),
+
+    /**
+     * 控制台链接错误
+     */
+    CONSOLE_CONNECT_ERROR("控制台链接错误"),
+
     ;
 
     DatasourceErrorEnum(String desctiption) {

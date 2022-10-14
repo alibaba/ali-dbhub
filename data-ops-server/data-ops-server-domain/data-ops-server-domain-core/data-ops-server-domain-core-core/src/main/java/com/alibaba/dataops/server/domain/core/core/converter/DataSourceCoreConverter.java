@@ -5,9 +5,11 @@ import java.util.Objects;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
 import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
+import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.excption.CommonErrorEnum;
 
@@ -38,6 +40,14 @@ public abstract class DataSourceCoreConverter {
      * @return
      */
     public abstract DataSourceDO param2do(DataSourceUpdateParam param);
+
+    /**
+     * 参数转换
+     *
+     * @param param
+     * @return
+     */
+    public abstract ConsoleCreateParam param2consoleParam(DataSourceExecuteParam param);
 
     /**
      * 参数转换
