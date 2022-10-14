@@ -13,6 +13,11 @@ import lombok.Getter;
 public enum DatasourceErrorEnum implements BaseErrorEnum {
 
     /**
+     * 数据源测试连接错误
+     */
+    DATASOURCE_TEST_ERROR("数据源测试连接错误"),
+
+    /**
      * 数据源连接错误
      */
     DATASOURCE_CONNECT_ERROR("数据源连接错误"),
