@@ -3,9 +3,16 @@ package com.alibaba.dataops.server.domain.data.core.model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
+import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
+import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
+import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
+
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -49,6 +56,59 @@ public class JdbcDataTemplate extends JdbcTemplate {
      * 连接
      */
     private Connection connection;
+
+    public ExecuteResultDTO queryData(final String sql) {
+
+        /**
+         * Callback to execute the query.
+         */
+        class QueryStatementCallback implements StatementCallback<ExecuteResultDTO>, SqlProvider {
+            @Override
+            @Nullable
+            public ExecuteResultDTO doInStatement(Statement stmt) throws SQLException {
+                ResultSet rs = null;
+                try {
+                    rs = stmt.executeQuery(sql);
+                    ExecuteResultDTO executeResult = ExecuteResultDTO.builder()
+                        .sql(sql)
+                        .build();
+                    // 获取有几列
+                    ResultSetMetaData resultSetMetaData = rs.getMetaData();
+                    int col = resultSetMetaData.getColumnCount();
+
+                    // 获取header信息
+                    List<CellDTO> headerList = Lists.newArrayListWithExpectedSize(col);
+                    executeResult.setHeaderList(headerList);
+                    for (int i = 1; i <= col; i++) {
+                        headerList.add(CellDTO.builder().type(CellTypeEnum.STRING.getCode())
+                            .stringValue(resultSetMetaData.getColumnName(i)).build());
+                    }
+
+                    // 获取数据信息
+                    List<List<CellDTO>> dataList = Lists.newArrayList();
+                    executeResult.setDataList(dataList);
+                    while (rs.next()) {
+                        List<CellDTO> row = Lists.newArrayListWithExpectedSize(col);
+                        dataList.add(row);
+                        for (int i = 1; i <= col; i++) {
+                            row.add(
+                                com.alibaba.dataops.server.domain.data.core.util.JdbcUtils.getResultSetValue(rs, i));
+                        }
+                    }
+                    return executeResult;
+                } finally {
+                    JdbcUtils.closeResultSet(rs);
+                }
+            }
+
+            @Override
+            public String getSql() {
+                return sql;
+            }
+        }
+
+        return execute(new QueryStatementCallback(), true);
+    }
 
     /**
      * 本方法未做任何修改

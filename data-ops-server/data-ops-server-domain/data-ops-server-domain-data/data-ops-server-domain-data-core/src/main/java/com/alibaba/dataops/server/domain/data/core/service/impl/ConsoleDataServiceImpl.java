@@ -7,6 +7,7 @@ import java.util.Map;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
+import com.alibaba.dataops.server.domain.data.core.model.DataSourceWrapper;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
@@ -29,10 +30,12 @@ public class ConsoleDataServiceImpl implements ConsoleDataService {
 
     @Override
     public ActionResult create(ConsoleCreateParam param) {
-        DruidDataSource druidDataSource = DataCenterUtils.DATA_SOURCE_CACHE.get(param.getDataSourceId());
-        if (druidDataSource == null) {
+        DataSourceWrapper dataSourceWrapper = DataCenterUtils.DATA_SOURCE_CACHE.get(param.getDataSourceId());
+        if (dataSourceWrapper == null) {
             throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
         }
+        DruidDataSource druidDataSource = dataSourceWrapper.getDruidDataSource();
+
         Long consoleId = param.getConsoleId();
         // 尝试关闭
         close(ConsoleCloseParam.builder().dataSourceId(param.getDataSourceId()).consoleId(consoleId).build());

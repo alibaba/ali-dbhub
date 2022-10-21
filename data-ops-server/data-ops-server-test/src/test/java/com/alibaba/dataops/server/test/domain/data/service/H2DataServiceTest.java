@@ -5,14 +5,21 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
+import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
+import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
+import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
+import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateUpdateParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
+import com.alibaba.dataops.server.domain.data.api.service.SqlDataService;
 import com.alibaba.dataops.server.test.common.BaseTest;
 import com.alibaba.dataops.server.test.domain.data.utils.TestUtils;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
@@ -46,6 +53,8 @@ public class H2DataServiceTest extends BaseTest {
     private ConsoleDataService consoleDataService;
     @Resource
     private JdbcTemplateDataService jdbcTemplateDataService;
+    @Resource
+    private SqlDataService sqlDataService;
 
     @Test
     @Order(1)
@@ -200,7 +209,6 @@ public class H2DataServiceTest extends BaseTest {
         log.info("查询数据返回{}", JSON.toJSONString(dataList));
     }
 
-
     @Test
     @Order(8)
     public void showDatabases() {
@@ -223,5 +231,37 @@ public class H2DataServiceTest extends BaseTest {
         templateQueryParam.setSql("explain select * from test_query where id=9999;");
         List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
         log.info("查询数据返回{}", JSON.toJSONString(dataList));
+    }
+
+    @Test
+    @Order(10)
+    public void execute() {
+        TemplateExecuteParam templateQueryParam = new TemplateExecuteParam();
+        templateQueryParam.setConsoleId(CONSOLE_ID);
+        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+        templateQueryParam.setSql("select * from test_query where id=1;");
+        ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
+        log.info("查询数据返回{}", JSON.toJSONString(executeResult));
+        List<CellDTO> headerList = executeResult.getHeaderList();
+        Assertions.assertEquals(4, headerList.size(), "查询结果异常");
+        List<List<CellDTO>> dataList = executeResult.getDataList();
+        Assertions.assertEquals(1, dataList.size(), "查询结果异常");
+        List<CellDTO> cellList = dataList.get(0);
+        Assertions.assertEquals(4, cellList.size(), "查询结果异常");
+        Assertions.assertEquals(CellTypeEnum.STRING.getCode(), cellList.get(0).getType(), "查询结果异常");
+        Assertions.assertEquals(CellTypeEnum.DATA.getCode(), cellList.get(2).getType(), "查询结果异常");
+    }
+
+    @Test
+    @Order(11)
+    public void analyse() {
+        SqlAnalyseParam sqlAnalyseParam = new SqlAnalyseParam();
+        sqlAnalyseParam.setDataSourceId(DATA_SOURCE_ID);
+        sqlAnalyseParam.setSql("select * from test_query where id=1;select * from test_query where id=122;");
+        List<SqlDTO> sqlList = sqlDataService.analyse(sqlAnalyseParam).getData();
+        log.info("分析数据返回{}", JSON.toJSONString(sqlList));
+        Assertions.assertEquals(2, sqlList.size(), "查询结果异常");
+        Assertions.assertEquals("SELECT *\nFROM test_query\nWHERE id = 1;", sqlList.get(0).getSql(), "查询结果异常");
+        Assertions.assertEquals("SELECT *\nFROM test_query\nWHERE id = 122;", sqlList.get(1).getSql(), "查询结果异常");
     }
 }

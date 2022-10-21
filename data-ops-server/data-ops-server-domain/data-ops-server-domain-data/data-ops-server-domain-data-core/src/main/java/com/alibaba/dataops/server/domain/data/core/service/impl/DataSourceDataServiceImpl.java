@@ -7,6 +7,7 @@ import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
+import com.alibaba.dataops.server.domain.data.core.model.DataSourceWrapper;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
@@ -44,18 +45,21 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
         druidDataSource.setInitialSize(0);
 
         // 放入缓存
-        DataCenterUtils.DATA_SOURCE_CACHE.put(dataSourceId, druidDataSource);
+        DataCenterUtils.DATA_SOURCE_CACHE.put(dataSourceId, DataSourceWrapper.builder()
+            .driverClass(driverClass)
+            .druidDataSource(druidDataSource)
+            .build());
         return ActionResult.isSuccess();
     }
 
     @Override
     public ActionResult close(DataSourceCloseParam param) {
-        DruidDataSource druidDataSource = DataCenterUtils.DATA_SOURCE_CACHE.remove(param.getDataSourceId());
-        if (druidDataSource == null) {
+        DataSourceWrapper dataSourceWrapper = DataCenterUtils.DATA_SOURCE_CACHE.remove(param.getDataSourceId());
+        if (dataSourceWrapper == null) {
             log.info("数据库连接源:{}不需要关闭", param.getDataSourceId());
             return ActionResult.isSuccess();
         }
-        druidDataSource.close();
+        dataSourceWrapper.getDruidDataSource().close();
 
         // 关闭连接
         Map<Long, JdbcDataTemplate> jdbcDataTemplateMap = DataCenterUtils.JDBC_TEMPLATE_CACHE.remove(
