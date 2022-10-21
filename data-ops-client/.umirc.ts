@@ -11,15 +11,12 @@ const chainWebpack = (config:any, { webpack }:any) => {
   ])
 
   // TODO: Monaco汉化
-  // config.module.rules
+  // config.module.rules()
   // .test(/\.js/)
   // .use(MonacoWebpackPlugin.loader)
   // .loader(MonacoWebpackPlugin.loader)
   // .options({name: /node_modules[\\\/]monaco-editor[\\\/]esm/ ,esModule: false});
 };
-
-
-
 
 export default defineConfig({
   title: 'dataOps',
@@ -35,27 +32,27 @@ export default defineConfig({
       component: '@/components/AppContainer',
       routes: [
         { path: '/login', exact: true, component: '@/pages/login' },
-        { path: '/demo', exact: true, component: '@/pages/demo' },
         { path: '/error', component: '@/pages/error' },
+        { path: '/demo', exact: true, component: '@/pages/demo' },
         {
           path: '/database',
-          component: '@/pages/database-manage',
+          component: '@/layouts/BaseLayout',
           routes: [
             {
               exact: true,
               path: '/database/:id',
-              component: '@/components/Database',
+              component: '@/pages/database',
             },
           ],
         },
         { 
           path: '/', 
-          component: '@/layout/HomeLayout',
+          component: '@/layouts/HomeLayout',
           routes:[
             {
               path: '/',
               exact: true,
-              redirect: '/connection',
+              component: '@/pages/connection',
             },
             {
               path: '/connection',
@@ -78,7 +75,7 @@ export default defineConfig({
   mfsu: {},
   fastRefresh: {},
   dynamicImport: {
-    loading: '@/components/Loading/index',
+    loading: '@/components/Loading/LazyLoading',
   },
   nodeModulesTransform: {
     type: 'none',

@@ -20,7 +20,7 @@ export default {
   'home.title.query': '查询',
 
   'database.buttonn.colorSwitch': '颜色切换',
-  'database.button.overview': '数据库概览',
+  'database.button.overview': '连接概览',
   'database.input.search': '搜索表',
   'database.input.newLink': '新建连接'
 }

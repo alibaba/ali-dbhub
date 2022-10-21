@@ -9,6 +9,7 @@ import com.alibaba.dataops.server.domain.core.api.service.UserExecutedDdlCoreSer
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
+import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dataops.server.web.api.controller.user.history.converter.HistoryWebConverter;
 import com.alibaba.dataops.server.web.api.controller.user.history.request.HistoryCreateRequest;
 import com.alibaba.dataops.server.web.api.controller.user.history.request.HistoryQueryRequest;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version HistoryManageController.java, v 0.1 2022年09月18日 10:55 moji Exp $
  * @date 2022/09/18
  */
+@BusinessExceptionAspect
 @RequestMapping("/api/history")
 @RestController
 public class HistoryManageController {

@@ -1,4 +1,4 @@
-import React, { Children, useEffect, useState } from 'react';
+import React, { Children, useEffect, useState, PropsWithChildren } from 'react';
 import styles from './index.less';
 import { history } from 'umi';
 import Iconfont from '@/components/Iconfont';
@@ -6,47 +6,54 @@ import classnames from 'classnames';
 import { Button, Menu } from 'antd';
 import Setting from '@/components/Setting';
 import BrandLogo from '@/components/BrandLogo';
-import { INavItem } from '@/types.js';
 import i18n from '@/i18n';
 
-const navConfig: INavItem[] = [
+interface Iprops {
+
+}
+
+interface INavItem {
+  title: string,
+  icon: string,
+  path: string,
+}
+
+const LNKConfig: INavItem[] = [
   {
     title: i18n('home.nav.database'),
     icon: '\ue759',
-    code: 'connection',
     path: '/connection',
   },
   {
     title: i18n('home.nav.mySql'),
     icon: '\ue759',
-    code: 'mySQL',
-    path: '/', // TODO
+    path: '/mySQL',
   },
 ];
 
-export default function HomePage(props: any) {
-  const [activeNav, setActiveNav] = useState<string>('connection');
+export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
+  const [activeNav, setActiveNav] = useState<string>(LNKConfig[0].path);
 
   useEffect(() => { }, []);
 
   function switchingNav(item: INavItem) {
-    history.push({
-      pathname: item.path,
-    });
-    setActiveNav(item.code);
+    history.push(item.path);
+    setActiveNav(item.path);
   }
 
   return (
     <div className={styles.page}>
       <div className={styles.layoutLeft}>
-        <BrandLogo className={styles.brandLogo} />
+        <a href="/">
+          <BrandLogo className={styles.brandLogo} />
+        </a>
         <ul className={styles.navList}>
-          {navConfig.map((item) => {
+          {LNKConfig.map((item) => {
             return (
               <li
-                key={item.code}
+                key={item.path}
                 className={classnames({
-                  [styles.activeNav]: item.code == activeNav,
+                  [styles.activeNav]: item.path == activeNav,
                 })}
                 onClick={switchingNav.bind(null, item)}
               >
@@ -61,7 +68,9 @@ export default function HomePage(props: any) {
         </div>
       </div>
       <div className={styles.layoutRight}>
-        <div className={styles.main}>{props.children}</div>
+        <div className={styles.main}>
+          {children}
+        </div>
       </div>
     </div>
   );

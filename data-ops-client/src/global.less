@@ -8,3 +8,59 @@ body {
     list-style: none;
   }
 }
+
+div,
+ul,
+li {
+  transition: border-color 0.3s, background 0.3s,
+    padding 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.menuList {
+  padding: 3px;
+  border-radius: 4px;
+  background-color: var(--color-bg-200);
+  box-shadow: var(--color-box-shadow);
+}
+
+.menuItem {
+  display: flex;
+  margin: 3px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  align-items: center;
+  color: var(--color-text-65);
+  cursor: pointer;
+  i {
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  &:hover {
+    background-color: var(--custom-primary-1);
+    color: var(--custom-primary-color);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-corner{
+  background: transparent;
+}

@@ -39,4 +39,9 @@ public class DataSourceVO {
      * 连接类型
      */
     private String type;
+
+    /**
+     * 环境类型
+     */
+    private String envType;
 }

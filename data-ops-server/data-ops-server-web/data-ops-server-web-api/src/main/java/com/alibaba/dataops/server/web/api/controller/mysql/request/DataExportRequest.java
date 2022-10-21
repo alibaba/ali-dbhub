@@ -23,6 +23,12 @@ public class DataExportRequest extends DataSourceBaseRequest {
     private String sql;
 
     /**
+     * 控制台id
+     */
+    @NotNull
+    private Long consoleId;
+
+    /**
      * 导出行ID列表
      */
     private List<Long> exportIds;

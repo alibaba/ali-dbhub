@@ -1,4 +1,5 @@
 import i18n, { isEN } from "@/i18n";
+import { TreeNodeType } from '@/utils/constants'
 
 export function formatDate(date, fmt = 'yyyy-MM-dd') {
   if (!date) {
@@ -25,7 +26,6 @@ export function formatDate(date, fmt = 'yyyy-MM-dd') {
       fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length));
   return fmt;
 }
-
 
 const monthNamesEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -69,4 +69,15 @@ export function formatNaturalDate(date: any) {
     return isEN() ? `${d.getDate()} ${monthNamesEn[d.getMonth()]}` : formatDate(d, 'M月d日');
   }
   return formatDate(d);
+}
+
+export function toTreeList(data:any[],name:string,key:string,type:TreeNodeType,isLeaf=true){
+  return data.map(item=>{
+    return {
+      key: item[key],
+      name: item[name],
+      isLeaf,
+      type
+    }
+  })
 }

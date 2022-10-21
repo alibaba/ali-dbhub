@@ -8285,7 +8285,6 @@ _:-ms-fullscreen
   transition: margin-bottom 0.3s 0.017s linear;
 }
 .custom-form-item-with-help {
-  margin-bottom: 0;
   transition: none;
 }
 .custom-form-item-hidden,

@@ -3,8 +3,6 @@ package com.alibaba.dataops.server.web.api.controller.data.source.request;
 
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dataops.server.tools.base.enums.DataSourceTypeEnum;
-
 import lombok.Data;
 
 /**
@@ -18,34 +16,7 @@ public class DataSourceAttachRequest {
     /**
      * 主键id
      */
+    @NotNull
     private Long id;
 
-    /**
-     * 连接别名
-     */
-    private String alias;
-
-    /**
-     * 连接地址
-     */
-    @NotNull
-    private String url;
-
-    /**
-     * 连接用户
-     */
-    private String user;
-
-    /**
-     * 密码
-     */
-    @NotNull
-    private String password;
-
-    /**
-     * 连接类型
-     * @see DataSourceTypeEnum
-     */
-    @NotNull
-    private String type;
 }

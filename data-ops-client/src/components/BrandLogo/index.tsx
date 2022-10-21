@@ -7,9 +7,9 @@ interface IProps {
   size?: number;
 }
 
-export default memo<IProps>(function BrandLogo({className, size = 48}) {
+export default memo<IProps>(function BrandLogo({ className, size = 48 }) {
   return (
-    <div className={classnames(className, styles.box)} style={{height:`${size}px`,width:`${size}px`}}>
+    <div className={classnames(className, styles.box)} style={{ height: `${size}px`, width: `${size}px` }}>
       <img src="https://cdn.apifox.cn/logo/apifox-logo-512.png" alt="" />
     </div>
   );

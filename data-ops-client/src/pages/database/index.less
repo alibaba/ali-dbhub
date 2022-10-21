@@ -48,7 +48,8 @@
   }
 
   &:hover{
-    background-color: var(--color-primary-8);
+    color: var(--custom-primary-color);
+    background-color: var(--custom-primary-1);
   }
 }
 
@@ -64,6 +65,7 @@
 }
 
 .currentNameBox{
+  height: 28px;
   display: flex;
   align-items: center;
   margin-bottom: 15px;
@@ -109,7 +111,6 @@
     border: none;
     outline: none;
     background-color: transparent;
-
   }
 
   .button{
@@ -173,38 +174,9 @@
   .failIcon{
     color: red;
   }
-
-  :global {
-    .custom-tabs-tab {
-      margin: 0px 10px;
-    }
-    .custom-tabs-nav{
-      margin: 0;
-    }
-    .custom-tabs-nav::before{
-      border: 0;
-    }
-    .custom-tabs-tab{
-      padding: 5px 10px;
-      margin: 0px 5px;
-    }
-  }
 }
 
 .resultContent{
   flex: 1;
   position:relative;
 }
-
-.tabsBox{
-  transform: translateY(1px);
-  :global {
-    .custom-tabs-nav{
-      margin: 0;
-      &::before{
-        border: 0;
-      }
-    }
-  }
-}
-

@@ -1,5 +1,7 @@
 package com.alibaba.dataops.server.web.api.controller.data.source;
 
+import java.util.List;
+
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
@@ -10,6 +12,7 @@ import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
+import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dataops.server.web.api.controller.data.source.converter.DataSourceWebConverter;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCloneRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCreateRequest;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version ConnectionManageController.java, v 0.1 2022年09月16日 14:07 moji Exp $
  * @date 2022/09/16
  */
+@BusinessExceptionAspect
 @RequestMapping("/api/connection/manage")
 @RestController
 public class DataSourceManageController {
@@ -54,7 +58,8 @@ public class DataSourceManageController {
     public WebPageResult<DataSourceVO> list(DataSourceQueryRequest request) {
         DataSourcePageQueryParam param = dataSourceWebConverter.queryReq2param(request);
         PageResult<DataSourceDTO> result = dataSourceCoreService.queryPage(param, new DataSourceSelector());
-        return null;
+        List<DataSourceVO> dataSourceVOS = dataSourceWebConverter.dto2vo(result.getData());
+        return WebPageResult.of(dataSourceVOS, result.getTotal(), result.getPageNo(), result.getPageSize());
     }
 
     /**

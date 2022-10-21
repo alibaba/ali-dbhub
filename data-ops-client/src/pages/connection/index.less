@@ -1,13 +1,18 @@
 @import '../../var.less';
 
 .box {
-  padding-left: 30px;
+  flex: 1;
+  padding-right: 30px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
-  padding: 30px 30px 0px 15px;
+  padding: 30px 0px 0px 15px;
+  margin-bottom: 20px;
 }
 
 .linkButton i {
@@ -16,11 +21,15 @@
 
 .title {
   font-size: 18px;
-  margin-bottom: 20px;
+}
+
+.scrollBox{
+  flex: 1;
+  overflow: auto;
 }
 
 .connectionList {
-  padding: 30px 30px 30px 0px;
+  padding-bottom: 30px;
 }
 
 .connectionItem {
@@ -29,10 +38,6 @@
   padding: 10px 15px;
   cursor: pointer;
   border-bottom: 1px solid var(--color-border);
-
-  &:last-of-type {
-    border-bottom: 0px;
-  }
 
   &:hover {
     background-color: var(--color-bg-hover);
@@ -47,8 +52,9 @@
   .left {
     flex: 1;
     display: flex;
+    align-items: center;
     margin-right: 20px;
-    font-size: 12px;
+    font-size: 14px;
     color: var(--color-text-75);
 
     .logo {
@@ -62,6 +68,9 @@
 
     .visitedTime {
       color: var(--color-text-45);
+    }
+    .name{
+      line-height: 100%;
     }
   }
 
@@ -93,26 +102,26 @@
   }
 }
 
-.menu {
+.menuList {
   padding: 3px;
   border-radius: 4px;
   background-color: var(--color-bg-200);
-  box-shadow: 0 1px 8px var(--custom-primary-color-outline);
+  box-shadow: var(--color-box-shadow);
   .menuItem {
+    display: flex;
     margin: 3px;
     padding: 5px 10px;
     border-radius: 4px;
-    cursor: pointer;
-    display: flex;
     align-items: center;
+    color: var(--color-text-65);
+    cursor: pointer;
     i {
       font-size: 16px;
       margin-right: 10px;
     }
     &:hover {
-      // color: var(--custom-primary-color);
-      background-color: var(--custom-primary-color-hover);
-      color: var(--color-bg-100);
+      background-color: var(--custom-primary-1);
+      color: var(--custom-primary-color);
     }
   }
 }

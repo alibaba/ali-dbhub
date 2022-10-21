@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.alibaba.dataops.server.tools.base.enums.EnvTypeEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
+import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dataops.server.web.api.controller.data.source.vo.EnvVO;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version EnvController.java, v 0.1 2022年09月18日 14:04 moji Exp $
  * @date 2022/09/18
  */
+@BusinessExceptionAspect
 @RequestMapping("/api/env")
 @RestController
 public class EnvController {

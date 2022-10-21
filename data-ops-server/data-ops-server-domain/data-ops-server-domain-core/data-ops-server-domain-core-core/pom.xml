@@ -30,5 +30,9 @@
             <groupId>com.alibaba.data-ops</groupId>
             <artifactId>data-ops-server-tools-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba.data-ops</groupId>
+            <artifactId>data-ops-server-domain-data-api</artifactId>
+        </dependency>
     </dependencies>
 </project>
