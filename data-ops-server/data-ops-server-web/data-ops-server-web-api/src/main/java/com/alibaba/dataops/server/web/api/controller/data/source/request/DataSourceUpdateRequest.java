@@ -3,8 +3,6 @@ package com.alibaba.dataops.server.web.api.controller.data.source.request;
 
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dataops.server.tools.base.enums.DataSourceTypeEnum;
-
 import lombok.Data;
 
 /**
@@ -43,7 +41,7 @@ public class DataSourceUpdateRequest {
 
     /**
      * 连接类型
-     * @see DataSourceTypeEnum
+     * @see com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum
      */
     private String type;
 

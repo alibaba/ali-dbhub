@@ -30,6 +30,7 @@ const { Option } = Select;
 
 interface IProps {
   className?: any;
+  onlyList?: boolean;
 }
 
 interface IMenu {
@@ -69,10 +70,12 @@ const menuList: IMenu[] = [
 ];
 
 export default memo<IProps>(function ConnectionPage(props) {
-  const { className } = props;
+
+  const { className, onlyList } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [connectionList, setConnectionList] = useState<IConnectionBase[]>();
   const [finished, setFinished] = useState(false);
+  const [pageNo, setPageNo] = useState(1)
   const [rowData, setRowData] = useState<IConnectionBase | null>();
   const [form] = Form.useForm();
   const scrollerRef = useRef(null)
@@ -91,19 +94,23 @@ export default memo<IProps>(function ConnectionPage(props) {
     }
 
     let p = {
-      pageNo: 1,
+      pageNo,
       pageSize: 10
     }
+
     return connectionServer.getList(p).then(res => {
-      if (!res.data?.length) {
+      console.log(pageNo)
+      if (!res.hasNextPage && pageNo !== 1) {
         setFinished(true)
         return
       }
+      setPageNo(pageNo + 1)
       if (connectionList?.length && superposition) {
         setConnectionList([...connectionList, ...res.data])
       } else {
         setConnectionList(res.data)
       }
+
     })
   }
 
@@ -128,6 +135,7 @@ export default memo<IProps>(function ConnectionPage(props) {
     }
 
     const cloneConnection = () => {
+      setFinished(false)
       connectionServer.clone({ id: rowData.id! }).then(res => {
         message.success('克隆成功');
         getConnectionList();
@@ -207,31 +215,37 @@ export default memo<IProps>(function ConnectionPage(props) {
         ></div>
         <div className={styles.name}>{item.alias}</div>
       </div>
-      <div className={styles.right}>
-        <Dropdown overlay={renderMenu(item)} trigger={['hover']}>
-          <a onClick={(e) => e.preventDefault()}>
-            <div className={styles.moreActions}>
-              <Iconfont code="&#xe601;" />
-            </div>
-          </a>
-        </Dropdown>
-      </div>
+      {
+        !onlyList &&
+        <div className={styles.right}>
+          <Dropdown overlay={renderMenu(item)} trigger={['hover']}>
+            <a onClick={(e) => e.preventDefault()}>
+              <div className={styles.moreActions}>
+                <Iconfont code="&#xe601;" />
+              </div>
+            </a>
+          </Dropdown>
+        </div>
+      }
     </div>
   }
 
   return (
     <div className={classnames(className, styles.box)}>
-      <div className={styles.header}>
-        <div className={styles.title}>{i18n('home.nav.database')}</div>
-        <Button
-          className={styles.linkButton}
-          type="primary"
-          onClick={showLinkModal}
-        >
-          <Iconfont code="&#xe631;"></Iconfont>
-          {i18n('database.input.newLink')}
-        </Button>
-      </div>
+      {
+        !onlyList &&
+        <div className={styles.header}>
+          <div className={styles.title}>{i18n('home.nav.database')}</div>
+          <Button
+            className={styles.linkButton}
+            type="primary"
+            onClick={showLinkModal}
+          >
+            <Iconfont code="&#xe631;"></Iconfont>
+            {i18n('database.input.newLink')}
+          </Button>
+        </div>
+      }
       <div className={styles.scrollBox} ref={scrollerRef}>
         <LoadingContent data={connectionList} handleEmpty>
           {
@@ -240,7 +254,7 @@ export default memo<IProps>(function ConnectionPage(props) {
               finished={finished}
               scrollerElement={scrollerRef.current}
               onReachBottom={getConnectionList.bind(null, { superposition: true })}
-              threshold={300}
+              threshold={200}
             >
               <div className={styles.connectionList}>
                 {connectionList?.map(item => renderCard(item))}
@@ -300,14 +314,14 @@ export default memo<IProps>(function ConnectionPage(props) {
           <Form.Item
             label="用户名"
             name="user"
-            rules={[{ required: true, message: '用户名不可为空！' }]}
+          // rules={[{ required: true, message: '用户名不可为空！' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="密码"
             name="password"
-            rules={[{ required: true, message: '密码不可为空！' }]}
+          // rules={[{ required: true, message: '密码不可为空！' }]}
           >
             <Input.Password />
           </Form.Item>

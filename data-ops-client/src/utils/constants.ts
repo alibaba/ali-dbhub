@@ -2,12 +2,18 @@ import mysqlLogo from '@/assets/mysql-logo.png';
 import redisLogo from '@/assets/redis-logo.png';
 import {IDatabase} from '@/types'
 
+export enum StatusType {
+  SUCCESS= 'success',
+  FAIL = 'fail'
+}
+
 export enum DatabaseTypeCode {
   MYSQL = 'MYSQL',
   ORACLE = 'ORACLE',
   DB2 = 'DB2',
   MONGODB = 'MONGODB',
-  REDIS = 'REDIS'
+  REDIS = 'REDIS',
+  H2 = 'H2'
 }
 
 export const databaseType:{
@@ -19,10 +25,15 @@ export const databaseType:{
     code: DatabaseTypeCode.MYSQL
   },
   [DatabaseTypeCode.REDIS]:{
-    name: 'redis',
+    name: 'Redis',
     img: redisLogo,
     code: DatabaseTypeCode.REDIS
-  }
+  },
+  [DatabaseTypeCode.H2]:{
+    name: 'H2',
+    img: redisLogo,
+    code: DatabaseTypeCode.H2
+  },
 }
 
 export const databaseTypeList = Object.keys(databaseType).map(keys=>{

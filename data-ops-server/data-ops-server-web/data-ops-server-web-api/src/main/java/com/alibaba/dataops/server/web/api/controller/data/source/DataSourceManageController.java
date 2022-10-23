@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
-import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceSelector;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
@@ -83,7 +83,7 @@ public class DataSourceManageController {
      */
     @PostMapping("/create")
     public DataResult<Long> create(@RequestBody DataSourceCreateRequest request) {
-        DataSourceCreateParam param = dataSourceWebConverter.createReq2param(request);
+        DataSourceManageCreateParam param = dataSourceWebConverter.createReq2param(request);
         return dataSourceCoreService.create(param);
     }
 

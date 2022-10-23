@@ -11,7 +11,7 @@ import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
-import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceSelector;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
@@ -21,6 +21,7 @@ import com.alibaba.dataops.server.domain.core.repository.mapper.DataSourceMapper
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
+import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
@@ -70,7 +71,7 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
     private DataSourceCoreConverter dataSourceCoreConverter;
 
     @Override
-    public DataResult<Long> create(DataSourceCreateParam param) {
+    public DataResult<Long> create(DataSourceManageCreateParam param) {
         DataSourceDO dataSourceDO = dataSourceCoreConverter.param2do(param);
         dataSourceDO.setGmtCreate(LocalDateTime.now());
         dataSourceDO.setGmtModified(LocalDateTime.now());
@@ -139,8 +140,7 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
     @Override
     public ListResult<DatabaseDTO> attach(Long id) {
         DataSourceDO dataSourceDO = dataSourceMapper.selectById(id);
-        com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param
-            = dataSourceCoreConverter.do2param(dataSourceDO);
+        DataSourceCreateParam param = dataSourceCoreConverter.do2param(dataSourceDO);
         ActionResult actionResult = dataSourceDataService.create(param);
         if (!actionResult.getSuccess()) {
             throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
@@ -173,12 +173,9 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         if (StringUtils.isBlank(param.getSql())) {
             return ListResult.empty();
         }
-        // 创建console连接
-        ConsoleCreateParam consoleCreateParam = dataSourceCoreConverter.param2consoleParam(param);
-        ActionResult actionResult = consoleDataService.create(consoleCreateParam);
-        if (!actionResult.getSuccess()) {
-            throw new BusinessException(DatasourceErrorEnum.CONSOLE_CONNECT_ERROR);
-        }
+
+        // TODO 改为前端创建数据库连接
+        attach(param.getDataSourceId());
 
         // 解析sql
         SqlAnalyseParam sqlAnalyseParam = new SqlAnalyseParam();

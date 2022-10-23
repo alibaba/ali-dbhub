@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2022/09/23
  */
 @Data
-public class DataSourceCreateParam {
+public class DataSourceManageCreateParam {
 
     /**
      * 别名

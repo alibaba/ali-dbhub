@@ -1,20 +1,19 @@
 package com.alibaba.dataops.server.domain.core.core.converter;
 
 import java.util.List;
-import java.util.Objects;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
-import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
-import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
-import com.alibaba.dataops.server.tools.base.excption.BusinessException;
-import com.alibaba.dataops.server.tools.base.excption.CommonErrorEnum;
+import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 /**
  * @author moji
@@ -30,7 +29,7 @@ public abstract class DataSourceCoreConverter {
      * @param param
      * @return
      */
-    public abstract DataSourceDO param2do(DataSourceCreateParam param);
+    public abstract DataSourceDO param2do(DataSourceManageCreateParam param);
 
     /**
      * 参数转换
@@ -54,21 +53,13 @@ public abstract class DataSourceCoreConverter {
      * @param dataSourceDO
      * @return
      */
-    public com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam do2param(
-        DataSourceDO dataSourceDO) {
-        com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param
-            = new com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam();
-        param.setDataSourceId(dataSourceDO.getId());
-        DbTypeEnum dbTypeEnum = DbTypeEnum.getByName(dataSourceDO.getType());
-        if (Objects.isNull(dbTypeEnum)) {
-            throw new BusinessException(CommonErrorEnum.DRIVER_CLASS_NOT_EXIST);
-        }
-        param.setDbType(dbTypeEnum.name());
-        param.setUrl(dataSourceDO.getUrl());
-        param.setUsername(dataSourceDO.getUserName());
-        param.setPassword(dataSourceDO.getPassword());
-        return param;
-    }
+    @Mappings({
+        @Mapping(source = "type", target = "dbType"),
+        @Mapping(source = "id", target = "dataSourceId")
+    })
+    public abstract DataSourceCreateParam do2param(DataSourceDO dataSourceDO);
+
+
 
     /**
      * 参数转换
@@ -76,20 +67,10 @@ public abstract class DataSourceCoreConverter {
      * @param dataSourceTestParam
      * @return
      */
-    public com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param2param(
-        DataSourceTestParam dataSourceTestParam) {
-        com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param
-            = new com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam();
-        DbTypeEnum dbTypeEnum = DbTypeEnum.getByName(dataSourceTestParam.getType());
-        if (Objects.isNull(dbTypeEnum)) {
-            throw new BusinessException(CommonErrorEnum.DRIVER_CLASS_NOT_EXIST);
-        }
-        param.setDbType(dbTypeEnum.name());
-        param.setUrl(dataSourceTestParam.getUrl());
-        param.setUsername(dataSourceTestParam.getUser());
-        param.setPassword(dataSourceTestParam.getPassword());
-        return param;
-    }
+    @Mappings({
+        @Mapping(source = "type", target = "dbType")
+    })
+    public abstract DataSourceCreateParam param2param(DataSourceTestParam dataSourceTestParam);
 
     /**
      * 模型转换
