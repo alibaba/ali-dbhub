@@ -82,7 +82,7 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
                 }
             }
         }
-        return ActionResult.isSlsuccess();
+        return ActionResult.isSuccess();
     }
 
     @Override
