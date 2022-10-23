@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 展示数据库信息
+ * 展示表结构信息
  * @author Jiaju Zhuang
  */
 @AllArgsConstructor
@@ -17,10 +17,22 @@ import lombok.ToString;
 @Data
 @Builder
 @ToString
-public class DataSourceShowDatabasesParam {
+public class DataSourceDescTableParam {
     /**
      * 对应数据库存储的来源id
      */
     @NotNull
     private Long dataSourceId;
+
+    /**
+     * 对应的连接数据库名称
+     */
+    @NotNull
+    private String databaseName;
+
+    /**
+     * 表名
+     */
+    @NotNull
+    private String tableName;
 }

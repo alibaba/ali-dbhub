@@ -4,13 +4,22 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
+import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
+import com.alibaba.dataops.server.domain.data.api.model.TableBriefDTO;
+import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceDescTableParam;
+import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceShowCreateTableParam;
+import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceShowDatabasesParam;
+import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceShowTablesParam;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.core.model.DataSourceWrapper;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
+import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
+import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.common.util.EasyEnumUtils;
 import com.alibaba.druid.pool.DruidDataSource;
 
@@ -73,26 +82,26 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
                 }
             }
         }
-        return ActionResult.isSuccess();
+        return ActionResult.isSlsuccess();
     }
 
     @Override
-    public ActionResult showDatabases(DataSourceCreateParam param) {
+    public ListResult<DatabaseDTO> showDatabases(DataSourceShowDatabasesParam param) {
         return null;
     }
 
     @Override
-    public ActionResult showTables(DataSourceCreateParam param) {
+    public ListResult<TableBriefDTO> showTables(DataSourceShowTablesParam param) {
         return null;
     }
 
     @Override
-    public ActionResult descTable(DataSourceCreateParam param) {
+    public DataResult<TableDTO> descTable(DataSourceDescTableParam param) {
         return null;
     }
 
     @Override
-    public ActionResult showCreateTable(DataSourceCreateParam param) {
+    public ActionResult showCreateTable(DataSourceShowCreateTableParam param) {
         return null;
     }
 }
