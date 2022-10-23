@@ -1,5 +1,10 @@
 package com.alibaba.dataops.server.web.api.controller.rdb.vo;
 
+import java.util.List;
+
+import com.alibaba.dataops.server.domain.data.api.enums.IndexTypeEnum;
+import com.alibaba.dataops.server.tools.base.enums.YesOrNoEnum;
+
 import lombok.Data;
 
 /**
@@ -11,18 +16,36 @@ import lombok.Data;
 public class IndexVO {
 
     /**
-     * 名称
-     */
-    private String name;
-
-    /**
-     * 类型
-     */
-    private String type;
-
-    /**
      * 包含列
      */
     private String columns;
 
+    /**
+     * 索引名称
+     */
+    private String name;
+
+    /**
+     * 是否主键
+     *
+     * @see YesOrNoEnum
+     */
+    private String primary;
+
+    /**
+     * 所以类型
+     *
+     * @see IndexTypeEnum
+     */
+    private String type;
+
+    /**
+     * 注释
+     */
+    private String comment;
+
+    /**
+     * 索引包含的列
+     */
+    private List<ColumnVO> columnList;
 }
