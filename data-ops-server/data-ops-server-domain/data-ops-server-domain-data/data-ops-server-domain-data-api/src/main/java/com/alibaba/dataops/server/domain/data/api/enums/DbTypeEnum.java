@@ -1,7 +1,5 @@
 package com.alibaba.dataops.server.domain.data.api.enums;
 
-import java.util.Objects;
-
 import com.alibaba.dataops.server.tools.base.enums.BaseEnum;
 
 import lombok.Getter;
@@ -12,7 +10,7 @@ import lombok.Getter;
  * @author Jiaju Zhuang
  */
 @Getter
-public enum DriverClassEnum implements BaseEnum<String> {
+public enum DbTypeEnum implements BaseEnum<String> {
     /**
      * MySQL
      */
@@ -37,7 +35,7 @@ public enum DriverClassEnum implements BaseEnum<String> {
     final String description;
     final String className;
 
-    DriverClassEnum(String description, String className) {
+    DbTypeEnum(String description, String className) {
         this.description = description;
         this.className = className;
     }
@@ -48,10 +46,10 @@ public enum DriverClassEnum implements BaseEnum<String> {
      * @param name
      * @return
      */
-    public static DriverClassEnum getByName(String name) {
-        for (DriverClassEnum driverClassEnum : DriverClassEnum.values()) {
-            if (driverClassEnum.name().equals(name)) {
-                return driverClassEnum;
+    public static DbTypeEnum getByName(String name) {
+        for (DbTypeEnum dbTypeEnum : DbTypeEnum.values()) {
+            if (dbTypeEnum.name().equals(name)) {
+                return dbTypeEnum;
             }
         }
         return null;

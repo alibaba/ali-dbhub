@@ -1,6 +1,6 @@
 package com.alibaba.dataops.server.domain.data.core.util;
 
-import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
+import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dataops.server.tools.base.excption.SystemException;
 import com.alibaba.druid.DbType;
@@ -18,7 +18,7 @@ public class DriverClassUtils {
      * @param driverClass
      * @return
      */
-    public static DbType parse2dbType(DriverClassEnum driverClass) {
+    public static DbType parse2dbType(DbTypeEnum driverClass) {
         switch (driverClass) {
             case H2:
                 return DbType.h2;

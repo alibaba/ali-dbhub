@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
-import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
+import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
@@ -60,7 +60,7 @@ public class H2DataServiceTest extends BaseTest {
     @Order(1)
     public void prepareData() {
         DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setDriverClassName(DriverClassEnum.H2.getClassName());
+        druidDataSource.setDriverClassName(DbTypeEnum.H2.getClassName());
         druidDataSource.setUrl(URL);
 
         // 初始化数据库
@@ -76,7 +76,7 @@ public class H2DataServiceTest extends BaseTest {
     public void createDataSource() {
         DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
         dataSourceCreateParam.setDataSourceId(DATA_SOURCE_ID);
-        dataSourceCreateParam.setDriverClass(DriverClassEnum.H2.getCode());
+        dataSourceCreateParam.setDriverClass(DbTypeEnum.H2.getCode());
         dataSourceCreateParam.setUrl(URL);
         ActionResult actionResult = dataSourceDataService.create(dataSourceCreateParam);
         Assertions.assertTrue(actionResult.success(), "创建数据库连接池失败");

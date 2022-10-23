@@ -2,7 +2,7 @@ package com.alibaba.dataops.server.domain.data.core.service.impl;
 
 import java.util.List;
 
-import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
+import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
 import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
 import com.alibaba.dataops.server.domain.data.api.service.SqlDataService;
@@ -34,7 +34,7 @@ public class SqlDataServiceImpl implements SqlDataService {
         if (dataSourceWrapper == null) {
             throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
         }
-        DriverClassEnum driverClass = dataSourceWrapper.getDriverClass();
+        DbTypeEnum driverClass = dataSourceWrapper.getDriverClass();
         List<SQLStatement> sqlStatementList = SQLUtils.parseStatements(param.getSql(),
             DriverClassUtils.parse2dbType(driverClass));
         return ListResult.of(EasyCollectionUtils.toList(sqlStatementList,

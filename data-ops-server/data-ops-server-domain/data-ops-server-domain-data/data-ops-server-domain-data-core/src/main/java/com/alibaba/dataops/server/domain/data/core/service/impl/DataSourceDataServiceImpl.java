@@ -3,7 +3,7 @@ package com.alibaba.dataops.server.domain.data.core.service.impl;
 import java.sql.SQLException;
 import java.util.Map;
 
-import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
+import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
@@ -34,7 +34,7 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
         // 尝试先关闭连接源
         close(DataSourceCloseParam.builder().dataSourceId(dataSourceId).build());
 
-        DriverClassEnum driverClass = EasyEnumUtils.getEnum(DriverClassEnum.class, param.getDriverClass());
+        DbTypeEnum driverClass = EasyEnumUtils.getEnum(DbTypeEnum.class, param.getDriverClass());
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setDriverClassName(driverClass.getClassName());
         druidDataSource.setUrl(param.getUrl());

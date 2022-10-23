@@ -9,14 +9,12 @@ import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
-import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
+import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.excption.CommonErrorEnum;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 /**
  * @author moji
@@ -61,11 +59,11 @@ public abstract class DataSourceCoreConverter {
         com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param
             = new com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam();
         param.setDataSourceId(dataSourceDO.getId());
-        DriverClassEnum driverClassEnum = DriverClassEnum.getByName(dataSourceDO.getType());
-        if (Objects.isNull(driverClassEnum)) {
+        DbTypeEnum dbTypeEnum = DbTypeEnum.getByName(dataSourceDO.getType());
+        if (Objects.isNull(dbTypeEnum)) {
             throw new BusinessException(CommonErrorEnum.DRIVER_CLASS_NOT_EXIST);
         }
-        param.setDriverClass(driverClassEnum.name());
+        param.setDriverClass(dbTypeEnum.name());
         param.setUrl(dataSourceDO.getUrl());
         param.setUsername(dataSourceDO.getUserName());
         param.setPassword(dataSourceDO.getPassword());
@@ -82,11 +80,11 @@ public abstract class DataSourceCoreConverter {
         DataSourceTestParam dataSourceTestParam) {
         com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param
             = new com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam();
-        DriverClassEnum driverClassEnum = DriverClassEnum.getByName(dataSourceTestParam.getType());
-        if (Objects.isNull(driverClassEnum)) {
+        DbTypeEnum dbTypeEnum = DbTypeEnum.getByName(dataSourceTestParam.getType());
+        if (Objects.isNull(dbTypeEnum)) {
             throw new BusinessException(CommonErrorEnum.DRIVER_CLASS_NOT_EXIST);
         }
-        param.setDriverClass(driverClassEnum.name());
+        param.setDriverClass(dbTypeEnum.name());
         param.setUrl(dataSourceTestParam.getUrl());
         param.setUsername(dataSourceTestParam.getUser());
         param.setPassword(dataSourceTestParam.getPassword());
