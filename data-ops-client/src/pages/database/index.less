@@ -79,6 +79,7 @@
 .databaseName{
   font-size: 18px;
   margin-right: 10px;
+  .f-single-line() 
 }
 
 .searchBox{
@@ -139,44 +140,42 @@
   }
 }
 
-.databaseQuery{
-  display: flex;
-  flex-direction: column;
+.databaseQueryBox{
+  position: relative;
   height: calc(100vh - 56px);
 }
 
+.databaseQuery{
+  opacity: 1;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.databaseQueryConceal{
+  opacity: 0;
+  z-index: 1;
+}
+
 .monacoEditor{
-  height: 70%;
+  height: 50%;
+  flex-shrink: 0;
 }
 
 .searchResult{
+  height: 0;
   flex: 1;
+}
+
+
+.connectionList{
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--color-border);
-  background-color: var(--color-bg-100);
-}
-
-.resultHeader{
-  padding: 5px 10px 0px 10px;
-  background-color: var(--color-bg-200);
-  border-bottom: 1px solid var(--color-border);
-
-  .statusIcon{
-    margin-right: 4px;
-    font-size: 12px;
-  }
-
-  .successIcon{
-    color: rgb(71, 157, 255);
-  }
-  
-  .failIcon{
-    color: red;
-  }
-}
-
-.resultContent{
-  flex: 1;
-  position:relative;
+  max-height: 60vh;
+  margin-right: -30px;
 }

@@ -1,7 +1,7 @@
 import i18n, { isEN } from "@/i18n";
 import { TreeNodeType } from '@/utils/constants'
 
-export function formatDate(date, fmt = 'yyyy-MM-dd') {
+export function formatDate(date:any, fmt = 'yyyy-MM-dd') {
   if (!date) {
     return '';
   }

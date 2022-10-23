@@ -29,10 +29,12 @@ function DemoPage() {
     debounceGetList()
   }
 
+  function onChange(e: any, b) {
+    console.log(e.target.value, b)
+
+  }
+
   return <div className={styles.page}>
-    <div className={styles.loading}>
-      <Iconfont code='&#xe6cd;' />
-    </div>
   </div>
 }
 

@@ -27,10 +27,10 @@ const codeMessage:{[errorCode:number]:string} = {
 };
 
 const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
-export const baseURL = location.host.indexOf('localhost') > -1 ? mockUrl : '/';
 
 const errorHandler = (error: ResponseError) => {
   const { response } = error;
+  if(!response) return
   const errortext = codeMessage[response.status] || response.statusText;
   const { status } = response;
   message.error(`${status}: ${errortext}`)
@@ -64,9 +64,9 @@ request.interceptors.request.use((url, options) => {
 
 export default function createRequest<P = void, R = {}>(url:string, options:IOptions){
   const {method = 'get', mock = false} = options;
-  const _baseURL = mock ? mockUrl : baseURL;
+  const _baseURL = mock ? mockUrl : '';
 
-  return function(params: P){
+  return function(params: any){
     const paramsInUrl: string[] = [];
     const _url = url.replace(/:(.+?)\b/, (_, name:string) => {
       const value = params[name];
@@ -81,8 +81,9 @@ export default function createRequest<P = void, R = {}>(url:string, options:IOpt
     }
 
     return new Promise<R>((resolve, reject) => {
-      request[method](`${_baseURL}${_url}`,{data: params})
+      request[method](`${_baseURL}${_url}`,{params: params})
       .then(res=>{
+        if(!res) return
         const {success, errorCode, errorMessage, data} = res
         if(!success){
           message.error(`${errorCode}: ${errorMessage}`)

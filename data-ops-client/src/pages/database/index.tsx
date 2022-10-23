@@ -2,8 +2,7 @@ import React, { memo, useEffect, useState, useRef } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { history, useParams } from 'umi';
-import { Button, DatePicker, Input, Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import { Button, DatePicker, Input, Table, Modal, Tabs } from 'antd';
 import i18n from '@/i18n';
 import AppHeader from '@/components/AppHeader';
 import Iconfont from '@/components/Iconfont';
@@ -11,11 +10,11 @@ import Tree from '@/components/Tree';
 import Loading from '@/components/Loading/Loading';
 import MonacoEditor from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
-import LoadingContent from '@/components/Loading/LoadingContent';
+import ConnectionPage from '@/pages/connection';
+import SearchResult from '@/components/SearchResult';
 import connectionServer from '@/service/connection';
 import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
-import Tabs from '@/components/Tabs';
 import { IConnectionBase, ITreeNode } from '@/types'
 import { TreeNodeType } from '@/utils/constants'
 import { toTreeList } from '@/utils/index'
@@ -23,55 +22,28 @@ import { toTreeList } from '@/utils/index'
 interface IProps {
   className?: any;
 }
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
+
+interface ITabItem {
+  label: string;
+  key: string;
+  sql?: string;
 }
 
-const columns: ColumnsType<DataType> = [
+const initialItems: ITabItem[] = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-  },
-];
-
-const tableDataMock: DataType[] = [
-  {
+    label: 'Tab 1',
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
+    sql: 'SELECT * FROM 1'
   },
   {
+    label: 'Tab 2',
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
+    sql: 'SELECT * FROM 2'
   },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-];
-
-const initialItems = [
-  { label: 'Tab 1', key: '1' },
-  { label: 'Tab 2', key: '2' },
   {
     label: 'Tab 3',
     key: '3',
+    sql: 'SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE'
   },
 ];
 
@@ -81,10 +53,10 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [databaseDetaile, setDatabaseDetaile] = useState<IConnectionBase>()
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
   const [activeKey, setActiveKey] = useState(initialItems[0].key);
-  const [items, setItems] = useState(initialItems);
+  const [items, setItems] = useState<ITabItem[]>(initialItems);
   const newTabIndex = useRef(0);
-  const [tableData, setTableDate] = useState(tableDataMock);
   const [treeData, setTreeData] = useState<ITreeNode[] | null>(null);
+  const [connectionModalVisible, setConnectionModalVisible] = useState(false);
   let editor: any = ''
 
   useEffect(() => {
@@ -92,69 +64,71 @@ export default memo<IProps>(function DatabasePage({ className }) {
       getDetaile()
       getDBList()
     }
-  }, [])
+  }, [params.id])
 
   const getDBList = () => {
     const DBList: ITreeNode[] = [
       {
-        key: '1',
-        name: 'data-ops',
-        type: TreeNodeType.DATABASE,
-        children: [
-          {
-            key: '1-1',
-            name: '表',
-            type: TreeNodeType.TABLE,
-          },
-          {
-            key: '1-2',
-            name: '查询',
-            type: TreeNodeType.SAVE,
-          },
-        ]
+        key: '1-1',
+        name: '表',
+        type: TreeNodeType.TABLE,
       },
       {
-        key: '2',
-        name: 'ata',
-        type: TreeNodeType.DATABASE,
-        children: [
-          {
-            key: '2-1',
-            name: '表',
-            type: TreeNodeType.TABLE,
-          },
-          {
-            key: '2-2',
-            name: '查询',
-            type: TreeNodeType.SAVE,
-          },
-        ]
-      },
-      {
-        key: '3',
-        name: 'grow',
-        type: TreeNodeType.DATABASE,
-        children: [
-          {
-            key: '3-1',
-            name: '表',
-            type: TreeNodeType.TABLE,
-          },
-          {
-            key: '3-2',
-            name: '查询',
-            type: TreeNodeType.SAVE,
-          },
-        ]
-      },
+        key: '1-2',
+        name: '查询',
+        type: TreeNodeType.SAVE,
+      }
+
+      // {
+      //   key: '1',
+      //   name: 'data-ops',
+      //   type: TreeNodeType.DATABASE,
+      //   children: [
+
+      //   ]
+      // },
+      // {
+      //   key: '2',
+      //   name: 'ata',
+      //   type: TreeNodeType.DATABASE,
+      //   children: [
+      //     {
+      //       key: '2-1',
+      //       name: '表',
+      //       type: TreeNodeType.TABLE,
+      //     },
+      //     {
+      //       key: '2-2',
+      //       name: '查询',
+      //       type: TreeNodeType.SAVE,
+      //     },
+      //   ]
+      // },
+      // {
+      //   key: '3',
+      //   name: 'grow',
+      //   type: TreeNodeType.DATABASE,
+      //   children: [
+      //     {
+      //       key: '3-1',
+      //       name: '表',
+      //       type: TreeNodeType.TABLE,
+      //     },
+      //     {
+      //       key: '3-2',
+      //       name: '查询',
+      //       type: TreeNodeType.SAVE,
+      //     },
+      //   ]
+      // },
     ]
     setTreeData(DBList)
   }
 
   const getTableList = () => {
     let p = {
-      dataSourceId: '11',
-      databaseName: '11',
+      dataSourceId: '2',
+      databaseName: 'TEST',
       pageNo: 1,
       pageSize: 10,
     }
@@ -185,54 +159,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   }
 
-  const makerResultHeaderList = () => {
-    const list = [
-      {
-        label: <div>执行记录</div>,
-        key: '10',
-      }
-    ]
-    const sqlRes = [
-      {
-        status: 'success',
-        id: '0'
-      },
-      {
-        status: 'fail',
-        id: '1'
-      },
-      {
-        status: 'fail',
-        id: '2'
-      },
-      {
-        status: 'success',
-        id: '3'
-      }, {
-        status: 'success',
-        id: '4'
-      }, {
-        status: 'success',
-        id: '5'
-      },
-    ]
-
-    sqlRes.map((item, index) => {
-      list.push({
-        label: <div>
-          <Iconfont className={classnames(
-            styles[item.status == 'success' ? 'successIcon' : 'failIcon'],
-            styles.statusIcon
-          )}
-            code={item.status == 'success' ? '\ue605' : '\ue87c'} />
-          执行结果{index}
-        </div>,
-        key: item.id
-      })
-    })
-    return list
-  }
-
   const getDetaile = () => {
     let p = {
       id: params.id
@@ -249,9 +175,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   function getEditor(e: any) {
     editor = e
-  }
-
-  function onChange() {
   }
 
   const add = () => {
@@ -282,7 +205,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
     setActiveKey(newActiveKey);
   };
 
-  const onEdit = (targetKey: string, action: 'add' | 'remove') => {
+  const onEdit = (targetKey: any, action: 'add' | 'remove') => {
     if (action === 'add') {
       add();
     } else {
@@ -304,18 +227,22 @@ export default memo<IProps>(function DatabasePage({ className }) {
     }
   }
 
-  return (
+  const searchTable = (value: string) => {
+    setConnectionModalVisible
+  }
+
+  return <>
     <div className={classnames(className, styles.box)}>
       <div ref={letfRef} className={styles.aside}>
         <div className={styles.header}>
-          <div className={styles.currentNameBox}>
+          <div onClick={() => { setConnectionModalVisible(true) }} className={styles.currentNameBox}>
             <div className={styles.databaseName}>
               {databaseDetaile?.alias}
             </div>
             {databaseDetaile?.alias && <Iconfont code="&#xe7b1;"></Iconfont>}
           </div>
           <div className={styles.searchBox}>
-            <SearchInput placeholder='搜索'></SearchInput>
+            <SearchInput onChange={searchTable} placeholder='搜索'></SearchInput>
             <div className={classnames(styles.refresh, styles.button)}>
               <Iconfont code="&#xec08;"></Iconfont>
             </div>
@@ -348,28 +275,32 @@ export default memo<IProps>(function DatabasePage({ className }) {
           <Button>保存</Button>
           <Button>我的SQL</Button>
         </div>
-        <div className={styles.databaseQuery}>
-          <div ref={monacoEditorBox} className={styles.monacoEditor}>
-            <MonacoEditor getEditor={getEditor}></MonacoEditor>
-          </div>
-          <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
-          <div className={styles.searchResult}>
-            <div className={styles.resultHeader}>
-              <Tabs
-                onChange={onChange}
-                tabs={makerResultHeaderList()}
-              />
-            </div>
-            <div className={styles.resultContent}>
-              <LoadingContent data={tableData} handleEmpty>
-                <div className={styles.tableBox}>
-                  <Table columns={columns} dataSource={tableData} size="middle" />
+        <div className={styles.databaseQueryBox}>
+          {
+            items.map((i: ITabItem) => {
+              return <div className={classnames(styles.databaseQuery, { [styles.databaseQueryConceal]: i.key !== activeKey })}>
+                <div ref={monacoEditorBox} className={styles.monacoEditor}>
+                  <MonacoEditor id={i.key} defaultValue={i.sql} getEditor={getEditor}></MonacoEditor>
                 </div>
-              </LoadingContent>
-            </div>
-          </div>
+                <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
+                <div className={styles.searchResult}>
+                  <SearchResult></SearchResult>
+                </div>
+              </div>
+            })
+          }
         </div>
       </div>
     </div>
-  );
+    <Modal
+      title="切换连接"
+      visible={connectionModalVisible}
+      onCancel={() => { setConnectionModalVisible(false) }}
+      footer={false}
+    >
+      <div className={styles.connectionList}>
+        <ConnectionPage onlyList={true}></ConnectionPage>
+      </div>
+    </Modal>
+  </>
 });

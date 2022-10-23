@@ -6,7 +6,7 @@ export interface IGetListParams extends IPageParams  {
   databaseName: string;
 } 
 
-const getList = createRequest<IGetListParams, IPageResponse<ITable>>('/api/mysql/table/list',{});
+const getList = createRequest<IGetListParams, IPageResponse<ITable>>('/api/rdb/table/list',{});
 
 export default {
   getList,

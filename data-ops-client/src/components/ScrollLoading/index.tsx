@@ -26,6 +26,7 @@ export default memo<IProps>(function ScrollLoading({ className, children, scroll
 
   useLayoutEffect(() => {
     scrollerRef.current = scroller;
+    finishedRef.current = finished
   }, [finished]);
 
   useLayoutEffect(() => {
