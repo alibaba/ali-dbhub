@@ -8,7 +8,7 @@ import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
-import com.alibaba.dataops.server.web.api.controller.mysql.converter.MysqlDataConverter;
+import com.alibaba.dataops.server.web.api.controller.mysql.converter.RdbDataConverter;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.DataExportRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.DataManageRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.vo.ExecuteResultVO;
@@ -28,15 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2022/09/16
  */
 @BusinessExceptionAspect
-@RequestMapping("/api/mysql/data")
+@RequestMapping("/api/rdb/data")
 @RestController
-public class MysqlDataManageController {
+public class RdbDataManageController {
 
     @Autowired
     private DataSourceCoreService dataSourceCoreService;
 
     @Autowired
-    private MysqlDataConverter mysqlDataConverter;
+    private RdbDataConverter rdbDataConverter;
 
     /**
      * 导出结果集Excel
@@ -79,9 +79,9 @@ public class MysqlDataManageController {
      */
     @PutMapping("/manage")
     public ListResult<ExecuteResultVO> manage(@RequestBody DataManageRequest request) {
-        DataSourceExecuteParam param = mysqlDataConverter.request2param(request);
+        DataSourceExecuteParam param = rdbDataConverter.request2param(request);
         ListResult<ExecuteResultDTO> resultDTOListResult = dataSourceCoreService.execute(param);
-        List<ExecuteResultVO> resultVOS = mysqlDataConverter.dto2vo(resultDTOListResult.getData());
+        List<ExecuteResultVO> resultVOS = rdbDataConverter.dto2vo(resultDTOListResult.getData());
         return ListResult.of(resultVOS);
     }
 

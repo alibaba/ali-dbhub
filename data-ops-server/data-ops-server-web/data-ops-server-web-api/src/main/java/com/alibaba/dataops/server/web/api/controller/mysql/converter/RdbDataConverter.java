@@ -18,7 +18,7 @@ import org.mapstruct.Mapper;
  * @date 2022/10/14
  */
 @Mapper(componentModel = "spring")
-public abstract class MysqlDataConverter {
+public abstract class RdbDataConverter {
 
     /**
      * 参数转换

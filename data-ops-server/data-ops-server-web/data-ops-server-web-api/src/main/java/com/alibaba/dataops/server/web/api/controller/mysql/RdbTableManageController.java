@@ -10,7 +10,7 @@ import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
-import com.alibaba.dataops.server.web.api.controller.mysql.converter.MysqlDataConverter;
+import com.alibaba.dataops.server.web.api.controller.mysql.converter.RdbDataConverter;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableBriefQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableDeleteRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableDetailQueryRequest;
@@ -35,15 +35,15 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2022/09/16
  */
 @BusinessExceptionAspect
-@RequestMapping("/api/mysql/table")
+@RequestMapping("/api/rdb/table")
 @RestController
-public class MysqlTableManageController {
+public class RdbTableManageController {
 
     @Autowired
     private DataSourceCoreService dataSourceCoreService;
 
     @Autowired
-    private MysqlDataConverter mysqlDataConverter;
+    private RdbDataConverter rdbDataConverter;
 
     /**
      * 查询当前DB下的表列表
@@ -86,9 +86,9 @@ public class MysqlTableManageController {
      */
     @PutMapping("/manage")
     public ListResult<ExecuteResultVO> manage(@RequestBody TableManageRequest request) {
-        DataSourceExecuteParam param = mysqlDataConverter.tableRequest2param(request);
+        DataSourceExecuteParam param = rdbDataConverter.tableRequest2param(request);
         ListResult<ExecuteResultDTO> resultDTOListResult = dataSourceCoreService.execute(param);
-        List<ExecuteResultVO> resultVOS = mysqlDataConverter.dto2vo(resultDTOListResult.getData());
+        List<ExecuteResultVO> resultVOS = rdbDataConverter.dto2vo(resultDTOListResult.getData());
         return ListResult.of(resultVOS);
     }
 
