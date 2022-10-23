@@ -1,7 +1,13 @@
 package com.alibaba.dataops.server.web.api.controller.mysql.converter;
 
+import java.util.List;
+
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
+import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
+import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.DataManageRequest;
+import com.alibaba.dataops.server.web.api.controller.mysql.vo.CellVO;
+import com.alibaba.dataops.server.web.api.controller.mysql.vo.ExecuteResultVO;
 
 import org.mapstruct.Mapper;
 
@@ -20,4 +26,36 @@ public abstract class MysqlDataConverter {
      * @return
      */
     public abstract DataSourceExecuteParam request2param(DataManageRequest request);
+
+    /**
+     * 模型转换
+     *
+     * @param cellDTO
+     * @return
+     */
+    public abstract CellVO cellDto2vo(CellDTO cellDTO);
+
+    /**
+     * 模型转换
+     *
+     * @param cellDTOS
+     * @return
+     */
+    public abstract List<CellVO> cellDto2vo(List<CellDTO> cellDTOS);
+
+    /**
+     * 模型转换
+     *
+     * @param dto
+     * @return
+     */
+    public abstract ExecuteResultVO dto2vo(ExecuteResultDTO dto);
+
+    /**
+     * 模型转换
+     *
+     * @param dtos
+     * @return
+     */
+    public abstract List<ExecuteResultVO> dto2vo(List<ExecuteResultDTO> dtos);
 }

@@ -10,6 +10,7 @@ import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceSelector;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
+import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
@@ -95,5 +96,5 @@ public interface DataSourceCoreService {
      * @param param
      * @return
      */
-    DataResult<Object> execute(DataSourceExecuteParam param);
+    ListResult<ExecuteResultDTO> execute(DataSourceExecuteParam param);
 }

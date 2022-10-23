@@ -27,6 +27,11 @@ public enum DatasourceErrorEnum implements BaseErrorEnum {
      */
     CONSOLE_CONNECT_ERROR("控制台链接错误"),
 
+    /**
+     * 不合法的执行语句
+     */
+    SQL_ANALYSIS_ERROR("不合法的执行语句"),
+
     ;
 
     DatasourceErrorEnum(String desctiption) {

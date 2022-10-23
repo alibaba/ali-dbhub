@@ -1,7 +1,10 @@
 package com.alibaba.dataops.server.domain.core.core.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
@@ -15,10 +18,16 @@ import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.core.core.converter.DataSourceCoreConverter;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
 import com.alibaba.dataops.server.domain.core.repository.mapper.DataSourceMapper;
+import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
+import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
+import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
+import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
+import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
+import com.alibaba.dataops.server.domain.data.api.service.SqlDataService;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.excption.DatasourceErrorEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
@@ -29,6 +38,7 @@ import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +62,9 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
 
     @Autowired
     private JdbcTemplateDataService jdbcTemplateDataService;
+
+    @Autowired
+    private SqlDataService sqlDataService;
 
     @Autowired
     private DataSourceCoreConverter dataSourceCoreConverter;
@@ -132,18 +145,61 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         if (!actionResult.getSuccess()) {
             throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
         }
+
+        Long consoleId = 2L;
+        ConsoleCreateParam consoleCreateParam = new ConsoleCreateParam();
+        consoleCreateParam.setDataSourceId(id);
+        consoleCreateParam.setConsoleId(consoleId);
+        consoleCreateParam.setDatabaseName("test");
+        actionResult = consoleDataService.create(consoleCreateParam);
+
+        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+        templateQueryParam.setConsoleId(consoleId);
+        templateQueryParam.setDataSourceId(id);
+        templateQueryParam.setSql("show databases;");
+        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+
+        List<DatabaseDTO> databaseDTOS = dataList.stream().map(item -> {
+            DatabaseDTO databaseDTO = new DatabaseDTO();
+            databaseDTO.setName((String)item.get("SCHEMA_NAME"));
+            return databaseDTO;
+        }).collect(Collectors.toList());
         // TODO 增加获取数据源下database逻辑
-        return ListResult.empty();
+        return ListResult.of(databaseDTOS);
     }
 
     @Override
-    public DataResult<Object> execute(DataSourceExecuteParam param) {
+    public ListResult<ExecuteResultDTO> execute(DataSourceExecuteParam param) {
+        if (StringUtils.isBlank(param.getSql())) {
+            return ListResult.empty();
+        }
+        // 创建console连接
         ConsoleCreateParam consoleCreateParam = dataSourceCoreConverter.param2consoleParam(param);
         ActionResult actionResult = consoleDataService.create(consoleCreateParam);
         if (!actionResult.getSuccess()) {
             throw new BusinessException(DatasourceErrorEnum.CONSOLE_CONNECT_ERROR);
         }
-        // TODO 增加sql执行逻辑
-        return null;
+
+        // 解析sql
+        SqlAnalyseParam sqlAnalyseParam = new SqlAnalyseParam();
+        sqlAnalyseParam.setDataSourceId(param.getDataSourceId());
+        sqlAnalyseParam.setSql(param.getSql());
+        List<SqlDTO> sqlList = sqlDataService.analyse(sqlAnalyseParam).getData();
+        if (CollectionUtils.isEmpty(sqlList)) {
+            throw new BusinessException(DatasourceErrorEnum.SQL_ANALYSIS_ERROR);
+        }
+
+        List<ExecuteResultDTO> result = new ArrayList<>();
+        // 执行sql
+        for (SqlDTO sqlDTO : sqlList) {
+            TemplateExecuteParam templateQueryParam = new TemplateExecuteParam();
+            templateQueryParam.setConsoleId(param.getConsoleId());
+            templateQueryParam.setDataSourceId(param.getDataSourceId());
+            templateQueryParam.setSql(sqlDTO.getSql());
+            ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
+            result.add(executeResult);
+        }
+
+        return ListResult.of(result);
     }
 }

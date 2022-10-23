@@ -1,24 +1,16 @@
-package com.alibaba.dataops.server.domain.data.api.model;
+package com.alibaba.dataops.server.web.api.controller.mysql.vo;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 /**
- * 执行结果
- *
- * @author Jiaju Zhuang
+ * @author moji
+ * @version ExecuteResultVO.java, v 0.1 2022年10月23日 11:20 moji Exp $
+ * @date 2022/10/23
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Builder
-@ToString
-public class ExecuteResultDTO {
+public class ExecuteResultVO {
 
     /**
      * 执行的sql
@@ -43,10 +35,10 @@ public class ExecuteResultDTO {
     /**
      * 展示头的列表
      */
-    private List<CellDTO> headerList;
+    private List<CellVO> headerList;
 
     /**
      * 数据的列表
      */
-    private List<List<CellDTO>> dataList;
+    private List<List<CellVO>> dataList;
 }
