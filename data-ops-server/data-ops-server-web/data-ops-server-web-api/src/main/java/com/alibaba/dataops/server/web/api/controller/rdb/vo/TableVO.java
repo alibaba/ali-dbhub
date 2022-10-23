@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.web.api.controller.mysql.vo;
+package com.alibaba.dataops.server.web.api.controller.rdb.vo;
 
 import java.util.List;
 

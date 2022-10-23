@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.web.api.controller.mysql.request;
+package com.alibaba.dataops.server.web.api.controller.rdb.request;
 
 import javax.validation.constraints.NotNull;
 

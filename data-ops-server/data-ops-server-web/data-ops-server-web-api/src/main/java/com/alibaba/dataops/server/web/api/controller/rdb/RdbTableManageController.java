@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.web.api.controller.mysql;
+package com.alibaba.dataops.server.web.api.controller.rdb;
 
 import java.util.List;
 
@@ -10,14 +10,14 @@ import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
-import com.alibaba.dataops.server.web.api.controller.mysql.converter.RdbDataConverter;
-import com.alibaba.dataops.server.web.api.controller.mysql.request.TableBriefQueryRequest;
-import com.alibaba.dataops.server.web.api.controller.mysql.request.TableDeleteRequest;
-import com.alibaba.dataops.server.web.api.controller.mysql.request.TableDetailQueryRequest;
-import com.alibaba.dataops.server.web.api.controller.mysql.request.TableManageRequest;
-import com.alibaba.dataops.server.web.api.controller.mysql.request.TableSqlExportRequest;
-import com.alibaba.dataops.server.web.api.controller.mysql.vo.ExecuteResultVO;
-import com.alibaba.dataops.server.web.api.controller.mysql.vo.TableVO;
+import com.alibaba.dataops.server.web.api.controller.rdb.converter.RdbDataConverter;
+import com.alibaba.dataops.server.web.api.controller.rdb.request.TableBriefQueryRequest;
+import com.alibaba.dataops.server.web.api.controller.rdb.request.TableDeleteRequest;
+import com.alibaba.dataops.server.web.api.controller.rdb.request.TableDetailQueryRequest;
+import com.alibaba.dataops.server.web.api.controller.rdb.request.TableManageRequest;
+import com.alibaba.dataops.server.web.api.controller.rdb.request.TableSqlExportRequest;
+import com.alibaba.dataops.server.web.api.controller.rdb.vo.ExecuteResultVO;
+import com.alibaba.dataops.server.web.api.controller.rdb.vo.TableVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;

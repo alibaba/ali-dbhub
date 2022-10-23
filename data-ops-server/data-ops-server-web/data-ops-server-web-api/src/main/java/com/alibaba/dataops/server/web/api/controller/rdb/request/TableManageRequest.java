@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.web.api.controller.mysql.request;
+package com.alibaba.dataops.server.web.api.controller.rdb.request;
 
 import javax.validation.constraints.NotNull;
 
@@ -12,11 +12,17 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
-public class TableDeleteRequest extends DataSourceBaseRequest {
+public class TableManageRequest extends DataSourceBaseRequest {
 
     /**
-     * 表名称
+     * sql语句
      */
     @NotNull
-    private String tableName;
+    private String sql;
+
+    /**
+     * 控制台id
+     */
+    @NotNull
+    private Long consoleId;
 }
