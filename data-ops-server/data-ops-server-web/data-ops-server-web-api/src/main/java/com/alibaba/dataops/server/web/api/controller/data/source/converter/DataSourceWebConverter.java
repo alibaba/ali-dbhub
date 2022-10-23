@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
-import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
@@ -36,7 +36,7 @@ public abstract class DataSourceWebConverter {
     @Mappings({
         @Mapping(source = "user", target = "userName")
     })
-    public abstract DataSourceCreateParam createReq2param(DataSourceCreateRequest request);
+    public abstract DataSourceManageCreateParam createReq2param(DataSourceCreateRequest request);
 
     /**
      * 参数转换
