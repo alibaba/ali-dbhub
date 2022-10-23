@@ -18,6 +18,10 @@
             <artifactId>data-ops-server-tools-base</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.alibaba.data-ops</groupId>
+            <artifactId>data-ops-server-domain-data-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
