@@ -1,6 +1,4 @@
-package com.alibaba.dataops.server.domain.data.api.model;
-
-import java.util.List;
+package com.alibaba.dataops.server.domain.data.core.dataobject;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +16,7 @@ import lombok.ToString;
 @Data
 @Builder
 @ToString
-public class TableDTO {
+public class TableDO {
     /**
      * 表名
      */
@@ -29,20 +27,5 @@ public class TableDTO {
      */
     private String comment;
 
-    /**
-     * 列列表
-     */
-    private List<TableColumnDTO> columnList;
-
-    /**
-     * 索引列表
-     */
-    private List<TableIndexDTO> indexList;
-
-    /**
-     * 建表语句
-     * 暂时不支持
-     */
-    private String createSql;
 }
 

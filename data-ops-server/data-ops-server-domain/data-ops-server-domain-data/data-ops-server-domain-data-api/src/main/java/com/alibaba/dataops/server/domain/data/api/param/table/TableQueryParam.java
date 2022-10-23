@@ -36,6 +36,5 @@ public class TableQueryParam extends QueryParam {
     /**
      * 表名
      */
-    @NotNull
     private String tableName;
 }

@@ -23,6 +23,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterDisposer;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.SqlProvider;
 import org.springframework.jdbc.core.StatementCallback;
@@ -110,6 +111,47 @@ public class JdbcDataTemplate extends JdbcTemplate {
         return execute(new QueryStatementCallback(), true);
     }
 
+    /**
+     * Query using a prepared statement, allowing for a PreparedStatementCreator
+     * and a PreparedStatementSetter. Most other query methods use this method,
+     * but application code will always work with either a creator or a setter.
+     * @param psc a callback that creates a PreparedStatement given a Connection
+     * @param pss a callback that knows how to set values on the prepared statement.
+     * If this is {@code null}, the SQL will be assumed to contain no bind parameters.
+     * @param rse a callback that will extract results
+     * @return an arbitrary result object, as returned by the ResultSetExtractor
+     * @throws DataAccessException if there is any problem
+     */
+    @Nullable
+    @Override
+    public <T> T query(
+        PreparedStatementCreator psc, @Nullable final PreparedStatementSetter pss, final ResultSetExtractor<T> rse)
+        throws DataAccessException {
+
+        Assert.notNull(rse, "ResultSetExtractor must not be null");
+        logger.debug("Executing prepared SQL query");
+
+        return execute(psc, new PreparedStatementCallback<T>() {
+            @Override
+            @Nullable
+            public T doInPreparedStatement(PreparedStatement ps) throws SQLException {
+                ResultSet rs = null;
+                try {
+                    if (pss != null) {
+                        pss.setValues(ps);
+                    }
+                    rs = ps.executeQuery();
+                    return rse.extractData(rs);
+                }
+                finally {
+                    JdbcUtils.closeResultSet(rs);
+                    if (pss instanceof ParameterDisposer) {
+                        ((ParameterDisposer) pss).cleanupParameters();
+                    }
+                }
+            }
+        }, true);
+    }
     /**
      * 本方法未做任何修改
      *
@@ -221,6 +263,7 @@ public class JdbcDataTemplate extends JdbcTemplate {
         return updateCount(execute(new UpdateStatementCallback(), true));
     }
 
+
     /**
      * 修改时的执行器
      *
@@ -273,6 +316,7 @@ public class JdbcDataTemplate extends JdbcTemplate {
             }
         }
     }
+
 
     /**
      * 本方法未做修改

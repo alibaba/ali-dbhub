@@ -36,6 +36,5 @@ public class TablePageQueryParam extends PageQueryParam {
     /**
      * 表名
      */
-    @NotNull
     private String tableName;
 }

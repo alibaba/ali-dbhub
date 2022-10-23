@@ -11,10 +11,12 @@ import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
 import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
+import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.database.DatabaseQueryAllParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateUpdateParam;
@@ -23,6 +25,7 @@ import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DatabaseDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
 import com.alibaba.dataops.server.domain.data.api.service.SqlDataService;
+import com.alibaba.dataops.server.domain.data.api.service.TableDataService;
 import com.alibaba.dataops.server.test.common.BaseTest;
 import com.alibaba.dataops.server.test.domain.data.utils.TestUtils;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
@@ -58,9 +61,10 @@ public class H2DataServiceTest extends BaseTest {
     private JdbcTemplateDataService jdbcTemplateDataService;
     @Resource
     private SqlDataService sqlDataService;
-
     @Resource
     private DatabaseDataService databaseDataService;
+    @Resource
+    private TableDataService tableDataService;
 
     @Test
     @Order(1)
@@ -278,5 +282,16 @@ public class H2DataServiceTest extends BaseTest {
         databaseQueryAllParam.setDataSourceId(DATA_SOURCE_ID);
         List<DatabaseDTO> databaseList = databaseDataService.queryAll(databaseQueryAllParam).getData();
         log.info("分析数据返回{}", JSON.toJSONString(databaseList));
+    }
+
+    @Test
+    @Order(14)
+    public void table() {
+        TablePageQueryParam tablePageQueryParam = new TablePageQueryParam();
+        tablePageQueryParam.setDataSourceId(DATA_SOURCE_ID);
+        tablePageQueryParam.setDatabaseName("PUBLIC");
+        //tablePageQueryParam.setTableName("test_query");
+        List<TableDTO> tableList = tableDataService.pageQuery(tablePageQueryParam, null).getData();
+        log.info("分析数据返回{}", JSON.toJSONString(tableList));
     }
 }
