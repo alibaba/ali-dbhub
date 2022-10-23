@@ -5,9 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
+import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;

@@ -3,13 +3,13 @@ package com.alibaba.dataops.server.domain.core.api.service;
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
-import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceSelector;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
+import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;

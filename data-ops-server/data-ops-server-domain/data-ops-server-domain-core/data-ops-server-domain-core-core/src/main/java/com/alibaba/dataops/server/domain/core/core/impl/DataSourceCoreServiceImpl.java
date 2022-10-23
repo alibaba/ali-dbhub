@@ -4,10 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
-import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
@@ -18,15 +16,18 @@ import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.core.core.converter.DataSourceCoreConverter;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
 import com.alibaba.dataops.server.domain.core.repository.mapper.DataSourceMapper;
+import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
+import com.alibaba.dataops.server.domain.data.api.param.database.DatabaseQueryAllParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
+import com.alibaba.dataops.server.domain.data.api.service.DatabaseDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
 import com.alibaba.dataops.server.domain.data.api.service.SqlDataService;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
@@ -66,6 +67,9 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
 
     @Autowired
     private SqlDataService sqlDataService;
+
+    @Autowired
+    private DatabaseDataService databaseDataService;
 
     @Autowired
     private DataSourceCoreConverter dataSourceCoreConverter;
@@ -146,26 +150,11 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
             throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
         }
 
-        Long consoleId = 2L;
-        ConsoleCreateParam consoleCreateParam = new ConsoleCreateParam();
-        consoleCreateParam.setDataSourceId(id);
-        consoleCreateParam.setConsoleId(consoleId);
-        consoleCreateParam.setDatabaseName("test");
-        actionResult = consoleDataService.create(consoleCreateParam);
-
-        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-        templateQueryParam.setConsoleId(consoleId);
-        templateQueryParam.setDataSourceId(id);
-        templateQueryParam.setSql("show databases;");
-        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
-
-        List<DatabaseDTO> databaseDTOS = dataList.stream().map(item -> {
-            DatabaseDTO databaseDTO = new DatabaseDTO();
-            databaseDTO.setName((String)item.get("SCHEMA_NAME"));
-            return databaseDTO;
-        }).collect(Collectors.toList());
-        // TODO 增加获取数据源下database逻辑
-        return ListResult.of(databaseDTOS);
+        // 查询database
+        DatabaseQueryAllParam queryAllParam = new DatabaseQueryAllParam();
+        queryAllParam.setDataSourceId(id);
+        ListResult<DatabaseDTO> databaseDTOS = databaseDataService.queryAll(queryAllParam);
+        return databaseDTOS;
     }
 
     @Override
@@ -173,9 +162,6 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         if (StringUtils.isBlank(param.getSql())) {
             return ListResult.empty();
         }
-
-        // TODO 改为前端创建数据库连接
-        attach(param.getDataSourceId());
 
         // 解析sql
         SqlAnalyseParam sqlAnalyseParam = new SqlAnalyseParam();
