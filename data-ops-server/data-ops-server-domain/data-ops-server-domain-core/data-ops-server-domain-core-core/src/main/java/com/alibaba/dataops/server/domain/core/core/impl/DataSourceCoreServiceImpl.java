@@ -26,6 +26,7 @@ import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCre
 import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
 import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.table.TableQueryParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TableSelector;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
@@ -194,12 +195,12 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
     }
 
     @Override
-    public DataResult<TableDTO> query(TableQueryParam param) {
-        return tableDataService.query(param);
+    public DataResult<TableDTO> query(TableQueryParam param, TableSelector selector) {
+        return tableDataService.query(param, selector);
     }
 
     @Override
-    public PageResult<TableDTO> pageQuery(TablePageQueryParam param) {
-        return tableDataService.pageQuery(param);
+    public PageResult<TableDTO> pageQuery(TablePageQueryParam param, TableSelector selector) {
+        return tableDataService.pageQuery(param, selector);
     }
 }

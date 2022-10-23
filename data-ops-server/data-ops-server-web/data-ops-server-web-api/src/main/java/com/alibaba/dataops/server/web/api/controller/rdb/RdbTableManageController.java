@@ -8,6 +8,7 @@ import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
 import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.table.TableQueryParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TableSelector;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
@@ -58,7 +59,10 @@ public class RdbTableManageController {
     @GetMapping("/list")
     public WebPageResult<TableVO> list(TableBriefQueryRequest request) {
         TablePageQueryParam queryParam = rdbDataConverter.tablePageRequest2param(request);
-        PageResult<TableDTO> tableDTOPageResult = dataSourceCoreService.pageQuery(queryParam);
+        TableSelector tableSelector = new TableSelector();
+        tableSelector.setColumnList(false);
+        tableSelector.setIndexList(false);
+        PageResult<TableDTO> tableDTOPageResult = dataSourceCoreService.pageQuery(queryParam, tableSelector);
         List<TableVO> tableVOS = rdbDataConverter.tableDto2vo(tableDTOPageResult.getData());
         return WebPageResult.of(tableVOS, tableDTOPageResult.getTotal(), request.getPageNo(), request.getPageSize());
     }
@@ -83,7 +87,10 @@ public class RdbTableManageController {
     @GetMapping("/query")
     public DataResult<TableVO> query(TableDetailQueryRequest request) {
         TableQueryParam queryParam = rdbDataConverter.tableRequest2param(request);
-        DataResult<TableDTO> tableDTODataResult = dataSourceCoreService.query(queryParam);
+        TableSelector tableSelector = new TableSelector();
+        tableSelector.setColumnList(true);
+        tableSelector.setIndexList(true);
+        DataResult<TableDTO> tableDTODataResult = dataSourceCoreService.query(queryParam, tableSelector);
         TableVO tableVO = rdbDataConverter.tableDto2vo(tableDTODataResult.getData());
         return DataResult.of(tableVO);
     }
