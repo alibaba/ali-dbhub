@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.domain.data.api.param.datasource;
+package com.alibaba.dataops.server.domain.data.api.param.database;
 
 import javax.validation.constraints.NotNull;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 展示表信息
+ * 展示数据库信息
  *
  * @author Jiaju Zhuang
  */
@@ -18,16 +18,10 @@ import lombok.ToString;
 @Data
 @Builder
 @ToString
-public class DataSourceShowTablesParam {
+public class DatabaseQueryAllParam {
     /**
      * 对应数据库存储的来源id
      */
     @NotNull
     private Long dataSourceId;
-
-    /**
-     * 对应的连接数据库名称
-     */
-    @NotNull
-    private String databaseName;
 }

@@ -8,9 +8,11 @@ import javax.annotation.Resource;
 import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
+import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
+import com.alibaba.dataops.server.domain.data.api.param.database.DatabaseQueryAllParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
@@ -18,6 +20,7 @@ import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryPa
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateUpdateParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
+import com.alibaba.dataops.server.domain.data.api.service.DatabaseDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
 import com.alibaba.dataops.server.domain.data.api.service.SqlDataService;
 import com.alibaba.dataops.server.test.common.BaseTest;
@@ -55,6 +58,9 @@ public class H2DataServiceTest extends BaseTest {
     private JdbcTemplateDataService jdbcTemplateDataService;
     @Resource
     private SqlDataService sqlDataService;
+
+    @Resource
+    private DatabaseDataService databaseDataService;
 
     @Test
     @Order(1)
@@ -263,5 +269,14 @@ public class H2DataServiceTest extends BaseTest {
         Assertions.assertEquals(2, sqlList.size(), "查询结果异常");
         Assertions.assertEquals("SELECT *\nFROM test_query\nWHERE id = 1;", sqlList.get(0).getSql(), "查询结果异常");
         Assertions.assertEquals("SELECT *\nFROM test_query\nWHERE id = 122;", sqlList.get(1).getSql(), "查询结果异常");
+    }
+
+    @Test
+    @Order(13)
+    public void database() {
+        DatabaseQueryAllParam databaseQueryAllParam = new DatabaseQueryAllParam();
+        databaseQueryAllParam.setDataSourceId(DATA_SOURCE_ID);
+        List<DatabaseDTO> databaseList = databaseDataService.queryAll(databaseQueryAllParam).getData();
+        log.info("分析数据返回{}", JSON.toJSONString(databaseList));
     }
 }

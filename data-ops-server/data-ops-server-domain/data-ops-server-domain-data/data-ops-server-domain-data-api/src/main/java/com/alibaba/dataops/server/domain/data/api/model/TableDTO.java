@@ -33,4 +33,11 @@ public class TableDTO {
      * 索引列表
      */
     private List<TableIndexDTO> indexList;
+
+    /**
+     * 建表语句
+     * 暂时不支持
+     */
+    private String createSql;
 }
+

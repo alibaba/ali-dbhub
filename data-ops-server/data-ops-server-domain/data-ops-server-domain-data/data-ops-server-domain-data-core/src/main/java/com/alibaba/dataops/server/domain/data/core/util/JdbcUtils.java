@@ -8,8 +8,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
+import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
+import com.alibaba.dataops.server.tools.base.excption.CommonErrorEnum;
+import com.alibaba.dataops.server.tools.base.excption.SystemException;
 import com.alibaba.dataops.server.tools.common.util.EasyOptionalUtils;
+import com.alibaba.druid.DbType;
 
 /**
  * jdbc工具类
@@ -17,6 +21,28 @@ import com.alibaba.dataops.server.tools.common.util.EasyOptionalUtils;
  * @author Jiaju Zhuang
  */
 public class JdbcUtils {
+
+    /**
+     * 获取德鲁伊的的数据库类型
+     *
+     * @param dbType
+     * @return
+     */
+    public static DbType parse2DruidDbType(DbTypeEnum dbType) {
+        switch (dbType) {
+            case H2:
+                return DbType.h2;
+            case MYSQL:
+                return DbType.mysql;
+            case ORACLE:
+                return DbType.oracle;
+            case SQLITE:
+                return DbType.sqlite;
+            default:
+                throw new SystemException(CommonErrorEnum.PARAM_ERROR);
+        }
+    }
+
     /**
      * 获取一个返回值
      *

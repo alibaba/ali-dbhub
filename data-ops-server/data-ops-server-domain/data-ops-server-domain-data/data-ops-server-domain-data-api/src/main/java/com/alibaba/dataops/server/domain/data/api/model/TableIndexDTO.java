@@ -22,6 +22,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class TableIndexDTO {
+
     /**
      * 索引名称
      */
@@ -49,5 +50,5 @@ public class TableIndexDTO {
     /**
      * 索引包含的列
      */
-    private List<TableIndexColumnDTO> columnList;
+    private List<TableColumnDTO> columnList;
 }

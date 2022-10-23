@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.domain.data.api.model;
+package com.alibaba.dataops.server.domain.data.api.param.table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 表的概要信息
+ * 表结构选择器
  *
  * @author Jiaju Zhuang
  */
@@ -16,9 +16,14 @@ import lombok.ToString;
 @Data
 @Builder
 @ToString
-public class TableBriefDTO {
+public class TableSelector {
     /**
-     * 表名
+     * 列列表
      */
-    private String name;
+    private Boolean columnList;
+
+    /**
+     * 索引列表
+     */
+    private Boolean indexList;
 }

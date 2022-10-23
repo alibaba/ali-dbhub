@@ -1,6 +1,8 @@
-package com.alibaba.dataops.server.domain.data.api.param.datasource;
+package com.alibaba.dataops.server.domain.data.api.param.table;
 
 import javax.validation.constraints.NotNull;
+
+import com.alibaba.dataops.server.tools.base.wrapper.param.PageQueryParam;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 展示表结构信息
+ * 分页查询表信息
+ *
  * @author Jiaju Zhuang
  */
 @AllArgsConstructor
@@ -17,7 +20,7 @@ import lombok.ToString;
 @Data
 @Builder
 @ToString
-public class DataSourceDescTableParam {
+public class TablePageQueryParam extends PageQueryParam {
     /**
      * 对应数据库存储的来源id
      */

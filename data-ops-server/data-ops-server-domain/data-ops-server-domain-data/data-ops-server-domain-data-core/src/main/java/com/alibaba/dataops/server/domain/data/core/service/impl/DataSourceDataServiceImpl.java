@@ -4,22 +4,14 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
-import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
-import com.alibaba.dataops.server.domain.data.api.model.TableBriefDTO;
-import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
-import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceDescTableParam;
-import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceShowCreateTableParam;
-import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceShowDatabasesParam;
-import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceShowTablesParam;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.core.model.DataSourceWrapper;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
+import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
-import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
-import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.common.util.EasyEnumUtils;
 import com.alibaba.druid.pool.DruidDataSource;
 
@@ -55,9 +47,19 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
 
         // 放入缓存
         DataCenterUtils.DATA_SOURCE_CACHE.put(dataSourceId, DataSourceWrapper.builder()
-            .driverClass(driverClass)
+            .dbType(driverClass)
             .druidDataSource(druidDataSource)
             .build());
+
+        // 创建一个默认的连接 来执行基础的sql
+        try {
+            DataCenterUtils.DEFAULT_JDBC_TEMPLATE_CACHE.put(dataSourceId,
+                JdbcDataTemplate.builder()
+                    .connection(druidDataSource.getConnection())
+                    .build());
+        } catch (SQLException e) {
+            throw new BusinessException("连接数据库异常", e);
+        }
         return ActionResult.isSuccess();
     }
 
@@ -85,23 +87,4 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
         return ActionResult.isSuccess();
     }
 
-    @Override
-    public ListResult<DatabaseDTO> showDatabases(DataSourceShowDatabasesParam param) {
-        return null;
-    }
-
-    @Override
-    public ListResult<TableBriefDTO> showTables(DataSourceShowTablesParam param) {
-        return null;
-    }
-
-    @Override
-    public DataResult<TableDTO> descTable(DataSourceDescTableParam param) {
-        return null;
-    }
-
-    @Override
-    public ActionResult showCreateTable(DataSourceShowCreateTableParam param) {
-        return null;
-    }
 }

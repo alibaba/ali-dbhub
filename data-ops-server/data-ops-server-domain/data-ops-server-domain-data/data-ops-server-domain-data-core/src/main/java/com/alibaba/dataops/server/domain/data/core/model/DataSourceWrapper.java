@@ -24,7 +24,7 @@ public class DataSourceWrapper {
     /**
      * 数据库类型
      */
-    private DbTypeEnum driverClass;
+    private DbTypeEnum dbType;
 
     /**
      * 数据源
