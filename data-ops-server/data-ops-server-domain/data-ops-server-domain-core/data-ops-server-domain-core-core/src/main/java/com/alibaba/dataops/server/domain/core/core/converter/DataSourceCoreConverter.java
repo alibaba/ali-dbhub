@@ -63,7 +63,7 @@ public abstract class DataSourceCoreConverter {
         if (Objects.isNull(dbTypeEnum)) {
             throw new BusinessException(CommonErrorEnum.DRIVER_CLASS_NOT_EXIST);
         }
-        param.setDriverClass(dbTypeEnum.name());
+        param.setDbType(dbTypeEnum.name());
         param.setUrl(dataSourceDO.getUrl());
         param.setUsername(dataSourceDO.getUserName());
         param.setPassword(dataSourceDO.getPassword());
@@ -84,7 +84,7 @@ public abstract class DataSourceCoreConverter {
         if (Objects.isNull(dbTypeEnum)) {
             throw new BusinessException(CommonErrorEnum.DRIVER_CLASS_NOT_EXIST);
         }
-        param.setDriverClass(dbTypeEnum.name());
+        param.setDbType(dbTypeEnum.name());
         param.setUrl(dataSourceTestParam.getUrl());
         param.setUsername(dataSourceTestParam.getUser());
         param.setPassword(dataSourceTestParam.getPassword());

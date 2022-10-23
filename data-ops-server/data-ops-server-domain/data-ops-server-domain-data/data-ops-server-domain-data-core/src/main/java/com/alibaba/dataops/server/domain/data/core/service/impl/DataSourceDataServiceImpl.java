@@ -34,7 +34,7 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
         // 尝试先关闭连接源
         close(DataSourceCloseParam.builder().dataSourceId(dataSourceId).build());
 
-        DbTypeEnum driverClass = EasyEnumUtils.getEnum(DbTypeEnum.class, param.getDriverClass());
+        DbTypeEnum driverClass = EasyEnumUtils.getEnum(DbTypeEnum.class, param.getDbType());
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setDriverClassName(driverClass.getClassName());
         druidDataSource.setUrl(param.getUrl());

@@ -29,12 +29,12 @@ public class DataSourceCreateParam {
     private Long dataSourceId;
 
     /**
-     * 驱动类型
+     * 数据库类型
      *
      * @see DbTypeEnum
      */
     @NotNull
-    private String driverClass;
+    private String dbType;
 
     /**
      * 请求连接

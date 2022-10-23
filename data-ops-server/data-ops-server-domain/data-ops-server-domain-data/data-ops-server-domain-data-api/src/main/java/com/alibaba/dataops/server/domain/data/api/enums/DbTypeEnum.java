@@ -5,7 +5,7 @@ import com.alibaba.dataops.server.tools.base.enums.BaseEnum;
 import lombok.Getter;
 
 /**
- * 驱动类枚举
+ * 数据类型
  *
  * @author Jiaju Zhuang
  */

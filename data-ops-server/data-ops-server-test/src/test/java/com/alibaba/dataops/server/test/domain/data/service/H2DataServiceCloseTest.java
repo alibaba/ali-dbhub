@@ -64,7 +64,7 @@ public class H2DataServiceCloseTest extends BaseTest {
     public void closeDataSource() {
         DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
         dataSourceCreateParam.setDataSourceId(DATA_SOURCE_ID);
-        dataSourceCreateParam.setDriverClass(DbTypeEnum.H2.getCode());
+        dataSourceCreateParam.setDbType(DbTypeEnum.H2.getCode());
         dataSourceCreateParam.setUrl(URL);
         ActionResult actionResult = dataSourceDataService.create(dataSourceCreateParam);
         Assertions.assertTrue(actionResult.success(), "创建数据库连接池失败");
@@ -91,7 +91,7 @@ public class H2DataServiceCloseTest extends BaseTest {
     public void closeDataSourceAfterCrateConsole() {
         DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
         dataSourceCreateParam.setDataSourceId(DATA_SOURCE_ID);
-        dataSourceCreateParam.setDriverClass(DbTypeEnum.H2.getCode());
+        dataSourceCreateParam.setDbType(DbTypeEnum.H2.getCode());
         dataSourceCreateParam.setUrl(URL);
         ActionResult actionResult = dataSourceDataService.create(dataSourceCreateParam);
         Assertions.assertTrue(actionResult.success(), "创建数据库连接池失败");
