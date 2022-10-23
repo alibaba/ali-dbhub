@@ -2,6 +2,7 @@
   "name": "data-ops-electron",
   "private": true,
   "license": "MIT",
+  "author": "yuqin",
   "version": "0.0.1",
   "main": "main.js",
   "homepage": "./",
@@ -21,7 +22,6 @@
     "directories":{
       "output": "../electron-build"
     },
-    "asar": false, 
     "files":[   
       "dist/**/*",
       "main.js",
@@ -29,12 +29,18 @@
       "app/**/*",
       "jre/**/*"
     ],
+    "electronDownload":{
+      "mirror":"https://npm.taobao.org/mirrors/electron/"
+    },
     "mac": {
       "icon": "logo/logo.png",
-      "target": [ 
-        "dmg",
-        "zip"
-      ]
+      "target": [{
+        "target": "dmg",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      }]
     },
     "win": {
       "target": [ 
