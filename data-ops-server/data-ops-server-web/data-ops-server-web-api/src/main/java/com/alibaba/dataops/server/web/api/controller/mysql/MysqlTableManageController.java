@@ -1,16 +1,25 @@
 package com.alibaba.dataops.server.web.api.controller.mysql;
 
+import java.util.List;
+
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
+import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
+import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
+import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
+import com.alibaba.dataops.server.web.api.controller.mysql.converter.MysqlDataConverter;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableBriefQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableDeleteRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableDetailQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableManageRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.TableSqlExportRequest;
+import com.alibaba.dataops.server.web.api.controller.mysql.vo.ExecuteResultVO;
 import com.alibaba.dataops.server.web.api.controller.mysql.vo.TableVO;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +38,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/mysql/table")
 @RestController
 public class MysqlTableManageController {
+
+    @Autowired
+    private DataSourceCoreService dataSourceCoreService;
+
+    @Autowired
+    private MysqlDataConverter mysqlDataConverter;
 
     /**
      * 查询当前DB下的表列表
@@ -70,10 +85,12 @@ public class MysqlTableManageController {
      * @return
      */
     @PutMapping("/manage")
-    public ActionResult manage(@RequestBody TableManageRequest request) {
-        return null;
+    public ListResult<ExecuteResultVO> manage(@RequestBody TableManageRequest request) {
+        DataSourceExecuteParam param = mysqlDataConverter.tableRequest2param(request);
+        ListResult<ExecuteResultDTO> resultDTOListResult = dataSourceCoreService.execute(param);
+        List<ExecuteResultVO> resultVOS = mysqlDataConverter.dto2vo(resultDTOListResult.getData());
+        return ListResult.of(resultVOS);
     }
-
 
     /**
      * 删除表

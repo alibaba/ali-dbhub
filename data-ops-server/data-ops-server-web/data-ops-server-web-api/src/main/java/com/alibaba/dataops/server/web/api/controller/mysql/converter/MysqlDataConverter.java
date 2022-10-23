@@ -6,6 +6,7 @@ import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.web.api.controller.mysql.request.DataManageRequest;
+import com.alibaba.dataops.server.web.api.controller.mysql.request.TableManageRequest;
 import com.alibaba.dataops.server.web.api.controller.mysql.vo.CellVO;
 import com.alibaba.dataops.server.web.api.controller.mysql.vo.ExecuteResultVO;
 
@@ -26,6 +27,14 @@ public abstract class MysqlDataConverter {
      * @return
      */
     public abstract DataSourceExecuteParam request2param(DataManageRequest request);
+
+    /**
+     * 参数转换
+     *
+     * @param request
+     * @return
+     */
+    public abstract DataSourceExecuteParam tableRequest2param(TableManageRequest request);
 
     /**
      * 模型转换
