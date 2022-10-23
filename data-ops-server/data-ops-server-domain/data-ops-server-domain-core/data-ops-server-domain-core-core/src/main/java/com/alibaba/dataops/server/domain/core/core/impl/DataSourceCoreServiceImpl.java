@@ -3,6 +3,8 @@ package com.alibaba.dataops.server.domain.core.core.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
@@ -21,6 +23,7 @@ import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
+import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
@@ -142,8 +145,27 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         if (!actionResult.getSuccess()) {
             throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
         }
+
+        Long consoleId = 2L;
+        ConsoleCreateParam consoleCreateParam = new ConsoleCreateParam();
+        consoleCreateParam.setDataSourceId(id);
+        consoleCreateParam.setConsoleId(consoleId);
+        consoleCreateParam.setDatabaseName("test");
+        actionResult = consoleDataService.create(consoleCreateParam);
+
+        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+        templateQueryParam.setConsoleId(consoleId);
+        templateQueryParam.setDataSourceId(id);
+        templateQueryParam.setSql("show databases;");
+        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+
+        List<DatabaseDTO> databaseDTOS = dataList.stream().map(item -> {
+            DatabaseDTO databaseDTO = new DatabaseDTO();
+            databaseDTO.setName((String)item.get("SCHEMA_NAME"));
+            return databaseDTO;
+        }).collect(Collectors.toList());
         // TODO 增加获取数据源下database逻辑
-        return ListResult.empty();
+        return ListResult.of(databaseDTOS);
     }
 
     @Override
