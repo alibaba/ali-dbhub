@@ -19,10 +19,13 @@ import com.alibaba.dataops.server.domain.core.repository.mapper.DataSourceMapper
 import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
+import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.database.DatabaseQueryAllParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TableQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
@@ -30,6 +33,7 @@ import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DatabaseDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
 import com.alibaba.dataops.server.domain.data.api.service.SqlDataService;
+import com.alibaba.dataops.server.domain.data.api.service.TableDataService;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.excption.DatasourceErrorEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
@@ -70,6 +74,9 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
 
     @Autowired
     private DatabaseDataService databaseDataService;
+
+    @Autowired
+    private TableDataService tableDataService;
 
     @Autowired
     private DataSourceCoreConverter dataSourceCoreConverter;
@@ -184,5 +191,15 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         }
 
         return ListResult.of(result);
+    }
+
+    @Override
+    public DataResult<TableDTO> query(TableQueryParam param) {
+        return tableDataService.query(param);
+    }
+
+    @Override
+    public PageResult<TableDTO> pageQuery(TablePageQueryParam param) {
+        return tableDataService.pageQuery(param);
     }
 }

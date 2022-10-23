@@ -20,7 +20,7 @@ public class TableVO {
     /**
      * 表描述
      */
-    private String description;
+    private String comment;
 
     /**
      * 列

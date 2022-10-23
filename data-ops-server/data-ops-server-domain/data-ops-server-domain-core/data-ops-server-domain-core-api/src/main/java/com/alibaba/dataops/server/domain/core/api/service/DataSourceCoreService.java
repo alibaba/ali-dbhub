@@ -11,6 +11,9 @@ import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
+import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
+import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TableQueryParam;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
@@ -97,4 +100,20 @@ public interface DataSourceCoreService {
      * @return
      */
     ListResult<ExecuteResultDTO> execute(DataSourceExecuteParam param);
+
+    /**
+     * 查询表信息
+     *
+     * @param param
+     * @return
+     */
+    DataResult<TableDTO> query(TableQueryParam param);
+
+    /**
+     * 分页查询表信息
+     *
+     * @param param
+     * @return
+     */
+    PageResult<TableDTO> pageQuery(TablePageQueryParam param);
 }
