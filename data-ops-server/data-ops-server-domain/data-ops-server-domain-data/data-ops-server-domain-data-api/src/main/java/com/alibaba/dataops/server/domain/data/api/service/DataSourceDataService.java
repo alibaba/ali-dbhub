@@ -27,4 +27,37 @@ public interface DataSourceDataService {
      */
     ActionResult close(DataSourceCloseParam param);
 
+
+    /**
+     * 创建数据库连接源
+     *
+     * @param param
+     * @return
+     */
+    ActionResult showDatabases(DataSourceCreateParam param);
+
+    /**
+     * 创建数据库连接源
+     *
+     * @param param
+     * @return
+     */
+    ActionResult showTables(DataSourceCreateParam param);
+
+    /**
+     * 创建数据库连接源
+     *
+     * @param param
+     * @return
+     */
+    ActionResult descTable(DataSourceCreateParam param);
+
+    /**
+     * 创建数据库连接源
+     *
+     * @param param
+     * @return
+     */
+    ActionResult showCreateTable(DataSourceCreateParam param);
+
 }

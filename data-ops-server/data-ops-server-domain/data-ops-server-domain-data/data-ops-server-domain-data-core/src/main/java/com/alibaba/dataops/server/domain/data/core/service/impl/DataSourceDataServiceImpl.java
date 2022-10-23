@@ -75,4 +75,24 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
         }
         return ActionResult.isSuccess();
     }
+
+    @Override
+    public ActionResult showDatabases(DataSourceCreateParam param) {
+        return null;
+    }
+
+    @Override
+    public ActionResult showTables(DataSourceCreateParam param) {
+        return null;
+    }
+
+    @Override
+    public ActionResult descTable(DataSourceCreateParam param) {
+        return null;
+    }
+
+    @Override
+    public ActionResult showCreateTable(DataSourceCreateParam param) {
+        return null;
+    }
 }
