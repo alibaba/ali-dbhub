@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import { formatNaturalDate } from '@/utils/index';
 import Iconfont from '@/components/Iconfont';
@@ -75,18 +75,24 @@ export default memo<IProps>(function ConnectionPage(props) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [connectionList, setConnectionList] = useState<IConnectionBase[]>();
   const [finished, setFinished] = useState(false);
-  const [pageNo, setPageNo] = useState(1)
   const [rowData, setRowData] = useState<IConnectionBase | null>();
   const [form] = Form.useForm();
   const scrollerRef = useRef(null)
+  const [pageNo, setPageNo] = useState(0)
 
   useEffect(() => {
-    getConnectionList()
+    // console.log(scrollerRef.current)
   }, [])
 
   type IParams = {
     superposition: boolean
   }
+
+  const resetGetList = () => {
+    setFinished(false);
+    setPageNo(1);
+  }
+
   const getConnectionList = (params?: IParams) => {
     const { superposition } = params || {}
     if (!superposition) {
@@ -94,21 +100,20 @@ export default memo<IProps>(function ConnectionPage(props) {
     }
 
     let p = {
-      pageNo,
+      pageNo: pageNo + 1,
       pageSize: 10
     }
 
     return connectionServer.getList(p).then(res => {
-      console.log(pageNo)
-      if (!res.hasNextPage && pageNo !== 1) {
-        setFinished(true)
-        return
-      }
-      setPageNo(pageNo + 1)
+
       if (connectionList?.length && superposition) {
         setConnectionList([...connectionList, ...res.data])
       } else {
         setConnectionList(res.data)
+      }
+
+      if (!res.hasNextPage) {
+        setFinished(true)
       }
 
     })
@@ -128,6 +133,7 @@ export default memo<IProps>(function ConnectionPage(props) {
     }
 
     const deleteConnection = () => {
+      resetGetList()
       connectionServer.remove({ id: rowData.id! }).then(res => {
         message.success('删除成功');
         getConnectionList();
@@ -135,7 +141,7 @@ export default memo<IProps>(function ConnectionPage(props) {
     }
 
     const cloneConnection = () => {
-      setFinished(false)
+      resetGetList()
       connectionServer.clone({ id: rowData.id! }).then(res => {
         message.success('克隆成功');
         getConnectionList();
@@ -247,21 +253,16 @@ export default memo<IProps>(function ConnectionPage(props) {
         </div>
       }
       <div className={styles.scrollBox} ref={scrollerRef}>
-        <LoadingContent data={connectionList} handleEmpty>
-          {
-            scrollerRef.current &&
-            <ScrollLoading
-              finished={finished}
-              scrollerElement={scrollerRef.current}
-              onReachBottom={getConnectionList.bind(null, { superposition: true })}
-              threshold={200}
-            >
-              <div className={styles.connectionList}>
-                {connectionList?.map(item => renderCard(item))}
-              </div>
-            </ScrollLoading>
-          }
-        </LoadingContent>
+        <ScrollLoading
+          finished={finished}
+          scrollerElement={scrollerRef}
+          onReachBottom={getConnectionList.bind(null, { superposition: true })}
+          threshold={200}
+        >
+          <div className={styles.connectionList}>
+            {connectionList?.map(item => renderCard(item))}
+          </div>
+        </ScrollLoading>
       </div>
       <Modal
         title="连接数据库"

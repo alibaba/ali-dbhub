@@ -61,7 +61,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
       databaseName: '1'
     }
     return api(p).then(res => {
-      if (res.data.length) {
+      if (!res.hasNextPage) {
         setFinished(true)
       }
       if (dataList?.length && !clear) {
@@ -98,10 +98,9 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
     <div className={styles.sqlListBox} ref={scrollerRef}>
       <LoadingContent data={dataList} handleEmpty>
         {
-          scrollerRef.current &&
           <ScrollLoading
             finished={finished}
-            scrollerElement={scrollerRef.current}
+            scrollerElement={scrollerRef}
             onReachBottom={getList}
             threshold={300}
           >

@@ -8,28 +8,29 @@ interface IProps {
   children?: React.ReactChild; // 滚动的内容
   onReachBottom: () => Promise<unknown>; // 触底的数据请求
   threshold: number; // 触底阈值
-  scrollerElement: HTMLElement; // overfollow：scroll 的盒子
+  scrollerElement: React.MutableRefObject<any>; // overfollow：scroll 的盒子
   finished: boolean; // 是否结束
 }
 
 export default memo<IProps>(function ScrollLoading({ className, children, scrollerElement, threshold, onReachBottom, finished }) {
-  const scroller = scrollerElement;
+  const scroller = scrollerElement.current;
   const scrollerRef = useRef(scroller);
   const pendingRef = useRef(false);
   const finishedRef = useRef(false);
+  const onBoxMounted = useRef(null)
   const onReachBottomRef = useRef(onReachBottom);
   const [isPending, setIsPadding] = useState(false);
 
-  useLayoutEffect(() => {
-    scrollerRef.current = scroller;
-  }, [scroller]);
+  useEffect(() => {
+    scrollerRef.current = scrollerElement.current;
+    replenishData(onBoxMounted.current!, scrollerElement.current)
+  }, []);
 
-  useLayoutEffect(() => {
-    scrollerRef.current = scroller;
+  useEffect(() => {
     finishedRef.current = finished
   }, [finished]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     onReachBottomRef.current = onReachBottom;
   }, [onReachBottom]);
 
@@ -59,7 +60,7 @@ export default memo<IProps>(function ScrollLoading({ className, children, scroll
     }
   }, [onScroll]);
 
-  // 当数据没有出现滚动条时处理
+  // 填充数据
   const replenishData = (a: HTMLElement, b: HTMLElement) => {
     if (a.clientHeight <= b.clientHeight && !finishedRef.current) {
       pendingRef.current = true;
@@ -72,19 +73,13 @@ export default memo<IProps>(function ScrollLoading({ className, children, scroll
     }
   }
 
-  const onBoxMounted = useCallback((element: HTMLElement | null) => {
-    if (element) {
-      replenishData(element, scroller)
-    }
-  }, []);
-
   return <div ref={onBoxMounted} className={classnames(className, styles.box)}>
     {children}
     <>
       {isPending && <div className={styles.tips}>
         <Loading className={styles.loading}></Loading>
       </div>}
-      {finishedRef.current && <div className={styles.tips}>----列表是有底线的----</div>}
+      {finished && <div className={styles.tips}>----列表是有底线的----</div>}
     </>
   </div>
 })
