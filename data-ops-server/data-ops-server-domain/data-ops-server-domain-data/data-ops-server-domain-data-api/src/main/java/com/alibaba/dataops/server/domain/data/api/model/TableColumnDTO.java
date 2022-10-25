@@ -1,6 +1,6 @@
 package com.alibaba.dataops.server.domain.data.api.model;
 
-import com.alibaba.dataops.server.domain.data.api.enums.column.ColumnTypeEnum;
+import com.alibaba.dataops.server.domain.data.api.enums.ColumnTypeEnum;
 import com.alibaba.dataops.server.tools.base.enums.YesOrNoEnum;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +26,11 @@ public class TableColumnDTO {
     private String name;
 
     /**
+     * 表名
+     */
+    private String tableName;
+
+    /**
      * 列的类型
      *
      * @see ColumnTypeEnum
@@ -33,18 +38,11 @@ public class TableColumnDTO {
     private String type;
 
     /**
-     * 是否为空
+     * 是否可以为空
      *
      * @see YesOrNoEnum
      */
     private String nullable;
-
-    /**
-     * 是否主键
-     *
-     * @see YesOrNoEnum
-     */
-    private String primary;
 
     /**
      * 默认值

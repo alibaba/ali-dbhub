@@ -142,6 +142,19 @@ public class PageResult<T> implements Serializable, Result<List<T>> {
     }
 
     /**
+     * 构建分页返回对象
+     * 总条数返回
+     *
+     * @param data  返回的对象
+     * @param param 分页参数
+     * @param <T>   返回的对象类型
+     * @return 分页返回对象
+     */
+    public static <T> PageResult<T> of(List<T> data, PageQueryParam param) {
+        return new PageResult<>(data, 0L, param.getPageNo(), param.getPageSize());
+    }
+
+    /**
      * 构建空的返回对象
      *
      * @param pageNo   页码

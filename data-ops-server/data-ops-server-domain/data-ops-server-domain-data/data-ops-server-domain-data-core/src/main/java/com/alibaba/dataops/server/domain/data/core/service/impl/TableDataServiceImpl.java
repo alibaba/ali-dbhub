@@ -1,26 +1,44 @@
 package com.alibaba.dataops.server.domain.data.core.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
+import com.alibaba.dataops.server.domain.data.api.model.TableColumnDTO;
 import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
+import com.alibaba.dataops.server.domain.data.api.model.TableIndexDTO;
 import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.table.TableQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.table.TableSelector;
 import com.alibaba.dataops.server.domain.data.api.service.TableDataService;
 import com.alibaba.dataops.server.domain.data.core.converter.TableCoreConverter;
-import com.alibaba.dataops.server.domain.data.core.dataobject.TableDO;
-import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
+import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorColumnQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorIndexQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTablePageQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.SqlExecutor;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
+import com.alibaba.dataops.server.tools.base.excption.CommonErrorEnum;
+import com.alibaba.dataops.server.tools.base.excption.SystemException;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
-import com.alibaba.druid.DbType;
+import com.alibaba.dataops.server.tools.common.util.EasyCollectionUtils;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,9 +48,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
-public class TableDataServiceImpl implements TableDataService {
+public class TableDataServiceImpl implements TableDataService, InitializingBean {
+    /**
+     * sql执行器的列表
+     */
+    private static final Map<DbTypeEnum, SqlExecutor> SQL_EXECUTOR_MAP = new HashMap<>();
     @Resource
     private TableCoreConverter tableCoreConverter;
+    @Autowired
+    private List<SqlExecutor> sqlExecutorList;
 
     @Override
     public DataResult<TableDTO> query(TableQueryParam param, TableSelector selector) {
@@ -41,55 +65,92 @@ public class TableDataServiceImpl implements TableDataService {
 
     @Override
     public PageResult<TableDTO> pageQuery(TablePageQueryParam param, TableSelector selector) {
-        JdbcDataTemplate jdbcDataTemplate = DataCenterUtils.getDefaultJdbcDataTemplate(param.getDataSourceId());
-        // TODO 根据不同的数据库类型来区分
-        DbType dbType = DataCenterUtils.getDruidDbTypeByDataSourceId(param.getDataSourceId());
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = DataCenterUtils.getDefaultJdbcTemplate(param.getDataSourceId());
+        SqlExecutor sqlExecutor = sqlExecutor(param.getDataSourceId());
 
-        // 查询表结构信息
-        List<TableDO> queryList = jdbcDataTemplate.query(
-            " select TABLE_NAME \n"
-                + "     , REMARKS   \n"
-                + "        from INFORMATION_SCHEMA.TABLES\n"
-                + "        where TABLE_SCHEMA = ?\n"
-                + "        order by TABLE_NAME;", (RowMapper)(rs, rowNum) -> {
-                TableDO tableDO = new TableDO();
-                tableDO.setName(rs.getString("TABLE_NAME"));
-                tableDO.setComment(rs.getString("REMARKS"));
-                return tableDO;
-            }, param.getDatabaseName());
-        List<TableDTO> list = tableCoreConverter.do2dto(queryList);
+        // 构建查询表信息参数
+        ExecutorTablePageQueryParam executorTablePageQueryParam = tableCoreConverter.param2param(param);
+        executorTablePageQueryParam.setNamedParameterJdbcTemplate(namedParameterJdbcTemplate);
+
+        // 查询表信息
+        PageResult<ExecutorTableDTO> pageResult = sqlExecutor.pageQueryTable(executorTablePageQueryParam);
+        List<TableDTO> list = tableCoreConverter.dto2dto(pageResult.getData());
 
         // 填充数据
-        fillData(list, selector);
-        return PageResult.of(list, 500L, param);
+        fillData(list, QueryContext.builder()
+            .namedParameterJdbcTemplate(namedParameterJdbcTemplate)
+            .databaseName(param.getDatabaseName())
+            .sqlExecutor(sqlExecutor)
+            .build(), selector);
+        return PageResult.of(list, pageResult.getTotal(), param);
     }
 
-    private void fillData(List<TableDTO> list, TableSelector selector) {
+    private void fillData(List<TableDTO> list, QueryContext queryContext, TableSelector selector) {
         if (CollectionUtils.isEmpty(list) || selector == null) {
             return;
         }
-        // 填充
-        fillColumnList(list, selector);
+        // 填充列的信息
+        fillColumnList(list, queryContext, selector);
+        // 填充索引的信息
+        fillIndexList(list, queryContext, selector);
     }
 
-    private void fillColumnList(List<TableDTO> list, TableSelector selector) {
+    private void fillIndexList(List<TableDTO> list, QueryContext queryContext, TableSelector selector) {
+        if (BooleanUtils.isNotTrue(selector.getIndexList())) {
+            return;
+        }
+        // 查询表结构信息
+        List<String> tableNameList = EasyCollectionUtils.toList(list, TableDTO::getName);
+        ExecutorIndexQueryParam executorIndexQueryParam = tableCoreConverter.context2paramIndex(queryContext);
+        executorIndexQueryParam.setTableNameList(tableNameList);
+        List<TableIndexDTO> tableIndexList = tableCoreConverter.dto2dtoIndex(
+            queryContext.getSqlExecutor().queryListIndex(executorIndexQueryParam).getData());
+        Map<String, List<TableIndexDTO>> tableIndexMap = EasyCollectionUtils.stream(tableIndexList)
+            .collect(Collectors.groupingBy(TableIndexDTO::getTableName));
+        for (TableDTO table : list) {
+            table.setIndexList(tableIndexMap.get(table.getName()));
+        }
+    }
+
+    private void fillColumnList(List<TableDTO> list, QueryContext queryContext, TableSelector selector) {
         if (BooleanUtils.isNotTrue(selector.getColumnList())) {
             return;
         }
+        // 查询表结构信息
+        List<String> tableNameList = EasyCollectionUtils.toList(list, TableDTO::getName);
+        ExecutorColumnQueryParam executorColumnQueryParam = tableCoreConverter.context2paramColumn(queryContext);
+        executorColumnQueryParam.setTableNameList(tableNameList);
+        List<TableColumnDTO> tableColumnList = tableCoreConverter.dto2dtoColumn(
+            queryContext.getSqlExecutor().queryListColumn(executorColumnQueryParam).getData());
+        Map<String, List<TableColumnDTO>> tableColumnMap = EasyCollectionUtils.stream(tableColumnList)
+            .collect(Collectors.groupingBy(TableColumnDTO::getTableName));
+        for (TableDTO table : list) {
+            table.setColumnList(tableColumnMap.get(table.getName()));
+        }
+    }
 
-        //List<TableColumnDO> tableColumnList = jdbcDataTemplate.queryForList(
-        //    "SELECT COLUMN_NAME              as name ,\n"
-        //        + "       DATA_TYPE              as type,\n"
-        //        + "       IS_NULLABLE              as nullable,\n"
-        //        + "       COLUMN_DEFAULT           as defaultValue,\n"
-        //        + "       EXTRA  as extra,\n"
-        //        + "       COLUMN_COMMENT           AS comment,\n"
-        //        + "       NUMERIC_PRECISION        as numericPrecision   ,\n"
-        //        + "       NUMERIC_SCALE            as numericScale,\n"
-        //        + "       CHARACTER_MAXIMUM_LENGTH as characterMaximumLength\n"
-        //        + "FROM INFORMATION_SCHEMA.COLUMNS\n"
-        //        + "WHERE table_name = ?\n"
-        //        + "  AND TABLE_SCHEMA = ?\n"
-        //        + "ORDER BY ORDINAL_POSITION;", TableColumnDO.class, param.getTableName(), param.getDatabaseName());
+    @Override
+    public void afterPropertiesSet() {
+        SQL_EXECUTOR_MAP.putAll(EasyCollectionUtils.toIdentityMap(sqlExecutorList, SqlExecutor::supportDbType));
+    }
+
+    private SqlExecutor sqlExecutor(Long dataSourceId) {
+        DbTypeEnum dbType = DataCenterUtils.getDbTypeByDataSourceId(dataSourceId);
+        SqlExecutor sqlExecutor = SQL_EXECUTOR_MAP.get(dbType);
+        if (sqlExecutor == null) {
+            throw new SystemException(CommonErrorEnum.PARAM_ERROR);
+        }
+        return sqlExecutor;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    @ToString
+    public static class QueryContext {
+        private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+        private String databaseName;
+        private SqlExecutor sqlExecutor;
     }
 }

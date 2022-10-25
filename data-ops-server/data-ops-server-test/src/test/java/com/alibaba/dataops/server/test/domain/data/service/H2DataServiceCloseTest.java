@@ -6,7 +6,7 @@ import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
-import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
+import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
@@ -110,11 +110,11 @@ public class H2DataServiceCloseTest extends BaseTest {
         // 无法执行sql了
         BusinessException businessException = Assertions.assertThrows(BusinessException.class, () -> {
             // 无法创建控制台
-            TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-            templateQueryParam.setConsoleId(CONSOLE_ID);
-            templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-            templateQueryParam.setSql("select * from test_close where id=1;");
-            jdbcTemplateDataService.queryForList(templateQueryParam);
+            TemplateExecuteParam templateExecuteParam = new TemplateExecuteParam();
+            templateExecuteParam.setConsoleId(CONSOLE_ID);
+            templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
+            templateExecuteParam.setSql("select * from test_close where id=1;");
+            jdbcTemplateDataService.execute(templateExecuteParam);
         }, "关闭连接池失败");
         Assertions.assertEquals(ErrorEnum.CONSOLE_NOT_FOUND.getCode(), businessException.getCode(), "关闭连接池失败");
     }

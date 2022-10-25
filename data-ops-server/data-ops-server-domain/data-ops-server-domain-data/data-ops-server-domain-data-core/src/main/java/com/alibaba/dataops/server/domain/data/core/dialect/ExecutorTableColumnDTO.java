@@ -1,22 +1,34 @@
-package com.alibaba.dataops.server.web.api.controller.rdb.vo;
+package com.alibaba.dataops.server.domain.data.core.dialect;
 
 import com.alibaba.dataops.server.domain.data.api.enums.ColumnTypeEnum;
 import com.alibaba.dataops.server.tools.base.enums.YesOrNoEnum;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
- * @author moji
- * @version TableVO.java, v 0.1 2022年09月16日 17:16 moji Exp $
- * @date 2022/09/16
+ * 列信息
+ *
+ * @author Jiaju Zhuang
  */
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class ColumnVO {
-
+@Builder
+@ToString
+public class ExecutorTableColumnDTO {
     /**
-     * 名称
+     * 列名
      */
     private String name;
+
+    /**
+     * 表名
+     */
+    private String tableName;
 
     /**
      * 列的类型
@@ -26,18 +38,11 @@ public class ColumnVO {
     private String type;
 
     /**
-     * 是否为空
+     * 是否可以为空
      *
      * @see YesOrNoEnum
      */
     private String nullable;
-
-    /**
-     * 是否主键
-     *
-     * @see YesOrNoEnum
-     */
-    private String primary;
 
     /**
      * 默认值
@@ -71,4 +76,9 @@ public class ColumnVO {
      */
     private String comment;
 
+    /**
+     * 排序
+     */
+    private Integer ordinalPosition;
 }
+

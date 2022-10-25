@@ -1,8 +1,9 @@
-package com.alibaba.dataops.server.domain.data.api.model;
+package com.alibaba.dataops.server.domain.data.core.dialect;
 
 import java.util.List;
 
 import com.alibaba.dataops.server.domain.data.api.enums.IndexTypeEnum;
+import com.alibaba.dataops.server.domain.data.api.model.TableColumnDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ import lombok.ToString;
 @Data
 @Builder
 @ToString
-public class TableIndexDTO {
+public class ExecutorTableIndexDTO {
 
     /**
      * 索引名称

@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.domain.data.api.enums.column;
+package com.alibaba.dataops.server.domain.data.api.enums;
 
 import com.alibaba.dataops.server.tools.base.enums.BaseEnum;
 

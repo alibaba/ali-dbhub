@@ -1,5 +1,6 @@
-package com.alibaba.dataops.server.domain.data.api.enums.column;
+package com.alibaba.dataops.server.domain.data.core.dialect;
 
+import com.alibaba.dataops.server.domain.data.api.enums.ColumnTypeEnum;
 import com.alibaba.dataops.server.tools.base.enums.BaseEnum;
 
 /**

@@ -1,7 +1,6 @@
 package com.alibaba.dataops.server.test.domain.data.service;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -17,9 +16,8 @@ import com.alibaba.dataops.server.domain.data.api.param.database.DatabaseQueryAl
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
 import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TableSelector;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
-import com.alibaba.dataops.server.domain.data.api.param.template.TemplateQueryParam;
-import com.alibaba.dataops.server.domain.data.api.param.template.TemplateUpdateParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DatabaseDataService;
@@ -39,7 +37,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer;
 import org.springframework.boot.sql.init.DatabaseInitializationSettings;
-import org.springframework.jdbc.BadSqlGrammarException;
 
 /**
  * h2的data服测试
@@ -103,145 +100,145 @@ public class H2DataServiceTest extends BaseTest {
         Assertions.assertTrue(actionResult.success(), "创建控制台失败");
     }
 
-    @Test
-    @Order(3)
-    public void queryForList() {
-        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("select * from test_query where id=1;");
-        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
-        log.info("查询数据返回{}", JSON.toJSONString(dataList));
-        Assertions.assertEquals(1, dataList.size(), "查询语句异常");
-        Map<String, Object> data1 = dataList.get(0);
-        Assertions.assertEquals(DATA_NAME, data1.get("name"), "未查询到姓名");
-    }
-
-    @Test
-    @Order(4)
-    public void insert() {
-        TemplateUpdateParam templateUpdateParam = new TemplateUpdateParam();
-        templateUpdateParam.setConsoleId(CONSOLE_ID);
-        templateUpdateParam.setDataSourceId(DATA_SOURCE_ID);
-        templateUpdateParam.setSql(
-            "INSERT INTO `test_query` (id,name,date,number) VALUES (9999,'姓名insert','2022-01-02',1234);");
-        Integer count = jdbcTemplateDataService.update(templateUpdateParam).getData();
-        log.info("查询数据返回:{}", count);
-
-        // 查数据
-        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("select * from test_query where id=9999;");
-        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
-        log.info("查询数据返回{}", JSON.toJSONString(dataList));
-        Assertions.assertEquals(1, dataList.size(), "查询语句异常");
-        Map<String, Object> data1 = dataList.get(0);
-        Assertions.assertEquals("姓名insert", data1.get("name"), "未查询到姓名");
-    }
-
-    @Test
-    @Order(5)
-    public void update() {
-        TemplateUpdateParam templateUpdateParam = new TemplateUpdateParam();
-        templateUpdateParam.setConsoleId(CONSOLE_ID);
-        templateUpdateParam.setDataSourceId(DATA_SOURCE_ID);
-        templateUpdateParam.setSql(
-            "update `test_query` set name='姓名update' where id=9999;");
-        Integer count = jdbcTemplateDataService.update(templateUpdateParam).getData();
-        log.info("查询数据返回:{}", count);
-
-        // 查数据
-        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("select * from test_query where id=9999;");
-        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
-        log.info("查询数据返回{}", JSON.toJSONString(dataList));
-        Assertions.assertEquals(1, dataList.size(), "查询语句异常");
-        Map<String, Object> data1 = dataList.get(0);
-        Assertions.assertEquals("姓名update", data1.get("name"), "未查询到姓名");
-    }
-
-    @Test
-    @Order(6)
-    public void delete() {
-        TemplateUpdateParam templateUpdateParam = new TemplateUpdateParam();
-        templateUpdateParam.setConsoleId(CONSOLE_ID);
-        templateUpdateParam.setDataSourceId(DATA_SOURCE_ID);
-        templateUpdateParam.setSql(
-            "delete from  `test_query` where id=9999;");
-        Integer count = jdbcTemplateDataService.update(templateUpdateParam).getData();
-        log.info("查询数据返回:{}", count);
-
-        // 查数据
-        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("select * from test_query where id=9999;");
-        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
-        log.info("查询数据返回{}", JSON.toJSONString(dataList));
-        Assertions.assertEquals(0, dataList.size(), "查询语句异常");
-    }
-
-    @Test
-    @Order(6)
-    public void errorSql() {
-        Assertions.assertThrows(BadSqlGrammarException.class, () -> {
-            // 异常sql
-            TemplateUpdateParam templateUpdateParam = new TemplateUpdateParam();
-            templateUpdateParam.setConsoleId(CONSOLE_ID);
-            templateUpdateParam.setDataSourceId(DATA_SOURCE_ID);
-            templateUpdateParam.setSql(
-                "delete from1  `test_query` where id=9999;");
-            jdbcTemplateDataService.update(templateUpdateParam);
-        }, "关闭连接池失败");
-
-        Assertions.assertThrows(BadSqlGrammarException.class, () -> {
-            // 异常sql
-            TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-            templateQueryParam.setConsoleId(CONSOLE_ID);
-            templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-            templateQueryParam.setSql("select * from test_query where1 id=9999;");
-            jdbcTemplateDataService.queryForList(templateQueryParam);
-        }, "关闭连接池失败");
-    }
-
-    @Test
-    @Order(7)
-    public void showTables() {
-        // 异常sql
-        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("show tables;");
-        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
-        log.info("查询数据返回{}", JSON.toJSONString(dataList));
-    }
-
-    @Test
-    @Order(8)
-    public void showDatabases() {
-        // 异常sql
-        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("show databases;");
-        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
-        log.info("查询数据返回{}", JSON.toJSONString(dataList));
-    }
-
-    @Test
-    @Order(9)
-    public void explain() {
-        // 异常sql
-        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("explain select * from test_query where id=9999;");
-        List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
-        log.info("查询数据返回{}", JSON.toJSONString(dataList));
-    }
+    //@Test
+    //@Order(3)
+    //public void queryForList() {
+    //    TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+    //    templateQueryParam.setConsoleId(CONSOLE_ID);
+    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateQueryParam.setSql("select * from test_query where id=1;");
+    //    List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+    //    log.info("查询数据返回{}", JSON.toJSONString(dataList));
+    //    Assertions.assertEquals(1, dataList.size(), "查询语句异常");
+    //    Map<String, Object> data1 = dataList.get(0);
+    //    Assertions.assertEquals(DATA_NAME, data1.get("name"), "未查询到姓名");
+    //}
+    //
+    //@Test
+    //@Order(4)
+    //public void insert() {
+    //    TemplateUpdateParam templateUpdateParam = new TemplateUpdateParam();
+    //    templateUpdateParam.setConsoleId(CONSOLE_ID);
+    //    templateUpdateParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateUpdateParam.setSql(
+    //        "INSERT INTO `test_query` (id,name,date,number) VALUES (9999,'姓名insert','2022-01-02',1234);");
+    //    Integer count = jdbcTemplateDataService.update(templateUpdateParam).getData();
+    //    log.info("查询数据返回:{}", count);
+    //
+    //    // 查数据
+    //    TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+    //    templateQueryParam.setConsoleId(CONSOLE_ID);
+    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateQueryParam.setSql("select * from test_query where id=9999;");
+    //    List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+    //    log.info("查询数据返回{}", JSON.toJSONString(dataList));
+    //    Assertions.assertEquals(1, dataList.size(), "查询语句异常");
+    //    Map<String, Object> data1 = dataList.get(0);
+    //    Assertions.assertEquals("姓名insert", data1.get("name"), "未查询到姓名");
+    //}
+    //
+    //@Test
+    //@Order(5)
+    //public void update() {
+    //    TemplateUpdateParam templateUpdateParam = new TemplateUpdateParam();
+    //    templateUpdateParam.setConsoleId(CONSOLE_ID);
+    //    templateUpdateParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateUpdateParam.setSql(
+    //        "update `test_query` set name='姓名update' where id=9999;");
+    //    Integer count = jdbcTemplateDataService.update(templateUpdateParam).getData();
+    //    log.info("查询数据返回:{}", count);
+    //
+    //    // 查数据
+    //    TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+    //    templateQueryParam.setConsoleId(CONSOLE_ID);
+    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateQueryParam.setSql("select * from test_query where id=9999;");
+    //    List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+    //    log.info("查询数据返回{}", JSON.toJSONString(dataList));
+    //    Assertions.assertEquals(1, dataList.size(), "查询语句异常");
+    //    Map<String, Object> data1 = dataList.get(0);
+    //    Assertions.assertEquals("姓名update", data1.get("name"), "未查询到姓名");
+    //}
+    //
+    //@Test
+    //@Order(6)
+    //public void delete() {
+    //    TemplateUpdateParam templateUpdateParam = new TemplateUpdateParam();
+    //    templateUpdateParam.setConsoleId(CONSOLE_ID);
+    //    templateUpdateParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateUpdateParam.setSql(
+    //        "delete from  `test_query` where id=9999;");
+    //    Integer count = jdbcTemplateDataService.update(templateUpdateParam).getData();
+    //    log.info("查询数据返回:{}", count);
+    //
+    //    // 查数据
+    //    TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+    //    templateQueryParam.setConsoleId(CONSOLE_ID);
+    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateQueryParam.setSql("select * from test_query where id=9999;");
+    //    List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+    //    log.info("查询数据返回{}", JSON.toJSONString(dataList));
+    //    Assertions.assertEquals(0, dataList.size(), "查询语句异常");
+    //}
+    //
+    //@Test
+    //@Order(6)
+    //public void errorSql() {
+    //    Assertions.assertThrows(BadSqlGrammarException.class, () -> {
+    //        // 异常sql
+    //        TemplateUpdateParam templateUpdateParam = new TemplateUpdateParam();
+    //        templateUpdateParam.setConsoleId(CONSOLE_ID);
+    //        templateUpdateParam.setDataSourceId(DATA_SOURCE_ID);
+    //        templateUpdateParam.setSql(
+    //            "delete from1  `test_query` where id=9999;");
+    //        jdbcTemplateDataService.update(templateUpdateParam);
+    //    }, "关闭连接池失败");
+    //
+    //    Assertions.assertThrows(BadSqlGrammarException.class, () -> {
+    //        // 异常sql
+    //        TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+    //        templateQueryParam.setConsoleId(CONSOLE_ID);
+    //        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //        templateQueryParam.setSql("select * from test_query where1 id=9999;");
+    //        jdbcTemplateDataService.queryForList(templateQueryParam);
+    //    }, "关闭连接池失败");
+    //}
+    //
+    //@Test
+    //@Order(7)
+    //public void showTables() {
+    //    // 异常sql
+    //    TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+    //    templateQueryParam.setConsoleId(CONSOLE_ID);
+    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateQueryParam.setSql("show tables;");
+    //    List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+    //    log.info("查询数据返回{}", JSON.toJSONString(dataList));
+    //}
+    //
+    //@Test
+    //@Order(8)
+    //public void showDatabases() {
+    //    // 异常sql
+    //    TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+    //    templateQueryParam.setConsoleId(CONSOLE_ID);
+    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateQueryParam.setSql("show databases;");
+    //    List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+    //    log.info("查询数据返回{}", JSON.toJSONString(dataList));
+    //}
+    //
+    //@Test
+    //@Order(9)
+    //public void explain() {
+    //    // 异常sql
+    //    TemplateQueryParam templateQueryParam = new TemplateQueryParam();
+    //    templateQueryParam.setConsoleId(CONSOLE_ID);
+    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateQueryParam.setSql("explain select * from test_query where id=9999;");
+    //    List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
+    //    log.info("查询数据返回{}", JSON.toJSONString(dataList));
+    //}
 
     @Test
     @Order(10)
@@ -291,7 +288,10 @@ public class H2DataServiceTest extends BaseTest {
         tablePageQueryParam.setDataSourceId(DATA_SOURCE_ID);
         tablePageQueryParam.setDatabaseName("PUBLIC");
         //tablePageQueryParam.setTableName("test_query");
-        List<TableDTO> tableList = tableDataService.pageQuery(tablePageQueryParam, null).getData();
+        List<TableDTO> tableList = tableDataService.pageQuery(tablePageQueryParam, TableSelector.builder()
+            .columnList(Boolean.TRUE)
+            .indexList(Boolean.TRUE)
+            .build()).getData();
         log.info("分析数据返回{}", JSON.toJSONString(tableList));
     }
 }

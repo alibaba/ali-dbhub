@@ -12,6 +12,11 @@ import lombok.Getter;
 @Getter
 public enum IndexTypeEnum implements BaseEnum<String> {
     /**
+     * 主键
+     */
+    PRIMARY_KEY("主键"),
+
+    /**
      * 普通索引
      */
     NORMAL("普通索引"),

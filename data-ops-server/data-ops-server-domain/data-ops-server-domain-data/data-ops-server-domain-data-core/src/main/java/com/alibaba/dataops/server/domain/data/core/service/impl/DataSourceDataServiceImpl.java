@@ -10,13 +10,13 @@ import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.core.model.DataSourceWrapper;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
-import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.common.util.EasyEnumUtils;
 import com.alibaba.druid.pool.DruidDataSource;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -51,15 +51,9 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
             .druidDataSource(druidDataSource)
             .build());
 
-        // 创建一个默认的连接 来执行基础的sql
-        try {
-            DataCenterUtils.DEFAULT_JDBC_TEMPLATE_CACHE.put(dataSourceId,
-                JdbcDataTemplate.builder()
-                    .connection(druidDataSource.getConnection())
-                    .build());
-        } catch (SQLException e) {
-            throw new BusinessException("连接数据库异常", e);
-        }
+        // 创建一个默认的模板来执行基础sql
+        DataCenterUtils.DEFAULT_JDBC_TEMPLATE_CACHE.put(dataSourceId,
+            new NamedParameterJdbcTemplate(druidDataSource));
         return ActionResult.isSuccess();
     }
 
@@ -84,6 +78,9 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
                 }
             }
         }
+
+        // 关闭连接
+        DataCenterUtils.DEFAULT_JDBC_TEMPLATE_CACHE.remove(param.getDataSourceId());
         return ActionResult.isSuccess();
     }
 

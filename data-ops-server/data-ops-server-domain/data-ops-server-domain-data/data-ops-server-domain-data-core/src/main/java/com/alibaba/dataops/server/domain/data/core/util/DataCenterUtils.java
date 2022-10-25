@@ -10,6 +10,7 @@ import com.alibaba.dataops.server.tools.common.enums.ErrorEnum;
 import com.alibaba.druid.DbType;
 
 import com.google.common.collect.Maps;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 /**
  * 用来存储连接等数据
@@ -34,7 +35,7 @@ public class DataCenterUtils {
      * 默认的的数据执行模板列表
      * key: dataSourceId
      */
-    public static final Map<Long, JdbcDataTemplate> DEFAULT_JDBC_TEMPLATE_CACHE = Maps.newConcurrentMap();
+    public static final Map<Long, NamedParameterJdbcTemplate> DEFAULT_JDBC_TEMPLATE_CACHE = Maps.newConcurrentMap();
 
     /**
      * 获取默认的JdbcDataTemplate
@@ -42,12 +43,12 @@ public class DataCenterUtils {
      * @param dataSourceId
      * @return
      */
-    public static JdbcDataTemplate getDefaultJdbcDataTemplate(Long dataSourceId) {
-        JdbcDataTemplate jdbcDataTemplate = DEFAULT_JDBC_TEMPLATE_CACHE.get(dataSourceId);
-        if (jdbcDataTemplate == null) {
+    public static NamedParameterJdbcTemplate getDefaultJdbcTemplate(Long dataSourceId) {
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = DEFAULT_JDBC_TEMPLATE_CACHE.get(dataSourceId);
+        if (namedParameterJdbcTemplate == null) {
             throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
         }
-        return jdbcDataTemplate;
+        return namedParameterJdbcTemplate;
     }
 
     /**
