@@ -54,6 +54,7 @@ public class JdbcTemplateDataServiceImpl implements JdbcTemplateDataService {
         SQLStatement sqlStatement = SQLUtils.parseSingleStatement(param.getSql(),
             DataCenterUtils.getDruidDbTypeByDataSourceId(param.getDataSourceId()));
         //TODO 其他语句的解析也要补充进来
+        // TODO 如果本来就带了分页就不用加了？
         if (sqlStatement instanceof SQLSelectStatement) {
             // 统计行数
             String countSql = COUNT_SQL_PARSER.getSmartCountSql(sql);
