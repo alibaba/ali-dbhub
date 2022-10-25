@@ -100,42 +100,45 @@ public class H2DataServiceTest extends BaseTest {
         Assertions.assertTrue(actionResult.success(), "创建控制台失败");
     }
 
-    //@Test
-    //@Order(3)
-    //public void queryForList() {
-    //    TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-    //    templateQueryParam.setConsoleId(CONSOLE_ID);
-    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-    //    templateQueryParam.setSql("select * from test_query where id=1;");
-    //    List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
-    //    log.info("查询数据返回{}", JSON.toJSONString(dataList));
-    //    Assertions.assertEquals(1, dataList.size(), "查询语句异常");
-    //    Map<String, Object> data1 = dataList.get(0);
-    //    Assertions.assertEquals(DATA_NAME, data1.get("name"), "未查询到姓名");
-    //}
-    //
-    //@Test
-    //@Order(4)
-    //public void insert() {
-    //    TemplateUpdateParam templateUpdateParam = new TemplateUpdateParam();
-    //    templateUpdateParam.setConsoleId(CONSOLE_ID);
-    //    templateUpdateParam.setDataSourceId(DATA_SOURCE_ID);
-    //    templateUpdateParam.setSql(
-    //        "INSERT INTO `test_query` (id,name,date,number) VALUES (9999,'姓名insert','2022-01-02',1234);");
-    //    Integer count = jdbcTemplateDataService.update(templateUpdateParam).getData();
-    //    log.info("查询数据返回:{}", count);
-    //
-    //    // 查数据
-    //    TemplateQueryParam templateQueryParam = new TemplateQueryParam();
-    //    templateQueryParam.setConsoleId(CONSOLE_ID);
-    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-    //    templateQueryParam.setSql("select * from test_query where id=9999;");
-    //    List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
-    //    log.info("查询数据返回{}", JSON.toJSONString(dataList));
-    //    Assertions.assertEquals(1, dataList.size(), "查询语句异常");
-    //    Map<String, Object> data1 = dataList.get(0);
-    //    Assertions.assertEquals("姓名insert", data1.get("name"), "未查询到姓名");
-    //}
+    @Test
+    @Order(3)
+    public void query() {
+        TemplateExecuteParam templateExecuteParam = new TemplateExecuteParam();
+        templateExecuteParam.setConsoleId(CONSOLE_ID);
+        templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
+        templateExecuteParam.setSql("select * from test_query where id=1;");
+        ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateExecuteParam).getData();
+        log.info("查询数据返回{}", JSON.toJSONString(executeResult));
+        List<List<CellDTO>> dataList = executeResult.getDataList();
+        Assertions.assertEquals(1, dataList.size(), "查询语句异常");
+        List<CellDTO> data1 = dataList.get(0);
+        Assertions.assertEquals(DATA_NAME, data1.get(1).getStringValue(), "未查询到姓名");
+    }
+
+    @Test
+    @Order(4)
+    public void insert() {
+        TemplateExecuteParam templateExecuteParam = new TemplateExecuteParam();
+        templateExecuteParam.setConsoleId(CONSOLE_ID);
+        templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
+        templateExecuteParam.setSql(
+            "INSERT INTO `test_query` (id,name,date,number) VALUES (9999,'姓名insert','2022-01-02',1234);");
+        ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateExecuteParam).getData();
+        log.info("插入数据返回:{}", executeResult);
+        Assertions.assertEquals(1, executeResult.getUpdateCount(), " 插入数据失败");
+
+        // 查数据
+        templateExecuteParam = new TemplateExecuteParam();
+        templateExecuteParam.setConsoleId(CONSOLE_ID);
+        templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
+        templateExecuteParam.setSql("select * from test_query where id=9999;");
+        executeResult = jdbcTemplateDataService.execute(templateExecuteParam).getData();
+        log.info("查询数据返回{}", JSON.toJSONString(executeResult));
+        List<List<CellDTO>> dataList = executeResult.getDataList();
+        Assertions.assertEquals(1, dataList.size(), "查询语句异常");
+        List<CellDTO> data1 = dataList.get(0);
+        Assertions.assertEquals("姓名insert", data1.get(1).getStringValue(), "未查询到姓名");
+    }
     //
     //@Test
     //@Order(5)
@@ -287,7 +290,7 @@ public class H2DataServiceTest extends BaseTest {
         TablePageQueryParam tablePageQueryParam = new TablePageQueryParam();
         tablePageQueryParam.setDataSourceId(DATA_SOURCE_ID);
         tablePageQueryParam.setDatabaseName("PUBLIC");
-        //tablePageQueryParam.setTableName("test_query");
+        tablePageQueryParam.setTableName("TEST_QUERY");
         List<TableDTO> tableList = tableDataService.pageQuery(tablePageQueryParam, TableSelector.builder()
             .columnList(Boolean.TRUE)
             .indexList(Boolean.TRUE)

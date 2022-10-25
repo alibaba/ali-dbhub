@@ -50,10 +50,10 @@ public class H2SqlExecutor implements SqlExecutor {
         String sql = " select TABLE_NAME \n"
             + "     , REMARKS   \n"
             + "        from INFORMATION_SCHEMA.TABLES\n"
-            + "        where TABLE_SCHEMA = 'PUBLIC'\n";
+            + "        where TABLE_SCHEMA = :databaseName\n";
         if (StringUtils.isNotBlank(param.getTableName())) {
             queryParam.put("tableName", param.getTableName());
-            sql += "       TABLE_NAME = :tableName";
+            sql += "   AND    TABLE_NAME = :tableName";
         }
         sql += "        order by TABLE_NAME;";
         return PageResult.of(param.getNamedParameterJdbcTemplate().query(sql,
