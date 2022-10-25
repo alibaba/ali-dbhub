@@ -1,7 +1,7 @@
 package com.alibaba.dataops.server.domain.data.core.dialect.h2;
 
 import com.alibaba.dataops.server.domain.data.api.enums.IndexTypeEnum;
-import com.alibaba.dataops.server.domain.data.core.dialect.BaseIndexTypeEnum;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.enums.BaseIndexTypeEnum;
 
 import lombok.Getter;
 

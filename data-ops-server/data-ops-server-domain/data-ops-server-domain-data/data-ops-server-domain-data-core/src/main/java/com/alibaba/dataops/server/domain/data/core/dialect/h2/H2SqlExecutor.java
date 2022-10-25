@@ -5,14 +5,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorColumnQueryParam;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorIndexQueryParam;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableColumnDTO;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableDTO;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableIndexColumnDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableIndexDTO;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTablePageQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.SqlExecutor;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableColumnDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableIndexColumnDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorColumnQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorIndexQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorTablePageQueryParam;
 import com.alibaba.dataops.server.tools.base.enums.YesOrNoEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
@@ -20,6 +20,8 @@ import com.alibaba.dataops.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.dataops.server.tools.common.util.EasyEnumUtils;
 import com.alibaba.dataops.server.tools.common.util.EasyOptionalUtils;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.dialect.helper.HsqldbDialect;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -35,9 +37,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class H2SqlExecutor implements SqlExecutor {
 
+    private static final HsqldbDialect HSQLDB_DIALECT = new HsqldbDialect();
+
     @Override
     public DbTypeEnum supportDbType() {
         return DbTypeEnum.H2;
+    }
+
+    @Override
+    public String getPageSql(String sql, Page page) {
+        return HSQLDB_DIALECT.getPageSql(sql, page, null);
     }
 
     @Override

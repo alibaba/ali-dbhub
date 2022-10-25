@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.domain.data.core.dialect;
+package com.alibaba.dataops.server.domain.data.core.dialect.common.param;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import lombok.ToString;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 /**
- * 索引查询查询
+ * 列查询
  *
  * @author Jiaju Zhuang
  */
@@ -22,7 +22,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @Data
 @Builder
 @ToString
-public class ExecutorIndexQueryParam {
+public class ExecutorColumnQueryParam {
     /**
      * jdbc执行器
      */

@@ -3,6 +3,7 @@ package com.alibaba.dataops.server.domain.data.core.dialect;
 import java.util.List;
 
 import com.alibaba.dataops.server.domain.data.api.enums.IndexTypeEnum;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableIndexColumnDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

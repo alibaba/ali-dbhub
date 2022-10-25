@@ -1,24 +1,41 @@
 package com.alibaba.dataops.server.domain.data.core.util;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
+import com.alibaba.dataops.server.domain.data.core.dialect.SqlExecutor;
 import com.alibaba.dataops.server.domain.data.core.model.DataSourceWrapper;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
+import com.alibaba.dataops.server.tools.base.excption.CommonErrorEnum;
+import com.alibaba.dataops.server.tools.base.excption.SystemException;
 import com.alibaba.dataops.server.tools.common.enums.ErrorEnum;
+import com.alibaba.dataops.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.druid.DbType;
 
+import com.github.pagehelper.Dialect;
 import com.google.common.collect.Maps;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
 
 /**
  * 用来存储连接等数据
  *
  * @author 是仪
  */
-public class DataCenterUtils {
+@Component
+public class DataCenterUtils implements InitializingBean {
+    @Autowired
+    private List<SqlExecutor> sqlExecutorList;
 
+    /**
+     * sql执行器的列表
+     */
+    private static final Map<DbTypeEnum, SqlExecutor> SQL_EXECUTOR_MAP = new HashMap<>();
     /**
      * 数据源
      * key: dataSourceId
@@ -92,5 +109,34 @@ public class DataCenterUtils {
      */
     public static DbType getDruidDbTypeByDataSourceId(Long dataSourceId) {
         return JdbcUtils.parse2DruidDbType(getDbTypeByDataSourceId(dataSourceId));
+    }
+
+    /**
+     * 根据dataSourceId 获取Dialect方言类型
+     *
+     * @param dataSourceId
+     * @return
+     */
+    public static Dialect getDialectByDataSourceId(Long dataSourceId) {
+        return JdbcUtils.parse2PageHelperDialect(getDbTypeByDataSourceId(dataSourceId));
+    }
+
+    /**
+     * 根据dataSourceId 获取Dialect方言类型
+     *
+     * @param dataSourceId
+     * @return
+     */
+    public static SqlExecutor getSqlExecutorByDataSourceId(Long dataSourceId) {
+        SqlExecutor sqlExecutor = SQL_EXECUTOR_MAP.get(getDbTypeByDataSourceId(dataSourceId));
+        if (sqlExecutor == null) {
+            throw new SystemException(CommonErrorEnum.PARAM_ERROR);
+        }
+        return sqlExecutor;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        SQL_EXECUTOR_MAP.putAll(EasyCollectionUtils.toIdentityMap(sqlExecutorList, SqlExecutor::supportDbType));
     }
 }

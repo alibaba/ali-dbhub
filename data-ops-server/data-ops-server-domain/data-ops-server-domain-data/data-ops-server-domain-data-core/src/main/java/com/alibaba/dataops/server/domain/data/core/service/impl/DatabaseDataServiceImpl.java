@@ -24,8 +24,6 @@ public class DatabaseDataServiceImpl implements DatabaseDataService {
     public ListResult<DatabaseDTO> queryAll(DatabaseQueryAllParam param) {
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = DataCenterUtils.getDefaultJdbcTemplate(
             param.getDataSourceId());
-        // TODO 根据不同的数据库类型来区分
-        DbType dbType = DataCenterUtils.getDruidDbTypeByDataSourceId(param.getDataSourceId());
         return ListResult.of(namedParameterJdbcTemplate.query("show databases;",
             (rs, rowNum) -> DatabaseDTO.builder()
                 .name(rs.getString(1))

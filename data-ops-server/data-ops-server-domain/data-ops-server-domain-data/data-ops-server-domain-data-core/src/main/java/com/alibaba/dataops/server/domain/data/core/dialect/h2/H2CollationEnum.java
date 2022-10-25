@@ -1,7 +1,7 @@
 package com.alibaba.dataops.server.domain.data.core.dialect.h2;
 
 import com.alibaba.dataops.server.domain.data.api.enums.CollationEnum;
-import com.alibaba.dataops.server.domain.data.core.dialect.BaseCollationEnum;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.enums.BaseCollationEnum;
 
 import lombok.Getter;
 

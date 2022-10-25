@@ -6,12 +6,12 @@ import com.alibaba.dataops.server.domain.data.api.model.TableColumnDTO;
 import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
 import com.alibaba.dataops.server.domain.data.api.model.TableIndexDTO;
 import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorColumnQueryParam;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorIndexQueryParam;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableColumnDTO;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorColumnQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorIndexQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableColumnDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableIndexDTO;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTablePageQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorTablePageQueryParam;
 import com.alibaba.dataops.server.domain.data.core.service.impl.TableDataServiceImpl.QueryContext;
 
 import org.mapstruct.Mapper;

@@ -55,4 +55,22 @@ public class ExecuteResultDTO {
      * 数据的列表
      */
     private List<List<CellDTO>> dataList;
+
+    /**
+     * 分页编码
+     * 只有select语句才有
+     */
+    private Integer pageNo;
+
+    /**
+     * 分页大小
+     * 只有select语句才有
+     */
+    private Integer pageSize;
+
+    /**
+     * 总的大小
+     * 只有select语句才有
+     */
+    private Long total;
 }

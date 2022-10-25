@@ -1,6 +1,6 @@
 package com.alibaba.dataops.server.domain.data.core.dialect.h2;
 
-import com.alibaba.dataops.server.domain.data.core.dialect.BaseColumnTypeEnum;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.enums.BaseColumnTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.enums.ColumnTypeEnum;
 
 import lombok.Getter;

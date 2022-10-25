@@ -1,8 +1,15 @@
 package com.alibaba.dataops.server.domain.data.core.dialect;
 
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableColumnDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorColumnQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorIndexQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorTablePageQueryParam;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
+
+import com.github.pagehelper.Page;
 
 /**
  * sql执行器
@@ -17,6 +24,15 @@ public interface SqlExecutor {
      * @return
      */
     DbTypeEnum supportDbType();
+
+    /**
+     * 获取分页sql
+     *
+     * @param sql
+     * @param page
+     * @return
+     */
+    String getPageSql(String sql, Page page);
 
     /**
      * 分页查询表信息

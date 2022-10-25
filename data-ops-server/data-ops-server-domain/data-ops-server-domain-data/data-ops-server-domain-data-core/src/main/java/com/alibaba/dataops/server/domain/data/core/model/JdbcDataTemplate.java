@@ -21,6 +21,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.UncategorizedSQLException;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.SqlProvider;
 import org.springframework.jdbc.core.StatementCallback;
 import org.springframework.jdbc.support.JdbcUtils;
@@ -75,6 +76,37 @@ public class JdbcDataTemplate {
     }
 
     /**
+     * 统计行数
+     *
+     * @param sql
+     * @return
+     */
+    public long count(final String sql) throws DataAccessException {
+        Assert.notNull(sql, "SQL must not be null");
+        class CountStatementCallback implements StatementCallback<Long>, SqlProvider {
+            @Override
+            @Nullable
+            public Long doInStatement(Statement stmt) throws SQLException {
+                ResultSet rs = null;
+                try {
+                    rs = stmt.executeQuery(sql);
+                    rs.next();
+                    return rs.getLong(1);
+                } finally {
+                    JdbcUtils.closeResultSet(rs);
+                }
+            }
+
+            @Override
+            public String getSql() {
+                return sql;
+            }
+        }
+
+        return execute(new CountStatementCallback());
+    }
+
+    /**
      * 执行一个自定义的sql查询
      *
      * @param sql
@@ -93,6 +125,7 @@ public class JdbcDataTemplate {
                     ExecuteResultDTO executeResult = ExecuteResultDTO.builder()
                         .sql(sql)
                         .build();
+                    executeResult.setDescription("执行成功");
                     // 获取有几列
                     ResultSetMetaData resultSetMetaData = rs.getMetaData();
                     int col = resultSetMetaData.getColumnCount();
@@ -150,6 +183,7 @@ public class JdbcDataTemplate {
                     .sql(sql)
                     .build();
                 executeResult.setUpdateCount(stmt.executeUpdate(sql));
+                executeResult.setDescription("执行成功");
                 return executeResult;
             }
 
@@ -176,8 +210,29 @@ public class JdbcDataTemplate {
         log.info("执行自定义sql:{}", sql);
         Statement stmt = null;
         try {
-            stmt = connection.createStatement();
             return action.doInStatement(connection.createStatement());
+        } catch (SQLException ex) {
+            throw translateException("CallableStatementCallback", sql, ex);
+        } finally {
+            JdbcUtils.closeStatement(stmt);
+        }
+    }
+
+    /**
+     * 执行一个sql
+     *
+     * @param action
+     * @param <T>
+     * @return
+     * @throws SQLException
+     */
+    @Nullable
+    private <T> T execute(PreparedStatementCallback<T> action) throws DataAccessException {
+        String sql = getSql(action);
+        log.info("执行自定义sql:{}", sql);
+        Statement stmt = null;
+        try {
+            return action.doInPreparedStatement(connection.prepareStatement(sql));
         } catch (SQLException ex) {
             throw translateException("CallableStatementCallback", sql, ex);
         } finally {

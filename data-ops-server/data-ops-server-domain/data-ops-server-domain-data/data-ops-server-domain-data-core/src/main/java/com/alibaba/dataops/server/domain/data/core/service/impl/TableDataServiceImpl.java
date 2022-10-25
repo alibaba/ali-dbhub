@@ -1,13 +1,11 @@
 package com.alibaba.dataops.server.domain.data.core.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.model.TableColumnDTO;
 import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
 import com.alibaba.dataops.server.domain.data.api.model.TableIndexDTO;
@@ -16,14 +14,12 @@ import com.alibaba.dataops.server.domain.data.api.param.table.TableQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.table.TableSelector;
 import com.alibaba.dataops.server.domain.data.api.service.TableDataService;
 import com.alibaba.dataops.server.domain.data.core.converter.TableCoreConverter;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorColumnQueryParam;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorIndexQueryParam;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableDTO;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTablePageQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.SqlExecutor;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorColumnQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorIndexQueryParam;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorTablePageQueryParam;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
-import com.alibaba.dataops.server.tools.base.excption.CommonErrorEnum;
-import com.alibaba.dataops.server.tools.base.excption.SystemException;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dataops.server.tools.common.util.EasyCollectionUtils;
@@ -36,8 +32,6 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -48,15 +42,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
-public class TableDataServiceImpl implements TableDataService, InitializingBean {
-    /**
-     * sql执行器的列表
-     */
-    private static final Map<DbTypeEnum, SqlExecutor> SQL_EXECUTOR_MAP = new HashMap<>();
+public class TableDataServiceImpl implements TableDataService {
+
     @Resource
     private TableCoreConverter tableCoreConverter;
-    @Autowired
-    private List<SqlExecutor> sqlExecutorList;
 
     @Override
     public DataResult<TableDTO> query(TableQueryParam param, TableSelector selector) {
@@ -65,8 +54,9 @@ public class TableDataServiceImpl implements TableDataService, InitializingBean 
 
     @Override
     public PageResult<TableDTO> pageQuery(TablePageQueryParam param, TableSelector selector) {
-        NamedParameterJdbcTemplate namedParameterJdbcTemplate = DataCenterUtils.getDefaultJdbcTemplate(param.getDataSourceId());
-        SqlExecutor sqlExecutor = sqlExecutor(param.getDataSourceId());
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = DataCenterUtils.getDefaultJdbcTemplate(
+            param.getDataSourceId());
+        SqlExecutor sqlExecutor = DataCenterUtils.getSqlExecutorByDataSourceId(param.getDataSourceId());
 
         // 构建查询表信息参数
         ExecutorTablePageQueryParam executorTablePageQueryParam = tableCoreConverter.param2param(param);
@@ -127,20 +117,6 @@ public class TableDataServiceImpl implements TableDataService, InitializingBean 
         for (TableDTO table : list) {
             table.setColumnList(tableColumnMap.get(table.getName()));
         }
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        SQL_EXECUTOR_MAP.putAll(EasyCollectionUtils.toIdentityMap(sqlExecutorList, SqlExecutor::supportDbType));
-    }
-
-    private SqlExecutor sqlExecutor(Long dataSourceId) {
-        DbTypeEnum dbType = DataCenterUtils.getDbTypeByDataSourceId(dataSourceId);
-        SqlExecutor sqlExecutor = SQL_EXECUTOR_MAP.get(dbType);
-        if (sqlExecutor == null) {
-            throw new SystemException(CommonErrorEnum.PARAM_ERROR);
-        }
-        return sqlExecutor;
     }
 
     @AllArgsConstructor

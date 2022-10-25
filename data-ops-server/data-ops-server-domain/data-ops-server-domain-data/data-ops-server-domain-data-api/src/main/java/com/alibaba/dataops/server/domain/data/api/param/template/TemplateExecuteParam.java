@@ -2,6 +2,8 @@ package com.alibaba.dataops.server.domain.data.api.param.template;
 
 import javax.validation.constraints.NotNull;
 
+import com.alibaba.dataops.server.tools.base.constant.EasyToolsConstant;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,4 +38,20 @@ public class TemplateExecuteParam {
      * 必须是单个语句
      */
     private String sql;
+
+    /**
+     * 分页编码
+     * 只有查询语句分页才有效
+     * 不传默认1
+     */
+    private Integer pageNo;
+
+    /**
+     * 分页大小
+     * 只有查询语句分页才有效
+     * 不传默认500
+     *
+     * @see EasyToolsConstant#MAX_PAGE_SIZE
+     */
+    private Integer pageSize;
 }
