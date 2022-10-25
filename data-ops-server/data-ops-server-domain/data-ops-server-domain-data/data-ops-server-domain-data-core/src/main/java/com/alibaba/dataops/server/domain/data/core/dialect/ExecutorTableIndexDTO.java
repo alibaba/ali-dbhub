@@ -3,7 +3,6 @@ package com.alibaba.dataops.server.domain.data.core.dialect;
 import java.util.List;
 
 import com.alibaba.dataops.server.domain.data.api.enums.IndexTypeEnum;
-import com.alibaba.dataops.server.domain.data.api.model.TableColumnDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,5 +47,5 @@ public class ExecutorTableIndexDTO {
     /**
      * 索引包含的列
      */
-    private List<TableColumnDTO> columnList;
+    private List<ExecutorTableIndexColumnDTO> columnList;
 }

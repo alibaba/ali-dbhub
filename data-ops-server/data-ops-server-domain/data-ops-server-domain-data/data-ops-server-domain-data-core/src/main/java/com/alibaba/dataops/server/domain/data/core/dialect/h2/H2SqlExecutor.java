@@ -1,23 +1,28 @@
 package com.alibaba.dataops.server.domain.data.core.dialect.h2;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorColumnQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorIndexQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableColumnDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableIndexColumnDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableIndexDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTablePageQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.SqlExecutor;
 import com.alibaba.dataops.server.tools.base.enums.YesOrNoEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
+import com.alibaba.dataops.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.dataops.server.tools.common.util.EasyEnumUtils;
 import com.alibaba.dataops.server.tools.common.util.EasyOptionalUtils;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +50,7 @@ public class H2SqlExecutor implements SqlExecutor {
         String sql = " select TABLE_NAME \n"
             + "     , REMARKS   \n"
             + "        from INFORMATION_SCHEMA.TABLES\n"
-            + "        where TABLE_SCHEMA = :databaseName\n";
+            + "        where TABLE_SCHEMA = 'PUBLIC'\n";
         if (StringUtils.isNotBlank(param.getTableName())) {
             queryParam.put("tableName", param.getTableName());
             sql += "       TABLE_NAME = :tableName";
@@ -117,14 +122,17 @@ public class H2SqlExecutor implements SqlExecutor {
         queryParam.put("databaseName", param.getDatabaseName());
         queryParam.put("tableNameList", param.getTableNameList());
 
-        return ListResult.of(param.getNamedParameterJdbcTemplate().query(
+        List<ExecutorTableIndexDTO> indexList = param.getNamedParameterJdbcTemplate().query(
             "SELECT INDEX_TYPE_NAME            ,\n"
                 + "       TABLE_NAME             ,\n"
                 + "       INDEX_NAME             ,\n"
                 + "       REMARKS         \n"
                 + "FROM INFORMATION_SCHEMA.INDEXES\n"
                 + "WHERE TABLE_NAME in (:tableNameList)\n"
-                + "  AND TABLE_SCHEMA = :databaseName;",
+                + "  AND INDEX_SCHEMA = :databaseName\n"
+                + "  AND TABLE_SCHEMA = :databaseName"
+                + "        order by INDEX_NAME",
+
             queryParam,
             (rs, rowNum) -> {
                 ExecutorTableIndexDTO index = ExecutorTableIndexDTO.builder()
@@ -138,7 +146,48 @@ public class H2SqlExecutor implements SqlExecutor {
                     index.setType(indexType.getIndexType().getCode());
                 }
                 return index;
-            }));
+            });
+        if (CollectionUtils.isEmpty(indexList)) {
+            return ListResult.of(indexList);
+        }
+
+        // 重新查询所有的表信息
+        List<ExecutorTableIndexColumnDTO> columnList = param.getNamedParameterJdbcTemplate().query(
+            "SELECT TABLE_NAME,\n"
+                + "            INDEX_NAME,\n"
+                + "            COLUMN_NAME,\n"
+                + "            ORDERING_SPECIFICATION\n"
+                + "        FROM INFORMATION_SCHEMA.INDEX_COLUMNS\n"
+                + "WHERE TABLE_NAME in (:tableNameList)\n"
+                + "  AND INDEX_SCHEMA = :databaseName\n"
+                + "  AND TABLE_SCHEMA = :databaseName \n"
+                + "        order by ORDINAL_POSITION",
+            queryParam,
+            (rs, rowNum) -> {
+                ExecutorTableIndexColumnDTO column = ExecutorTableIndexColumnDTO.builder()
+                    .name(rs.getString("COLUMN_NAME"))
+                    .tableName(rs.getString("TABLE_NAME"))
+                    .indexName(rs.getString("INDEX_NAME"))
+                    .build();
+                H2CollationEnum collation = EasyEnumUtils.getEnum(H2CollationEnum.class,
+                    rs.getString("ORDERING_SPECIFICATION"));
+                if (collation != null) {
+                    column.setCollation(collation.getCollation().getCode());
+                }
+                return column;
+            });
+
+        Map<String, Map<String, List<ExecutorTableIndexColumnDTO>>> columnMap = EasyCollectionUtils.stream(columnList)
+            .collect(Collectors.groupingBy(ExecutorTableIndexColumnDTO::getTableName,
+                Collectors.groupingBy(ExecutorTableIndexColumnDTO::getIndexName)));
+        for (ExecutorTableIndexDTO executorTableIndex : indexList) {
+            Map<String, List<ExecutorTableIndexColumnDTO>> map = columnMap.get(executorTableIndex.getTableName());
+            if (map == null) {
+                continue;
+            }
+            executorTableIndex.setColumnList(map.get(executorTableIndex.getName()));
+        }
+        return ListResult.of(indexList);
     }
 
 }
