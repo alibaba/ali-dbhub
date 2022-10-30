@@ -60,8 +60,8 @@ public class RdbTableManageController {
     public WebPageResult<TableVO> list(TableBriefQueryRequest request) {
         TablePageQueryParam queryParam = rdbDataConverter.tablePageRequest2param(request);
         TableSelector tableSelector = new TableSelector();
-        tableSelector.setColumnList(false);
-        tableSelector.setIndexList(false);
+        tableSelector.setColumnList(true);
+        tableSelector.setIndexList(true);
         PageResult<TableDTO> tableDTOPageResult = dataSourceCoreService.pageQuery(queryParam, tableSelector);
         List<TableVO> tableVOS = rdbDataConverter.tableDto2vo(tableDTOPageResult.getData());
         return WebPageResult.of(tableVOS, tableDTOPageResult.getTotal(), request.getPageNo(), request.getPageSize());
