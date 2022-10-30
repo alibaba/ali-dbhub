@@ -262,7 +262,7 @@ public class H2DataServiceTest extends BaseTest {
         Assertions.assertEquals(1, dataList.size(), "查询结果异常");
         List<CellDTO> cellList = dataList.get(0);
         Assertions.assertEquals(4, cellList.size(), "查询结果异常");
-        Assertions.assertEquals(CellTypeEnum.STRING.getCode(), cellList.get(0).getType(), "查询结果异常");
+        Assertions.assertEquals(CellTypeEnum.BIG_DECIMAL.getCode(), cellList.get(0).getType(), "查询结果异常");
         Assertions.assertEquals(CellTypeEnum.DATA.getCode(), cellList.get(2).getType(), "查询结果异常");
     }
 

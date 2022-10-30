@@ -1,5 +1,6 @@
 package com.alibaba.dataops.server.domain.data.core.util;
 
+import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Date;
@@ -133,6 +134,11 @@ public class JdbcUtils {
                 cell.setDateValue(EasyOptionalUtils.mapTo(rs.getDate(index), Date::getTime));
                 return cell;
             }
+        }
+        if (obj instanceof Number) {
+            cell.setType(CellTypeEnum.BIG_DECIMAL.getCode());
+            cell.setBigDecimal(new BigDecimal(obj.toString()));
+            return cell;
         }
         cell.setType(CellTypeEnum.STRING.getCode());
         cell.setStringValue(obj.toString());
