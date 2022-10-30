@@ -22,12 +22,14 @@
     "directories":{
       "output": "../electron-build"
     },
+    "asar": false,
     "files":[   
       "dist/**/*",
       "main.js",
       "preload.js",
       "app/**/*",
-      "jre/**/*"
+      "jre/**/*",
+      "my.bat"
     ],
     "electronDownload":{
       "mirror":"https://npm.taobao.org/mirrors/electron/"
@@ -37,8 +39,7 @@
       "target": [{
         "target": "dmg",
         "arch": [
-          "x64",
-          "arm64"
+          "x64"
         ]
       }]
     },
