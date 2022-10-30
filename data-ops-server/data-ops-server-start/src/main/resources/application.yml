@@ -23,3 +23,7 @@ spring:
       settings:
         trace: true
         web-allow-others: true
+  main:
+    lazy-initialization: true
+  jmx:
+    enabled: false
