@@ -37,7 +37,7 @@ public class CellDTO {
     /**
      * 数字
      */
-    private BigDecimal bigDecimal;
+    private BigDecimal bigDecimalValue;
 
     /**
      * 日期数据

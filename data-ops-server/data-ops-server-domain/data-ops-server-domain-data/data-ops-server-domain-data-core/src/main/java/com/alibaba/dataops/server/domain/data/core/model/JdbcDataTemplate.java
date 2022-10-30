@@ -82,6 +82,7 @@ public class JdbcDataTemplate {
 
         ExecuteResultDTO executeResult = ExecuteResultDTO.builder()
             .sql(sql)
+            .success(Boolean.TRUE)
             .build();
         Statement stmt = null;
         try {

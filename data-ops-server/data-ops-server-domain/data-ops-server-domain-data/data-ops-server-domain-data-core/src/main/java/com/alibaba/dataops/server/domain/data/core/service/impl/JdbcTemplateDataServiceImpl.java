@@ -2,12 +2,9 @@ package com.alibaba.dataops.server.domain.data.core.service.impl;
 
 import java.sql.SQLException;
 
-import javax.annotation.Resource;
-
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateCountParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
-import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
@@ -26,9 +23,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class JdbcTemplateDataServiceImpl implements JdbcTemplateDataService {
-
-    @Resource
-    private ConsoleDataService consoleDataService;
 
     @Override
     public DataResult<ExecuteResultDTO> execute(TemplateExecuteParam param) {
@@ -57,6 +51,6 @@ public class JdbcTemplateDataServiceImpl implements JdbcTemplateDataService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return DataResult.of(executeResult.getDataList().get(0).get(0).getBigDecimal().longValue());
+        return DataResult.of(executeResult.getDataList().get(0).get(0).getBigDecimalValue().longValue());
     }
 }

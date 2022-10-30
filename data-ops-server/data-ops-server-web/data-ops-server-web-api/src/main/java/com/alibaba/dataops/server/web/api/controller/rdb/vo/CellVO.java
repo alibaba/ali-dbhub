@@ -1,5 +1,7 @@
 package com.alibaba.dataops.server.web.api.controller.rdb.vo;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 /**
@@ -21,6 +23,11 @@ public class CellVO {
      * 字符串数据
      */
     private String stringValue;
+
+    /**
+     * 数字
+     */
+    private BigDecimal bigDecimalValue;
 
     /**
      * 日期数据

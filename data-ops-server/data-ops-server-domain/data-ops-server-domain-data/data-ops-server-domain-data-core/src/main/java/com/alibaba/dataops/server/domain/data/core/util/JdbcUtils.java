@@ -104,7 +104,7 @@ public class JdbcUtils {
         }
         if (obj instanceof Number) {
             cell.setType(CellTypeEnum.BIG_DECIMAL.getCode());
-            cell.setBigDecimal(new BigDecimal(obj.toString()));
+            cell.setBigDecimalValue(new BigDecimal(obj.toString()));
             return cell;
         }
         cell.setType(CellTypeEnum.STRING.getCode());
