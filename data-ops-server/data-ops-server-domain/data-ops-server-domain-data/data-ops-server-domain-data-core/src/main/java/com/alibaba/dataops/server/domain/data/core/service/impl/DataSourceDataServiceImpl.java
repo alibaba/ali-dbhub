@@ -39,8 +39,8 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setDriverClassName(driverClass.getClassName());
         druidDataSource.setUrl(param.getUrl());
+        druidDataSource.setUsername(param.getUsername());
         druidDataSource.setPassword(param.getPassword());
-        druidDataSource.setUrl(param.getUrl());
         // 不设置最大连接数
         druidDataSource.setMaxActive(999);
         druidDataSource.setInitialSize(0);

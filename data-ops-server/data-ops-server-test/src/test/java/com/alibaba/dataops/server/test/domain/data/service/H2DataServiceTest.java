@@ -325,7 +325,6 @@ public class H2DataServiceTest extends BaseTest {
         Assertions.assertEquals(EasyToolsConstant.MAX_PAGE_SIZE, executeResult.getDataList().size(), "查询结果异常");
         Assertions.assertEquals(1, executeResult.getPageNo(), "查询结果异常");
         Assertions.assertEquals(EasyToolsConstant.MAX_PAGE_SIZE, executeResult.getPageSize(), "查询结果异常");
-        Assertions.assertEquals(1000L, executeResult.getTotal(), "查询结果异常");
 
         templateQueryParam = new TemplateExecuteParam();
         templateQueryParam.setConsoleId(CONSOLE_ID);
@@ -337,7 +336,6 @@ public class H2DataServiceTest extends BaseTest {
         Assertions.assertEquals(100, executeResult.getDataList().size(), "查询结果异常");
         Assertions.assertEquals(2, executeResult.getPageNo(), "查询结果异常");
         Assertions.assertEquals(100, executeResult.getPageSize(), "查询结果异常");
-        Assertions.assertEquals(1000L, executeResult.getTotal(), "查询结果异常");
         Assertions.assertEquals("100", executeResult.getDataList().get(0).get(3).getStringValue(), "查询结果异常");
 
         templateQueryParam = new TemplateExecuteParam();
@@ -349,6 +347,5 @@ public class H2DataServiceTest extends BaseTest {
         Assertions.assertEquals(1000, executeResult.getDataList().size(), "查询结果异常");
         Assertions.assertEquals(1, executeResult.getPageNo(), "查询结果异常");
         Assertions.assertEquals(0, executeResult.getPageSize(), "查询结果异常");
-        Assertions.assertEquals(1000L, executeResult.getTotal(), "查询结果异常");
     }
 }

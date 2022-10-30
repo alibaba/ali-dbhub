@@ -57,6 +57,12 @@ public class ExecuteResultDTO {
     private List<List<CellDTO>> dataList;
 
     /**
+     * 是否存在下一页
+     * 只有select语句才有
+     */
+    private Boolean hasNextPage;
+
+    /**
      * 分页编码
      * 只有select语句才有
      */
@@ -67,10 +73,4 @@ public class ExecuteResultDTO {
      * 只有select语句才有
      */
     private Integer pageSize;
-
-    /**
-     * 总的大小
-     * 只有select语句才有
-     */
-    private Long total;
 }

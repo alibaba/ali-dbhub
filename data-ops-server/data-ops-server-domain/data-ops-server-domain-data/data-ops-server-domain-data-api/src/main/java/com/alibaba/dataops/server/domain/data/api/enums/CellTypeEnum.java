@@ -17,6 +17,11 @@ public enum CellTypeEnum implements BaseEnum<String> {
     STRING("字符串"),
 
     /**
+     * 数字
+     */
+    BIG_DECIMAL("数字"),
+
+    /**
      * 日期
      */
     DATA("日期"),

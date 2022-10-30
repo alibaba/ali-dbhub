@@ -40,6 +40,11 @@ public class TemplateExecuteParam {
     private String sql;
 
     /**
+     * 是否返回总数 默认不返回
+     */
+    private Boolean total;
+
+    /**
      * 分页编码
      * 只有查询语句分页才有效
      * 不传默认1

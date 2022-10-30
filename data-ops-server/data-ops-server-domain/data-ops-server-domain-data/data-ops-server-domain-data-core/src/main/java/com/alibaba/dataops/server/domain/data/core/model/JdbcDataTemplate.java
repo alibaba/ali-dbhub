@@ -10,6 +10,7 @@ import java.util.List;
 import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
+import com.alibaba.dataops.server.tools.base.constant.EasyToolsConstant;
 import com.alibaba.druid.pool.DruidDataSource;
 
 import com.google.common.collect.Lists;
@@ -19,15 +20,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.UncategorizedSQLException;
-import org.springframework.jdbc.core.PreparedStatementCallback;
-import org.springframework.jdbc.core.SqlProvider;
-import org.springframework.jdbc.core.StatementCallback;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -76,56 +71,28 @@ public class JdbcDataTemplate {
     }
 
     /**
-     * 统计行数
+     * 执行sql
      *
      * @param sql
      * @return
      */
-    public long count(final String sql) throws DataAccessException {
+    public ExecuteResultDTO execute(final String sql, Integer pageSize) throws SQLException {
         Assert.notNull(sql, "SQL must not be null");
-        class CountStatementCallback implements StatementCallback<Long>, SqlProvider {
-            @Override
-            @Nullable
-            public Long doInStatement(Statement stmt) throws SQLException {
+        log.info("execute:{}", sql);
+
+        ExecuteResultDTO executeResult = ExecuteResultDTO.builder()
+            .sql(sql)
+            .build();
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            boolean query = stmt.execute(sql);
+            executeResult.setDescription("执行成功");
+            // 代表是查询
+            if (query) {
                 ResultSet rs = null;
                 try {
-                    rs = stmt.executeQuery(sql);
-                    rs.next();
-                    return rs.getLong(1);
-                } finally {
-                    JdbcUtils.closeResultSet(rs);
-                }
-            }
-
-            @Override
-            public String getSql() {
-                return sql;
-            }
-        }
-
-        return execute(new CountStatementCallback());
-    }
-
-    /**
-     * 执行一个自定义的sql查询
-     *
-     * @param sql
-     * @return
-     */
-    public ExecuteResultDTO query(final String sql) throws DataAccessException {
-        Assert.notNull(sql, "SQL must not be null");
-
-        class QueryStatementCallback implements StatementCallback<ExecuteResultDTO>, SqlProvider {
-            @Override
-            @Nullable
-            public ExecuteResultDTO doInStatement(Statement stmt) throws SQLException {
-                ResultSet rs = null;
-                try {
-                    rs = stmt.executeQuery(sql);
-                    ExecuteResultDTO executeResult = ExecuteResultDTO.builder()
-                        .sql(sql)
-                        .build();
-                    executeResult.setDescription("执行成功");
+                    rs = stmt.getResultSet();
                     // 获取有几列
                     ResultSetMetaData resultSetMetaData = rs.getMetaData();
                     int col = resultSetMetaData.getColumnCount();
@@ -141,6 +108,13 @@ public class JdbcDataTemplate {
                     // 获取数据信息
                     List<List<CellDTO>> dataList = Lists.newArrayList();
                     executeResult.setDataList(dataList);
+
+                    // 分页大小
+                    executeResult.setHasNextPage(Boolean.FALSE);
+                    if (pageSize == null) {
+                        pageSize = EasyToolsConstant.MAX_PAGE_SIZE;
+                    }
+                    int rsSize = 0;
                     while (rs.next()) {
                         List<CellDTO> row = Lists.newArrayListWithExpectedSize(col);
                         dataList.add(row);
@@ -148,109 +122,24 @@ public class JdbcDataTemplate {
                             row.add(
                                 com.alibaba.dataops.server.domain.data.core.util.JdbcUtils.getResultSetValue(rs, i));
                         }
+                        rsSize++;
+                        // 到达下一页了
+                        if (rsSize >= pageSize) {
+                            executeResult.setHasNextPage(Boolean.TRUE);
+                            break;
+                        }
                     }
                     return executeResult;
                 } finally {
                     JdbcUtils.closeResultSet(rs);
                 }
+            } else {
+                // 修改或者其他
+                executeResult.setUpdateCount(stmt.getUpdateCount());
             }
-
-            @Override
-            public String getSql() {
-                return sql;
-            }
-        }
-
-        return execute(new QueryStatementCallback());
-    }
-
-    /**
-     * 执行一个自定义的sql修改
-     *
-     * @param sql
-     * @return
-     * @throws DataAccessException
-     */
-    public ExecuteResultDTO update(final String sql) throws DataAccessException {
-        Assert.notNull(sql, "SQL must not be null");
-        /**
-         * Callback to execute the update statement.
-         */
-        class UpdateStatementCallback implements StatementCallback<ExecuteResultDTO>, SqlProvider {
-            @Override
-            public ExecuteResultDTO doInStatement(Statement stmt) throws SQLException {
-                ExecuteResultDTO executeResult = ExecuteResultDTO.builder()
-                    .sql(sql)
-                    .build();
-                executeResult.setUpdateCount(stmt.executeUpdate(sql));
-                executeResult.setDescription("执行成功");
-                return executeResult;
-            }
-
-            @Override
-            public String getSql() {
-                return sql;
-            }
-        }
-
-        return execute(new UpdateStatementCallback());
-    }
-
-    /**
-     * 执行一个sql
-     *
-     * @param action
-     * @param <T>
-     * @return
-     * @throws SQLException
-     */
-    @Nullable
-    private <T> T execute(StatementCallback<T> action) throws DataAccessException {
-        String sql = getSql(action);
-        log.info("执行自定义sql:{}", sql);
-        Statement stmt = null;
-        try {
-            return action.doInStatement(connection.createStatement());
-        } catch (SQLException ex) {
-            throw translateException("CallableStatementCallback", sql, ex);
         } finally {
             JdbcUtils.closeStatement(stmt);
         }
+        return executeResult;
     }
-
-    /**
-     * 执行一个sql
-     *
-     * @param action
-     * @param <T>
-     * @return
-     * @throws SQLException
-     */
-    @Nullable
-    private <T> T execute(PreparedStatementCallback<T> action) throws DataAccessException {
-        String sql = getSql(action);
-        log.info("执行自定义sql:{}", sql);
-        Statement stmt = null;
-        try {
-            return action.doInPreparedStatement(connection.prepareStatement(sql));
-        } catch (SQLException ex) {
-            throw translateException("CallableStatementCallback", sql, ex);
-        } finally {
-            JdbcUtils.closeStatement(stmt);
-        }
-    }
-
-    private String getSql(Object sqlProvider) {
-        if (sqlProvider instanceof SqlProvider) {
-            return ((SqlProvider)sqlProvider).getSql();
-        } else {
-            return null;
-        }
-    }
-
-    protected DataAccessException translateException(String task, @Nullable String sql, SQLException ex) {
-        DataAccessException dae = sqlExceptionTranslator.translate(task, sql, ex);
-        return (dae != null ? dae : new UncategorizedSQLException(task, sql, ex));
-    }
-
 }

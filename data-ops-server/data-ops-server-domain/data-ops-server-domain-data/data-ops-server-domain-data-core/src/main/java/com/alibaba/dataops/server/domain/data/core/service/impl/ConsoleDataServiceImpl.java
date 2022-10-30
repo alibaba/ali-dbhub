@@ -52,7 +52,11 @@ public class ConsoleDataServiceImpl implements ConsoleDataService {
             druidDataSource);
         jdbcDataTemplateMap.put(consoleId, jdbcDataTemplate);
         // 切换到当前database
-        jdbcDataTemplate.update("use " + param.getDatabaseName() + ";");
+        try {
+            jdbcDataTemplate.execute("use " + param.getDatabaseName() + ";", null);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return ActionResult.isSuccess();
     }
 
