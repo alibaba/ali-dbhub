@@ -1,6 +1,5 @@
 package com.alibaba.dataops.server.domain.data.api.model;
 
-import com.alibaba.dataops.server.domain.data.api.enums.ColumnTypeEnum;
 import com.alibaba.dataops.server.tools.base.enums.YesOrNoEnum;
 
 import lombok.AllArgsConstructor;
@@ -32,10 +31,15 @@ public class TableColumnDTO {
 
     /**
      * 列的类型
-     *
-     * @see ColumnTypeEnum
+     * 比如 varchar(100) ,double(10,6)
      */
-    private String type;
+    private String columnType;
+
+    /**
+     * 列的数据类型
+     * 比如 varchar ,double
+     */
+    private String dataType;
 
     /**
      * 是否可以为空
@@ -55,21 +59,6 @@ public class TableColumnDTO {
      * @see YesOrNoEnum
      */
     private String autoIncrement;
-
-    /**
-     * 数字精度
-     */
-    private Integer numericPrecision;
-
-    /**
-     * 数字比例
-     */
-    private Integer numericScale;
-
-    /**
-     * 字符串最大长度
-     */
-    private Integer characterMaximumLength;
 
     /**
      * 注释

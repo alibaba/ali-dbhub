@@ -2,9 +2,12 @@ package com.alibaba.dataops.server.domain.data.core.service.impl;
 
 import java.sql.SQLException;
 
+import javax.annotation.Resource;
+
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateCountParam;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
+import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
@@ -12,7 +15,6 @@ import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.PagerUtils;
 
-import com.github.pagehelper.parser.CountSqlParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -25,15 +27,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class JdbcTemplateDataServiceImpl implements JdbcTemplateDataService {
 
-    /**
-     * 统计语句的执行器
-     */
-    private static final CountSqlParser COUNT_SQL_PARSER = new CountSqlParser();
+    @Resource
+    private ConsoleDataService consoleDataService;
 
     @Override
     public DataResult<ExecuteResultDTO> execute(TemplateExecuteParam param) {
         JdbcDataTemplate jdbcDataTemplate = DataCenterUtils.getJdbcDataTemplate(param.getDataSourceId(),
-            param.getConsoleId());
+            param.getConsoleId(), param.getDatabaseName());
         String sql = param.getSql();
         ExecuteResultDTO executeResult = null;
         try {
@@ -47,7 +47,7 @@ public class JdbcTemplateDataServiceImpl implements JdbcTemplateDataService {
     @Override
     public DataResult<Long> count(TemplateCountParam param) {
         JdbcDataTemplate jdbcDataTemplate = DataCenterUtils.getJdbcDataTemplate(param.getDataSourceId(),
-            param.getConsoleId());
+            param.getConsoleId(), param.getDatabaseName());
         DbType dbType = DataCenterUtils.getDruidDbTypeByDataSourceId(param.getDataSourceId());
 
         String countSql = PagerUtils.count(param.getSql(), dbType);

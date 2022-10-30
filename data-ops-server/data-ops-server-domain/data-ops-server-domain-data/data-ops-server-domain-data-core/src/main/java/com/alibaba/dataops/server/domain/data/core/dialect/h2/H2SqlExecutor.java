@@ -18,10 +18,7 @@ import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dataops.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.dataops.server.tools.common.util.EasyEnumUtils;
-import com.alibaba.dataops.server.tools.common.util.EasyOptionalUtils;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.dialect.helper.HsqldbDialect;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -37,16 +34,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class H2SqlExecutor implements SqlExecutor {
 
-    private static final HsqldbDialect HSQLDB_DIALECT = new HsqldbDialect();
-
     @Override
     public DbTypeEnum supportDbType() {
         return DbTypeEnum.H2;
-    }
-
-    @Override
-    public String getPageSql(String sql, Page page) {
-        return HSQLDB_DIALECT.getPageSql(sql, page, null);
     }
 
     @Override
@@ -85,12 +75,10 @@ public class H2SqlExecutor implements SqlExecutor {
             "SELECT COLUMN_NAME            ,\n"
                 + "       TABLE_NAME             ,\n"
                 + "       DATA_TYPE             ,\n"
+                + "       DATA_TYPE_SQL(TABLE_SCHEMA, TABLE_NAME, 'TABLE', ORDINAL_POSITION) COLUMN_TYPE           ,\n"
                 + "       IS_NULLABLE         ,\n"
                 + "       COLUMN_DEFAULT        , \n"
                 + "       IS_IDENTITY         ,\n"
-                + "       NUMERIC_PRECISION          ,\n"
-                + "       NUMERIC_SCALE          ,\n"
-                + "       CHARACTER_MAXIMUM_LENGTH ,\n"
                 + "       REMARKS         \n"
                 + "FROM INFORMATION_SCHEMA.COLUMNS\n"
                 + "WHERE TABLE_NAME in (:tableNameList)\n"
@@ -102,16 +90,11 @@ public class H2SqlExecutor implements SqlExecutor {
                     .name(rs.getString("COLUMN_NAME"))
                     .tableName(rs.getString("TABLE_NAME"))
                     .defaultValue(rs.getString("COLUMN_DEFAULT"))
-                    .numericPrecision(EasyOptionalUtils.mapTo(rs.getString("NUMERIC_PRECISION"), Integer::parseInt))
-                    .numericScale(EasyOptionalUtils.mapTo(rs.getString("NUMERIC_SCALE"), Integer::parseInt))
+                    .dataType(rs.getString("DATA_TYPE"))
+                    .columnType(rs.getString("COLUMN_TYPE"))
                     .comment(rs.getString("REMARKS"))
-                    .characterMaximumLength(
-                        EasyOptionalUtils.mapTo(rs.getString("CHARACTER_MAXIMUM_LENGTH"), Integer::parseInt))
                     .build();
-                H2ColumnTypeEnum columnType = EasyEnumUtils.getEnum(H2ColumnTypeEnum.class, rs.getString("DATA_TYPE"));
-                if (columnType != null) {
-                    column.setType(columnType.getColumnType().getCode());
-                }
+
                 YesOrNoEnum nullable = EasyEnumUtils.getEnum(YesOrNoEnum.class, rs.getString("IS_NULLABLE"));
                 if (nullable != null) {
                     column.setNullable(nullable.getCode());

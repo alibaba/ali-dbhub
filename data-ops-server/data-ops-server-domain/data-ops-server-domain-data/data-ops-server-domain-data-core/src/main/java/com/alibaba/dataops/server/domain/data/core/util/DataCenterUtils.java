@@ -4,7 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
+import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
+import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.core.dialect.SqlExecutor;
 import com.alibaba.dataops.server.domain.data.core.model.DataSourceWrapper;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
@@ -15,7 +19,6 @@ import com.alibaba.dataops.server.tools.common.enums.ErrorEnum;
 import com.alibaba.dataops.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.druid.DbType;
 
-import com.github.pagehelper.Dialect;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,9 @@ import org.springframework.stereotype.Component;
 public class DataCenterUtils implements InitializingBean {
     @Autowired
     private List<SqlExecutor> sqlExecutorList;
+    @Resource
+    private ConsoleDataService consoleDataService;
+    private static ConsoleDataService consoleDataServiceStatic;
 
     /**
      * sql执行器的列表
@@ -73,16 +79,24 @@ public class DataCenterUtils implements InitializingBean {
      *
      * @param dataSourceId
      * @param consoleId
+     * @param databaseName
      * @return
      */
-    public static JdbcDataTemplate getJdbcDataTemplate(Long dataSourceId, Long consoleId) {
+    public static JdbcDataTemplate getJdbcDataTemplate(Long dataSourceId, Long consoleId, String databaseName) {
         Map<Long, JdbcDataTemplate> jdbcDataTemplateMap = JDBC_TEMPLATE_CACHE.get(dataSourceId);
         if (jdbcDataTemplateMap == null) {
             throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
         }
         JdbcDataTemplate jdbcDataTemplate = jdbcDataTemplateMap.get(consoleId);
         if (jdbcDataTemplate == null) {
-            throw new BusinessException(ErrorEnum.CONSOLE_NOT_FOUND);
+            consoleDataServiceStatic.create(ConsoleCreateParam.builder()
+                .dataSourceId(dataSourceId)
+                .consoleId(consoleId)
+                .databaseName(databaseName).build());
+            jdbcDataTemplate = jdbcDataTemplateMap.get(consoleId);
+            if (jdbcDataTemplate == null) {
+                throw new BusinessException(ErrorEnum.CONSOLE_NOT_FOUND);
+            }
         }
         return jdbcDataTemplate;
     }
@@ -117,16 +131,6 @@ public class DataCenterUtils implements InitializingBean {
      * @param dataSourceId
      * @return
      */
-    public static Dialect getDialectByDataSourceId(Long dataSourceId) {
-        return JdbcUtils.parse2PageHelperDialect(getDbTypeByDataSourceId(dataSourceId));
-    }
-
-    /**
-     * 根据dataSourceId 获取Dialect方言类型
-     *
-     * @param dataSourceId
-     * @return
-     */
     public static SqlExecutor getSqlExecutorByDataSourceId(Long dataSourceId) {
         SqlExecutor sqlExecutor = SQL_EXECUTOR_MAP.get(getDbTypeByDataSourceId(dataSourceId));
         if (sqlExecutor == null) {
@@ -138,5 +142,6 @@ public class DataCenterUtils implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         SQL_EXECUTOR_MAP.putAll(EasyCollectionUtils.toIdentityMap(sqlExecutorList, SqlExecutor::supportDbType));
+        consoleDataServiceStatic = consoleDataService;
     }
 }

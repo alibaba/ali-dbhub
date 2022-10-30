@@ -3,6 +3,7 @@ package com.alibaba.dataops.server.domain.core.api.service;
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
+import com.alibaba.dataops.server.domain.core.api.param.ConsoleConnectParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
@@ -12,6 +13,7 @@ import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
 import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
+import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.table.TableQueryParam;
 import com.alibaba.dataops.server.domain.data.api.param.table.TableSelector;
@@ -93,6 +95,30 @@ public interface DataSourceCoreService {
      * @return
      */
     ListResult<DatabaseDTO> attach(Long id);
+
+    /**
+     * 关闭数据源连接
+     *
+     * @param id
+     * @return
+     */
+    ActionResult close(Long id);
+
+    /**
+     * 创建console链接
+     *
+     * @param param
+     * @return
+     */
+    ActionResult createConsole(ConsoleConnectParam param);
+
+    /**
+     * 关闭连接
+     *
+     * @param param
+     * @return
+     */
+    ActionResult closeConsole(ConsoleCloseParam param);
 
     /**
      * 数据源执行

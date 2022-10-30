@@ -9,8 +9,6 @@ import com.alibaba.dataops.server.domain.data.core.dialect.common.param.Executor
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 
-import com.github.pagehelper.Page;
-
 /**
  * sql执行器
  *
@@ -25,14 +23,6 @@ public interface SqlExecutor {
      */
     DbTypeEnum supportDbType();
 
-    /**
-     * 获取分页sql
-     *
-     * @param sql
-     * @param page
-     * @return
-     */
-    String getPageSql(String sql, Page page);
 
     /**
      * 分页查询表信息
