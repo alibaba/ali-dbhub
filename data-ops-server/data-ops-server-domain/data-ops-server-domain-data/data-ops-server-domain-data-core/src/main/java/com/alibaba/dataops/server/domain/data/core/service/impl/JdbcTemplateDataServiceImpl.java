@@ -12,7 +12,6 @@ import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.PagerUtils;
 
-import com.github.pagehelper.parser.CountSqlParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +23,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class JdbcTemplateDataServiceImpl implements JdbcTemplateDataService {
-
-    /**
-     * 统计语句的执行器
-     */
-    private static final CountSqlParser COUNT_SQL_PARSER = new CountSqlParser();
 
     @Override
     public DataResult<ExecuteResultDTO> execute(TemplateExecuteParam param) {

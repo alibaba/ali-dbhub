@@ -7,8 +7,6 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
@@ -18,29 +16,12 @@ import com.alibaba.dataops.server.tools.base.excption.SystemException;
 import com.alibaba.dataops.server.tools.common.util.EasyOptionalUtils;
 import com.alibaba.druid.DbType;
 
-import com.github.pagehelper.Dialect;
-import com.github.pagehelper.dialect.helper.HsqldbDialect;
-import com.github.pagehelper.dialect.helper.MySqlDialect;
-import com.github.pagehelper.dialect.helper.OracleDialect;
-
 /**
  * jdbc工具类
  *
  * @author Jiaju Zhuang
  */
 public class JdbcUtils {
-
-    /**
-     * 方言的map
-     */
-    private static Map<DbTypeEnum, Dialect> DIALECT_MAP = new HashMap<>();
-
-    static {
-        DIALECT_MAP.put(DbTypeEnum.H2, new HsqldbDialect());
-        DIALECT_MAP.put(DbTypeEnum.MYSQL, new MySqlDialect());
-        DIALECT_MAP.put(DbTypeEnum.ORACLE, new OracleDialect());
-        DIALECT_MAP.put(DbTypeEnum.SQLITE, new MySqlDialect());
-    }
 
     /**
      * 获取德鲁伊的的数据库类型
@@ -61,20 +42,6 @@ public class JdbcUtils {
             default:
                 throw new SystemException(CommonErrorEnum.PARAM_ERROR);
         }
-    }
-
-    /**
-     * 转换成PageHelper的方言
-     *
-     * @param dbType
-     * @return
-     */
-    public static Dialect parse2PageHelperDialect(DbTypeEnum dbType) {
-        Dialect dialect = DIALECT_MAP.get(dbType);
-        if (dialect == null) {
-            throw new SystemException(CommonErrorEnum.PARAM_ERROR);
-        }
-        return dialect;
     }
 
     /**

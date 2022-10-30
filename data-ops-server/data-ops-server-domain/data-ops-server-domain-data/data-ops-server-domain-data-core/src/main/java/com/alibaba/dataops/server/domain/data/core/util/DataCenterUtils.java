@@ -15,7 +15,6 @@ import com.alibaba.dataops.server.tools.common.enums.ErrorEnum;
 import com.alibaba.dataops.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.druid.DbType;
 
-import com.github.pagehelper.Dialect;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,15 +110,6 @@ public class DataCenterUtils implements InitializingBean {
         return JdbcUtils.parse2DruidDbType(getDbTypeByDataSourceId(dataSourceId));
     }
 
-    /**
-     * 根据dataSourceId 获取Dialect方言类型
-     *
-     * @param dataSourceId
-     * @return
-     */
-    public static Dialect getDialectByDataSourceId(Long dataSourceId) {
-        return JdbcUtils.parse2PageHelperDialect(getDbTypeByDataSourceId(dataSourceId));
-    }
 
     /**
      * 根据dataSourceId 获取Dialect方言类型

@@ -41,10 +41,5 @@
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
 
-        <!-- 解决分页问题 -->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-        </dependency>
     </dependencies>
 </project>
