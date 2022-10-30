@@ -83,8 +83,8 @@ export default defineConfig({
   chainWebpack,
   // proxy: {
   //   '/api': {
-  //     'target': 'http://30.198.0.98:8080',
-  //     'changeOrigin': true,
+  //     'target': 'http://30.198.0.110:8080',
+  //     'changeOrigin': true
   //   },
   // },
 });

@@ -7,7 +7,7 @@ export interface IOptions{
   mock?: boolean;
 }
 
-// TODO 
+// TODO:
 const codeMessage:{[errorCode:number]:string} = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -26,7 +26,8 @@ const codeMessage:{[errorCode:number]:string} = {
   504: '网关超时。',
 };
 
-const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
+// const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
+const mockUrl = 'http://localhost:8000';
 
 const errorHandler = (error: ResponseError) => {
   const { response } = error;
@@ -39,7 +40,10 @@ const errorHandler = (error: ResponseError) => {
 const request = extend({
   errorHandler,
   // prefix: '/api',
-  credentials: 'include', // 默认请求是否带上cookie
+  // credentials: 'include', // 默认请求是否带上cookie
+  headers:{
+    'Content-Type': 'application/json' 
+  }
 });
 
 request.interceptors.request.use((url, options) => {
@@ -64,7 +68,7 @@ request.interceptors.request.use((url, options) => {
 
 export default function createRequest<P = void, R = {}>(url:string, options:IOptions){
   const {method = 'get', mock = false} = options;
-  const _baseURL = mock ? mockUrl : mockUrl;
+  const _baseURL = mock ? 'mockUrl' : mockUrl;
 
   return function(params: any){
     const paramsInUrl: string[] = [];
@@ -81,7 +85,22 @@ export default function createRequest<P = void, R = {}>(url:string, options:IOpt
     }
 
     return new Promise<R>((resolve, reject) => {
-      request[method](`${_baseURL}${_url}`,{params: params})
+      let dataName = ''
+      switch (method) { 
+        case 'get':
+          dataName = 'params';
+          break
+        case 'delete':
+          dataName = 'params';
+          break;
+        case 'put':
+          dataName = 'data';
+          break;
+        case 'post':
+          dataName = 'data';
+          break;
+      }
+      request[method](`${_baseURL}${_url}`,{[dataName]: params})
       .then(res=>{
         if(!res) return
         const {success, errorCode, errorMessage, data} = res

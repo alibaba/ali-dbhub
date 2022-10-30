@@ -19,7 +19,6 @@ export default memo<IProps>(function ScrollLoading({ className, children, scroll
   const finishedRef = useRef(false);
   const onBoxMounted = useRef(null)
   const onReachBottomRef = useRef(onReachBottom);
-  const [isPending, setIsPadding] = useState(false);
 
   useEffect(() => {
     scrollerRef.current = scrollerElement.current;
@@ -42,10 +41,8 @@ export default memo<IProps>(function ScrollLoading({ className, children, scroll
     if (scroller) {
       if (scroller.scrollTop >= scroller.scrollHeight - scroller.clientHeight - threshold) {
         pendingRef.current = true;
-        setIsPadding(true)
         onReachBottomRef.current().then(() => {
           pendingRef.current = false;
-          setIsPadding(false);
         });
       }
     }
@@ -63,12 +60,11 @@ export default memo<IProps>(function ScrollLoading({ className, children, scroll
   // 填充数据
   const replenishData = (a: HTMLElement, b: HTMLElement) => {
     if (a.clientHeight <= b.clientHeight && !finishedRef.current) {
-      pendingRef.current = true;
-      setIsPadding(true);
+      console.log(finishedRef.current)
       onReachBottomRef.current().then(() => {
-        pendingRef.current = false;
-        setIsPadding(false);
-        replenishData(a, b);
+        setTimeout(() => {
+          replenishData(a, b);
+        }, 0)
       });
     }
   }
@@ -76,7 +72,7 @@ export default memo<IProps>(function ScrollLoading({ className, children, scroll
   return <div ref={onBoxMounted} className={classnames(className, styles.box)}>
     {children}
     <>
-      {isPending && <div className={styles.tips}>
+      {!finished && <div className={styles.tips}>
         <Loading className={styles.loading}></Loading>
       </div>}
       {finished && <div className={styles.tips}>----列表是有底线的----</div>}

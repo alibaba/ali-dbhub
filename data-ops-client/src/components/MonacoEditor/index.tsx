@@ -14,7 +14,7 @@ interface IProps {
   height?: number;
   getEditor: any;
   defaultValue: string | undefined;
-  getValue?: (value: string) => {}
+  getMonacoValue?: (value: string) => void
 }
 
 export const hintData = {
@@ -23,7 +23,7 @@ export const hintData = {
 }
 
 export default memo(function MonacoEditor(props: IProps) {
-  const { defaultValue, className, getEditor, id = 0, getValue: getMonacovalue } = props
+  const { defaultValue, className, getEditor, id = 0, getMonacoValue } = props
   const [editor, setEditor] = useState<any>()
 
   useEffect(() => {
@@ -138,14 +138,18 @@ export default memo(function MonacoEditor(props: IProps) {
     model.setValue(value)
   }
 
-  getMonacovalue
-
   // 获取编辑器的值
   const getValue = () => {
-    const model = editor.getModel(editor)
-    const value = model.getValue()
-    return value
+    if (editor?.getModel) {
+      const model = editor.getModel(editor)
+      const value = model.getValue()
+      console.log(value)
+      return value
+    }
   }
+
+  getMonacoValue?.bind(null, getValue())
+
 
   return <div className={classnames(className, styles.box)}>
     <div id={`monaco-editor-${id}`} className={styles.editorContainer} />

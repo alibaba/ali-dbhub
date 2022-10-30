@@ -1,4 +1,4 @@
-import React, { memo, useRef, useEffect, useState} from 'react';
+import React, { memo, useRef, useEffect, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 
@@ -10,33 +10,33 @@ interface IProps {
   callback?: Function;
 }
 
-export default memo<IProps>(function DraggableDivider({className, volatileRef, min,direction='line',callback}) {
+export default memo<IProps>(function DraggableDivider({ className, volatileRef, min, direction = 'line', callback }) {
 
   const DividerRef = useRef<HTMLDivElement | null>(null);
   const DividerLine = useRef<HTMLDivElement | null>(null);
   const [dragging, setDragging] = useState(false)
 
-  useEffect(()=>{
-    if(DividerRef.current){
+  useEffect(() => {
+    if (DividerRef.current) {
 
       DividerRef.current.onmouseover = e => {
-        if(DividerRef.current && DividerLine.current){
-          DividerLine.current.style.backgroundColor =  'var(--custom-primary-color)';
-          DividerLine.current.style.cursor =  direction == 'line' ?  'col-resize' : 'row-resize';
+        if (DividerRef.current && DividerLine.current) {
+          DividerLine.current.style.backgroundColor = 'var(--custom-primary-color)';
+          DividerLine.current.style.cursor = direction == 'line' ? 'col-resize' : 'row-resize';
         }
       }
-      
+
       DividerRef.current.onmouseout = e => {
-        if(DividerRef.current && DividerLine.current){
-          DividerLine.current.style.backgroundColor =  'transparent';
-          DividerLine.current.style.cursor =  'default';
+        if (DividerRef.current && DividerLine.current) {
+          DividerLine.current.style.backgroundColor = 'transparent';
+          DividerLine.current.style.cursor = 'default';
         }
       }
 
       DividerRef.current.onmousedown = e => {
         setDragging(true)
         const clientStart = direction == 'line' ? e.clientX : e.clientY
-        if(!volatileRef.current) return
+        if (!volatileRef.current) return
         const volatileBoxXY = direction == 'line' ? volatileRef.current.offsetWidth : volatileRef.current.offsetHeight;
         e.preventDefault();
         document.onmousemove = e => {
@@ -53,29 +53,32 @@ export default memo<IProps>(function DraggableDivider({className, volatileRef, m
         };
       };
     }
-  },[])
+  }, [])
 
-  const moveHandle = (nowClientXY, letfDom, clientStart, volatileBoxXY) =>{
+  const moveHandle = (nowClientXY, letfDom, clientStart, volatileBoxXY) => {
+
     let computedXY = nowClientXY - clientStart;
     let changeLength = volatileBoxXY + computedXY;
-    if(min && changeLength < min){
+    if (min && changeLength < min) {
       return
     }
-    if(direction == 'line'){
+    if (direction == 'line') {
+      console.log(changeLength + "px")
       letfDom.style.width = changeLength + "px";
-    }else{
+    } else {
+      console.log(changeLength + "px")
       letfDom.style.height = changeLength + "px";
     }
     callback && callback(changeLength)
   }
 
-  return <div ref={DividerLine}  className={
+  return <div ref={DividerLine} className={
     classnames(
-      className, 
+      className,
       (direction == 'line' ? styles.divider : styles.rowDivider),
-      {[styles.dragging]: dragging},
-      {[styles.rowDragging]: (dragging && direction == 'row')},
+      { [styles.dragging]: dragging },
+      { [styles.rowDragging]: (dragging && direction == 'row') },
     )} >
     <div ref={DividerRef} className={styles.dividerCenter}></div>
-    </div>
+  </div>
 })

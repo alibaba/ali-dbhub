@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import Tabs from '@/components/Tabs';
@@ -14,6 +14,7 @@ import ResizeObserver from 'rc-resize-observer';
 
 interface IProps {
   className?: string;
+  dataList: any;
 }
 
 interface DataType {
@@ -27,13 +28,7 @@ const historyListData: DataType[] = [
     databaseName: 'ATA',
     sql: 'SELECT * FROM adbs',
     status: StatusType.SUCCESS,
-  },
-  {
-    id: '2',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.FAIL,
+    key: '1'
   },
   {
     id: '3',
@@ -41,130 +36,20 @@ const historyListData: DataType[] = [
     databaseName: 'ATA',
     sql: 'SELECT * FROM adbs',
     status: StatusType.SUCCESS,
-  },
-  {
-    id: '4',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.FAIL,
-  },
-  {
-    id: '1',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.SUCCESS,
+    key: '3'
   },
   {
     id: '2',
     startTime: 1665540690000,
     databaseName: 'ATA',
     sql: 'SELECT * FROM adbs',
-    status: StatusType.FAIL,
-  },
-  {
-    id: '3',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
     status: StatusType.SUCCESS,
+    key: '2'
   },
-  {
-    id: '4',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.FAIL,
-  },
-  {
-    id: '1',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.SUCCESS,
-  },
-  {
-    id: '2',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.FAIL,
-  },
-  {
-    id: '3',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.SUCCESS,
-  },
-  {
-    id: '4',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.FAIL,
-  },
-  {
-    id: '1',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.SUCCESS,
-  },
-  {
-    id: '2',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.FAIL,
-  },
-  {
-    id: '3',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.SUCCESS,
-  },
-  {
-    id: '4',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.FAIL,
-  },
-  {
-    id: '1',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.SUCCESS,
-  },
-  {
-    id: '2',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.FAIL,
-  },
-  {
-    id: '3',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.SUCCESS,
-  },
-  {
-    id: '4',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.FAIL,
-  },
+
 ];
 
-
-export default memo<IProps>(function SearchResult({ className }) {
+export default memo<IProps>(function SearchResult({ className, dataList }) {
   function size() {
     let a: any = []
 
@@ -179,8 +64,9 @@ export default memo<IProps>(function SearchResult({ className }) {
     }
     return
   }
-
   const [tableData, setTableDate] = useState(historyListData);
+  const [columns, setColumns] = useState();
+
   const renderStartTime = (text: string) => {
     return formatDate(text, 'yyyy-MM-dd hh:mm:ss')
   }
@@ -190,28 +76,19 @@ export default memo<IProps>(function SearchResult({ className }) {
       {text == StatusType.SUCCESS ? '成功' : '失败'}
     </div>
   }
-  const columns: ColumnsType<DataType> = [
-    {
-      title: '开始时间',
-      dataIndex: 'startTime',
-      render: renderStartTime,
-      width: 200,
-    },
-    {
-      title: '数据库',
-      dataIndex: 'databaseName',
-    },
-    {
-      title: 'SQL',
-      dataIndex: 'sql',
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      render: renderStatus,
-      width: 100,
+
+  useEffect(() => {
+    if (dataList?.[0]?.headerList) {
+      const columns = dataList?.[0]?.headerList.map(item => {
+        return {
+          title: item.stringValue,
+          dataIndex: 'startTime',
+        }
+      })
+      setColumns(columns)
+      console.log(columns)
     }
-  ];
+  }, [dataList])
 
   function onChange() {
   }
@@ -227,34 +104,11 @@ export default memo<IProps>(function SearchResult({ className }) {
         key: '10',
       }
     ]
-    const sqlRes = [
-      {
-        status: 'success',
-        id: '0'
-      },
-      {
-        status: 'fail',
-        id: '1'
-      },
-      {
-        status: 'fail',
-        id: '2'
-      },
-      {
-        status: 'success',
-        id: '3'
-      }, {
-        status: 'success',
-        id: '4'
-      }, {
-        status: 'success',
-        id: '5'
-      },
-    ]
+    const sqlRes = dataList
 
-    sqlRes.map((item, index) => {
+    sqlRes?.map((item, index) => {
       list.push({
-        label: <div>
+        label: <div key={item.id}>
           <Iconfont className={classnames(
             styles[item.status == 'success' ? 'successIcon' : 'failIcon'],
             styles.statusIcon
@@ -287,7 +141,6 @@ export default memo<IProps>(function SearchResult({ className }) {
         <Iconfont code='&#xeb93;'></Iconfont>
       </div>
       <div>
-
       </div>
     </div>
   </div>
