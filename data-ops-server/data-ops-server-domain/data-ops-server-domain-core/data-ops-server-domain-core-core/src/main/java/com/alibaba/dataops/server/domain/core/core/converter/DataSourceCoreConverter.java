@@ -3,6 +3,7 @@ package com.alibaba.dataops.server.domain.core.core.converter;
 import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
+import com.alibaba.dataops.server.domain.core.api.param.ConsoleConnectParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
@@ -45,7 +46,7 @@ public abstract class DataSourceCoreConverter {
      * @param param
      * @return
      */
-    public abstract ConsoleCreateParam param2consoleParam(DataSourceExecuteParam param);
+    public abstract ConsoleCreateParam param2consoleParam(ConsoleConnectParam param);
 
     /**
      * 参数转换

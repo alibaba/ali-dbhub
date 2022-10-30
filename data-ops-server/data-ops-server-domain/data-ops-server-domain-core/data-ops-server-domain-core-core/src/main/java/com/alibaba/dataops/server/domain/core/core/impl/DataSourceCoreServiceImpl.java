@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
+import com.alibaba.dataops.server.domain.core.api.param.ConsoleConnectParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
@@ -19,7 +20,10 @@ import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
 import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
+import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCloseParam;
+import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.database.DatabaseQueryAllParam;
+import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
 import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
@@ -160,6 +164,24 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         queryAllParam.setDataSourceId(id);
         ListResult<DatabaseDTO> databaseDTOS = databaseDataService.queryAll(queryAllParam);
         return databaseDTOS;
+    }
+
+    @Override
+    public ActionResult close(Long id) {
+        DataSourceCloseParam closeParam = new DataSourceCloseParam();
+        closeParam.setDataSourceId(id);
+        return dataSourceDataService.close(closeParam);
+    }
+
+    @Override
+    public ActionResult createConsole(ConsoleConnectParam param) {
+        ConsoleCreateParam createParam = dataSourceCoreConverter.param2consoleParam(param);
+        return consoleDataService.create(createParam);
+    }
+
+    @Override
+    public ActionResult closeConsole(ConsoleCloseParam param) {
+        return consoleDataService.close(param);
     }
 
     @Override
