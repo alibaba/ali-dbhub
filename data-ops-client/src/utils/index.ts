@@ -1,7 +1,7 @@
 import i18n, { isEN } from "@/i18n";
 import { TreeNodeType } from '@/utils/constants'
 
-export function formatDate(date, fmt = 'yyyy-MM-dd') {
+export function formatDate(date:any, fmt = 'yyyy-MM-dd') {
   if (!date) {
     return '';
   }
@@ -72,7 +72,7 @@ export function formatNaturalDate(date: any) {
 }
 
 export function toTreeList(data:any[],name:string,key:string,type:TreeNodeType,isLeaf=true){
-  return data.map(item=>{
+  return data?.map(item=>{
     return {
       key: item[key],
       name: item[name],
@@ -80,4 +80,13 @@ export function toTreeList(data:any[],name:string,key:string,type:TreeNodeType,i
       type
     }
   })
+}
+
+// 生成一个随机数
+export function createRandom(minNum:number,maxNum:number){
+  return Math.floor(Math.random()*(maxNum-minNum+1)+minNum); 
+}
+
+// 
+export function createRandomId(length:number){
 }

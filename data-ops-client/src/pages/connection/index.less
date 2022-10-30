@@ -1,6 +1,7 @@
 @import '../../var.less';
 
 .box {
+  max-height: 100%;
   flex: 1;
   padding-right: 30px;
   overflow: hidden;
@@ -24,6 +25,7 @@
 }
 
 .scrollBox{
+  
   flex: 1;
   overflow: auto;
 }
@@ -99,29 +101,5 @@
   justify-content: space-between;
   .cancel {
     margin-right: 20px;
-  }
-}
-
-.menuList {
-  padding: 3px;
-  border-radius: 4px;
-  background-color: var(--color-bg-200);
-  box-shadow: var(--color-box-shadow);
-  .menuItem {
-    display: flex;
-    margin: 3px;
-    padding: 5px 10px;
-    border-radius: 4px;
-    align-items: center;
-    color: var(--color-text-65);
-    cursor: pointer;
-    i {
-      font-size: 16px;
-      margin-right: 10px;
-    }
-    &:hover {
-      background-color: var(--custom-primary-1);
-      color: var(--custom-primary-color);
-    }
   }
 }

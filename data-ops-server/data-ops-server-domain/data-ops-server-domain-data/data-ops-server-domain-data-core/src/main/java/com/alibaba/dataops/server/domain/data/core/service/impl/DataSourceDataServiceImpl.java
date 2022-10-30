@@ -3,7 +3,7 @@ package com.alibaba.dataops.server.domain.data.core.service.impl;
 import java.sql.SQLException;
 import java.util.Map;
 
-import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
+import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
@@ -16,6 +16,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,21 +35,26 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
         // 尝试先关闭连接源
         close(DataSourceCloseParam.builder().dataSourceId(dataSourceId).build());
 
-        DriverClassEnum driverClass = EasyEnumUtils.getEnum(DriverClassEnum.class, param.getDriverClass());
+        DbTypeEnum driverClass = EasyEnumUtils.getEnum(DbTypeEnum.class, param.getDbType());
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setDriverClassName(driverClass.getClassName());
         druidDataSource.setUrl(param.getUrl());
+        druidDataSource.setUsername(param.getUsername());
         druidDataSource.setPassword(param.getPassword());
-        druidDataSource.setUrl(param.getUrl());
         // 不设置最大连接数
         druidDataSource.setMaxActive(999);
         druidDataSource.setInitialSize(0);
+        druidDataSource.setFailFast(true);
 
         // 放入缓存
         DataCenterUtils.DATA_SOURCE_CACHE.put(dataSourceId, DataSourceWrapper.builder()
-            .driverClass(driverClass)
+            .dbType(driverClass)
             .druidDataSource(druidDataSource)
             .build());
+
+        // 创建一个默认的模板来执行基础sql
+        DataCenterUtils.DEFAULT_JDBC_TEMPLATE_CACHE.put(dataSourceId,
+            new NamedParameterJdbcTemplate(druidDataSource));
         return ActionResult.isSuccess();
     }
 
@@ -73,6 +79,10 @@ public class DataSourceDataServiceImpl implements DataSourceDataService {
                 }
             }
         }
+
+        // 关闭连接
+        DataCenterUtils.DEFAULT_JDBC_TEMPLATE_CACHE.remove(param.getDataSourceId());
         return ActionResult.isSuccess();
     }
+
 }

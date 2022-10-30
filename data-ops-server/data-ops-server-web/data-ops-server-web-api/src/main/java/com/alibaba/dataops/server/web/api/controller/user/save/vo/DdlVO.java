@@ -1,7 +1,5 @@
 package com.alibaba.dataops.server.web.api.controller.user.save.vo;
 
-import com.alibaba.dataops.server.tools.base.enums.DataSourceTypeEnum;
-
 import lombok.Data;
 
 /**
@@ -34,7 +32,7 @@ public class DdlVO {
 
     /**
      * ddl语言类型
-     * @see DataSourceTypeEnum
+     * @see com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum
      */
     private String type;
 }

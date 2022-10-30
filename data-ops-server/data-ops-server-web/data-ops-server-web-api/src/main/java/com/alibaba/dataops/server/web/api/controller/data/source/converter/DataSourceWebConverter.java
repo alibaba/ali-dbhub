@@ -3,11 +3,15 @@ package com.alibaba.dataops.server.web.api.controller.data.source.converter;
 import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
-import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
-import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.ConsoleConnectParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
+import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
+import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCloseParam;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.ConsoleCloseRequest;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.ConsoleConnectRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCreateRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceQueryRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceTestRequest;
@@ -36,7 +40,7 @@ public abstract class DataSourceWebConverter {
     @Mappings({
         @Mapping(source = "user", target = "userName")
     })
-    public abstract DataSourceCreateParam createReq2param(DataSourceCreateRequest request);
+    public abstract DataSourceManageCreateParam createReq2param(DataSourceCreateRequest request);
 
     /**
      * 参数转换
@@ -100,4 +104,19 @@ public abstract class DataSourceWebConverter {
      */
     public abstract DataSourceTestParam testRequest2param(DataSourceTestRequest request);
 
+    /**
+     * 参数转换
+     *
+     * @param request
+     * @return
+     */
+    public abstract ConsoleConnectParam request2connectParam(ConsoleConnectRequest request);
+
+    /**
+     * 参数转换
+     *
+     * @param request
+     * @return
+     */
+    public abstract ConsoleCloseParam request2closeParam(ConsoleCloseRequest request);
 }

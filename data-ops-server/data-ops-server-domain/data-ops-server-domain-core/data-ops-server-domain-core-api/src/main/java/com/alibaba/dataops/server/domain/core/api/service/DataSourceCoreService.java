@@ -3,14 +3,20 @@ package com.alibaba.dataops.server.domain.core.api.service;
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
-import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
-import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.ConsoleConnectParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceSelector;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
+import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
+import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
+import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCloseParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TableQueryParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TableSelector;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
@@ -31,7 +37,7 @@ public interface DataSourceCoreService {
      * @param param
      * @return
      */
-    DataResult<Long> create(DataSourceCreateParam param);
+    DataResult<Long> create(DataSourceManageCreateParam param);
 
     /**
      * 更新数据源连接
@@ -91,10 +97,50 @@ public interface DataSourceCoreService {
     ListResult<DatabaseDTO> attach(Long id);
 
     /**
+     * 关闭数据源连接
+     *
+     * @param id
+     * @return
+     */
+    ActionResult close(Long id);
+
+    /**
+     * 创建console链接
+     *
+     * @param param
+     * @return
+     */
+    ActionResult createConsole(ConsoleConnectParam param);
+
+    /**
+     * 关闭连接
+     *
+     * @param param
+     * @return
+     */
+    ActionResult closeConsole(ConsoleCloseParam param);
+
+    /**
      * 数据源执行
      *
      * @param param
      * @return
      */
     ListResult<ExecuteResultDTO> execute(DataSourceExecuteParam param);
+
+    /**
+     * 查询表信息
+     *
+     * @param param
+     * @return
+     */
+    DataResult<TableDTO> query(TableQueryParam param, TableSelector selector);
+
+    /**
+     * 分页查询表信息
+     *
+     * @param param
+     * @return
+     */
+    PageResult<TableDTO> pageQuery(TablePageQueryParam param, TableSelector selector);
 }

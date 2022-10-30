@@ -2,8 +2,7 @@ import React, { memo, useEffect, useState, useRef } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { history, useParams } from 'umi';
-import { Button, DatePicker, Input, Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import { Button, DatePicker, Input, Table, Modal, Tabs, Dropdown } from 'antd';
 import i18n from '@/i18n';
 import AppHeader from '@/components/AppHeader';
 import Iconfont from '@/components/Iconfont';
@@ -11,80 +10,139 @@ import Tree from '@/components/Tree';
 import Loading from '@/components/Loading/Loading';
 import MonacoEditor from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
-import LoadingContent from '@/components/Loading/LoadingContent';
+import ConnectionPage from '@/pages/connection';
+import SearchResult from '@/components/SearchResult';
+import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import connectionServer from '@/service/connection';
 import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
-import Tabs from '@/components/Tabs';
 import { IConnectionBase, ITreeNode } from '@/types'
 import { TreeNodeType } from '@/utils/constants'
-import { toTreeList } from '@/utils/index'
+import { toTreeList, createRandom } from '@/utils/index'
+import { databaseType, DatabaseTypeCode } from '@/utils/constants'
 
 interface IProps {
   className?: any;
 }
-interface DataType {
-  key: React.Key;
+interface ITabItem {
+  label: string;
+  key: string;
+  sql?: string;
+}
+interface IDB {
+  id: string;
   name: string;
-  age: number;
-  address: string;
+  type: DatabaseTypeCode
 }
 
-const columns: ColumnsType<DataType> = [
+const initialItems: ITabItem[] = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
+    label: 'Default Tab',
+    key: createRandom(1000000000000000, 9999999999999999) + '',
+    sql: 'SELECT * FROM 1'
   },
 ];
 
-const tableDataMock: DataType[] = [
+const basicsTree: ITreeNode[] = [
   {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
+    key: '1-1',
+    name: '表',
+    type: TreeNodeType.TABLE,
   },
   {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-];
+    key: '1-2',
+    name: '查询',
+    type: TreeNodeType.SAVE,
+  }
+]
 
-const initialItems = [
-  { label: 'Tab 1', key: '1' },
-  { label: 'Tab 2', key: '2' },
+export function DatabaseQuery({ activeKey, details }: { activeKey: string, details: any }) {
+
+  const [searchResultDataList, setSearchResultDataList] = useState<any>()
+
+  useEffect(() => {
+    let p = {
+      consoleId: '1',
+      dataSourceId: details.dataSourceId,
+      databaseName: details.databaseName,
+    }
+    mysqlServer.connectConsole(p).then(res => {
+
+    })
+  }, [])
+  const monacoEditorBox = useRef<HTMLDivElement | null>(null);
+  let editor: any = ''
+
+  function getEditor(e: any) {
+    editor = e
+  }
+  const callback = () => {
+    editor && editor.layout()
+  }
+
+  function getMonacoValue(value: string) {
+    console.log(value)
+  }
+
+  const executeSql = () => {
+    mysqlServer.executeSql({
+      sql: details.sql,
+      consoleId: details.consoleId || 1,
+      dataSourceId: details?.dataSourceId,
+      databaseName: details?.databaseName
+    }).then(res => {
+      setSearchResultDataList(res)
+    })
+  }
+
+  return <>
+    <div className={classnames(styles.databaseQuery, { [styles.databaseQueryConceal]: details.id !== activeKey })}>
+      <div className={styles.operatingArea}>
+        <Button type="primary" onClick={executeSql}>执行</Button>
+        <Button>保存</Button>
+        <Button>我的SQL</Button>
+      </div>
+      <div ref={monacoEditorBox} className={styles.monacoEditor}>
+        <MonacoEditor getMonacoValue={getMonacoValue} id={details.id} defaultValue={details.sql} getEditor={getEditor}></MonacoEditor>
+      </div>
+      <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
+      <div className={styles.searchResult}>
+        <SearchResult dataList={searchResultDataList}></SearchResult>
+      </div>
+    </div>
+  </>
+}
+
+const windowListMock = [
   {
-    label: 'Tab 3',
-    key: '3',
+    sql: "select * from test;",
+    dataSourceId: 16,
+    databaseName: "PUBLIC",
+    consoleId: "1",
+    id: 2
   },
-];
+  {
+    sql: "select * from test;",
+    dataSourceId: 16,
+    databaseName: "PUBLIC",
+    consoleId: "1",
+    id: 1
+  },
+
+]
 
 export default memo<IProps>(function DatabasePage({ className }) {
   const params: { id: string } = useParams()
   const letfRef = useRef<HTMLDivElement | null>(null);
-  const [databaseDetaile, setDatabaseDetaile] = useState<IConnectionBase>()
-  const monacoEditorBox = useRef<HTMLDivElement | null>(null);
+  const [connectionDetaile, setConnectionDetaile] = useState<IConnectionBase>()
+  const [currentDB, setCurrentDB] = useState<IDB>()
   const [activeKey, setActiveKey] = useState(initialItems[0].key);
-  const [items, setItems] = useState(initialItems);
+  const [items, setItems] = useState<ITabItem[]>(initialItems);
+  const [windowList, setWindowList] = useState<any[]>(windowListMock);
+  const [currentWindow, setCurrentWindow] = useState(windowListMock[0]);
   const newTabIndex = useRef(0);
-  const [tableData, setTableDate] = useState(tableDataMock);
-  const [treeData, setTreeData] = useState<ITreeNode[] | null>(null);
+  const [treeData, setTreeData] = useState<ITreeNode[]>(basicsTree);
+  const [DBList, setDBList] = useState<IDB[]>();
   let editor: any = ''
 
   useEffect(() => {
@@ -92,74 +150,43 @@ export default memo<IProps>(function DatabasePage({ className }) {
       getDetaile()
       getDBList()
     }
-  }, [])
+  }, [params.id])
+
+  useEffect(() => {
+    console.log('数据库切换')
+    if (currentDB) {
+      getTableList()
+    }
+  }, [currentDB])
+
+  useEffect(() => {
+    setCurrentDB(DBList?.[0])
+  }, [DBList])
 
   const getDBList = () => {
-    const DBList: ITreeNode[] = [
-      {
-        key: '1',
-        name: 'data-ops',
-        type: TreeNodeType.DATABASE,
-        children: [
-          {
-            key: '1-1',
-            name: '表',
-            type: TreeNodeType.TABLE,
-          },
-          {
-            key: '1-2',
-            name: '查询',
-            type: TreeNodeType.SAVE,
-          },
-        ]
-      },
-      {
-        key: '2',
-        name: 'ata',
-        type: TreeNodeType.DATABASE,
-        children: [
-          {
-            key: '2-1',
-            name: '表',
-            type: TreeNodeType.TABLE,
-          },
-          {
-            key: '2-2',
-            name: '查询',
-            type: TreeNodeType.SAVE,
-          },
-        ]
-      },
-      {
-        key: '3',
-        name: 'grow',
-        type: TreeNodeType.DATABASE,
-        children: [
-          {
-            key: '3-1',
-            name: '表',
-            type: TreeNodeType.TABLE,
-          },
-          {
-            key: '3-2',
-            name: '查询',
-            type: TreeNodeType.SAVE,
-          },
-        ]
-      },
-    ]
-    setTreeData(DBList)
+    connectionServer.getDBList({
+      id: params.id
+    }).then(res => {
+      const list = res?.map(item => {
+        return {
+          name: item.name,
+          id: item.name,
+          type: DatabaseTypeCode.H2
+        }
+      })
+      setDBList(list)
+    })
   }
 
   const getTableList = () => {
     let p = {
-      dataSourceId: '11',
-      databaseName: '11',
+      dataSourceId: params.id,
+      databaseName: currentDB?.name,
       pageNo: 1,
       pageSize: 10,
     }
     return mysqlServer.getList(p).then(res => {
-      const tableList: ITreeNode[] = res.data.map(item => {
+      const tableList: ITreeNode[] = res.data?.map(item => {
         return {
           name: item.name,
           type: TreeNodeType.TABLE,
@@ -180,57 +207,11 @@ export default memo<IProps>(function DatabasePage({ className }) {
           ]
         }
       })
+      console.log(tableList)
+      setTreeData(tableList)
       return tableList
     })
 
-  }
-
-  const makerResultHeaderList = () => {
-    const list = [
-      {
-        label: <div>执行记录</div>,
-        key: '10',
-      }
-    ]
-    const sqlRes = [
-      {
-        status: 'success',
-        id: '0'
-      },
-      {
-        status: 'fail',
-        id: '1'
-      },
-      {
-        status: 'fail',
-        id: '2'
-      },
-      {
-        status: 'success',
-        id: '3'
-      }, {
-        status: 'success',
-        id: '4'
-      }, {
-        status: 'success',
-        id: '5'
-      },
-    ]
-
-    sqlRes.map((item, index) => {
-      list.push({
-        label: <div>
-          <Iconfont className={classnames(
-            styles[item.status == 'success' ? 'successIcon' : 'failIcon'],
-            styles.statusIcon
-          )}
-            code={item.status == 'success' ? '\ue605' : '\ue87c'} />
-          执行结果{index}
-        </div>,
-        key: item.id
-      })
-    })
-    return list
   }
 
   const getDetaile = () => {
@@ -238,8 +219,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
       id: params.id
     }
     connectionServer.getDetaile(p).then(res => {
-      setDatabaseDetaile(res)
-      // setTableDate([])
+      setConnectionDetaile(res)
     })
   }
 
@@ -247,17 +227,11 @@ export default memo<IProps>(function DatabasePage({ className }) {
     editor && editor.layout()
   }
 
-  function getEditor(e: any) {
-    editor = e
-  }
-
-  function onChange() {
-  }
-
   const add = () => {
-    const newActiveKey = `newTab${newTabIndex.current++}`;
+    const newActiveKey = 'newTab';
     const newPanes = [...items];
-    newPanes.push({ label: 'New Tab', key: newActiveKey });
+    newPanes.push({ label: 'New Tab', key: createRandom(1000000000000000, 9999999999999999) + '' });
+    console.log(newPanes)
     setItems(newPanes);
     setActiveKey(newActiveKey);
   };
@@ -282,7 +256,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
     setActiveKey(newActiveKey);
   };
 
-  const onEdit = (targetKey: string, action: 'add' | 'remove') => {
+  const onEdit = (targetKey: any, action: 'add' | 'remove') => {
     if (action === 'add') {
       add();
     } else {
@@ -304,18 +278,60 @@ export default memo<IProps>(function DatabasePage({ className }) {
     }
   }
 
-  return (
+  const searchTable = (value: string) => {
+  }
+
+  const DBListMenu = () => {
+    const myDBList = DBList?.map(item => {
+      return {
+        title: item.name,
+        key: item.id,
+        type: item.type
+      }
+    })
+    const switchDB = (item: IMenu<DatabaseTypeCode>) => {
+      if (item.key !== currentDB?.id) {
+        setCurrentDB({
+          name: item.title,
+          id: item.key,
+          type: item.type!
+        })
+      }
+    }
+
+    return <Menu>
+      {
+        myDBList?.map(item => {
+          return <MenuItem key={item.key} onClick={switchDB.bind(null, item)}>
+            <div className={styles.switchDBItem}>
+              <div className={styles.DBLogo} style={{ backgroundImage: `url(${databaseType[item?.type].img})` }}></div>
+              <div className={styles.DBName}>{item.title}</div>
+            </div>
+          </MenuItem>
+        })
+      }
+    </Menu>
+  }
+
+  return <>
     <div className={classnames(className, styles.box)}>
       <div ref={letfRef} className={styles.aside}>
         <div className={styles.header}>
-          <div className={styles.currentNameBox}>
-            <div className={styles.databaseName}>
-              {databaseDetaile?.alias}
+          <Dropdown overlay={DBListMenu} trigger={['click']}>
+            <div className={styles.currentNameBox}>
+              {
+                currentDB &&
+                <div className={styles.DBLogo} style={{ backgroundImage: `url(${databaseType[currentDB?.type].img})` }}></div>
+              }
+              <div className={styles.databaseName}>
+                {currentDB?.name}
+              </div>
+              {DBList?.[1] && <Iconfont code="&#xe7b1;"></Iconfont>}
             </div>
-            {databaseDetaile?.alias && <Iconfont code="&#xe7b1;"></Iconfont>}
-          </div>
+          </Dropdown>
+
           <div className={styles.searchBox}>
-            <SearchInput placeholder='搜索'></SearchInput>
+            <SearchInput onChange={searchTable} placeholder='搜索'></SearchInput>
             <div className={classnames(styles.refresh, styles.button)}>
               <Iconfont code="&#xec08;"></Iconfont>
             </div>
@@ -343,33 +359,14 @@ export default memo<IProps>(function DatabasePage({ className }) {
             />
           </div>
         </AppHeader>
-        <div className={styles.operatingArea}>
-          <Button type="primary">执行</Button>
-          <Button>保存</Button>
-          <Button>我的SQL</Button>
-        </div>
-        <div className={styles.databaseQuery}>
-          <div ref={monacoEditorBox} className={styles.monacoEditor}>
-            <MonacoEditor getEditor={getEditor}></MonacoEditor>
-          </div>
-          <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
-          <div className={styles.searchResult}>
-            <div className={styles.resultHeader}>
-              <Tabs
-                onChange={onChange}
-                tabs={makerResultHeaderList()}
-              />
-            </div>
-            <div className={styles.resultContent}>
-              <LoadingContent data={tableData} handleEmpty>
-                <div className={styles.tableBox}>
-                  <Table columns={columns} dataSource={tableData} size="middle" />
-                </div>
-              </LoadingContent>
-            </div>
-          </div>
+        <div className={styles.databaseQueryBox}>
+          {
+            windowList?.map((i: any) => {
+              return <DatabaseQuery details={i} key={i.id} activeKey={currentWindow.id}></DatabaseQuery>
+            })
+          }
         </div>
       </div>
     </div>
-  );
+  </>
 });

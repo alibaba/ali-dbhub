@@ -1,5 +1,7 @@
 package com.alibaba.dataops.server.domain.data.api.model;
 
+import java.math.BigDecimal;
+
 import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
 
 import lombok.AllArgsConstructor;
@@ -31,6 +33,11 @@ public class CellDTO {
      * 字符串数据
      */
     private String stringValue;
+
+    /**
+     * 数字
+     */
+    private BigDecimal bigDecimalValue;
 
     /**
      * 日期数据

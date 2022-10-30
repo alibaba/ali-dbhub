@@ -1,7 +1,6 @@
 package com.alibaba.dataops.server.domain.data.core.model;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -11,6 +10,8 @@ import java.util.List;
 import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
+import com.alibaba.dataops.server.tools.base.constant.EasyToolsConstant;
+import com.alibaba.druid.pool.DruidDataSource;
 
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
@@ -18,16 +19,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ParameterDisposer;
-import org.springframework.jdbc.core.PreparedStatementCallback;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.SqlProvider;
-import org.springframework.jdbc.core.StatementCallback;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcUtils;
-import org.springframework.lang.Nullable;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
+import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.util.Assert;
 
 /**
@@ -40,8 +35,8 @@ import org.springframework.util.Assert;
 @Data
 @Builder
 @ToString
-public class JdbcDataTemplate extends JdbcTemplate {
-
+@Slf4j
+public class JdbcDataTemplate {
     /**
      * 对应数据库存储的来源id
      */
@@ -57,21 +52,48 @@ public class JdbcDataTemplate extends JdbcTemplate {
      */
     private Connection connection;
 
-    public ExecuteResultDTO queryData(final String sql) {
+    /**
+     * 数据库连接源
+     */
+    private DruidDataSource druidDataSource;
 
-        /**
-         * Callback to execute the query.
-         */
-        class QueryStatementCallback implements StatementCallback<ExecuteResultDTO>, SqlProvider {
-            @Override
-            @Nullable
-            public ExecuteResultDTO doInStatement(Statement stmt) throws SQLException {
+    /**
+     * 执行错误异常转换器
+     */
+    private SQLExceptionTranslator sqlExceptionTranslator;
+
+    public JdbcDataTemplate(Long dataSourceId, Long consoleId, Connection connection, DruidDataSource druidDataSource) {
+        this.dataSourceId = dataSourceId;
+        this.consoleId = consoleId;
+        this.connection = connection;
+        this.druidDataSource = druidDataSource;
+        this.sqlExceptionTranslator = new SQLErrorCodeSQLExceptionTranslator(druidDataSource);
+    }
+
+    /**
+     * 执行sql
+     *
+     * @param sql
+     * @return
+     */
+    public ExecuteResultDTO execute(final String sql, Integer pageSize) throws SQLException {
+        Assert.notNull(sql, "SQL must not be null");
+        log.info("execute:{}", sql);
+
+        ExecuteResultDTO executeResult = ExecuteResultDTO.builder()
+            .sql(sql)
+            .success(Boolean.TRUE)
+            .build();
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            boolean query = stmt.execute(sql);
+            executeResult.setDescription("执行成功");
+            // 代表是查询
+            if (query) {
                 ResultSet rs = null;
                 try {
-                    rs = stmt.executeQuery(sql);
-                    ExecuteResultDTO executeResult = ExecuteResultDTO.builder()
-                        .sql(sql)
-                        .build();
+                    rs = stmt.getResultSet();
                     // 获取有几列
                     ResultSetMetaData resultSetMetaData = rs.getMetaData();
                     int col = resultSetMetaData.getColumnCount();
@@ -87,6 +109,13 @@ public class JdbcDataTemplate extends JdbcTemplate {
                     // 获取数据信息
                     List<List<CellDTO>> dataList = Lists.newArrayList();
                     executeResult.setDataList(dataList);
+
+                    // 分页大小
+                    executeResult.setHasNextPage(Boolean.FALSE);
+                    if (pageSize == null) {
+                        pageSize = EasyToolsConstant.MAX_PAGE_SIZE;
+                    }
+                    int rsSize = 0;
                     while (rs.next()) {
                         List<CellDTO> row = Lists.newArrayListWithExpectedSize(col);
                         dataList.add(row);
@@ -94,241 +123,24 @@ public class JdbcDataTemplate extends JdbcTemplate {
                             row.add(
                                 com.alibaba.dataops.server.domain.data.core.util.JdbcUtils.getResultSetValue(rs, i));
                         }
+                        rsSize++;
+                        // 到达下一页了
+                        if (rsSize >= pageSize) {
+                            executeResult.setHasNextPage(Boolean.TRUE);
+                            break;
+                        }
                     }
                     return executeResult;
                 } finally {
                     JdbcUtils.closeResultSet(rs);
                 }
+            } else {
+                // 修改或者其他
+                executeResult.setUpdateCount(stmt.getUpdateCount());
             }
-
-            @Override
-            public String getSql() {
-                return sql;
-            }
-        }
-
-        return execute(new QueryStatementCallback(), true);
-    }
-
-    /**
-     * 本方法未做任何修改
-     *
-     * @param sql the SQL query to execute
-     * @param rse a callback that will extract all rows of results
-     * @param <T>
-     * @return
-     * @throws DataAccessException
-     */
-    @Override
-    @Nullable
-    public <T> T query(final String sql, final ResultSetExtractor<T> rse) throws DataAccessException {
-        Assert.notNull(sql, "SQL must not be null");
-        Assert.notNull(rse, "ResultSetExtractor must not be null");
-        if (logger.isDebugEnabled()) {
-            logger.debug("Executing SQL query [" + sql + "]");
-        }
-
-        /**
-         * Callback to execute the query.
-         */
-        class QueryStatementCallback implements StatementCallback<T>, SqlProvider {
-            @Override
-            @Nullable
-            public T doInStatement(Statement stmt) throws SQLException {
-                ResultSet rs = null;
-                try {
-                    rs = stmt.executeQuery(sql);
-                    return rse.extractData(rs);
-                } finally {
-                    JdbcUtils.closeResultSet(rs);
-                }
-            }
-
-            @Override
-            public String getSql() {
-                return sql;
-            }
-        }
-
-        return execute(new QueryStatementCallback(), true);
-    }
-
-    /**
-     * 查询的执行器
-     *
-     * @param action
-     * @param closeResources
-     * @param <T>
-     * @return
-     * @throws DataAccessException
-     */
-    @Nullable
-    private <T> T execute(StatementCallback<T> action, boolean closeResources) throws DataAccessException {
-        Assert.notNull(action, "Callback object must not be null");
-
-        // change 修改连接直接用固定的
-        Connection con = connection;
-        Statement stmt = null;
-
-        try {
-            stmt = con.createStatement();
-            applyStatementSettings(stmt);
-            T result = action.doInStatement(stmt);
-            handleWarnings(stmt);
-            return result;
-        } catch (SQLException ex) {
-            // Release Connection early, to avoid potential connection pool deadlock
-            // in the case when the exception translator hasn't been initialized yet.
-            String sql = getSql(action);
+        } finally {
             JdbcUtils.closeStatement(stmt);
-
-            // change 不再关闭连接
-            throw translateException("StatementCallback", sql, ex);
-        } finally {
-            if (closeResources) {
-                JdbcUtils.closeStatement(stmt);
-                // change 不再关闭连接
-            }
         }
+        return executeResult;
     }
-
-    @Override
-    public int update(final String sql) throws DataAccessException {
-        Assert.notNull(sql, "SQL must not be null");
-        if (logger.isDebugEnabled()) {
-            logger.debug("Executing SQL update [" + sql + "]");
-        }
-
-        /**
-         * Callback to execute the update statement.
-         */
-        class UpdateStatementCallback implements StatementCallback<Integer>, SqlProvider {
-            @Override
-            public Integer doInStatement(Statement stmt) throws SQLException {
-                int rows = stmt.executeUpdate(sql);
-                if (logger.isTraceEnabled()) {
-                    logger.trace("SQL update affected " + rows + " rows");
-                }
-                return rows;
-            }
-
-            @Override
-            public String getSql() {
-                return sql;
-            }
-        }
-
-        return updateCount(execute(new UpdateStatementCallback(), true));
-    }
-
-    /**
-     * 修改时的执行器
-     *
-     * @param psc
-     * @param action
-     * @param closeResources
-     * @param <T>
-     * @return
-     * @throws DataAccessException
-     */
-    @Nullable
-    private <T> T execute(PreparedStatementCreator psc, PreparedStatementCallback<T> action, boolean closeResources)
-        throws DataAccessException {
-
-        Assert.notNull(psc, "PreparedStatementCreator must not be null");
-        Assert.notNull(action, "Callback object must not be null");
-        if (logger.isDebugEnabled()) {
-            String sql = getSql(psc);
-            logger.debug("Executing prepared SQL statement" + (sql != null ? " [" + sql + "]" : ""));
-        }
-
-        // change 修改连接直接用固定的
-        Connection con = connection;
-        PreparedStatement ps = null;
-        try {
-            ps = psc.createPreparedStatement(con);
-            applyStatementSettings(ps);
-            T result = action.doInPreparedStatement(ps);
-            handleWarnings(ps);
-            return result;
-        } catch (SQLException ex) {
-            // Release Connection early, to avoid potential connection pool deadlock
-            // in the case when the exception translator hasn't been initialized yet.
-            if (psc instanceof ParameterDisposer) {
-                ((ParameterDisposer)psc).cleanupParameters();
-            }
-            String sql = getSql(psc);
-            psc = null;
-            JdbcUtils.closeStatement(ps);
-            ps = null;
-            // change 不再关闭连接
-            throw translateException("PreparedStatementCallback", sql, ex);
-        } finally {
-            if (closeResources) {
-                if (psc instanceof ParameterDisposer) {
-                    ((ParameterDisposer)psc).cleanupParameters();
-                }
-                JdbcUtils.closeStatement(ps);
-                // change 不再关闭连接
-            }
-        }
-    }
-
-    /**
-     * 本方法未做修改
-     *
-     * @param sql static SQL to execute
-     * @throws DataAccessException
-     */
-    @Override
-    public void execute(final String sql) throws DataAccessException {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Executing SQL statement [" + sql + "]");
-        }
-
-        /**
-         * Callback to execute the statement.
-         */
-        class ExecuteStatementCallback implements StatementCallback<Object>, SqlProvider {
-            @Override
-            @Nullable
-            public Object doInStatement(Statement stmt) throws SQLException {
-                stmt.execute(sql);
-                return null;
-            }
-
-            @Override
-            public String getSql() {
-                return sql;
-            }
-        }
-
-        execute(new ExecuteStatementCallback(), true);
-    }
-
-    /**
-     * 本方法未做任何修改
-     *
-     * @param sqlProvider
-     * @return
-     */
-    private static String getSql(Object sqlProvider) {
-        if (sqlProvider instanceof SqlProvider) {
-            return ((SqlProvider)sqlProvider).getSql();
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 本方法未做任何修改
-     *
-     * @param result
-     * @return
-     */
-    private static int updateCount(@Nullable Integer result) {
-        Assert.state(result != null, "No update count");
-        return result;
-    }
-
 }

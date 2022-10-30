@@ -6,6 +6,7 @@ import Iconfont from '../Iconfont';
 import { Dropdown } from 'antd';
 import { ITreeNode } from '@/types';
 import { TreeNodeType } from '@/utils/constants'
+import Menu, { IMenu } from '@/components/Menu'
 
 interface IProps {
   className?: any;
@@ -463,6 +464,8 @@ interface TreeNodeIProps {
   loadData: Function;
 }
 
+
+
 export function TreeNode(props: TreeNodeIProps) {
   const { data, level, show = false, loadData } = props
   const [showChildren, setShowChildren] = useState(false);
@@ -490,11 +493,6 @@ export function TreeNode(props: TreeNodeIProps) {
   };
 
   const renderMenu = () => {
-    interface IMenu {
-      title: string;
-      type: string;
-      icon: string;
-    }
     const tableMenu: IMenu[] = [
       {
         title: '打开SQL窗口',
@@ -507,22 +505,8 @@ export function TreeNode(props: TreeNodeIProps) {
         icon: '\ue604'
       }
     ]
-
-    const renderMenuList = (menuList: IMenu[]) => {
-      return <ul className={globalStyle.menuList}>
-        {
-          menuList.map(item => {
-            return <li className={globalStyle.menuItem}>
-              <Iconfont code={item.icon} />
-              {item.title}
-            </li>
-          })
-        }
-      </ul>
-    }
-
     return <div className={styles.menuBox}>
-      {renderMenuList(tableMenu)}
+      <Menu data={tableMenu}></Menu>
     </div>
   }
 
@@ -546,7 +530,7 @@ export function TreeNode(props: TreeNodeIProps) {
   }
 
   return <>
-    <Dropdown overlay={renderMenu} trigger={['contextMenu']}>
+    <Dropdown overlay={renderMenu()} trigger={['contextMenu']}>
       <div className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
         <div className={styles.left}>
           {

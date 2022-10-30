@@ -2,7 +2,7 @@ package com.alibaba.dataops.server.domain.data.api.param.datasource;
 
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
+import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,12 +29,12 @@ public class DataSourceCreateParam {
     private Long dataSourceId;
 
     /**
-     * 驱动类型
+     * 数据库类型
      *
-     * @see DriverClassEnum
+     * @see DbTypeEnum
      */
     @NotNull
-    private String driverClass;
+    private String dbType;
 
     /**
      * 请求连接

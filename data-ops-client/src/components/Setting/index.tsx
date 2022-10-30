@@ -94,7 +94,7 @@ export default memo<IProps>(function Setting({ className }) {
         <Iconfont code="&#xe795;"></Iconfont>
       </div>
       <Modal
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={false}
@@ -115,7 +115,7 @@ export default memo<IProps>(function Setting({ className }) {
             );
           })}
         </ul>
-        {/* <div className={styles.title}>
+        <div className={styles.title}>
           主题色
         </div>
         <ul className={styles.primaryColorList}>
@@ -126,7 +126,7 @@ export default memo<IProps>(function Setting({ className }) {
               </li>
             );
           })}
-        </ul> */}
+        </ul>
         <div className={styles.title}>
           语言
         </div>

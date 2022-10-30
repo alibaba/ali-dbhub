@@ -21,6 +21,17 @@ import lombok.ToString;
 public class ExecuteResultDTO {
 
     /**
+     * 是否成功标志位
+     */
+    private Boolean success;
+
+    /**
+     * 失败消息提示
+     * 只有失败的情况下会有
+     */
+    private String message;
+
+    /**
      * 执行的sql
      */
     private String sql;
@@ -31,14 +42,9 @@ public class ExecuteResultDTO {
     private String description;
 
     /**
-     * 失败消息提示
+     * 修改行数 查询sql不会返回
      */
-    private String message;
-
-    /**
-     * 是否成功标志位
-     */
-    private Boolean success;
+    private Integer updateCount;
 
     /**
      * 展示头的列表
@@ -49,4 +55,22 @@ public class ExecuteResultDTO {
      * 数据的列表
      */
     private List<List<CellDTO>> dataList;
+
+    /**
+     * 是否存在下一页
+     * 只有select语句才有
+     */
+    private Boolean hasNextPage;
+
+    /**
+     * 分页编码
+     * 只有select语句才有
+     */
+    private Integer pageNo;
+
+    /**
+     * 分页大小
+     * 只有select语句才有
+     */
+    private Integer pageSize;
 }

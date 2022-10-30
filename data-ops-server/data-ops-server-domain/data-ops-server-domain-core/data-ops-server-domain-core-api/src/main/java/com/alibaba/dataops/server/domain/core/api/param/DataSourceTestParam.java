@@ -3,8 +3,6 @@ package com.alibaba.dataops.server.domain.core.api.param;
 
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dataops.server.tools.base.enums.DataSourceTypeEnum;
-
 import lombok.Data;
 
 /**
@@ -39,7 +37,7 @@ public class DataSourceTestParam {
 
     /**
      * 连接类型
-     * @see DataSourceTypeEnum
+     * @see com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum
      */
     @NotNull
     private String type;

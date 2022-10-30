@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import { formatNaturalDate } from '@/utils/index';
 import Iconfont from '@/components/Iconfont';
@@ -10,7 +10,6 @@ import { IConnectionBase } from '@/types'
 import { databaseTypeList, DatabaseTypeCode } from '@/utils/constants'
 import {
   Dropdown,
-  Menu,
   Space,
   Select,
   Button,
@@ -19,23 +18,19 @@ import {
   Input,
   Checkbox,
   message,
+  Menu,
   Pagination
 } from 'antd';
 
 import styles from './index.less';
 import globalStyle from '@/global.less';
-import LoadingContent from '@/components/Loading/LoadingContent';
+// import Menu, { IMenu, MenuItem } from '@/components/Menu'
 
 const { Option } = Select;
 
 interface IProps {
   className?: any;
-}
-
-interface IMenu {
-  code: string;
-  icon: string;
-  title: string;
+  onlyList?: boolean;
 }
 
 enum submitType {
@@ -52,58 +47,64 @@ enum handleType {
 
 const menuList: IMenu[] = [
   {
-    code: handleType.EDIT,
+    key: handleType.EDIT,
     icon: '\ue60f',
     title: '修改名称',
   },
   {
-    code: handleType.CLONE,
+    key: handleType.CLONE,
     icon: '\ue6ca',
     title: '克隆连接',
   },
   {
-    code: handleType.DELETE,
+    key: handleType.DELETE,
     icon: '\ue604',
     title: '删除链接',
   }
 ];
 
 export default memo<IProps>(function ConnectionPage(props) {
-  const { className } = props;
+
+  const { className, onlyList } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [connectionList, setConnectionList] = useState<IConnectionBase[]>();
   const [finished, setFinished] = useState(false);
   const [rowData, setRowData] = useState<IConnectionBase | null>();
   const [form] = Form.useForm();
   const scrollerRef = useRef(null)
+  const [pageNo, setPageNo] = useState(0)
 
   useEffect(() => {
-    getConnectionList()
+    // console.log(scrollerRef.current)
   }, [])
 
   type IParams = {
     superposition: boolean
   }
+
+  const resetGetList = () => {
+    setPageNo(0);
+  }
+
   const getConnectionList = (params?: IParams) => {
     const { superposition } = params || {}
-    if (!superposition) {
-      setConnectionList(undefined)
-    }
-
     let p = {
-      pageNo: 1,
+      pageNo: pageNo + 1,
       pageSize: 10
     }
+
     return connectionServer.getList(p).then(res => {
-      if (!res.data?.length) {
-        setFinished(true)
-        return
-      }
+
       if (connectionList?.length && superposition) {
         setConnectionList([...connectionList, ...res.data])
       } else {
         setConnectionList(res.data)
       }
+
+      if (!res.hasNextPage) {
+        setFinished(true)
+      }
+
     })
   }
 
@@ -121,6 +122,7 @@ export default memo<IProps>(function ConnectionPage(props) {
     }
 
     const deleteConnection = () => {
+      resetGetList()
       connectionServer.remove({ id: rowData.id! }).then(res => {
         message.success('删除成功');
         getConnectionList();
@@ -128,14 +130,15 @@ export default memo<IProps>(function ConnectionPage(props) {
     }
 
     const cloneConnection = () => {
+      resetGetList()
       connectionServer.clone({ id: rowData.id! }).then(res => {
         message.success('克隆成功');
         getConnectionList();
       })
     }
 
-    const clickMenuList = (item: IMenu) => {
-      switch (item.code) {
+    const clickMenuList = (item) => {
+      switch (item.key) {
         case handleType.EDIT:
           return editConnection();
         case handleType.DELETE:
@@ -144,18 +147,23 @@ export default memo<IProps>(function ConnectionPage(props) {
           return cloneConnection();
       }
     }
-    return (
-      <ul className={globalStyle.menuList}>
-        {menuList.map((item) => {
-          return (
-            <li onClick={clickMenuList.bind(null, item)} key={item.code} className={globalStyle.menuItem}>
-              <Iconfont code={item.icon}></Iconfont>
-              {item.title}
-            </li>
-          );
-        })}
-      </ul>
-    );
+    return <Menu
+      selectable
+      defaultSelectedKeys={['3']}
+      items={
+        menuList.map((item) => {
+          return {
+            key: item.key,
+            label: <>
+              <span onClick={clickMenuList.bind(null, item)}>
+                <Iconfont code={item.icon!}></Iconfont>
+                {item.title}
+              </span>
+            </>
+          }
+        })
+      }
+    />
   };
 
   const showLinkModal = () => {
@@ -176,6 +184,7 @@ export default memo<IProps>(function ConnectionPage(props) {
   const saveConnection = (values: IConnectionBase, type: submitType) => {
     let p = values
     connectionServer[type](p).then(res => {
+      getConnectionList()
       closeModal();
     })
   };
@@ -207,51 +216,52 @@ export default memo<IProps>(function ConnectionPage(props) {
         ></div>
         <div className={styles.name}>{item.alias}</div>
       </div>
-      <div className={styles.right}>
-        <Dropdown overlay={renderMenu(item)} trigger={['hover']}>
-          <a onClick={(e) => e.preventDefault()}>
-            <div className={styles.moreActions}>
-              <Iconfont code="&#xe601;" />
-            </div>
-          </a>
-        </Dropdown>
-      </div>
+      {
+        !onlyList &&
+        <div className={styles.right}>
+          <Dropdown overlay={renderMenu(item)} trigger={['hover']}>
+            <a onClick={(e) => e.preventDefault()}>
+              <div className={styles.moreActions}>
+                <Iconfont code="&#xe601;" />
+              </div>
+            </a>
+          </Dropdown>
+        </div>
+      }
     </div>
   }
 
   return (
     <div className={classnames(className, styles.box)}>
-      <div className={styles.header}>
-        <div className={styles.title}>{i18n('home.nav.database')}</div>
-        <Button
-          className={styles.linkButton}
-          type="primary"
-          onClick={showLinkModal}
-        >
-          <Iconfont code="&#xe631;"></Iconfont>
-          {i18n('database.input.newLink')}
-        </Button>
-      </div>
+      {
+        !onlyList &&
+        <div className={styles.header}>
+          <div className={styles.title}>{i18n('home.nav.database')}</div>
+          <Button
+            className={styles.linkButton}
+            type="primary"
+            onClick={showLinkModal}
+          >
+            <Iconfont code="&#xe631;"></Iconfont>
+            {i18n('database.input.newLink')}
+          </Button>
+        </div>
+      }
       <div className={styles.scrollBox} ref={scrollerRef}>
-        <LoadingContent data={connectionList} handleEmpty>
-          {
-            scrollerRef.current &&
-            <ScrollLoading
-              finished={finished}
-              scrollerElement={scrollerRef.current}
-              onReachBottom={getConnectionList.bind(null, { superposition: true })}
-              threshold={300}
-            >
-              <div className={styles.connectionList}>
-                {connectionList?.map(item => renderCard(item))}
-              </div>
-            </ScrollLoading>
-          }
-        </LoadingContent>
+        <ScrollLoading
+          finished={finished}
+          scrollerElement={scrollerRef}
+          onReachBottom={getConnectionList.bind(null, { superposition: true })}
+          threshold={200}
+        >
+          <div className={styles.connectionList}>
+            {connectionList?.map(item => renderCard(item))}
+          </div>
+        </ScrollLoading>
       </div>
       <Modal
         title="连接数据库"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={false}
@@ -300,14 +310,14 @@ export default memo<IProps>(function ConnectionPage(props) {
           <Form.Item
             label="用户名"
             name="user"
-            rules={[{ required: true, message: '用户名不可为空！' }]}
+          // rules={[{ required: true, message: '用户名不可为空！' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="密码"
             name="password"
-            rules={[{ required: true, message: '密码不可为空！' }]}
+          // rules={[{ required: true, message: '密码不可为空！' }]}
           >
             <Input.Password />
           </Form.Item>

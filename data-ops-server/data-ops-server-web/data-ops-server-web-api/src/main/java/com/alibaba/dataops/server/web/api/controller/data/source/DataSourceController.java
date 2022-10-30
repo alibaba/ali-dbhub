@@ -5,14 +5,19 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
+import com.alibaba.dataops.server.domain.core.api.param.ConsoleConnectParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
+import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
+import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCloseParam;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dataops.server.web.api.controller.data.source.converter.DataSourceWebConverter;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.ConsoleCloseRequest;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.ConsoleConnectRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceAttachRequest;
+import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceCloseRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceTestRequest;
 import com.alibaba.dataops.server.web.api.controller.data.source.vo.DatabaseVO;
 
@@ -62,6 +67,41 @@ public class DataSourceController {
         ListResult<DatabaseDTO> databaseDTOListResult = dataSourceCoreService.attach(request.getId());
         List<DatabaseVO> databaseVOS = dataSourceWebConverter.databaseDto2vo(databaseDTOListResult.getData());
         return ListResult.of(databaseVOS);
+    }
+
+    /**
+     * 关闭数据库连接
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/close")
+    public ActionResult close(@Valid @NotNull DataSourceCloseRequest request) {
+        return dataSourceCoreService.close(request.getId());
+    }
+
+    /**
+     * Console连接
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/console/connect")
+    public ActionResult connect(@Valid @NotNull ConsoleConnectRequest request) {
+        ConsoleConnectParam consoleConnectParam = dataSourceWebConverter.request2connectParam(request);
+        return dataSourceCoreService.createConsole(consoleConnectParam);
+    }
+
+    /**
+     * 关闭Console连接
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/console/close")
+    public ActionResult closeConsole(@Valid @NotNull ConsoleCloseRequest request) {
+        ConsoleCloseParam closeParam = dataSourceWebConverter.request2closeParam(request);
+        return dataSourceCoreService.closeConsole(closeParam);
     }
 
 }

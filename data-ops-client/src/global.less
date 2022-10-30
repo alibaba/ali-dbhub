@@ -1,4 +1,8 @@
 @import './theme/custom.css';
+@import './theme/background/dark.less';
+@import './theme/background/default.less';
+@import './theme/primaryColor/polarBlue.less';
+@import './theme/primaryColor/polarGreen.less';
 
 body {
   ul,
@@ -16,33 +20,9 @@ li {
     padding 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-.menuList {
-  padding: 3px;
-  border-radius: 4px;
-  background-color: var(--color-bg-200);
-  box-shadow: var(--color-box-shadow);
-}
-
-.menuItem {
-  display: flex;
-  margin: 3px;
-  padding: 5px 10px;
-  border-radius: 4px;
-  align-items: center;
-  color: var(--color-text-65);
-  cursor: pointer;
-  i {
-    font-size: 16px;
-    margin-right: 10px;
-  }
-  &:hover {
-    background-color: var(--custom-primary-1);
-    color: var(--custom-primary-color);
-  }
-}
-
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-thumb {

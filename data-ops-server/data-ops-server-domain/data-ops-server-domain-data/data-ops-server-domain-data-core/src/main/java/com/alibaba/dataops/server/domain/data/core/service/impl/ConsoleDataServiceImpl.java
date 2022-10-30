@@ -48,7 +48,15 @@ public class ConsoleDataServiceImpl implements ConsoleDataService {
         // 放入连接队列
         Map<Long, JdbcDataTemplate> jdbcDataTemplateMap = DataCenterUtils.JDBC_TEMPLATE_CACHE.computeIfAbsent(
             param.getDataSourceId(), key -> Maps.newConcurrentMap());
-        jdbcDataTemplateMap.put(consoleId, JdbcDataTemplate.builder().connection(connection).build());
+        JdbcDataTemplate jdbcDataTemplate = new JdbcDataTemplate(param.getDataSourceId(), consoleId, connection,
+            druidDataSource);
+        jdbcDataTemplateMap.put(consoleId, jdbcDataTemplate);
+        // 切换到当前database
+        try {
+            jdbcDataTemplate.execute("use " + param.getDatabaseName() + ";", null);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return ActionResult.isSuccess();
     }
 

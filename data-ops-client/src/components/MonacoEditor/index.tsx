@@ -13,6 +13,8 @@ interface IProps {
   className?: string;
   height?: number;
   getEditor: any;
+  defaultValue: string | undefined;
+  getMonacoValue?: (value: string) => void
 }
 
 export const hintData = {
@@ -20,10 +22,12 @@ export const hintData = {
   dimi: ['ads_adid', 'ads_spec_adid_category'],
 }
 
-export default memo<IProps>(function MonacoEditor({ className, getEditor, id = 0 }) {
+export default memo(function MonacoEditor(props: IProps) {
+  const { defaultValue, className, getEditor, id = 0, getMonacoValue } = props
   const [editor, setEditor] = useState<any>()
 
   useEffect(() => {
+    console.log(id)
     registerCompletion()
     const editor = monaco.editor.create(document.getElementById(`monaco-editor-${id}`)!, {
       value: '',
@@ -41,7 +45,8 @@ export default memo<IProps>(function MonacoEditor({ className, getEditor, id = 0
     };
     getEditor(editor)
     setEditor(editor)
-  }, [])
+    setValue(editor, defaultValue || '')
+  }, [id])
 
   const registerCompletion = () => {
     monaco.languages.registerCompletionItemProvider('sql', {
@@ -130,15 +135,21 @@ export default memo<IProps>(function MonacoEditor({ className, getEditor, id = 0
   // 设置编辑器的值
   const setValue = (editor, value: string) => {
     const model = editor.getModel(editor)
-    model.setValue()
+    model.setValue(value)
   }
 
   // 获取编辑器的值
   const getValue = () => {
-    const model = editor.getModel(editor)
-    const value = model.getValue()
-    return value
+    if (editor?.getModel) {
+      const model = editor.getModel(editor)
+      const value = model.getValue()
+      console.log(value)
+      return value
+    }
   }
+
+  getMonacoValue?.bind(null, getValue())
+
 
   return <div className={classnames(className, styles.box)}>
     <div id={`monaco-editor-${id}`} className={styles.editorContainer} />

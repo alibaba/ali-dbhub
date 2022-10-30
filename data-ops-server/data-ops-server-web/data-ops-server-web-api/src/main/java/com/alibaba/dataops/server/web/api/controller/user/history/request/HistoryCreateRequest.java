@@ -2,7 +2,6 @@ package com.alibaba.dataops.server.web.api.controller.user.history.request;
 
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dataops.server.tools.base.enums.DataSourceTypeEnum;
 import com.alibaba.dataops.server.web.api.controller.data.source.request.DataSourceBaseRequest;
 
 import lombok.Data;
@@ -22,7 +21,7 @@ public class HistoryCreateRequest extends DataSourceBaseRequest {
 
     /**
      * ddl类型
-     * @see DataSourceTypeEnum
+     * @see com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum
      */
     @NotNull
     private String type;

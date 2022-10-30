@@ -5,26 +5,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
-import com.alibaba.dataops.server.domain.core.api.model.DatabaseDTO;
+import com.alibaba.dataops.server.domain.core.api.param.ConsoleConnectParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
-import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
-import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
-import com.alibaba.dataops.server.domain.core.api.param.DataSourceCreateParam;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourcePageQueryParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceSelector;
+import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
+import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
 import com.alibaba.dataops.server.domain.core.core.converter.DataSourceCoreConverter;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
 import com.alibaba.dataops.server.domain.core.repository.mapper.DataSourceMapper;
+import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
+import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
+import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
+import com.alibaba.dataops.server.domain.data.api.param.database.DatabaseQueryAllParam;
+import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCloseParam;
+import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TableQueryParam;
+import com.alibaba.dataops.server.domain.data.api.param.table.TableSelector;
 import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
+import com.alibaba.dataops.server.domain.data.api.service.DatabaseDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
 import com.alibaba.dataops.server.domain.data.api.service.SqlDataService;
+import com.alibaba.dataops.server.domain.data.api.service.TableDataService;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.excption.DatasourceErrorEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
@@ -64,10 +75,16 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
     private SqlDataService sqlDataService;
 
     @Autowired
+    private DatabaseDataService databaseDataService;
+
+    @Autowired
+    private TableDataService tableDataService;
+
+    @Autowired
     private DataSourceCoreConverter dataSourceCoreConverter;
 
     @Override
-    public DataResult<Long> create(DataSourceCreateParam param) {
+    public DataResult<Long> create(DataSourceManageCreateParam param) {
         DataSourceDO dataSourceDO = dataSourceCoreConverter.param2do(param);
         dataSourceDO.setGmtCreate(LocalDateTime.now());
         dataSourceDO.setGmtModified(LocalDateTime.now());
@@ -136,26 +153,41 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
     @Override
     public ListResult<DatabaseDTO> attach(Long id) {
         DataSourceDO dataSourceDO = dataSourceMapper.selectById(id);
-        com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam param
-            = dataSourceCoreConverter.do2param(dataSourceDO);
+        DataSourceCreateParam param = dataSourceCoreConverter.do2param(dataSourceDO);
         ActionResult actionResult = dataSourceDataService.create(param);
         if (!actionResult.getSuccess()) {
             throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
         }
-        // TODO 增加获取数据源下database逻辑
-        return ListResult.empty();
+
+        // 查询database
+        DatabaseQueryAllParam queryAllParam = new DatabaseQueryAllParam();
+        queryAllParam.setDataSourceId(id);
+        ListResult<DatabaseDTO> databaseDTOS = databaseDataService.queryAll(queryAllParam);
+        return databaseDTOS;
+    }
+
+    @Override
+    public ActionResult close(Long id) {
+        DataSourceCloseParam closeParam = new DataSourceCloseParam();
+        closeParam.setDataSourceId(id);
+        return dataSourceDataService.close(closeParam);
+    }
+
+    @Override
+    public ActionResult createConsole(ConsoleConnectParam param) {
+        ConsoleCreateParam createParam = dataSourceCoreConverter.param2consoleParam(param);
+        return consoleDataService.create(createParam);
+    }
+
+    @Override
+    public ActionResult closeConsole(ConsoleCloseParam param) {
+        return consoleDataService.close(param);
     }
 
     @Override
     public ListResult<ExecuteResultDTO> execute(DataSourceExecuteParam param) {
         if (StringUtils.isBlank(param.getSql())) {
             return ListResult.empty();
-        }
-        // 创建console连接
-        ConsoleCreateParam consoleCreateParam = dataSourceCoreConverter.param2consoleParam(param);
-        ActionResult actionResult = consoleDataService.create(consoleCreateParam);
-        if (!actionResult.getSuccess()) {
-            throw new BusinessException(DatasourceErrorEnum.CONSOLE_CONNECT_ERROR);
         }
 
         // 解析sql
@@ -179,5 +211,15 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         }
 
         return ListResult.of(result);
+    }
+
+    @Override
+    public DataResult<TableDTO> query(TableQueryParam param, TableSelector selector) {
+        return tableDataService.query(param, selector);
+    }
+
+    @Override
+    public PageResult<TableDTO> pageQuery(TablePageQueryParam param, TableSelector selector) {
+        return tableDataService.pageQuery(param, selector);
     }
 }

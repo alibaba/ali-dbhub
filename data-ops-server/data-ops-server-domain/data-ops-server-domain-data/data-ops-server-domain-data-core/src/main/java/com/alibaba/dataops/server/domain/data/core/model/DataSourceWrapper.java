@@ -1,6 +1,6 @@
 package com.alibaba.dataops.server.domain.data.core.model;
 
-import com.alibaba.dataops.server.domain.data.api.enums.DriverClassEnum;
+import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.druid.pool.DruidDataSource;
 
 import lombok.AllArgsConstructor;
@@ -24,7 +24,7 @@ public class DataSourceWrapper {
     /**
      * 数据库类型
      */
-    private DriverClassEnum driverClass;
+    private DbTypeEnum dbType;
 
     /**
      * 数据源
