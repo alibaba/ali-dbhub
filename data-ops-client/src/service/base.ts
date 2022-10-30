@@ -27,7 +27,7 @@ const codeMessage:{[errorCode:number]:string} = {
 };
 
 // const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
-const mockUrl = 'http://127.0.0.1:8000';
+const mockUrl = 'http://localhost:8000';
 
 const errorHandler = (error: ResponseError) => {
   const { response } = error;
@@ -54,6 +54,8 @@ request.interceptors.request.use((url, options) => {
   };
 });
 
+
+
 // request.interceptors.response.use(async response => {
 //   const res = await response.clone().json();
 //   console.log(response)
@@ -68,7 +70,8 @@ request.interceptors.request.use((url, options) => {
 
 export default function createRequest<P = void, R = {}>(url:string, options:IOptions){
   const {method = 'get', mock = false} = options;
-  const _baseURL = mock ? 'mockUrl' : mockUrl;
+  // const _baseURL = mock ? 'mockUrl' : mockUrl;
+  const _baseURL = 'http://127.0.0.1:8080/'
 
   return function(params: any){
     const paramsInUrl: string[] = [];
