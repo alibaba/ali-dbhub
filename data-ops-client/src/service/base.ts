@@ -27,7 +27,7 @@ const codeMessage:{[errorCode:number]:string} = {
 };
 
 // const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
-const mockUrl = 'http://localhost:8000';
+const mockUrl = 'http://127.0.0.1:8000';
 
 const errorHandler = (error: ResponseError) => {
   const { response } = error;

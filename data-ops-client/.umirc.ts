@@ -81,10 +81,10 @@ export default defineConfig({
     type: 'none',
   },
   chainWebpack,
-  // proxy: {
-  //   '/api': {
-  //     'target': 'http://30.198.0.110:8080',
-  //     'changeOrigin': true
-  //   },
-  // },
+  proxy: {
+    '/api': {
+      'target': 'http://127.0.0.1:8080/',
+      'changeOrigin': true
+    },
+  },
 });
