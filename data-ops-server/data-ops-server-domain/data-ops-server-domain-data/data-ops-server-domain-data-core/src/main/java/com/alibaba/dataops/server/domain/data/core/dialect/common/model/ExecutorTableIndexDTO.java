@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.domain.data.core.dialect;
+package com.alibaba.dataops.server.domain.data.core.dialect.common.model;
 
 import java.util.List;
 

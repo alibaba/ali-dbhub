@@ -1,4 +1,4 @@
-package com.alibaba.dataops.server.domain.data.core.dialect.h2;
+package com.alibaba.dataops.server.domain.data.core.dialect.mysq;
 
 import java.util.List;
 import java.util.Map;
@@ -26,13 +26,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * h2的sql执行器
+ * sql执行器
  *
  * @author Jiaju Zhuang
  */
 @Component
 @Slf4j
-public class H2SqlExecutor implements SqlExecutor {
+public class MysqlSqlExecutor implements SqlExecutor {
 
     @Override
     public DbTypeEnum supportDbType() {
@@ -47,7 +47,7 @@ public class H2SqlExecutor implements SqlExecutor {
 
         // 拼接sql
         String sql = " select TABLE_NAME \n"
-            + "     , REMARKS   \n"
+            + "     , TABLE_COMMENT   \n"
             + "        from INFORMATION_SCHEMA.TABLES\n"
             + "        where TABLE_SCHEMA = :databaseName\n";
         if (StringUtils.isNotBlank(param.getTableName())) {
@@ -59,7 +59,7 @@ public class H2SqlExecutor implements SqlExecutor {
                 queryParam,
                 (rs, rowNum) -> ExecutorTableDTO.builder()
                     .name(rs.getString("TABLE_NAME"))
-                    .comment(rs.getString("REMARKS"))
+                    .comment(rs.getString("TABLE_COMMENT"))
                     .build()),
             0L, param);
     }
@@ -75,11 +75,11 @@ public class H2SqlExecutor implements SqlExecutor {
             "SELECT COLUMN_NAME            ,\n"
                 + "       TABLE_NAME             ,\n"
                 + "       DATA_TYPE             ,\n"
-                + "       DATA_TYPE_SQL(TABLE_SCHEMA, TABLE_NAME, 'TABLE', ORDINAL_POSITION) COLUMN_TYPE           ,\n"
+                + "       COLUMN_TYPE           ,\n"
                 + "       IS_NULLABLE         ,\n"
                 + "       COLUMN_DEFAULT        , \n"
-                + "       IS_IDENTITY         ,\n"
-                + "       REMARKS         \n"
+                + "       EXTRA         ,\n"
+                + "       COLUMN_COMMENT         \n"
                 + "FROM INFORMATION_SCHEMA.COLUMNS\n"
                 + "WHERE TABLE_NAME in (:tableNameList)\n"
                 + "  AND TABLE_SCHEMA = :databaseName\n"
@@ -92,16 +92,18 @@ public class H2SqlExecutor implements SqlExecutor {
                     .defaultValue(rs.getString("COLUMN_DEFAULT"))
                     .dataType(rs.getString("DATA_TYPE"))
                     .columnType(rs.getString("COLUMN_TYPE"))
-                    .comment(rs.getString("REMARKS"))
+                    .comment(rs.getString("COLUMN_COMMENT"))
                     .build();
 
                 YesOrNoEnum nullable = EasyEnumUtils.getEnum(YesOrNoEnum.class, rs.getString("IS_NULLABLE"));
                 if (nullable != null) {
                     column.setNullable(nullable.getCode());
                 }
-                YesOrNoEnum autoIncrement = EasyEnumUtils.getEnum(YesOrNoEnum.class, rs.getString("IS_IDENTITY"));
-                if (nullable != null) {
-                    column.setAutoIncrement(autoIncrement.getCode());
+                String extra = rs.getString("EXTRA");
+                if ("auto_increment".equals(extra)) {
+                    column.setAutoIncrement(YesOrNoEnum.YES.getCode());
+                } else {
+                    column.setAutoIncrement(YesOrNoEnum.NO.getCode());
                 }
                 return column;
             }));
@@ -132,7 +134,7 @@ public class H2SqlExecutor implements SqlExecutor {
                     .tableName(rs.getString("TABLE_NAME"))
                     .comment(rs.getString("REMARKS"))
                     .build();
-                H2IndexTypeEnum indexType = EasyEnumUtils.getEnum(H2IndexTypeEnum.class,
+                MysqlIndexTypeEnum indexType = EasyEnumUtils.getEnum(MysqlIndexTypeEnum.class,
                     rs.getString("INDEX_TYPE_NAME"));
                 if (indexType != null) {
                     index.setType(indexType.getIndexType().getCode());
@@ -161,7 +163,7 @@ public class H2SqlExecutor implements SqlExecutor {
                     .tableName(rs.getString("TABLE_NAME"))
                     .indexName(rs.getString("INDEX_NAME"))
                     .build();
-                H2CollationEnum collation = EasyEnumUtils.getEnum(H2CollationEnum.class,
+                MysqlCollationEnum collation = EasyEnumUtils.getEnum(MysqlCollationEnum.class,
                     rs.getString("ORDERING_SPECIFICATION"));
                 if (collation != null) {
                     column.setCollation(collation.getCollation().getCode());
