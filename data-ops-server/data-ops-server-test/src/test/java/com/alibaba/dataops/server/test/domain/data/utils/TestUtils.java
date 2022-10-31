@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Jiaju Zhuang
  */
 public class TestUtils {
+
     public static final AtomicLong ATOMIC_LONG = new AtomicLong();
 
     /**

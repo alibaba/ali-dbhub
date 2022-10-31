@@ -1,7 +1,6 @@
-package com.alibaba.dataops.server.domain.data.api.model;
+package com.alibaba.dataops.server.domain.data.core.dialect.common.model;
 
-import java.util.List;
-
+import com.alibaba.dataops.server.domain.data.api.enums.CollationEnum;
 import com.alibaba.dataops.server.domain.data.api.enums.IndexTypeEnum;
 
 import lombok.AllArgsConstructor;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 索引信息
+ * 索引+列
  *
  * @author Jiaju Zhuang
  */
@@ -20,12 +19,12 @@ import lombok.ToString;
 @Data
 @Builder
 @ToString
-public class TableIndexDTO {
+public class ExecutorTableIndexColumnUnionDTO {
 
     /**
      * 索引名称
      */
-    private String name;
+    private String indexName;
 
     /**
      * 表名
@@ -45,7 +44,20 @@ public class TableIndexDTO {
     private String comment;
 
     /**
-     * 索引包含的列
+     * 列名
      */
-    private List<TableIndexColumnDTO> columnList;
+    private String columnName;
+
+    /**
+     * 顺序
+     */
+    private Long ordinalPosition;
+
+    /**
+     * 排序
+     *
+     * @see CollationEnum
+     */
+    private String collation;
 }
+

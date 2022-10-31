@@ -1,15 +1,18 @@
 package com.alibaba.dataops.server.domain.data.core.dialect.mysq;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
-import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableIndexDTO;
+import com.alibaba.dataops.server.domain.data.api.enums.IndexTypeEnum;
 import com.alibaba.dataops.server.domain.data.core.dialect.SqlExecutor;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableColumnDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableIndexColumnDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableIndexColumnUnionDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableIndexDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorColumnQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorIndexQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorTablePageQueryParam;
@@ -19,9 +22,9 @@ import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dataops.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.dataops.server.tools.common.util.EasyEnumUtils;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -116,72 +119,74 @@ public class MysqlSqlExecutor implements SqlExecutor {
         queryParam.put("databaseName", param.getDatabaseName());
         queryParam.put("tableNameList", param.getTableNameList());
 
-        List<ExecutorTableIndexDTO> indexList = param.getNamedParameterJdbcTemplate().query(
-            "SELECT INDEX_TYPE_NAME            ,\n"
+        List<ExecutorTableIndexColumnUnionDTO> indexList = param.getNamedParameterJdbcTemplate().query(
+            "SELECT INDEX_NAME            ,\n"
                 + "       TABLE_NAME             ,\n"
-                + "       INDEX_NAME             ,\n"
-                + "       REMARKS         \n"
-                + "FROM INFORMATION_SCHEMA.INDEXES\n"
+                + "       COLUMN_NAME             ,\n"
+                + "       COLLATION             ,\n"
+                + "       SEQ_IN_INDEX             ,\n"
+                + "       NON_UNIQUE             ,\n"
+                + "       COMMENT         \n"
+                + "FROM INFORMATION_SCHEMA.STATISTICS\n"
                 + "WHERE TABLE_NAME in (:tableNameList)\n"
                 + "  AND INDEX_SCHEMA = :databaseName\n"
                 + "  AND TABLE_SCHEMA = :databaseName"
-                + "        order by INDEX_NAME",
+                + "        order by SEQ_IN_INDEX",
 
             queryParam,
             (rs, rowNum) -> {
-                ExecutorTableIndexDTO index = ExecutorTableIndexDTO.builder()
-                    .name(rs.getString("INDEX_NAME"))
+                ExecutorTableIndexColumnUnionDTO index = ExecutorTableIndexColumnUnionDTO.builder()
+                    .indexName(rs.getString("INDEX_NAME"))
                     .tableName(rs.getString("TABLE_NAME"))
-                    .comment(rs.getString("REMARKS"))
+                    .comment(rs.getString("COMMENT"))
+                    .columnName(rs.getString("COLUMN_NAME"))
+                    .ordinalPosition(rs.getLong("SEQ_IN_INDEX"))
                     .build();
-                MysqlIndexTypeEnum indexType = EasyEnumUtils.getEnum(MysqlIndexTypeEnum.class,
-                    rs.getString("INDEX_TYPE_NAME"));
-                if (indexType != null) {
-                    index.setType(indexType.getIndexType().getCode());
+
+                if ("PRIMARY".equalsIgnoreCase(rs.getString("INDEX_NAME"))) {
+                    index.setType(IndexTypeEnum.PRIMARY_KEY.getCode());
+                } else {
+                    if ("1".equalsIgnoreCase(rs.getString("NON_UNIQUE"))) {
+                        index.setType(IndexTypeEnum.UNIQUE.getCode());
+                    } else {
+                        index.setType(IndexTypeEnum.NORMAL.getCode());
+                    }
+                }
+
+                if (MysqlCollationEnum.DESC.getCode().equalsIgnoreCase(rs.getString("COLLATION"))) {
+                    index.setCollation(MysqlCollationEnum.DESC.getCode());
+                } else {
+                    index.setCollation(MysqlCollationEnum.ASC.getCode());
                 }
                 return index;
             });
-        if (CollectionUtils.isEmpty(indexList)) {
-            return ListResult.of(indexList);
-        }
 
-        // 重新查询所有的表信息
-        List<ExecutorTableIndexColumnDTO> columnList = param.getNamedParameterJdbcTemplate().query(
-            "SELECT TABLE_NAME,\n"
-                + "            INDEX_NAME,\n"
-                + "            COLUMN_NAME,\n"
-                + "            ORDERING_SPECIFICATION\n"
-                + "        FROM INFORMATION_SCHEMA.INDEX_COLUMNS\n"
-                + "WHERE TABLE_NAME in (:tableNameList)\n"
-                + "  AND INDEX_SCHEMA = :databaseName\n"
-                + "  AND TABLE_SCHEMA = :databaseName \n"
-                + "        order by ORDINAL_POSITION",
-            queryParam,
-            (rs, rowNum) -> {
-                ExecutorTableIndexColumnDTO column = ExecutorTableIndexColumnDTO.builder()
-                    .name(rs.getString("COLUMN_NAME"))
-                    .tableName(rs.getString("TABLE_NAME"))
-                    .indexName(rs.getString("INDEX_NAME"))
-                    .build();
-                MysqlCollationEnum collation = EasyEnumUtils.getEnum(MysqlCollationEnum.class,
-                    rs.getString("ORDERING_SPECIFICATION"));
-                if (collation != null) {
-                    column.setCollation(collation.getCollation().getCode());
-                }
-                return column;
-            });
+        // 分组数据
+        Map<String, Map<String, List<ExecutorTableIndexColumnUnionDTO>>> indexMap = EasyCollectionUtils.stream(
+                indexList)
+            .sorted(Comparator.comparing(ExecutorTableIndexColumnUnionDTO::getOrdinalPosition))
+            .collect(Collectors.groupingBy(ExecutorTableIndexColumnUnionDTO::getTableName,
+                Collectors.groupingBy(ExecutorTableIndexColumnUnionDTO::getIndexName)));
+        List<ExecutorTableIndexDTO> dataList = Lists.newArrayList();
+        indexMap.forEach((tableName, indexSubMap) -> indexSubMap.forEach((indexName, indexSubList) -> {
+            // 拼接表对象
+            ExecutorTableIndexColumnUnionDTO indexColumnUnionFirst = indexSubList.get(0);
+            dataList.add(ExecutorTableIndexDTO.builder()
+                .tableName(tableName)
+                .name(indexName)
+                .type(indexColumnUnionFirst.getType())
+                .comment(indexColumnUnionFirst.getComment())
+                .columnList(
+                    EasyCollectionUtils.toList(indexSubList, indexColumnUnion -> ExecutorTableIndexColumnDTO.builder()
+                        .name(indexColumnUnion.getColumnName())
+                        .indexName(indexName)
+                        .tableName(tableName)
+                        .collation(indexColumnUnion.getCollation())
+                        .build()))
+                .build());
 
-        Map<String, Map<String, List<ExecutorTableIndexColumnDTO>>> columnMap = EasyCollectionUtils.stream(columnList)
-            .collect(Collectors.groupingBy(ExecutorTableIndexColumnDTO::getTableName,
-                Collectors.groupingBy(ExecutorTableIndexColumnDTO::getIndexName)));
-        for (ExecutorTableIndexDTO executorTableIndex : indexList) {
-            Map<String, List<ExecutorTableIndexColumnDTO>> map = columnMap.get(executorTableIndex.getTableName());
-            if (map == null) {
-                continue;
-            }
-            executorTableIndex.setColumnList(map.get(executorTableIndex.getName()));
-        }
-        return ListResult.of(indexList);
+        }));
+        return ListResult.of(dataList);
     }
 
 }

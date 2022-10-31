@@ -15,11 +15,11 @@ public enum MysqlCollationEnum implements BaseCollationEnum {
     /**
      * ASC
      */
-    ASC("ASC", CollationEnum.ASC),
+    ASC("A", CollationEnum.ASC),
     /**
      * DESC
      */
-    DESC("DESC", CollationEnum.DESC),
+    DESC("D", CollationEnum.DESC),
     ;
 
     final String code;

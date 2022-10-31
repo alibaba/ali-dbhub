@@ -20,6 +20,10 @@ public enum H2IndexTypeEnum implements BaseIndexTypeEnum {
      * UNIQUE INDEX
      */
     UNIQUE("UNIQUE INDEX", IndexTypeEnum.UNIQUE),
+    /**
+     * NORMAL
+     */
+    NORMAL("INDEX", IndexTypeEnum.NORMAL),
     ;
 
     final String code;
