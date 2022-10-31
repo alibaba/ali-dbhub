@@ -39,7 +39,7 @@ public class MysqlSqlExecutor implements SqlExecutor {
 
     @Override
     public DbTypeEnum supportDbType() {
-        return DbTypeEnum.H2;
+        return DbTypeEnum.MYSQL;
     }
 
     @Override

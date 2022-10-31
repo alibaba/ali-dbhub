@@ -12,6 +12,7 @@ import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCre
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
+import com.alibaba.dataops.server.test.common.BaseTest;
 import com.alibaba.dataops.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dataops.server.test.domain.data.utils.TestUtils;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
@@ -30,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Jiaju Zhuang
  */
 @Slf4j
-public class ConsoleDataServiceTest {
+public class ConsoleDataServiceTest  extends BaseTest {
     @Resource
     private DataSourceDataService dataSourceDataService;
     @Resource

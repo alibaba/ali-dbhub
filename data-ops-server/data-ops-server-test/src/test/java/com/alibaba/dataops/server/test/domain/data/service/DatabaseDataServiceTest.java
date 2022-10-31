@@ -10,6 +10,7 @@ import com.alibaba.dataops.server.domain.data.api.param.database.DatabaseQueryAl
 import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DatabaseDataService;
+import com.alibaba.dataops.server.test.common.BaseTest;
 import com.alibaba.dataops.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dataops.server.test.domain.data.utils.TestUtils;
 import com.alibaba.fastjson2.JSON;
@@ -26,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Jiaju Zhuang
  */
 @Slf4j
-public class DatabaseDataServiceTest {
+public class DatabaseDataServiceTest extends BaseTest {
     @Resource
     private DataSourceDataService dataSourceDataService;
     @Autowired

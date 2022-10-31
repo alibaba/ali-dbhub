@@ -20,6 +20,7 @@ import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
 import com.alibaba.dataops.server.domain.data.api.service.TableDataService;
+import com.alibaba.dataops.server.test.common.BaseTest;
 import com.alibaba.dataops.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dataops.server.test.domain.data.utils.TestUtils;
 import com.alibaba.dataops.server.tools.base.enums.YesOrNoEnum;
@@ -38,7 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Jiaju Zhuang
  */
 @Slf4j
-public class TableDataServiceTest {
+public class TableDataServiceTest extends BaseTest {
     /**
      * 表名
      */
@@ -111,7 +112,7 @@ public class TableDataServiceTest {
             TableColumnDTO string = columnList.get(3);
             Assertions.assertEquals("STRING", string.getName(), "查询表结构失败");
             Assertions.assertEquals(YesOrNoEnum.YES.getCode(), string.getNullable(), "查询表结构失败");
-            Assertions.assertEquals("DATA", string.getDefaultValue(), "查询表结构失败");
+            Assertions.assertEquals("'DATA'", string.getDefaultValue(), "查询表结构失败");
 
             List<TableIndexDTO> tableIndexList = table.getIndexList();
             Assertions.assertEquals(4L, tableIndexList.size(), "查询表结构失败");
