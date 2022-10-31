@@ -10,7 +10,6 @@ import { IConnectionBase } from '@/types'
 import { databaseTypeList, DatabaseTypeCode } from '@/utils/constants'
 import {
   Dropdown,
-  Menu,
   Space,
   Select,
   Button,
@@ -19,24 +18,19 @@ import {
   Input,
   Checkbox,
   message,
+  Menu,
   Pagination
 } from 'antd';
 
 import styles from './index.less';
 import globalStyle from '@/global.less';
-import LoadingContent from '@/components/Loading/LoadingContent';
+// import Menu, { IMenu, MenuItem } from '@/components/Menu'
 
 const { Option } = Select;
 
 interface IProps {
   className?: any;
   onlyList?: boolean;
-}
-
-interface IMenu {
-  code: string;
-  icon: string;
-  title: string;
 }
 
 enum submitType {
@@ -53,17 +47,17 @@ enum handleType {
 
 const menuList: IMenu[] = [
   {
-    code: handleType.EDIT,
+    key: handleType.EDIT,
     icon: '\ue60f',
     title: '修改名称',
   },
   {
-    code: handleType.CLONE,
+    key: handleType.CLONE,
     icon: '\ue6ca',
     title: '克隆连接',
   },
   {
-    code: handleType.DELETE,
+    key: handleType.DELETE,
     icon: '\ue604',
     title: '删除链接',
   }
@@ -89,16 +83,11 @@ export default memo<IProps>(function ConnectionPage(props) {
   }
 
   const resetGetList = () => {
-    setFinished(false);
-    setPageNo(1);
+    setPageNo(0);
   }
 
   const getConnectionList = (params?: IParams) => {
     const { superposition } = params || {}
-    if (!superposition) {
-      setConnectionList(undefined)
-    }
-
     let p = {
       pageNo: pageNo + 1,
       pageSize: 10
@@ -148,8 +137,8 @@ export default memo<IProps>(function ConnectionPage(props) {
       })
     }
 
-    const clickMenuList = (item: IMenu) => {
-      switch (item.code) {
+    const clickMenuList = (item) => {
+      switch (item.key) {
         case handleType.EDIT:
           return editConnection();
         case handleType.DELETE:
@@ -158,18 +147,23 @@ export default memo<IProps>(function ConnectionPage(props) {
           return cloneConnection();
       }
     }
-    return (
-      <ul className={globalStyle.menuList}>
-        {menuList.map((item) => {
-          return (
-            <li onClick={clickMenuList.bind(null, item)} key={item.code} className={globalStyle.menuItem}>
-              <Iconfont code={item.icon}></Iconfont>
-              {item.title}
-            </li>
-          );
-        })}
-      </ul>
-    );
+    return <Menu
+      selectable
+      defaultSelectedKeys={['3']}
+      items={
+        menuList.map((item) => {
+          return {
+            key: item.key,
+            label: <>
+              <span onClick={clickMenuList.bind(null, item)}>
+                <Iconfont code={item.icon!}></Iconfont>
+                {item.title}
+              </span>
+            </>
+          }
+        })
+      }
+    />
   };
 
   const showLinkModal = () => {
@@ -190,6 +184,7 @@ export default memo<IProps>(function ConnectionPage(props) {
   const saveConnection = (values: IConnectionBase, type: submitType) => {
     let p = values
     connectionServer[type](p).then(res => {
+      getConnectionList()
       closeModal();
     })
   };
@@ -266,7 +261,7 @@ export default memo<IProps>(function ConnectionPage(props) {
       </div>
       <Modal
         title="连接数据库"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={false}

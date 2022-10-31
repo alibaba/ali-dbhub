@@ -24,6 +24,14 @@ const remove = createRequest<{id:number},void>('/api/connection/manage/:id',{met
 const clone = createRequest<{id:number},void>('/api/connection/manage/clone',{method:'post'});
 
 
+export interface IDBItem{
+  name: string;
+  description: string;
+  count: string;
+}
+
+const getDBList = createRequest<{id:number}, IDBItem[]>('/api/connection/attach',{method:'get'});
+
 export default {
   getList,
   getDetaile,
@@ -31,5 +39,6 @@ export default {
   test,
   update,
   remove,
-  clone
+  clone,
+  getDBList
 }

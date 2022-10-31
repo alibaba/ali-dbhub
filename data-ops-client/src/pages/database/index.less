@@ -78,8 +78,31 @@
 
 .databaseName{
   font-size: 18px;
-  margin-right: 10px;
+  margin: 0 10px;
   .f-single-line() 
+}
+
+.DBLogo{
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background-position: 50%;
+  background-size: cover;
+}
+
+.switchDBItem{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  .DBLogo{
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  .DBName{
+    flex: 1;
+    .f-single-line();
+  }
 }
 
 .searchBox{
@@ -172,10 +195,3 @@
   flex: 1;
 }
 
-
-.connectionList{
-  display: flex;
-  flex-direction: column;
-  max-height: 60vh;
-  margin-right: -30px;
-}

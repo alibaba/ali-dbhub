@@ -21,7 +21,7 @@ export const databaseType:{
 } = {
   [DatabaseTypeCode.MYSQL]:{
     name: 'MySQL',
-    img: redisLogo,
+    img: mysqlLogo,
     code: DatabaseTypeCode.MYSQL
   },
   [DatabaseTypeCode.REDIS]:{
