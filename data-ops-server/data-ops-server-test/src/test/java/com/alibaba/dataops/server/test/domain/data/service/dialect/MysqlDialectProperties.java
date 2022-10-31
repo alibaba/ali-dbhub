@@ -9,56 +9,52 @@ import cn.hutool.core.date.DateUtil;
 import org.springframework.stereotype.Component;
 
 /**
- * h2
+ * mysql
  *
  * @author Jiaju Zhuang
  */
 @Component
-public class H2DialectProperties implements DialectProperties {
+public class MysqlDialectProperties implements DialectProperties {
 
     @Override
     public DbTypeEnum getDbType() {
-        return DbTypeEnum.H2;
+        return DbTypeEnum.MYSQL;
     }
 
     @Override
     public String getUrl() {
-        return "jdbc:h2:mem:data-ops-test;MODE=MYSQL";
+        return "jdbc:mysql://rm-8vb099vo8309mcngk.mysql.zhangbei.rds.aliyuncs.com:3306";
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return "grow";
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return "v5EdRurYac";
     }
 
     @Override
     public String getDatabaseName() {
-        return "PUBLIC";
+        return "data_ops_test";
     }
 
     @Override
     public String getCrateTableSql(String tableName) {
-        String sql = "CREATE TABLE `" + tableName + "`\n"
+        return "CREATE TABLE `" + tableName + "`\n"
             + "(\n"
             + "    `ID`     bigint PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT '主键自增',\n"
-            + "    `DATE`   datetime                          not null COMMENT '日期',\n"
+            + "    `DATE`   datetime(3)                          not null COMMENT '日期',\n"
             + "    `NUMBER` bigint COMMENT '长整型',\n"
-            + "    `STRING` VARCHAR(100) default 'DATA' COMMENT '名字'"
-            + ");\n";
-        sql += "comment on table " + tableName + " is '测试表';\n";
-        sql += "create index " + tableName + "_IDX_DATE   on " + tableName + "(DATE desc);\n";
-        sql += "comment on index " + tableName + "_IDX_DATE is '日期索引';\n";
-        sql += "create index " + tableName + "_UK_NUMBER   on " + tableName + "(NUMBER);\n";
-        sql += "comment on index " + tableName + "_UK_NUMBER is '唯一索引';\n";
-        sql += "create index " + tableName + "_IDX_NUMBER_STRING   on " + tableName + "(NUMBER, DATE);\n";
-        sql += "comment on index " + tableName + "_IDX_NUMBER_STRING is '联合索引';\n";
-        return sql;
+            + "    `STRING` VARCHAR(100) default 'DATA' COMMENT '名字',\n"
+            + "    INDEX " + tableName + "_IDX_DATE (DATE desc) comment '日期索引',\n"
+            + "    unique " + tableName + "_UK_NUMBER (NUMBER) comment '唯一索引',\n"
+            + "    INDEX " + tableName + "_IDX_NUMBER_STRING (NUMBER, DATE) comment '联合索引'\n"
+            + ") COMMENT ='测试表';";
     }
+
 
     @Override
     public String getDropTableSql(String tableName) {
@@ -75,6 +71,6 @@ public class H2DialectProperties implements DialectProperties {
     public String getSelectSqlById(String tableName, Long id) {
         return "select *\n"
             + "from " + tableName + "\n"
-            + "where `ID` = '"+id+"';";
+            + "where `ID` = '" + id + "';";
     }
 }

@@ -15,7 +15,7 @@ import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecute
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataService;
-import com.alibaba.dataops.server.domain.data.api.service.TableDataService;
+import com.alibaba.dataops.server.test.common.BaseTest;
 import com.alibaba.dataops.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dataops.server.test.domain.data.utils.TestUtils;
 
@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Jiaju Zhuang
  */
 @Slf4j
-public class JdbcTemplateDataServiceTest {
+public class JdbcTemplateDataServiceTest extends BaseTest {
     /**
      * 表名
      */
@@ -48,12 +48,10 @@ public class JdbcTemplateDataServiceTest {
     private List<DialectProperties> dialectPropertiesList;
     @Resource
     private JdbcTemplateDataService jdbcTemplateDataService;
-    @Resource
-    private TableDataService tableDataService;
 
     @Test
     @Order(1)
-    public void prepare() {
+    public void execute() {
         for (DialectProperties dialectProperties : dialectPropertiesList) {
             DbTypeEnum dbTypeEnum = dialectProperties.getDbType();
             Long dataSourceId = TestUtils.nextLong();
@@ -98,7 +96,7 @@ public class JdbcTemplateDataServiceTest {
             executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
             Assertions.assertTrue(executeResult.getSuccess(), "查询数据失败");
             List<CellDTO> headerList = executeResult.getHeaderList();
-            Assertions.assertEquals(1L, headerList.size(), "查询数据失败");
+            Assertions.assertEquals(4L, headerList.size(), "查询数据失败");
             Assertions.assertEquals("ID", headerList.get(0).getStringValue(), "查询数据失败");
 
             List<List<CellDTO>> dataList = executeResult.getDataList();
