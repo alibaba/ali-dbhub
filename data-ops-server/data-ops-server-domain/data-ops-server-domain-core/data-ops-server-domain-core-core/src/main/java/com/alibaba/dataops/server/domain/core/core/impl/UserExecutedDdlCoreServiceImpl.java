@@ -49,7 +49,7 @@ public class UserExecutedDdlCoreServiceImpl implements UserExecutedDdlCoreServic
         if (StringUtils.isNotBlank(param.getSearchKey())) {
             queryWrapper.like("ddl", param.getSearchKey());
         }
-        Integer start = (param.getPageNo() - 1) * param.getPageSize();
+        Integer start = param.getPageNo();
         Integer offset = param.getPageSize();
         Page<UserExecutedDdlDO> page = new Page<>(start, offset);
         IPage<UserExecutedDdlDO> executedDdlDOIPage = userExecutedDdlMapper.selectPage(page, queryWrapper);

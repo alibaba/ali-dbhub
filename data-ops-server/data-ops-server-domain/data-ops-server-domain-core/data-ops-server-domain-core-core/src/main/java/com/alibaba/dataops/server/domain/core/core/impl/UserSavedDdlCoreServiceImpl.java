@@ -75,7 +75,7 @@ public class UserSavedDdlCoreServiceImpl implements UserSavedDdlCoreService {
         if (StringUtils.isNotBlank(param.getStatus())) {
             queryWrapper.eq("status", param.getStatus());
         }
-        Integer start = (param.getPageNo() - 1) * param.getPageSize();
+        Integer start = param.getPageNo();
         Integer offset = param.getPageSize();
         Page<UserSavedDdlDO> page = new Page<>(start, offset);
         IPage<UserSavedDdlDO> iPage = userSavedDdlMapper.selectPage(page, queryWrapper);

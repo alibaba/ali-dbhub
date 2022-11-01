@@ -130,7 +130,7 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         if (StringUtils.isNotBlank(param.getSearchKey())) {
             queryWrapper.like("alias", param.getSearchKey());
         }
-        Integer start = (param.getPageNo() - 1) * param.getPageSize();
+        Integer start = param.getPageNo();
         Integer offset = param.getPageSize();
         Page<DataSourceDO> page = new Page<>(start, offset);
         IPage<DataSourceDO> iPage = dataSourceMapper.selectPage(page, queryWrapper);
