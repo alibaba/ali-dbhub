@@ -20,7 +20,6 @@ import com.alibaba.dataops.server.tools.base.enums.YesOrNoEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dataops.server.tools.common.util.EasyCollectionUtils;
-import com.alibaba.dataops.server.tools.common.util.EasyEnumUtils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -98,12 +97,14 @@ public class MysqlSqlExecutor implements SqlExecutor {
                     .comment(rs.getString("COLUMN_COMMENT"))
                     .build();
 
-                YesOrNoEnum nullable = EasyEnumUtils.getEnum(YesOrNoEnum.class, rs.getString("IS_NULLABLE"));
-                if (nullable != null) {
-                    column.setNullable(nullable.getCode());
+                if (YesOrNoEnum.YES.getCode().equalsIgnoreCase(rs.getString("IS_NULLABLE"))) {
+                    column.setNullable(YesOrNoEnum.YES.getCode());
+                } else {
+                    column.setNullable(YesOrNoEnum.NO.getCode());
                 }
+
                 String extra = rs.getString("EXTRA");
-                if ("auto_increment".equals(extra)) {
+                if ("auto_increment".equalsIgnoreCase(extra)) {
                     column.setAutoIncrement(YesOrNoEnum.YES.getCode());
                 } else {
                     column.setAutoIncrement(YesOrNoEnum.NO.getCode());
@@ -126,7 +127,7 @@ public class MysqlSqlExecutor implements SqlExecutor {
                 + "       COLLATION             ,\n"
                 + "       SEQ_IN_INDEX             ,\n"
                 + "       NON_UNIQUE             ,\n"
-                + "       COMMENT         \n"
+                + "       INDEX_COMMENT         \n"
                 + "FROM INFORMATION_SCHEMA.STATISTICS\n"
                 + "WHERE TABLE_NAME in (:tableNameList)\n"
                 + "  AND INDEX_SCHEMA = :databaseName\n"
@@ -138,7 +139,7 @@ public class MysqlSqlExecutor implements SqlExecutor {
                 ExecutorTableIndexColumnUnionDTO index = ExecutorTableIndexColumnUnionDTO.builder()
                     .indexName(rs.getString("INDEX_NAME"))
                     .tableName(rs.getString("TABLE_NAME"))
-                    .comment(rs.getString("COMMENT"))
+                    .comment(rs.getString("INDEX_COMMENT"))
                     .columnName(rs.getString("COLUMN_NAME"))
                     .ordinalPosition(rs.getLong("SEQ_IN_INDEX"))
                     .build();
@@ -147,16 +148,16 @@ public class MysqlSqlExecutor implements SqlExecutor {
                     index.setType(IndexTypeEnum.PRIMARY_KEY.getCode());
                 } else {
                     if ("1".equalsIgnoreCase(rs.getString("NON_UNIQUE"))) {
-                        index.setType(IndexTypeEnum.UNIQUE.getCode());
-                    } else {
                         index.setType(IndexTypeEnum.NORMAL.getCode());
+                    } else {
+                        index.setType(IndexTypeEnum.UNIQUE.getCode());
                     }
                 }
 
                 if (MysqlCollationEnum.DESC.getCode().equalsIgnoreCase(rs.getString("COLLATION"))) {
-                    index.setCollation(MysqlCollationEnum.DESC.getCode());
+                    index.setCollation(MysqlCollationEnum.DESC.getCollation().getCode());
                 } else {
-                    index.setCollation(MysqlCollationEnum.ASC.getCode());
+                    index.setCollation(MysqlCollationEnum.ASC.getCollation().getCode());
                 }
                 return index;
             });

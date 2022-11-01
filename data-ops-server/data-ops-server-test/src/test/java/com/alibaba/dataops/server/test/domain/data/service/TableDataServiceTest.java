@@ -43,7 +43,7 @@ public class TableDataServiceTest extends BaseTest {
     /**
      * 表名
      */
-    public static final String TABLE_NAME = "DATA_OPS_TABLE_TEST_" + System.currentTimeMillis();
+    public static final String TABLE_NAME = "data_ops_table_test_" + System.currentTimeMillis();
 
     @Resource
     private DataSourceDataService dataSourceDataService;
@@ -90,7 +90,7 @@ public class TableDataServiceTest extends BaseTest {
             TablePageQueryParam tablePageQueryParam = new TablePageQueryParam();
             tablePageQueryParam.setDataSourceId(dataSourceId);
             tablePageQueryParam.setDatabaseName(dialectProperties.getDatabaseName());
-            tablePageQueryParam.setTableName(TABLE_NAME);
+            tablePageQueryParam.setTableName(dialectProperties.toCase(TABLE_NAME));
             List<TableDTO> tableList = tableDataService.pageQuery(tablePageQueryParam, TableSelector.builder()
                 .columnList(Boolean.TRUE)
                 .indexList(Boolean.TRUE)
@@ -98,39 +98,39 @@ public class TableDataServiceTest extends BaseTest {
             log.info("分析数据返回{}", JSON.toJSONString(tableList));
             Assertions.assertEquals(1L, tableList.size(), "查询表结构失败");
             TableDTO table = tableList.get(0);
-            Assertions.assertEquals(TABLE_NAME, table.getName(), "查询表结构失败");
+            Assertions.assertEquals(dialectProperties.toCase(TABLE_NAME), table.getName(), "查询表结构失败");
             Assertions.assertEquals("测试表", table.getComment(), "查询表结构失败");
 
             List<TableColumnDTO> columnList = table.getColumnList();
             Assertions.assertEquals(4L, columnList.size(), "查询表结构失败");
             TableColumnDTO id = columnList.get(0);
-            Assertions.assertEquals("ID", id.getName(), "查询表结构失败");
+            Assertions.assertEquals(dialectProperties.toCase("id"), id.getName(), "查询表结构失败");
             Assertions.assertEquals("主键自增", id.getComment(), "查询表结构失败");
             Assertions.assertEquals(YesOrNoEnum.YES.getCode(), id.getAutoIncrement(), "查询表结构失败");
             Assertions.assertEquals(YesOrNoEnum.NO.getCode(), id.getNullable(), "查询表结构失败");
 
             TableColumnDTO string = columnList.get(3);
-            Assertions.assertEquals("STRING", string.getName(), "查询表结构失败");
+            Assertions.assertEquals(dialectProperties.toCase("string"), string.getName(), "查询表结构失败");
             Assertions.assertEquals(YesOrNoEnum.YES.getCode(), string.getNullable(), "查询表结构失败");
-            Assertions.assertEquals("'DATA'", string.getDefaultValue(), "查询表结构失败");
+            Assertions.assertEquals("DATA", TestUtils.unWrapperDefaultValue(string.getDefaultValue()), "查询表结构失败");
 
             List<TableIndexDTO> tableIndexList = table.getIndexList();
             Assertions.assertEquals(4L, tableIndexList.size(), "查询表结构失败");
             Map<String, TableIndexDTO> tableIndexMap = EasyCollectionUtils.toIdentityMap(tableIndexList,
                 TableIndexDTO::getName);
-            TableIndexDTO idxDate = tableIndexMap.get("IDX_DATE");
+            TableIndexDTO idxDate = tableIndexMap.get(dialectProperties.toCase(TABLE_NAME + "_idx_date"));
             Assertions.assertEquals("日期索引", idxDate.getComment(), "查询表结构失败");
             Assertions.assertEquals(IndexTypeEnum.NORMAL.getCode(), idxDate.getType(), "查询表结构失败");
             Assertions.assertEquals(1L, idxDate.getColumnList().size(), "查询表结构失败");
-            Assertions.assertEquals("DATE", idxDate.getColumnList().get(0).getName(), "查询表结构失败");
+            Assertions.assertEquals(dialectProperties.toCase("date"), idxDate.getColumnList().get(0).getName(), "查询表结构失败");
             Assertions.assertEquals(CollationEnum.DESC.getCode(), idxDate.getColumnList().get(0).getCollation(),
                 "查询表结构失败");
 
-            TableIndexDTO ukNumber = tableIndexMap.get("UK_NUMBER");
+            TableIndexDTO ukNumber = tableIndexMap.get(dialectProperties.toCase(TABLE_NAME + "_uk_number"));
             Assertions.assertEquals("唯一索引", ukNumber.getComment(), "查询表结构失败");
             Assertions.assertEquals(IndexTypeEnum.UNIQUE.getCode(), ukNumber.getType(), "查询表结构失败");
 
-            TableIndexDTO idxNumberString = tableIndexMap.get("IDX_NUMBER_STRING");
+            TableIndexDTO idxNumberString = tableIndexMap.get(dialectProperties.toCase(TABLE_NAME + "_idx_number_string"));
             Assertions.assertEquals(2, idxNumberString.getColumnList().size(), "查询表结构失败");
         }
 

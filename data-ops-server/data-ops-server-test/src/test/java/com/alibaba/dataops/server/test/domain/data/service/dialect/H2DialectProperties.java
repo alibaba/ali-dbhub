@@ -6,6 +6,7 @@ import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,18 +46,18 @@ public class H2DialectProperties implements DialectProperties {
     public String getCrateTableSql(String tableName) {
         String sql = "CREATE TABLE `" + tableName + "`\n"
             + "(\n"
-            + "    `ID`     bigint PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT '主键自增',\n"
-            + "    `DATE`   datetime                          not null COMMENT '日期',\n"
-            + "    `NUMBER` bigint COMMENT '长整型',\n"
-            + "    `STRING` VARCHAR(100) default 'DATA' COMMENT '名字'"
+            + "    `id`     bigint PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT '主键自增',\n"
+            + "    `date`   datetime                          not null COMMENT '日期',\n"
+            + "    `number` bigint COMMENT '长整型',\n"
+            + "    `string` VARCHAR(100) default 'DATA' COMMENT '名字'"
             + ");\n";
         sql += "comment on table " + tableName + " is '测试表';\n";
-        sql += "create index " + tableName + "_IDX_DATE   on " + tableName + "(DATE desc);\n";
-        sql += "comment on index " + tableName + "_IDX_DATE is '日期索引';\n";
-        sql += "create index " + tableName + "_UK_NUMBER   on " + tableName + "(NUMBER);\n";
-        sql += "comment on index " + tableName + "_UK_NUMBER is '唯一索引';\n";
-        sql += "create index " + tableName + "_IDX_NUMBER_STRING   on " + tableName + "(NUMBER, DATE);\n";
-        sql += "comment on index " + tableName + "_IDX_NUMBER_STRING is '联合索引';\n";
+        sql += "create index " + tableName + "_idx_date   on " + tableName + "(DATE desc);\n";
+        sql += "comment on index " + tableName + "_idx_date is '日期索引';\n";
+        sql += "create unique index " + tableName + "_uk_number   on " + tableName + "(NUMBER);\n";
+        sql += "comment on index " + tableName + "_uk_number is '唯一索引';\n";
+        sql += "create index " + tableName + "_idx_number_string   on " + tableName + "(NUMBER, DATE);\n";
+        sql += "comment on index " + tableName + "_idx_number_string is '联合索引';\n";
         return sql;
     }
 
@@ -67,7 +68,7 @@ public class H2DialectProperties implements DialectProperties {
 
     @Override
     public String getInsertSql(String tableName, Date date, Long number, String string) {
-        return "INSERT INTO `" + tableName + "` (DATE,NUMBER,STRING) VALUES ('" + DateUtil.format(date,
+        return "INSERT INTO `" + tableName + "` (date,number,string) VALUES ('" + DateUtil.format(date,
             DatePattern.NORM_DATETIME_MS_FORMAT) + "','" + number + "','" + string + "');";
     }
 
@@ -75,6 +76,11 @@ public class H2DialectProperties implements DialectProperties {
     public String getSelectSqlById(String tableName, Long id) {
         return "select *\n"
             + "from " + tableName + "\n"
-            + "where `ID` = '"+id+"';";
+            + "where `id` = '" + id + "';";
+    }
+
+    @Override
+    public String toCase(String string) {
+        return StringUtils.toRootUpperCase(string);
     }
 }

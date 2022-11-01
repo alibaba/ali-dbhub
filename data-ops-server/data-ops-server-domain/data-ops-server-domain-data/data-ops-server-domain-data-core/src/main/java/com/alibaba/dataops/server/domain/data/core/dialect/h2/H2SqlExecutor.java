@@ -135,11 +135,11 @@ public class H2SqlExecutor implements SqlExecutor {
 
                 String indexTypeName = rs.getString("INDEX_TYPE_NAME");
                 if (H2IndexTypeEnum.PRIMARY_KEY.getCode().equalsIgnoreCase(indexTypeName)) {
-                    index.setType(H2IndexTypeEnum.PRIMARY_KEY.getCode());
+                    index.setType(H2IndexTypeEnum.PRIMARY_KEY.getIndexType().getCode());
                 } else if (H2IndexTypeEnum.UNIQUE.getCode().equalsIgnoreCase(indexTypeName)) {
-                    index.setType(H2IndexTypeEnum.UNIQUE.getCode());
+                    index.setType(H2IndexTypeEnum.UNIQUE.getIndexType().getCode());
                 } else {
-                    index.setType(H2IndexTypeEnum.NORMAL.getCode());
+                    index.setType(H2IndexTypeEnum.NORMAL.getIndexType().getCode());
                 }
                 return index;
             });
@@ -166,9 +166,9 @@ public class H2SqlExecutor implements SqlExecutor {
                     .indexName(rs.getString("INDEX_NAME"))
                     .build();
                 if (H2CollationEnum.DESC.getCode().equalsIgnoreCase(rs.getString("ORDERING_SPECIFICATION"))) {
-                    column.setCollation(H2CollationEnum.DESC.getCode());
+                    column.setCollation(H2CollationEnum.DESC.getCollation().getCode());
                 } else {
-                    column.setCollation(H2CollationEnum.ASC.getCode());
+                    column.setCollation(H2CollationEnum.ASC.getCollation().getCode());
                 }
                 return column;
             });
