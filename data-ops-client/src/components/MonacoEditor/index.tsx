@@ -14,20 +14,19 @@ interface IProps {
   height?: number;
   getEditor: any;
   defaultValue: string | undefined;
-  getMonacoValue?: (value: string) => void
+  hintData: any;
 }
 
-export const hintData = {
-  adbs: ['dim_realtime_recharge_paycfg_range', 'dim_realtime_recharge_range'],
-  dimi: ['ads_adid', 'ads_spec_adid_category'],
-}
+// export const hintData: any = {
+//   // adbs: ['dim_realtime_recharge_paycfg_range', 'dim_realtime_recharge_range'],
+//   dimi: ['ads_adid', 'ads_spec_adid_category'],
+// }
 
 export default memo(function MonacoEditor(props: IProps) {
-  const { defaultValue, className, getEditor, id = 0, getMonacoValue } = props
+  const { defaultValue, className, getEditor, id = 0, hintData } = props
   const [editor, setEditor] = useState<any>()
 
   useEffect(() => {
-    console.log(id)
     registerCompletion()
     const editor = monaco.editor.create(document.getElementById(`monaco-editor-${id}`)!, {
       value: '',
@@ -51,11 +50,9 @@ export default memo(function MonacoEditor(props: IProps) {
   const registerCompletion = () => {
     monaco.languages.registerCompletionItemProvider('sql', {
       triggerCharacters: ['.', ...keywords],
-      provideCompletionItems: (model, position) => {
-        let suggestions = []
-
+      provideCompletionItems: (model: any, position: any) => {
+        let suggestions: any = []
         const { lineNumber, column } = position
-
         const textBeforePointer = model.getValueInRange({
           startLineNumber: lineNumber,
           startColumn: 0,
@@ -92,12 +89,12 @@ export default memo(function MonacoEditor(props: IProps) {
   }
 
   // 获取Table数据
-  const getTableSuggest = (dbName) => {
+  const getTableSuggest = (dbName: any) => {
     const tableNames = hintData[dbName]
     if (!tableNames) {
       return []
     }
-    return tableNames.map((name) => ({
+    return tableNames.map((name: any) => ({
       label: name,
       kind: monaco.languages.CompletionItemKind.Constant,
       insertText: name,
@@ -133,7 +130,7 @@ export default memo(function MonacoEditor(props: IProps) {
   }
 
   // 设置编辑器的值
-  const setValue = (editor, value: string) => {
+  const setValue = (editor: any, value: string) => {
     const model = editor.getModel(editor)
     model.setValue(value)
   }
@@ -147,9 +144,6 @@ export default memo(function MonacoEditor(props: IProps) {
       return value
     }
   }
-
-  getMonacoValue?.bind(null, getValue())
-
 
   return <div className={classnames(className, styles.box)}>
     <div id={`monaco-editor-${id}`} className={styles.editorContainer} />

@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState, useRef } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { history, useParams } from 'umi';
-import { Button, DatePicker, Input, Table, Modal, Tabs, Dropdown } from 'antd';
+import { Button, DatePicker, Input, Table, Modal, Tabs, Dropdown, message } from 'antd';
 import i18n from '@/i18n';
 import AppHeader from '@/components/AppHeader';
 import Iconfont from '@/components/Iconfont';
@@ -10,38 +10,23 @@ import Tree from '@/components/Tree';
 import Loading from '@/components/Loading/Loading';
 import MonacoEditor from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
-import ConnectionPage from '@/pages/connection';
 import SearchResult from '@/components/SearchResult';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import connectionServer from '@/service/connection';
+import historyServer from '@/service/history';
 import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
-import { IConnectionBase, ITreeNode } from '@/types'
-import { TreeNodeType } from '@/utils/constants'
+import { IConnectionBase, ITreeNode, IWindowTab, IDB } from '@/types'
 import { toTreeList, createRandom } from '@/utils/index'
-import { databaseType, DatabaseTypeCode } from '@/utils/constants'
+import { databaseType, DatabaseTypeCode, TreeNodeType, WindowTabStatus } from '@/utils/constants'
 
 interface IProps {
   className?: any;
 }
-interface ITabItem {
+interface ITabItem extends IWindowTab {
   label: string;
   key: string;
-  sql?: string;
 }
-interface IDB {
-  id: string;
-  name: string;
-  type: DatabaseTypeCode
-}
-
-const initialItems: ITabItem[] = [
-  {
-    label: 'Default Tab',
-    key: createRandom(1000000000000000, 9999999999999999) + '',
-    sql: 'SELECT * FROM 1'
-  },
-];
 
 const basicsTree: ITreeNode[] = [
   {
@@ -56,129 +41,172 @@ const basicsTree: ITreeNode[] = [
   }
 ]
 
-export function DatabaseQuery({ activeKey, details }: { activeKey: string, details: any }) {
-
-  const [searchResultDataList, setSearchResultDataList] = useState<any>()
+export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData: any, activeTabKey: string, windowTab: IWindowTab }) {
+  const params: { id: string, type: string } = useParams()
+  const [manageResultDataList, setManageResultDataList] = useState<any>();
+  const [editorHintData, setEditorHintData] = useState<any>();
+  const monacoEditorBox = useRef<HTMLDivElement | null>(null);
+  const monacoEditor = useRef<any>(null);
 
   useEffect(() => {
-    let p = {
-      consoleId: '1',
-      dataSourceId: details.dataSourceId,
-      databaseName: details.databaseName,
-    }
-    mysqlServer.connectConsole(p).then(res => {
-
-    })
+    connectConsole();
+    disposalEditorHintData();
   }, [])
-  const monacoEditorBox = useRef<HTMLDivElement | null>(null);
-  let editor: any = ''
 
-  function getEditor(e: any) {
-    editor = e
+  const disposalEditorHintData = () => {
+    try {
+      const editorHintData: any = {}
+      treeData.map((item: any) => {
+        editorHintData[item.name] = item.children[0].children.map((item: any) => {
+          return item.name
+        })
+      })
+      setEditorHintData(editorHintData)
+    }
+    catch {
+      setEditorHintData({})
+    }
   }
+
+  const connectConsole = () => {
+    let p = {
+      consoleId: windowTab.id!,
+      dataSourceId: windowTab.dataSourceId,
+      databaseName: windowTab.databaseName,
+    }
+    mysqlServer.connectConsole(p)
+  }
+
+  const getEditor = (editor: any) => {
+    monacoEditor.current = editor
+    const model = editor.getModel(editor)
+    model.setValue(windowTab.sql || windowTab.ddl || '')
+  }
+
   const callback = () => {
-    editor && editor.layout()
+    // monacoEditor.current && monacoEditor.current.layout()
   }
 
-  function getMonacoValue(value: string) {
-    console.log(value)
+  const getMonacoEditorValue = () => {
+    if (monacoEditor?.current?.getModel) {
+      const model = monacoEditor?.current.getModel(monacoEditor?.current)
+      const value = model.getValue()
+      return value
+    }
   }
 
   const executeSql = () => {
+    const sql = getMonacoEditorValue()
+    if (!sql) {
+      message.warning('请输入sql');
+      return
+    }
     mysqlServer.executeSql({
-      sql: details.sql,
-      consoleId: details.consoleId || 1,
-      dataSourceId: details?.dataSourceId,
-      databaseName: details?.databaseName
+      sql,
+      consoleId: windowTab?.id!,
+      dataSourceId: windowTab?.dataSourceId,
+      databaseName: windowTab?.databaseName
     }).then(res => {
-      setSearchResultDataList(res)
+      debugger
+      setManageResultDataList(res)
+    })
+  }
+
+  const saveWindowTabTab = () => {
+    let p = {
+      name: windowTab?.name,
+      type: params.type.toUpperCase() as DatabaseTypeCode,
+      dataSourceId: params.id,
+      databaseName: windowTab?.databaseName,
+      status: WindowTabStatus.DRAFT,
+      ddl: getMonacoEditorValue()
+    }
+    historyServer.saveWindowTab(p).then(res => {
+      message.success('保存成功');
     })
   }
 
   return <>
-    <div className={classnames(styles.databaseQuery, { [styles.databaseQueryConceal]: details.id !== activeKey })}>
+    <div className={classnames(styles.databaseQuery, { [styles.databaseQueryConceal]: windowTab.id !== activeTabKey })}>
       <div className={styles.operatingArea}>
         <Button type="primary" onClick={executeSql}>执行</Button>
-        <Button>保存</Button>
-        <Button>我的SQL</Button>
+        <Button onClick={saveWindowTabTab}>保存</Button>
+        <div>{windowTab.name}</div>
       </div>
       <div ref={monacoEditorBox} className={styles.monacoEditor}>
-        <MonacoEditor getMonacoValue={getMonacoValue} id={details.id} defaultValue={details.sql} getEditor={getEditor}></MonacoEditor>
+        {
+          editorHintData &&
+          <MonacoEditor hintData={editorHintData} id={windowTab.id!} defaultValue={windowTab.sql} getEditor={getEditor}></MonacoEditor>
+        }
       </div>
       <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
       <div className={styles.searchResult}>
-        <SearchResult dataList={searchResultDataList}></SearchResult>
+        <SearchResult manageResultDataList={manageResultDataList}></SearchResult>
       </div>
     </div>
   </>
 }
 
-const windowListMock = [
-  {
-    sql: "select * from test;",
-    dataSourceId: 16,
-    databaseName: "PUBLIC",
-    consoleId: "1",
-    id: 2
-  },
-  {
-    sql: "select * from test;",
-    dataSourceId: 16,
-    databaseName: "PUBLIC",
-    consoleId: "1",
-    id: 1
-  },
-
-]
-
 export default memo<IProps>(function DatabasePage({ className }) {
-  const params: { id: string } = useParams()
+  const params: { id: string, type: string } = useParams()
   const letfRef = useRef<HTMLDivElement | null>(null);
   const [connectionDetaile, setConnectionDetaile] = useState<IConnectionBase>()
   const [currentDB, setCurrentDB] = useState<IDB>()
-  const [activeKey, setActiveKey] = useState(initialItems[0].key);
-  const [items, setItems] = useState<ITabItem[]>(initialItems);
-  const [windowList, setWindowList] = useState<any[]>(windowListMock);
-  const [currentWindow, setCurrentWindow] = useState(windowListMock[0]);
-  const newTabIndex = useRef(0);
+  const [activeKey, setActiveKey] = useState<string>();
+  const [windowList, setWindowList] = useState<ITabItem[]>([]);
   const [treeData, setTreeData] = useState<ITreeNode[]>(basicsTree);
   const [DBList, setDBList] = useState<IDB[]>();
-  let editor: any = ''
 
   useEffect(() => {
-    if (params.id) {
-      getDetaile()
-      getDBList()
-    }
+    if (!params.id) return
+    getDetaile();
+    getDBList();
   }, [params.id])
 
   useEffect(() => {
-    console.log('数据库切换')
-    if (currentDB) {
-      getTableList()
-    }
+    if (!currentDB) return
+    getWindowList()
   }, [currentDB])
 
   useEffect(() => {
-    setCurrentDB(DBList?.[0])
+    if (!DBList?.length) return
+    setCurrentDB(DBList?.[1])
+    getTableList(DBList?.[1])
   }, [DBList])
+
+  const getWindowList = () => {
+    let p = {
+      pageNo: 1,
+      pageSize: 20,
+      dataSourceId: params.id,
+      databaseName: currentDB?.name
+    }
+    historyServer.getSaveList(p).then(res => {
+      if (res?.data?.length) {
+        const list = res.data.map(item => {
+          return {
+            ...item,
+            label: item.name,
+            key: item.id!
+          }
+        })
+        setActiveKey(list?.[0]?.id)
+        setWindowList(list)
+      } else {
+        addWindowTab([])
+      }
+    })
+  }
 
   const getDBList = () => {
     connectionServer.getDBList({
       id: params.id
     }).then(res => {
-      const list = res?.map(item => {
-        return {
-          name: item.name,
-          id: item.name,
-          type: DatabaseTypeCode.H2
-        }
-      })
-      setDBList(list)
+      setDBList(res)
     })
   }
 
-  const getTableList = () => {
+  const getTableList = (currentDB: IDB) => {
     let p = {
       dataSourceId: params.id,
       databaseName: currentDB?.name,
@@ -207,7 +235,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
           ]
         }
       })
-      console.log(tableList)
       setTreeData(tableList)
       return tableList
     })
@@ -224,27 +251,41 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   const callback = () => {
-    editor && editor.layout()
+    // editor && editor.layout()
   }
 
-  const add = () => {
-    const newActiveKey = 'newTab';
-    const newPanes = [...items];
-    newPanes.push({ label: 'New Tab', key: createRandom(1000000000000000, 9999999999999999) + '' });
-    console.log(newPanes)
-    setItems(newPanes);
-    setActiveKey(newActiveKey);
+  const addWindowTab = (windowList: ITabItem[]) => {
+    let p = {
+      name: `Default Tab${windowList?.length + 1}`,
+      type: params.type.toUpperCase() as DatabaseTypeCode,
+      dataSourceId: params.id,
+      databaseName: currentDB?.name!,
+      status: WindowTabStatus.DRAFT,
+      sql: ''
+    }
+    historyServer.saveWindowTab(p).then(res => {
+      setWindowList([
+        ...windowList,
+        {
+          ...p,
+          id: res,
+          label: p.name,
+          key: res
+        }
+      ])
+      setActiveKey(res)
+    })
   };
 
-  const remove = (targetKey: string) => {
+  const closeWindowTab = (targetKey: string) => {
     let newActiveKey = activeKey;
     let lastIndex = -1;
-    items.forEach((item, i) => {
+    windowList.forEach((item, i) => {
       if (item.key === targetKey) {
         lastIndex = i - 1;
       }
     });
-    const newPanes = items.filter(item => item.key !== targetKey);
+    const newPanes = windowList.filter(item => item.key !== targetKey);
     if (newPanes.length && newActiveKey === targetKey) {
       if (lastIndex >= 0) {
         newActiveKey = newPanes[lastIndex].key;
@@ -252,15 +293,17 @@ export default memo<IProps>(function DatabasePage({ className }) {
         newActiveKey = newPanes[0].key;
       }
     }
-    setItems(newPanes);
+    setWindowList(newPanes);
     setActiveKey(newActiveKey);
+    let p = { id: targetKey };
+    historyServer.deleteWindowTab(p);
   };
 
   const onEdit = (targetKey: any, action: 'add' | 'remove') => {
     if (action === 'add') {
-      add();
+      addWindowTab(windowList);
     } else {
-      remove(targetKey);
+      closeWindowTab(targetKey);
     }
   };
 
@@ -268,44 +311,23 @@ export default memo<IProps>(function DatabasePage({ className }) {
     setActiveKey(newActiveKey);
   };
 
-  const loadData = (data: ITreeNode) => {
-    if (!data.children && data.type === TreeNodeType.TABLE) {
-      return getTableList()
-    } else {
-      return new Promise((r) => {
-        r(null)
-      })
-    }
-  }
-
   const searchTable = (value: string) => {
   }
 
   const DBListMenu = () => {
-    const myDBList = DBList?.map(item => {
-      return {
-        title: item.name,
-        key: item.id,
-        type: item.type
-      }
-    })
-    const switchDB = (item: IMenu<DatabaseTypeCode>) => {
-      if (item.key !== currentDB?.id) {
-        setCurrentDB({
-          name: item.title,
-          id: item.key,
-          type: item.type!
-        })
+    const switchDB = (item: IDB) => {
+      if (item.name !== currentDB?.name) {
+        setCurrentDB(item)
+        getTableList(item)
       }
     }
 
     return <Menu>
       {
-        myDBList?.map(item => {
-          return <MenuItem key={item.key} onClick={switchDB.bind(null, item)}>
+        DBList?.map(item => {
+          return <MenuItem key={item.name} onClick={switchDB.bind(null, item)}>
             <div className={styles.switchDBItem}>
-              <div className={styles.DBLogo} style={{ backgroundImage: `url(${databaseType[item?.type].img})` }}></div>
-              <div className={styles.DBName}>{item.title}</div>
+              <div className={styles.DBName}>{item.name}</div>
             </div>
           </MenuItem>
         })
@@ -321,12 +343,12 @@ export default memo<IProps>(function DatabasePage({ className }) {
             <div className={styles.currentNameBox}>
               {
                 currentDB &&
-                <div className={styles.DBLogo} style={{ backgroundImage: `url(${databaseType[currentDB?.type].img})` }}></div>
+                <div className={styles.DBLogo} style={{ backgroundImage: `url(${databaseType[params.type.toUpperCase()].img})` }}></div>
               }
               <div className={styles.databaseName}>
                 {currentDB?.name}
               </div>
-              {DBList?.[1] && <Iconfont code="&#xe7b1;"></Iconfont>}
+              {(DBList?.length || 0) > 1 && <Iconfont code="&#xe7b1;"></Iconfont>}
             </div>
           </Dropdown>
 
@@ -344,7 +366,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
           <Iconfont code="&#xe63d;"></Iconfont>
           <span>{i18n('database.button.overview')}</span>
         </div>
-        <Tree className={styles.tree} loadData={loadData} treeData={treeData}></Tree>
+        <Tree className={styles.tree} treeData={treeData}></Tree>
       </div>
       <DraggableDivider callback={callback} volatileRef={letfRef} />
       <div className={styles.main}>
@@ -355,14 +377,15 @@ export default memo<IProps>(function DatabasePage({ className }) {
               onChange={onChangeTab}
               activeKey={activeKey}
               onEdit={onEdit}
-              items={items}
+              items={windowList}
             />
           </div>
         </AppHeader>
         <div className={styles.databaseQueryBox}>
           {
-            windowList?.map((i: any) => {
-              return <DatabaseQuery details={i} key={i.id} activeKey={currentWindow.id}></DatabaseQuery>
+            currentDB &&
+            windowList?.map((i: IWindowTab) => {
+              return <DatabaseQuery treeData={treeData} windowTab={i} key={i.databaseName + i.id} activeTabKey={activeKey!}></DatabaseQuery>
             })
           }
         </div>

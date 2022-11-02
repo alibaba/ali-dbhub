@@ -21,7 +21,6 @@ function DemoPage() {
   }
 
   function getList() {
-    console.log('请求接口了')
   }
 
   function changeValue(e: any) {
@@ -30,7 +29,6 @@ function DemoPage() {
   }
 
   function onChange(e: any, b) {
-    console.log(e.target.value, b)
 
   }
 

@@ -7,7 +7,7 @@ import Iconfont from '@/components/Iconfont';
 import SearchInput from '@/components/SearchInput';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import ScrollLoading from '@/components/ScrollLoading';
-import sqlServer, { IGetSaveListParams } from '@/service/sql';
+import sqlServer, { IGetSaveListParams } from '@/service/history';
 import { IPageParams, IHistoryRecord } from '@/types';
 import { DatabaseTypeCode, databaseType } from '@/utils/constants';
 import { useDebounce } from '@/utils/hooks'
@@ -41,10 +41,11 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
   const [dataList, setDataList] = useState<IHistoryRecord[] | null>();
   const [searchKey, setSearchKey] = useState<string>();
   const [finished, setFinished] = useState(false);
+  const [pageNo, setPageNo] = useState(0)
   const scrollerRef = useRef(null)
 
   useEffect(() => {
-    getList(true)
+    setPageNo(0)
   }, [currentTab, searchKey])
 
   const getList = (clear = false) => {
@@ -55,12 +56,11 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
 
     let p: IPageParams | IGetSaveListParams = {
       searchKey,
-      pageNo: 1,
+      pageNo: pageNo + 1,
       pageSize: 10,
-      dataSourceId: 1,
-      databaseName: '1'
     }
     return api(p).then(res => {
+      setPageNo(pageNo + 1)
       if (!res.hasNextPage) {
         setFinished(true)
       }
@@ -96,37 +96,35 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
       <SearchInput onChange={searchChange} className={styles.searchInput} placeholder='搜索'></SearchInput>
     </div>
     <div className={styles.sqlListBox} ref={scrollerRef}>
-      <LoadingContent data={dataList} handleEmpty>
-        {
-          <ScrollLoading
-            finished={finished}
-            scrollerElement={scrollerRef}
-            onReachBottom={getList}
-            threshold={300}
-          >
-            <div className={styles.sqlList}>
-              {
-                dataList?.map(item => {
-                  return <div key={item.id} className={styles.cardItem}>
-                    <div className={styles.ddlType}>
-                      <img src={databaseType[item.type].img} alt="" />
-                    </div>
-                    <div className={styles.name}>
-                      {item.name}
-                    </div>
-                    <div className={styles.databaseName}>
-                      {item.databaseName}
-                    </div>
-                    <div className={styles.arrows}>
-                      <Iconfont code='&#xe685;'></Iconfont>
-                    </div>
-                  </div>
-                })
-              }
-            </div>
-          </ScrollLoading>
-        }
-      </LoadingContent>
+      {/* <LoadingContent data={dataList} handleEmpty> */}
+      <ScrollLoading
+        finished={finished}
+        scrollerElement={scrollerRef}
+        onReachBottom={getList}
+        threshold={300}
+      >
+        <div className={styles.sqlList}>
+          {
+            dataList?.map(item => {
+              return <div key={item.id} className={styles.cardItem}>
+                <div className={styles.ddlType}>
+                  <img src={databaseType[item.type].img} alt="" />
+                </div>
+                <div className={styles.name}>
+                  {item.name}
+                </div>
+                <div className={styles.databaseName}>
+                  {item.databaseName}
+                </div>
+                <div className={styles.arrows}>
+                  <Iconfont code='&#xe685;'></Iconfont>
+                </div>
+              </div>
+            })
+          }
+        </div>
+      </ScrollLoading>
+      {/* </LoadingContent> */}
     </div>
   </div>
 })

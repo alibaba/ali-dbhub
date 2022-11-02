@@ -5,9 +5,9 @@ const path = require('path');
 const appName = 'data-ops-server-start-1.0.0-SNAPSHOT.jar';
 contextBridge.exposeInMainWorld('myAPI', {
   startServerForSpawn: () => {
-    const path1 = path.join(__dirname, `app/${appName}`);
-
-    const ls = spawn('jre/Contents/Home/bin/java', ['-jar', path1]);
+    const path1 = path.join('./electron', `app/${appName}`);
+    console.log(path1)
+    const ls = spawn('./electron/jre/Contents/Home/bin/java', ['-jar', path1]);
     ls.stdout.on('data', (buffer) => {
       console.log(buffer.toString('utf8'));
       const data = buffer.toString('utf8');
@@ -30,7 +30,7 @@ contextBridge.exposeInMainWorld('myAPI', {
     bat.stdout.on('data', (data) => {
       console.log(data.toString());
       if (data.toString().indexOf('Started') !== -1) {
-        window.location.href = 'http://localhost:8080';
+        window.location.href = 'http://127.0.0.1:8080';
       }
     });
     bat.stderr.on('data', (data) => {

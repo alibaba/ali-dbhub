@@ -48,3 +48,25 @@ export enum TreeNodeType {
   SAVE = 'save',
   INDEXES = 'indexes'
 }
+
+export enum WindowTabStatus {
+  DRAFT = 'DRAFT',
+  RELEASE = 'RELEASE',
+}
+
+export enum TableDataType {
+  STRING = 'STRING',
+  DATA = 'DATA',
+  BYTE = 'BYTE',
+  EMPTY = 'EMPTY',
+  BIG_DECIMAL = 'BIG_DECIMAL'
+}
+
+export enum TableDataTypeCorresValue {
+  STRING = 'stringValue',
+  DATA = 'dateValue',
+  BYTE = 'byteValue',
+  EMPTY = 'emptyValue',
+  BIG_DECIMAL = 'bigDecimalValue'
+}
+

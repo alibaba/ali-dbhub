@@ -19,11 +19,11 @@
   },
   "build": {
     "appId": "com.data-opt",
-    "directories":{
+    "directories": {
       "output": "../electron-build"
     },
     "asar": false,
-    "files":[   
+    "files": [
       "dist/**/*",
       "main.js",
       "preload.js",
@@ -31,20 +31,22 @@
       "jre/**/*",
       "my.bat"
     ],
-    "electronDownload":{
-      "mirror":"https://npm.taobao.org/mirrors/electron/"
+    "electronDownload": {
+      "mirror": "https://npm.taobao.org/mirrors/electron/"
     },
     "mac": {
       "icon": "logo/logo.png",
-      "target": [{
-        "target": "dmg",
-        "arch": [
-          "x64"
-        ]
-      }]
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
     },
     "win": {
-      "target": [ 
+      "target": [
         "nsis",
         "zip"
       ]

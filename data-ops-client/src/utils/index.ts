@@ -71,13 +71,14 @@ export function formatNaturalDate(date: any) {
   return formatDate(d);
 }
 
-export function toTreeList(data:any[],name:string,key:string,type:TreeNodeType,isLeaf=true){
-  return data?.map(item=>{
+export function toTreeList(data:any[],name:string,type:string,nodeType:TreeNodeType,isLeaf=true){
+  return data?.map((item,index)=>{
     return {
-      key: item[key],
+      key: `${index+1}-${index+1}`,
+      dataType: item[type],
+      nodeType: nodeType,
       name: item[name],
       isLeaf,
-      type
     }
   })
 }

@@ -75,7 +75,6 @@ export default memo<IProps>(function ConnectionPage(props) {
   const [pageNo, setPageNo] = useState(0)
 
   useEffect(() => {
-    // console.log(scrollerRef.current)
   }, [])
 
   type IParams = {
@@ -92,9 +91,7 @@ export default memo<IProps>(function ConnectionPage(props) {
       pageNo: pageNo + 1,
       pageSize: 10
     }
-
     return connectionServer.getList(p).then(res => {
-
       if (connectionList?.length && superposition) {
         setConnectionList([...connectionList, ...res.data])
       } else {
@@ -104,13 +101,12 @@ export default memo<IProps>(function ConnectionPage(props) {
       if (!res.hasNextPage) {
         setFinished(true)
       }
-
     })
   }
 
   const jumpPage = (item: IConnectionBase) => {
     history.push({
-      pathname: `/database/${item.id}`,
+      pathname: `/database/${item.type}/${item.id}`,
     });
   };
 
@@ -201,7 +197,6 @@ export default memo<IProps>(function ConnectionPage(props) {
     form.validateFields().then(res => {
       saveConnection(res, type)
     }).catch(error => {
-      console.log(error)
     })
   }
 

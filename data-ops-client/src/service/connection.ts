@@ -1,5 +1,5 @@
 import createRequest from "./base";
-import { IPageResponse, IConnectionBase } from '@/types'
+import { IPageResponse, IConnectionBase,IDB } from '@/types'
 
 export interface IGetConnectionParams {
   searchKey?: string;
@@ -24,13 +24,7 @@ const remove = createRequest<{id:number},void>('/api/connection/manage/:id',{met
 const clone = createRequest<{id:number},void>('/api/connection/manage/clone',{method:'post'});
 
 
-export interface IDBItem{
-  name: string;
-  description: string;
-  count: string;
-}
-
-const getDBList = createRequest<{id:number}, IDBItem[]>('/api/connection/attach',{method:'get'});
+const getDBList = createRequest<{id:string}, IDB[]>('/api/connection/attach',{method:'get'});
 
 export default {
   getList,

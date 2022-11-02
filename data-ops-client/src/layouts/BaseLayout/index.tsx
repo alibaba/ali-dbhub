@@ -27,7 +27,7 @@ const LNKConfig: INavItem[] = [
   {
     title: i18n('home.nav.mySql'),
     icon: '\ue759',
-    path: '/mySQL',
+    path: '/sql-history',
   },
 ];
 

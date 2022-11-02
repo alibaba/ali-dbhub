@@ -63,10 +63,8 @@ export default memo<IProps>(function DraggableDivider({ className, volatileRef, 
       return
     }
     if (direction == 'line') {
-      console.log(changeLength + "px")
       letfDom.style.width = changeLength + "px";
     } else {
-      console.log(changeLength + "px")
       letfDom.style.height = changeLength + "px";
     }
     callback && callback(changeLength)

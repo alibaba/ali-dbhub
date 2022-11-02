@@ -6,50 +6,23 @@ import type { ColumnsType } from 'antd/es/table';
 import Iconfont from '@/components/Iconfont';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import { Button, DatePicker, Input, Table, Modal } from 'antd';
-import { StatusType } from '@/utils/constants';
+import { StatusType, TableDataType, TableDataTypeCorresValue } from '@/utils/constants';
 import { formatDate } from '@/utils';
+import { IManageResultData, ITableHeaderItem, ITableCellItem } from '@/types';
 import ResizeObserver from 'rc-resize-observer';
 // import { VariableSizeGrid as Grid } from 'react-window';
 
 
 interface IProps {
   className?: string;
-  dataList: any;
+  manageResultDataList: IManageResultData[];
 }
 
 interface DataType {
   [key: string]: any;
 }
 
-const historyListData: DataType[] = [
-  {
-    id: '1',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.SUCCESS,
-    key: '1'
-  },
-  {
-    id: '3',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.SUCCESS,
-    key: '3'
-  },
-  {
-    id: '2',
-    startTime: 1665540690000,
-    databaseName: 'ATA',
-    sql: 'SELECT * FROM adbs',
-    status: StatusType.SUCCESS,
-    key: '2'
-  },
-
-];
-
-export default memo<IProps>(function SearchResult({ className, dataList }) {
+export default memo<IProps>(function SearchResult({ className, manageResultDataList = [] }) {
   function size() {
     let a: any = []
 
@@ -64,7 +37,6 @@ export default memo<IProps>(function SearchResult({ className, dataList }) {
     }
     return
   }
-  const [tableData, setTableDate] = useState(historyListData);
   const [columns, setColumns] = useState();
 
   const renderStartTime = (text: string) => {
@@ -77,46 +49,22 @@ export default memo<IProps>(function SearchResult({ className, dataList }) {
     </div>
   }
 
-  useEffect(() => {
-    if (dataList?.[0]?.headerList) {
-      const columns = dataList?.[0]?.headerList.map(item => {
-        return {
-          title: item.stringValue,
-          dataIndex: 'startTime',
-        }
-      })
-      setColumns(columns)
-      console.log(columns)
-    }
-  }, [dataList])
-
   function onChange() {
   }
 
-
   const makerResultHeaderList = () => {
-    const list = [
-      {
-        label: <div>
-          <Iconfont className={styles.recordIcon} code='&#xe8ad;'></Iconfont>
-          执行记录
-        </div>,
-        key: '10',
-      }
-    ]
-    const sqlRes = dataList
-
-    sqlRes?.map((item, index) => {
+    const list: any = []
+    manageResultDataList?.map((item, index) => {
       list.push({
-        label: <div key={item.id}>
+        label: <div key={index}>
           <Iconfont className={classnames(
-            styles[item.status == 'success' ? 'successIcon' : 'failIcon'],
+            styles[item.success ? 'successIcon' : 'failIcon'],
             styles.statusIcon
           )}
-            code={item.status == 'success' ? '\ue605' : '\ue87c'} />
-          执行结果{index}
+            code={item.success ? '\ue605' : '\ue87c'} />
+          执行结果{index + 1}
         </div>,
-        key: item.id
+        key: index
       })
     })
     return list
@@ -130,10 +78,12 @@ export default memo<IProps>(function SearchResult({ className, dataList }) {
       />
     </div>
     <div className={styles.resultContent}>
-      <LoadingContent data={tableData} handleEmpty>
-        <div className={styles.tableBox}>
-          <Table pagination={false} columns={columns} dataSource={tableData} size="small" />
-        </div>
+      <LoadingContent data={manageResultDataList} handleEmpty>
+        {
+          manageResultDataList.map(item => {
+            return <TableBox headerList={item.headerList} dataList={item.dataList}></TableBox>
+          })
+        }
       </LoadingContent>
     </div>
     <div className={styles.footer}>
@@ -145,3 +95,38 @@ export default memo<IProps>(function SearchResult({ className, dataList }) {
     </div>
   </div>
 })
+
+interface ITableProps {
+  headerList: ITableHeaderItem[];
+  dataList: ITableCellItem[][];
+}
+
+export function TableBox({ headerList, dataList }: ITableProps) {
+  const [columns, setColumns] = useState<any>();
+  const [tableData, setTableData] = useState<any>();
+  useEffect(() => {
+    const columns = headerList.map((item, index) => {
+      return {
+        title: item.stringValue,
+        dataIndex: dataList.length && TableDataTypeCorresValue[dataList[0][index].type],
+        key: dataList.length && TableDataTypeCorresValue[dataList[0][index].type],
+      }
+    })
+    setColumns(columns)
+  }, [headerList])
+
+  useEffect(() => {
+    const tableData = dataList.map((item: ITableCellItem[]) => {
+      const rowData: any = {}
+      item.map((i: ITableCellItem) => {
+        rowData[TableDataTypeCorresValue[i.type]] = i[TableDataTypeCorresValue[i.type]]
+      })
+      return rowData
+    })
+    setTableData(tableData)
+  }, [dataList])
+
+  return <div className={styles.tableBox}>
+    <Table pagination={false} columns={columns} dataSource={tableData} size="small" />
+  </div>
+}
