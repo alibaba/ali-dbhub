@@ -37,7 +37,8 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
     }
     return
   }
-  const [isUnfold, setIsUnfold] = useState(true)
+  const [isUnfold, setIsUnfold] = useState(true);
+  const [currentTab, setCurrentTab] = useState('0')
 
   const renderStartTime = (text: string) => {
     return formatDate(text, 'yyyy-MM-dd hh:mm:ss')
@@ -49,7 +50,8 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
     </div>
   }
 
-  function onChange() {
+  function onChange(index: string) {
+    setCurrentTab(index)
   }
 
   const makerResultHeaderList = () => {
@@ -93,8 +95,8 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
     <div className={styles.resultContent}>
       <LoadingContent data={manageResultDataList} handleEmpty>
         {
-          manageResultDataList.map(item => {
-            return <TableBox headerList={item.headerList} dataList={item.dataList}></TableBox>
+          manageResultDataList.map((item, index) => {
+            return <TableBox className={classnames({ [styles.cursorTableBox]: (index + '') == currentTab })} headerList={item.headerList} dataList={item.dataList}></TableBox>
           })
         }
       </LoadingContent>
@@ -112,9 +114,10 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
 interface ITableProps {
   headerList: ITableHeaderItem[];
   dataList: ITableCellItem[][];
+  className?: string;
 }
 
-export function TableBox({ headerList, dataList }: ITableProps) {
+export function TableBox({ headerList, dataList, className }: ITableProps) {
   const [columns, setColumns] = useState<any>();
   const [tableData, setTableData] = useState<any>();
   useEffect(() => {
@@ -139,7 +142,7 @@ export function TableBox({ headerList, dataList }: ITableProps) {
     setTableData(tableData)
   }, [dataList])
 
-  return <div className={styles.tableBox}>
+  return <div className={classnames(className, styles.tableBox)}>
     <Table pagination={false} columns={columns} dataSource={tableData} size="small" />
   </div>
 }

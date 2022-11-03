@@ -1,5 +1,6 @@
-import e from '@umijs/deps/compiled/express';
+
 import { useCallback,  useEffect,  useRef, useState } from 'react';
+import {addColorSchemeListener} from '@/components/Setting';
 
 export function useDebounce<A extends any[]>(callback: (...args: A) => void, timeout: number) {
   const timer = useRef<any>();
@@ -29,4 +30,12 @@ export function useUpdateEffect(fn: Function, arr: any[]){
       fn();
     }
   },arr)
+}
+
+export function useTheme() {
+  const [currentColorScheme, setCurrentColorScheme] = useState(localStorage.getItem('theme'));
+  useEffect(() => {
+    addColorSchemeListener(setCurrentColorScheme)
+  },[]);
+  return currentColorScheme;
 }

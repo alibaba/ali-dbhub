@@ -6,7 +6,9 @@ const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import zh_CN from 'monaco-editor-nls/locale/zh-hans.json';
 setLocaleData(zh_CN);
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
-const { keywords } = language
+const { keywords } = language;
+import { useTheme } from '@/utils/hooks';
+
 
 interface IProps {
   id: string;
@@ -26,6 +28,8 @@ export default memo(function MonacoEditor(props: IProps) {
   const { defaultValue, className, getEditor, id = 0, hintData } = props;
   const [editor, setEditor] = useState<any>();
   const monacoHint = useRef<any>(null);
+  const themeColor = useTheme();
+
 
   useEffect(() => {
     registerCompletion();
@@ -46,11 +50,45 @@ export default memo(function MonacoEditor(props: IProps) {
     getEditor(editor)
     setEditor(editor)
     setValue(editor, defaultValue || '')
+    monaco.editor.defineTheme('BlackTheme', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [{ background: '#15161a' }],
+      colors: {
+        // 相关颜色属性配置
+        // 'editor.foreground': '#000000',
+        'editor.background': '#15161a',     //背景色
+        // 'editorCursor.foreground': '#8B0000',
+        // 'editor.lineHighlightBackground': '#0000FF20',
+        // 'editorLineNumber.foreground': '#008800',
+        // 'editor.selectionBackground': '#88000030',
+        // 'editor.inactiveSelectionBackground': '#88000015'
+      }
+    });
+    monaco.editor.defineTheme('Default1', {
+      base: 'vs',
+      inherit: true,
+      rules: [{ background: '#15161a' }],
+      colors: {
+        // 相关颜色属性配置
+        // 'editor.foreground': '#000000',
+        'editor.background': '#f8f8fa',     //背景色
+        // 'editorCursor.foreground': '#8B0000',
+        // 'editor.lineHighlightBackground': '#0000FF20',
+        // 'editorLineNumber.foreground': '#008800',
+        // 'editor.selectionBackground': '#88000030',
+        // 'editor.inactiveSelectionBackground': '#88000015'
+      }
+    });
     return () => {
       monacoHint.current?.dispose()
       editor.dispose()
     }
   }, [])
+
+  useEffect(() => {
+    monaco.editor.setTheme(themeColor == 'dark' ? 'BlackTheme' : 'Default');
+  }, [themeColor])
 
   const registerCompletion = () => {
 
@@ -130,11 +168,6 @@ export default memo(function MonacoEditor(props: IProps) {
       endColumn,
     })
     return value
-  }
-
-  //设置主题
-  const setTheme = () => {
-    monaco.editor.setTheme('vs-dark')
   }
 
   // 设置编辑器的值

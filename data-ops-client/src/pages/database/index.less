@@ -70,7 +70,11 @@
   display: flex;
   align-items: center;
   button{
+    height: 24px;
+    line-height: 24px;
+    font-size: 14px;
     border: 0;
+    padding: 0px 10px;
     margin: 0px 5px;
   }
 }
@@ -204,5 +208,27 @@
 .searchResult{
   height: 0;
   flex: 1;
+}
+
+.appHeader{
+  // border: 0;
+}
+
+.tabsBox{
+  :global {
+    .custom-tabs-nav{
+      transform: translateY(15px) translateX(5px);
+    }
+    .custom-tabs-card > .custom-tabs-nav .custom-tabs-tab{
+      border-bottom: 0;
+    }
+    .custom-tabs > .custom-tabs-nav .custom-tabs-nav-add {
+      border-bottom: 0;
+    }
+    .custom-tabs-top > .custom-tabs-nav::before{
+
+      border-bottom: 0px !important;
+    }
+  }
 }
 

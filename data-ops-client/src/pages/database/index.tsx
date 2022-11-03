@@ -129,7 +129,6 @@ export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData:
       <div className={styles.operatingArea}>
         <Button type="primary" onClick={executeSql}>执行</Button>
         <Button onClick={saveWindowTabTab}>保存</Button>
-        <div>{windowTab.name}</div>
       </div>
       <div ref={monacoEditorBox} className={styles.monacoEditor}>
         {
@@ -171,8 +170,8 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   useEffect(() => {
     if (!DBList?.length) return
-    setCurrentDB(DBList?.[1])
-    getTableList(DBList?.[1])
+    setCurrentDB(DBList?.[0])
+    getTableList(DBList?.[0])
   }, [DBList])
 
   const getWindowList = () => {
@@ -263,7 +262,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
       dataSourceId: params.id,
       databaseName: currentDB?.name!,
       status: WindowTabStatus.DRAFT,
-      sql: ''
+      sql: 'SELECT * FROM'
     }
     historyServer.saveWindowTab(p).then(res => {
       setWindowList([
@@ -378,7 +377,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
       </div>
       <DraggableDivider callback={callback} volatileRef={letfRef} />
       <div className={styles.main}>
-        <AppHeader>
+        <AppHeader className={styles.appHeader} showRight={false}>
           <div className={styles.tabsBox}>
             <Tabs
               type="editable-card"

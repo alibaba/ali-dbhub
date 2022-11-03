@@ -25,7 +25,7 @@ export default function LoadingContent<T>(props: PropsWithChildren<IProps<T>>) {
             isEmpty ?
               <>
                 {
-                  <div className={styles.empty}>{empty}</div> ||
+                  empty ||
                   <StateIndicator state='empty'></StateIndicator>
 
                 }

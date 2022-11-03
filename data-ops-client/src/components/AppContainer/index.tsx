@@ -9,6 +9,7 @@ interface IProps {
   className?: any;
 }
 
+
 export default memo<IProps>(function AppContainer({ className, children }) {
   // const [isLogin] = useLogin();
   // // 路由守卫
@@ -28,10 +29,11 @@ export default memo<IProps>(function AppContainer({ className, children }) {
   }, [])
 
   function settings() {
-    document.documentElement.setAttribute('theme', localStorage.getItem('theme') || 'default');
+    const theme = localStorage.getItem('theme') || 'default'
+    document.documentElement.setAttribute('theme', theme);
     document.documentElement.setAttribute('primary-color', localStorage.getItem('primary-color') || 'polar-blue');
     if (!localStorage.getItem('lang')) {
-      localStorage.setItem('lang', 'zh-cn')
+      localStorage.setItem('lang', 'zh-cn');
     }
 
     // document.oncontextmenu = (e) => {
@@ -45,3 +47,6 @@ export default memo<IProps>(function AppContainer({ className, children }) {
     </div>
   </ConfigProvider>
 });
+
+
+
