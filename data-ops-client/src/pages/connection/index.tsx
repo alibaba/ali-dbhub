@@ -18,13 +18,13 @@ import {
   Input,
   Checkbox,
   message,
-  Menu,
+  // Menu,
   Pagination
 } from 'antd';
 
 import styles from './index.less';
 import globalStyle from '@/global.less';
-// import Menu, { IMenu, MenuItem } from '@/components/Menu'
+import Menu, { IMenu, MenuItem } from '@/components/Menu';
 
 const { Option } = Select;
 
@@ -71,8 +71,8 @@ export default memo<IProps>(function ConnectionPage(props) {
   const [finished, setFinished] = useState(false);
   const [rowData, setRowData] = useState<IConnectionBase | null>();
   const [form] = Form.useForm();
-  const scrollerRef = useRef(null)
-  const [pageNo, setPageNo] = useState(0)
+  const scrollerRef = useRef(null);
+  const [pageNo, setPageNo] = useState(0);
 
   useEffect(() => {
   }, [])
@@ -110,57 +110,7 @@ export default memo<IProps>(function ConnectionPage(props) {
     });
   };
 
-  const renderMenu = (rowData: IConnectionBase) => {
-    const editConnection = () => {
-      setRowData(rowData);
-      setIsModalVisible(true);
-      form.setFieldsValue(rowData);
-    }
 
-    const deleteConnection = () => {
-      resetGetList()
-      connectionServer.remove({ id: rowData.id! }).then(res => {
-        message.success('删除成功');
-        getConnectionList();
-      })
-    }
-
-    const cloneConnection = () => {
-      resetGetList()
-      connectionServer.clone({ id: rowData.id! }).then(res => {
-        message.success('克隆成功');
-        getConnectionList();
-      })
-    }
-
-    const clickMenuList = (item) => {
-      switch (item.key) {
-        case handleType.EDIT:
-          return editConnection();
-        case handleType.DELETE:
-          return deleteConnection();
-        case handleType.CLONE:
-          return cloneConnection();
-      }
-    }
-    return <Menu
-      selectable
-      defaultSelectedKeys={['3']}
-      items={
-        menuList.map((item) => {
-          return {
-            key: item.key,
-            label: <>
-              <span onClick={clickMenuList.bind(null, item)}>
-                <Iconfont code={item.icon!}></Iconfont>
-                {item.title}
-              </span>
-            </>
-          }
-        })
-      }
-    />
-  };
 
   const showLinkModal = () => {
     setIsModalVisible(true);
@@ -200,7 +150,57 @@ export default memo<IProps>(function ConnectionPage(props) {
     })
   }
 
-  const renderCard = (item: IConnectionBase) => {
+  const RenderCard = ({ item }: { item: IConnectionBase }) => {
+    const [openDropdown, setOpenDropdown] = useState(false);
+
+    const renderMenu = (rowData: IConnectionBase) => {
+      const editConnection = () => {
+        setRowData(rowData);
+        setIsModalVisible(true);
+        form.setFieldsValue(rowData);
+      }
+
+      const deleteConnection = () => {
+        resetGetList()
+        connectionServer.remove({ id: rowData.id! }).then(res => {
+          message.success('删除成功');
+          getConnectionList();
+        })
+      }
+
+      const cloneConnection = () => {
+        resetGetList()
+        connectionServer.clone({ id: rowData.id! }).then(res => {
+          message.success('克隆成功');
+          getConnectionList();
+        })
+      }
+
+      const clickMenuList = (item) => {
+        switch (item.key) {
+          case handleType.EDIT:
+            return editConnection();
+          case handleType.DELETE:
+            return deleteConnection();
+          case handleType.CLONE:
+            return cloneConnection();
+        }
+        setOpenDropdown(false);
+      }
+      return <Menu>
+        {
+          menuList.map((item) => {
+            return <MenuItem>
+              <span onClick={clickMenuList.bind(null, item)}>
+                <Iconfont code={item.icon!}></Iconfont>
+                {item.title}
+              </span>
+            </MenuItem>
+          })
+        }
+      </Menu>
+    };
+
     return <div key={item.id} className={styles.connectionItem}>
       <div className={styles.left} onClick={jumpPage.bind(null, item)}>
         <div
@@ -214,8 +214,8 @@ export default memo<IProps>(function ConnectionPage(props) {
       {
         !onlyList &&
         <div className={styles.right}>
-          <Dropdown overlay={renderMenu(item)} trigger={['hover']}>
-            <a onClick={(e) => e.preventDefault()}>
+          <Dropdown open={openDropdown} overlay={renderMenu(item)} trigger={['hover']}>
+            <a onClick={() => { setOpenDropdown(true) }}>
               <div className={styles.moreActions}>
                 <Iconfont code="&#xe601;" />
               </div>
@@ -250,7 +250,7 @@ export default memo<IProps>(function ConnectionPage(props) {
           threshold={200}
         >
           <div className={styles.connectionList}>
-            {connectionList?.map(item => renderCard(item))}
+            {connectionList?.map(item => <RenderCard item={item}></RenderCard>)}
           </div>
         </ScrollLoading>
       </div>

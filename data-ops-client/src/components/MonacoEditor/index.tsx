@@ -1,10 +1,10 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { setLocaleData } from 'monaco-editor-nls';
+const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import zh_CN from 'monaco-editor-nls/locale/zh-hans.json';
 setLocaleData(zh_CN);
-const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
 const { keywords } = language
 
@@ -23,11 +23,12 @@ interface IProps {
 // }
 
 export default memo(function MonacoEditor(props: IProps) {
-  const { defaultValue, className, getEditor, id = 0, hintData } = props
-  const [editor, setEditor] = useState<any>()
+  const { defaultValue, className, getEditor, id = 0, hintData } = props;
+  const [editor, setEditor] = useState<any>();
+  const monacoHint = useRef<any>(null);
 
   useEffect(() => {
-    registerCompletion()
+    registerCompletion();
     const editor = monaco.editor.create(document.getElementById(`monaco-editor-${id}`)!, {
       value: '',
       language: 'sql',
@@ -45,10 +46,15 @@ export default memo(function MonacoEditor(props: IProps) {
     getEditor(editor)
     setEditor(editor)
     setValue(editor, defaultValue || '')
-  }, [id])
+    return () => {
+      monacoHint.current?.dispose()
+      editor.dispose()
+    }
+  }, [])
 
   const registerCompletion = () => {
-    monaco.languages.registerCompletionItemProvider('sql', {
+
+    monacoHint.current = monaco.languages.registerCompletionItemProvider('sql', {
       triggerCharacters: ['.', ...keywords],
       provideCompletionItems: (model: any, position: any) => {
         let suggestions: any = []
@@ -73,12 +79,14 @@ export default memo(function MonacoEditor(props: IProps) {
         } else {
           suggestions = [...getDBSuggest(), ...getSQLSuggest()]
         }
+        console.log(suggestions)
         return {
-          suggestions,
+          suggestions
         }
       },
     })
   }
+
   // 获取DB数据
   const getDBSuggest = () => {
     return Object.keys(hintData).map((key) => ({

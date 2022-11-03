@@ -7,10 +7,10 @@ import Iconfont from '@/components/Iconfont';
 import SearchInput from '@/components/SearchInput';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import ScrollLoading from '@/components/ScrollLoading';
-import sqlServer, { IGetSaveListParams } from '@/service/history';
+import sqlServer, { IGetHistoryListParams } from '@/service/history';
 import { IPageParams, IHistoryRecord } from '@/types';
 import { DatabaseTypeCode, databaseType } from '@/utils/constants';
-import { useDebounce } from '@/utils/hooks'
+import { useDebounce, useUpdateEffect } from '@/utils/hooks'
 import { Input } from 'antd';
 import styles from './index.less';
 import request from 'umi-request';
@@ -41,46 +41,52 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
   const [dataList, setDataList] = useState<IHistoryRecord[] | null>();
   const [searchKey, setSearchKey] = useState<string>();
   const [finished, setFinished] = useState(false);
-  const [pageNo, setPageNo] = useState(0)
-  const scrollerRef = useRef(null)
+  const scrollerRef = useRef(null);
+  const initialListParams: IGetHistoryListParams = {
+    searchKey: '',
+    pageNo: 1,
+    pageSize: 1000,
+    dataSourceId: '10',
+    databaseName: 'PUBLIC'
+  }
+  const listParams = useRef(initialListParams)
 
-  useEffect(() => {
-    setPageNo(0)
-  }, [currentTab, searchKey])
+  useUpdateEffect(() => {
+    getList();
+  }, [currentTab])
 
-  const getList = (clear = false) => {
-    if (clear) {
-      setDataList(null)
-    }
-    const api = currentTab == TabsKey.SAVE ? sqlServer.getSaveList : sqlServer.getHistoryList
-
-    let p: IPageParams | IGetSaveListParams = {
-      searchKey,
-      pageNo: pageNo + 1,
-      pageSize: 10,
-    }
-    return api(p).then(res => {
-      setPageNo(pageNo + 1)
+  const getList = () => {
+    const api = currentTab == TabsKey.SAVE ? sqlServer.getSaveList : sqlServer.getHistoryList;
+    return api(listParams.current).then(res => {
       if (!res.hasNextPage) {
         setFinished(true)
       }
-      if (dataList?.length && !clear) {
-        setDataList([...dataList, ...res.data])
-      } else {
+      if (listParams.current.pageNo === 1) {
         setDataList(res.data)
+      } else {
+        setDataList([...dataList!, ...res.data])
       }
+      listParams.current.pageNo++
     })
   }
 
-  const onChange = (key: string) => {
-    setCurrentTab(key)
+  const onChangeTab = (key: string) => {
+    listParams.current.pageNo = 1;
+    setCurrentTab(key);
   };
 
   const searchInputChange = (value: string) => {
-    setSearchKey(value)
+    listParams.current.pageNo = 1;
+    listParams.current.searchKey = value;
+    getList();
   }
   const searchChange = useDebounce(searchInputChange, 500)
 
+  const jumpToDatabasePage = (item: IHistoryRecord) => {
+    if (currentTab == TabsKey.SAVE) {
+      location.href = `/#/database/${item.type}/${item.dataSourceId}?databaseName=${item.databaseName}?windowTabName=${item.name}`
+    }
+  }
 
   return <div className={classnames(className, styles.box)}>
     <div className={styles.header}>
@@ -88,7 +94,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
     </div>
     <Tabs
       className={styles.tabs}
-      onChange={onChange}
+      onChange={onChangeTab}
       currentTab={currentTab}
       tabs={tabs}
     ></Tabs>
@@ -96,7 +102,6 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
       <SearchInput onChange={searchChange} className={styles.searchInput} placeholder='搜索'></SearchInput>
     </div>
     <div className={styles.sqlListBox} ref={scrollerRef}>
-      {/* <LoadingContent data={dataList} handleEmpty> */}
       <ScrollLoading
         finished={finished}
         scrollerElement={scrollerRef}
@@ -106,7 +111,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
         <div className={styles.sqlList}>
           {
             dataList?.map(item => {
-              return <div key={item.id} className={styles.cardItem}>
+              return <div onClick={jumpToDatabasePage.bind(null, item)} key={item.id} className={styles.cardItem}>
                 <div className={styles.ddlType}>
                   <img src={databaseType[item.type].img} alt="" />
                 </div>
@@ -116,15 +121,17 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
                 <div className={styles.databaseName}>
                   {item.databaseName}
                 </div>
-                <div className={styles.arrows}>
-                  <Iconfont code='&#xe685;'></Iconfont>
-                </div>
+                {
+                  currentTab == TabsKey.SAVE &&
+                  < div className={styles.arrows}>
+                    <Iconfont code='&#xe685;'></Iconfont>
+                  </div>
+                }
               </div>
             })
           }
         </div>
       </ScrollLoading>
-      {/* </LoadingContent> */}
-    </div>
-  </div>
+    </div >
+  </div >
 })

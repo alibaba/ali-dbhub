@@ -17,7 +17,7 @@ import historyServer from '@/service/history';
 import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
 import { IConnectionBase, ITreeNode, IWindowTab, IDB } from '@/types'
-import { toTreeList, createRandom } from '@/utils/index'
+import { toTreeList, createRandom, approximateTreeNode } from '@/utils/index'
 import { databaseType, DatabaseTypeCode, TreeNodeType, WindowTabStatus } from '@/utils/constants'
 
 interface IProps {
@@ -28,21 +28,11 @@ interface ITabItem extends IWindowTab {
   key: string;
 }
 
-const basicsTree: ITreeNode[] = [
-  {
-    key: '1-1',
-    name: '表',
-    type: TreeNodeType.TABLE,
-  },
-  {
-    key: '1-2',
-    name: '查询',
-    type: TreeNodeType.SAVE,
-  }
-]
+const basicsTree: ITreeNode[] = []
 
 export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData: any, activeTabKey: string, windowTab: IWindowTab }) {
   const params: { id: string, type: string } = useParams()
+  const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode
   const [manageResultDataList, setManageResultDataList] = useState<any>();
   const [editorHintData, setEditorHintData] = useState<any>();
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
@@ -101,13 +91,21 @@ export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData:
       message.warning('请输入sql');
       return
     }
-    mysqlServer.executeSql({
+    let p = {
       sql,
       consoleId: windowTab?.id!,
       dataSourceId: windowTab?.dataSourceId,
       databaseName: windowTab?.databaseName
-    }).then(res => {
-      debugger
+    }
+    mysqlServer.executeSql(p).then(res => {
+      let p = {
+        dataSourceId: windowTab?.dataSourceId,
+        databaseName: windowTab?.databaseName,
+        name: windowTab?.name,
+        ddl: sql,
+        type: dataBaseType
+      }
+      historyServer.createHistory(p)
       setManageResultDataList(res)
     })
   }
@@ -115,7 +113,7 @@ export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData:
   const saveWindowTabTab = () => {
     let p = {
       name: windowTab?.name,
-      type: params.type.toUpperCase() as DatabaseTypeCode,
+      type: dataBaseType,
       dataSourceId: params.id,
       databaseName: windowTab?.databaseName,
       status: WindowTabStatus.DRAFT,
@@ -148,14 +146,17 @@ export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData:
 }
 
 export default memo<IProps>(function DatabasePage({ className }) {
-  const params: { id: string, type: string } = useParams()
+  const params: { id: string, type: string } = useParams();
+  const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode;
   const letfRef = useRef<HTMLDivElement | null>(null);
   const [connectionDetaile, setConnectionDetaile] = useState<IConnectionBase>()
   const [currentDB, setCurrentDB] = useState<IDB>()
   const [activeKey, setActiveKey] = useState<string>();
   const [windowList, setWindowList] = useState<ITabItem[]>([]);
-  const [treeData, setTreeData] = useState<ITreeNode[]>(basicsTree);
+  const [treeData, setTreeData] = useState<ITreeNode[]>();
+  const fixedTreeData = useRef<ITreeNode[]>();
   const [DBList, setDBList] = useState<IDB[]>();
+  const [openDropdown, setOpenDropdown] = useState(false)
 
   useEffect(() => {
     if (!params.id) return
@@ -217,24 +218,25 @@ export default memo<IProps>(function DatabasePage({ className }) {
       const tableList: ITreeNode[] = res.data?.map(item => {
         return {
           name: item.name,
-          type: TreeNodeType.TABLE,
+          nodeType: TreeNodeType.TABLE,
           key: item.name,
           children: [
             {
               key: '1',
               name: '列',
-              type: TreeNodeType.LINE,
-              children: toTreeList(item.columnList, 'name', 'type', TreeNodeType.LINE)
+              nodeType: TreeNodeType.LINE,
+              children: toTreeList(item.columnList, 'name', 'nodeType', TreeNodeType.LINE)
             },
             {
-              key: '1',
+              key: '2',
               name: '索引',
-              type: TreeNodeType.INDEXES,
-              children: toTreeList(item.indexList, 'name', 'type', TreeNodeType.INDEXES)
+              nodeType: TreeNodeType.INDEXES,
+              children: toTreeList(item.indexList, 'name', 'nodeType', TreeNodeType.INDEXES)
             }
           ]
         }
       })
+      fixedTreeData.current = tableList
       setTreeData(tableList)
       return tableList
     })
@@ -257,7 +259,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const addWindowTab = (windowList: ITabItem[]) => {
     let p = {
       name: `Default Tab${windowList?.length + 1}`,
-      type: params.type.toUpperCase() as DatabaseTypeCode,
+      type: dataBaseType,
       dataSourceId: params.id,
       databaseName: currentDB?.name!,
       status: WindowTabStatus.DRAFT,
@@ -312,10 +314,14 @@ export default memo<IProps>(function DatabasePage({ className }) {
   };
 
   const searchTable = (value: string) => {
+    if (fixedTreeData.current?.length) {
+      setTreeData(approximateTreeNode(fixedTreeData.current, value));
+    }
   }
 
   const DBListMenu = () => {
     const switchDB = (item: IDB) => {
+      setOpenDropdown(false)
       if (item.name !== currentDB?.name) {
         setCurrentDB(item)
         getTableList(item)
@@ -337,36 +343,38 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   return <>
     <div className={classnames(className, styles.box)}>
-      <div ref={letfRef} className={styles.aside}>
-        <div className={styles.header}>
-          <Dropdown overlay={DBListMenu} trigger={['click']}>
-            <div className={styles.currentNameBox}>
-              {
-                currentDB &&
-                <div className={styles.DBLogo} style={{ backgroundImage: `url(${databaseType[params.type.toUpperCase()].img})` }}></div>
-              }
-              <div className={styles.databaseName}>
-                {currentDB?.name}
+      <div ref={letfRef} className={styles.asideBox} id="database-left-aside">
+        <div className={styles.aside}>
+          <div className={styles.header}>
+            <Dropdown open={openDropdown} overlay={DBListMenu} trigger={['click']}>
+              <div className={styles.currentNameBox} onClick={() => { setOpenDropdown(true) }}>
+                {
+                  currentDB &&
+                  <div className={styles.DBLogo} style={{ backgroundImage: `url(${databaseType[params.type.toUpperCase()].img})` }}></div>
+                }
+                <div className={styles.databaseName}>
+                  {currentDB?.name}
+                </div>
+                {(DBList?.length || 0) > 1 && <Iconfont code="&#xe7b1;"></Iconfont>}
               </div>
-              {(DBList?.length || 0) > 1 && <Iconfont code="&#xe7b1;"></Iconfont>}
-            </div>
-          </Dropdown>
+            </Dropdown>
 
-          <div className={styles.searchBox}>
-            <SearchInput onChange={searchTable} placeholder='搜索'></SearchInput>
-            <div className={classnames(styles.refresh, styles.button)}>
-              <Iconfont code="&#xec08;"></Iconfont>
-            </div>
-            <div className={classnames(styles.create, styles.button)}>
-              <Iconfont code="&#xe631;"></Iconfont>
+            <div className={styles.searchBox}>
+              <SearchInput onChange={searchTable} placeholder='搜索'></SearchInput>
+              <div className={classnames(styles.refresh, styles.button)}>
+                <Iconfont code="&#xec08;"></Iconfont>
+              </div>
+              <div className={classnames(styles.create, styles.button)}>
+                <Iconfont code="&#xe631;"></Iconfont>
+              </div>
             </div>
           </div>
+          <div className={styles.overview}>
+            <Iconfont code="&#xe63d;"></Iconfont>
+            <span>{i18n('database.button.overview')}</span>
+          </div>
+          <Tree className={styles.tree} treeData={treeData}></Tree>
         </div>
-        <div className={styles.overview}>
-          <Iconfont code="&#xe63d;"></Iconfont>
-          <span>{i18n('database.button.overview')}</span>
-        </div>
-        <Tree className={styles.tree} treeData={treeData}></Tree>
       </div>
       <DraggableDivider callback={callback} volatileRef={letfRef} />
       <div className={styles.main}>

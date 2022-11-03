@@ -1,5 +1,6 @@
 import i18n, { isEN } from "@/i18n";
 import { TreeNodeType } from '@/utils/constants'
+import { ITreeNode } from '@/types'
 
 export function formatDate(date:any, fmt = 'yyyy-MM-dd') {
   if (!date) {
@@ -90,4 +91,24 @@ export function createRandom(minNum:number,maxNum:number){
 
 // 
 export function createRandomId(length:number){
+}
+
+// 模糊匹配树并且高亮
+export function approximateTreeNode(treeData: ITreeNode[], target: string, isDelete = true){
+  if(target){
+    const newTree:ITreeNode[] = JSON.parse(JSON.stringify(treeData));
+    newTree.map((item,index)=>{
+      if(item.children?.length){
+        item.children = approximateTreeNode(item.children, target,false);
+      }
+      if(item.name?.toUpperCase()?.indexOf(target?.toUpperCase()) == -1 && isDelete){
+        delete newTree[index];
+      }else{
+        item.name = item.name?.replace(target,`<span style='color:red;'>${target}</span>`);
+      }
+    })
+    return newTree.filter(i=>i)
+  }else{
+    return treeData
+  }
 }

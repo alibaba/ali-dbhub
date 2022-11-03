@@ -28,7 +28,7 @@ export interface IConnectionBase{
   envType: string;
 }
 export interface IHistoryRecord{
-  id?: number;
+  id?: string;
   name: string;
   dataSourceId: string;
   databaseName: string;
@@ -54,7 +54,7 @@ export interface ITreeNode{
   key: string;
   name: string;
   nodeType: TreeNodeType;
-  dataType: string;
+  dataType?: string;
   isLeaf?: boolean;
   children?: ITreeNode[];
 }

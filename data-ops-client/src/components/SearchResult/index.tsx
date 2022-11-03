@@ -37,7 +37,7 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
     }
     return
   }
-  const [columns, setColumns] = useState();
+  const [isUnfold, setIsUnfold] = useState(true)
 
   const renderStartTime = (text: string) => {
     return formatDate(text, 'yyyy-MM-dd hh:mm:ss')
@@ -70,6 +70,19 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
     return list
   }
 
+  const moveLeftAside = () => {
+    const databaseLeftAside = document.getElementById('database-left-aside');
+    if (databaseLeftAside) {
+      if (databaseLeftAside.offsetWidth === 0) {
+        databaseLeftAside.style.width = '250px'
+        setIsUnfold(true)
+      } else {
+        databaseLeftAside.style.width = '0px'
+        setIsUnfold(false)
+      }
+    }
+  }
+
   return <div className={classnames(className, styles.box)}>
     <div className={styles.resultHeader}>
       <Tabs
@@ -87,7 +100,7 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
       </LoadingContent>
     </div>
     <div className={styles.footer}>
-      <div className={styles.iconBox}>
+      <div className={classnames({ [styles.reversalIconBox]: !isUnfold }, styles.iconBox)} onClick={moveLeftAside}>
         <Iconfont code='&#xeb93;'></Iconfont>
       </div>
       <div>
