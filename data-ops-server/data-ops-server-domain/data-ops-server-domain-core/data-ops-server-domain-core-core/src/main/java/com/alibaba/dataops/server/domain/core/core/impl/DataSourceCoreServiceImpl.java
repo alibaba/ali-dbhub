@@ -148,7 +148,6 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
             throw new BusinessException(DatasourceErrorEnum.DATASOURCE_TEST_ERROR);
         }
-        // TODO 关闭连接
         return ActionResult.isSuccess();
     }
 
