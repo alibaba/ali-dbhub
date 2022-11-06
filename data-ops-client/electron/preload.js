@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('myAPI', {
   startServerForSpawn: () => {
     const path1 = path.join(__dirname, `app/${appName}`);
     console.log('path1', path1);
-    const ls = spawn('./jre/Contents/Home/bin/java', ['-jar', path1]);
+    const ls = spawn(path.join(__dirname, 'jre/Contents/Home/bin/java')  , ['-jar', path1]);
     ls.stdout.on('data', (buffer) => {
       console.log(buffer.toString('utf8'));
       const data = buffer.toString('utf8');

@@ -358,7 +358,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
       dataSourceId: params.id,
       databaseName: currentDB?.name!,
       status: WindowTabStatus.DRAFT,
-      sql: 'SELECT * FROM'
+      ddl: 'SELECT * FROM'
     }
     historyServer.saveWindowTab(p).then(res => {
       setWindowList([

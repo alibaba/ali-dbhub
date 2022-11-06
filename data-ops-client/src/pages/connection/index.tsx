@@ -326,13 +326,13 @@ export default memo<IProps>(function ConnectionPage(props) {
           >
             <Input.Password />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             wrapperCol={{ offset: 5 }}
             label={false}
             name="savePassword"
           >
             <Checkbox onChange={onChange}>保存密码</Checkbox>
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item wrapperCol={{ offset: 0 }}>
             <div className={styles.formFooter}>
               <div className={styles.test}>

@@ -15,7 +15,7 @@ const save = createRequest<IConnectionBase, void>('/api/connection/manage/create
 
 
 // TODO: 没有找到测试连接接口
-const test = createRequest<IConnectionBase, void>('/api/connection/manage/create',{method:'post'});
+const test = createRequest<IConnectionBase, void>('/api/connection/test',{});
 
 const update = createRequest<IConnectionBase, void>('/api/connection/manage/update',{method:'put'});
 
