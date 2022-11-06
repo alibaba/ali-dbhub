@@ -55,7 +55,7 @@ public class DataDataSource implements DataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+        return DriverManager.getConnection(url.trim(), username, password);
     }
 
     @Override
