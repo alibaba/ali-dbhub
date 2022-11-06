@@ -17,8 +17,11 @@ import historyServer from '@/service/history';
 import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
 import { IConnectionBase, ITreeNode, IWindowTab, IDB } from '@/types'
-import { toTreeList, createRandom, approximateTreeNode } from '@/utils/index'
+import { toTreeList, createRandom, approximateTreeNode, getLocationHash } from '@/utils/index'
 import { databaseType, DatabaseTypeCode, TreeNodeType, WindowTabStatus } from '@/utils/constants'
+const monaco = require('monaco-editor/esm/vs/editor/editor.api');
+import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
+const { keywords } = language;
 
 interface IProps {
   className?: any;
@@ -31,32 +34,16 @@ interface ITabItem extends IWindowTab {
 const basicsTree: ITreeNode[] = []
 
 export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData: any, activeTabKey: string, windowTab: IWindowTab }) {
-  const params: { id: string, type: string } = useParams()
-  const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode
+  const params: { id: string, type: string } = useParams();
+  const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode;
   const [manageResultDataList, setManageResultDataList] = useState<any>();
-  const [editorHintData, setEditorHintData] = useState<any>();
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
   const monacoEditor = useRef<any>(null);
+  const editorHintData = useRef<any>(null);
 
   useEffect(() => {
     connectConsole();
-    disposalEditorHintData();
   }, [])
-
-  const disposalEditorHintData = () => {
-    try {
-      const editorHintData: any = {}
-      treeData.map((item: any) => {
-        editorHintData[item.name] = item.children[0].children.map((item: any) => {
-          return item.name
-        })
-      })
-      setEditorHintData(editorHintData)
-    }
-    catch {
-      setEditorHintData({})
-    }
-  }
 
   const connectConsole = () => {
     let p = {
@@ -132,8 +119,8 @@ export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData:
       </div>
       <div ref={monacoEditorBox} className={styles.monacoEditor}>
         {
-          editorHintData &&
-          <MonacoEditor hintData={editorHintData} id={windowTab.id!} defaultValue={windowTab.sql} getEditor={getEditor}></MonacoEditor>
+          // editorHintData.current &&
+          <MonacoEditor id={windowTab.id!} defaultValue={windowTab.sql} getEditor={getEditor}></MonacoEditor>
         }
       </div>
       <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
@@ -155,7 +142,103 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [treeData, setTreeData] = useState<ITreeNode[]>();
   const fixedTreeData = useRef<ITreeNode[]>();
   const [DBList, setDBList] = useState<IDB[]>();
-  const [openDropdown, setOpenDropdown] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const monacoHint = useRef<any>(null);
+  const editorHintData = useRef<any>(null);
+
+
+  const closeDropdownFn = () => {
+    setOpenDropdown(false)
+  }
+
+  const disposalEditorHintData = (tableList: any) => {
+    try {
+      const myEditorHintData: any = {}
+      tableList?.map((item: any) => {
+        myEditorHintData[item.name] = item.children[0].children.map((item: any) => {
+          return item.name
+        })
+      })
+      editorHintData.current = myEditorHintData
+    }
+    catch {
+      editorHintData.current = {}
+    }
+  }
+
+  const registerCompletion = () => {
+    monacoHint.current = monaco.languages.registerCompletionItemProvider('sql', {
+      triggerCharacters: ['.', ...keywords],
+      provideCompletionItems: (model: any, position: any) => {
+        let suggestions: any = []
+        const { lineNumber, column } = position
+        const textBeforePointer = model.getValueInRange({
+          startLineNumber: lineNumber,
+          startColumn: 0,
+          endLineNumber: lineNumber,
+          endColumn: column,
+        })
+
+        const tokens = textBeforePointer.trim().split(/\s+/)
+        const lastToken = tokens[tokens.length - 1] // 获取最后一段非空字符串
+
+        if (lastToken.endsWith('.')) {
+          const tokenNoDot = lastToken.slice(0, lastToken.length - 1)
+          if (Object.keys(editorHintData.current).includes(tokenNoDot)) {
+            suggestions = [...getTableSuggest(tokenNoDot)]
+          }
+        } else if (lastToken === '.') {
+          suggestions = []
+        } else {
+          suggestions = [...getDBSuggest(), ...getSQLSuggest()]
+        }
+        console.log(suggestions)
+        return {
+          suggestions
+        }
+      },
+    })
+  }
+
+  // 获取 SQL 语法提示
+  const getSQLSuggest = () => {
+    return keywords.map((key: any) => ({
+      label: key,
+      kind: monaco.languages.CompletionItemKind.Enum,
+      insertText: key,
+    }))
+  }
+
+  // 获取DB数据
+  const getDBSuggest = () => {
+    return Object.keys(editorHintData.current).map((key) => ({
+      label: key,
+      kind: monaco.languages.CompletionItemKind.Constant,
+      insertText: key,
+    }))
+  }
+
+  // 获取Table数据
+  const getTableSuggest = (dbName: any) => {
+    const tableNames = editorHintData.current[dbName]
+    if (!tableNames) {
+      return []
+    }
+    return tableNames.map((name: any) => ({
+      label: name,
+      kind: monaco.languages.CompletionItemKind.Constant,
+      insertText: name,
+    }))
+  }
+
+  useEffect(() => {
+    if (openDropdown) {
+      document.documentElement.addEventListener('click', closeDropdownFn)
+    }
+    return () => {
+      document.documentElement.removeEventListener('click', closeDropdownFn)
+    }
+  }, [openDropdown])
 
   useEffect(() => {
     if (!params.id) return
@@ -170,8 +253,17 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   useEffect(() => {
     if (!DBList?.length) return
-    setCurrentDB(DBList?.[0])
-    getTableList(DBList?.[0])
+    const locationHash: any = getLocationHash()
+    console.log(locationHash)
+    DBList.map(item => {
+      if (locationHash?.databaseName && item.name == locationHash?.databaseName) {
+        setCurrentDB(item)
+        getTableList(item)
+      } else {
+        setCurrentDB(DBList?.[0])
+        getTableList(DBList?.[0])
+      }
+    })
   }, [DBList])
 
   const getWindowList = () => {
@@ -235,8 +327,12 @@ export default memo<IProps>(function DatabasePage({ className }) {
           ]
         }
       })
+
       fixedTreeData.current = tableList
       setTreeData(tableList)
+      monacoHint.current?.dispose()
+      disposalEditorHintData(tableList)
+      registerCompletion();
       return tableList
     })
 
@@ -346,7 +442,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
         <div className={styles.aside}>
           <div className={styles.header}>
             <Dropdown open={openDropdown} overlay={DBListMenu} trigger={['click']}>
-              <div className={styles.currentNameBox} onClick={() => { setOpenDropdown(true) }}>
+              <div className={styles.currentNameBox} onClick={(event) => { event.stopPropagation(); setOpenDropdown(true) }}>
                 {
                   currentDB &&
                   <div className={styles.DBLogo} style={{ backgroundImage: `url(${databaseType[params.type.toUpperCase()].img})` }}></div>
@@ -360,12 +456,12 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
             <div className={styles.searchBox}>
               <SearchInput onChange={searchTable} placeholder='搜索'></SearchInput>
-              <div className={classnames(styles.refresh, styles.button)}>
+              {/* <div className={classnames(styles.refresh, styles.button)}>
                 <Iconfont code="&#xec08;"></Iconfont>
               </div>
               <div className={classnames(styles.create, styles.button)}>
                 <Iconfont code="&#xe631;"></Iconfont>
-              </div>
+              </div> */}
             </div>
           </div>
           <div className={styles.overview}>

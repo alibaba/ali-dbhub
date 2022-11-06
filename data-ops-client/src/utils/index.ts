@@ -112,3 +112,16 @@ export function approximateTreeNode(treeData: ITreeNode[], target: string, isDel
     return treeData
   }
 }
+
+export function getLocationHash(){
+    const righthash = location.hash.split('?')[1]
+    const params:any = {}
+    if (righthash) {
+      const arr = righthash.split('&')
+      arr.map(item => {
+        const splitRes = item.split('=')
+        params[splitRes[0]] = splitRes[1]
+      })
+    }
+    return params
+}

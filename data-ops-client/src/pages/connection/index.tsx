@@ -152,6 +152,17 @@ export default memo<IProps>(function ConnectionPage(props) {
 
   const RenderCard = ({ item }: { item: IConnectionBase }) => {
     const [openDropdown, setOpenDropdown] = useState(false);
+    const closeDropdownFn = () => {
+      setOpenDropdown(false);
+    }
+    useEffect(() => {
+      if (openDropdown) {
+        document.documentElement.addEventListener('click', closeDropdownFn);
+      }
+      return () => {
+        document.documentElement.removeEventListener('click', closeDropdownFn);
+      }
+    }, [openDropdown])
 
     const renderMenu = (rowData: IConnectionBase) => {
       const editConnection = () => {
@@ -185,12 +196,11 @@ export default memo<IProps>(function ConnectionPage(props) {
           case handleType.CLONE:
             return cloneConnection();
         }
-        setOpenDropdown(false);
       }
       return <Menu>
         {
-          menuList.map((item) => {
-            return <MenuItem>
+          menuList.map((item, index) => {
+            return <MenuItem key={index}>
               <span onClick={clickMenuList.bind(null, item)}>
                 <Iconfont code={item.icon!}></Iconfont>
                 {item.title}
@@ -215,7 +225,7 @@ export default memo<IProps>(function ConnectionPage(props) {
         !onlyList &&
         <div className={styles.right}>
           <Dropdown open={openDropdown} overlay={renderMenu(item)} trigger={['hover']}>
-            <a onClick={() => { setOpenDropdown(true) }}>
+            <a onClick={(event) => { event.stopPropagation(); setOpenDropdown(true) }}>
               <div className={styles.moreActions}>
                 <Iconfont code="&#xe601;" />
               </div>
@@ -250,7 +260,7 @@ export default memo<IProps>(function ConnectionPage(props) {
           threshold={200}
         >
           <div className={styles.connectionList}>
-            {connectionList?.map(item => <RenderCard item={item}></RenderCard>)}
+            {connectionList?.map(item => <RenderCard key={item.id} item={item}></RenderCard>)}
           </div>
         </ScrollLoading>
       </div>

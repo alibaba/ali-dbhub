@@ -16,7 +16,6 @@ interface IProps {
   height?: number;
   getEditor: any;
   defaultValue: string | undefined;
-  hintData: any;
 }
 
 // export const hintData: any = {
@@ -25,14 +24,12 @@ interface IProps {
 // }
 
 export default memo(function MonacoEditor(props: IProps) {
-  const { defaultValue, className, getEditor, id = 0, hintData } = props;
+  const { defaultValue, className, getEditor, id = 0 } = props;
   const [editor, setEditor] = useState<any>();
-  const monacoHint = useRef<any>(null);
   const themeColor = useTheme();
 
 
   useEffect(() => {
-    registerCompletion();
     const editor = monaco.editor.create(document.getElementById(`monaco-editor-${id}`)!, {
       value: '',
       language: 'sql',
@@ -80,72 +77,11 @@ export default memo(function MonacoEditor(props: IProps) {
         // 'editor.inactiveSelectionBackground': '#88000015'
       }
     });
-    return () => {
-      monacoHint.current?.dispose()
-      editor.dispose()
-    }
   }, [])
 
   useEffect(() => {
     monaco.editor.setTheme(themeColor == 'dark' ? 'BlackTheme' : 'Default');
   }, [themeColor])
-
-  const registerCompletion = () => {
-
-    monacoHint.current = monaco.languages.registerCompletionItemProvider('sql', {
-      triggerCharacters: ['.', ...keywords],
-      provideCompletionItems: (model: any, position: any) => {
-        let suggestions: any = []
-        const { lineNumber, column } = position
-        const textBeforePointer = model.getValueInRange({
-          startLineNumber: lineNumber,
-          startColumn: 0,
-          endLineNumber: lineNumber,
-          endColumn: column,
-        })
-
-        const tokens = textBeforePointer.trim().split(/\s+/)
-        const lastToken = tokens[tokens.length - 1] // 获取最后一段非空字符串
-
-        if (lastToken.endsWith('.')) {
-          const tokenNoDot = lastToken.slice(0, lastToken.length - 1)
-          if (Object.keys(hintData).includes(tokenNoDot)) {
-            suggestions = [...getTableSuggest(tokenNoDot)]
-          }
-        } else if (lastToken === '.') {
-          suggestions = []
-        } else {
-          suggestions = [...getDBSuggest(), ...getSQLSuggest()]
-        }
-        console.log(suggestions)
-        return {
-          suggestions
-        }
-      },
-    })
-  }
-
-  // 获取DB数据
-  const getDBSuggest = () => {
-    return Object.keys(hintData).map((key) => ({
-      label: key,
-      kind: monaco.languages.CompletionItemKind.Constant,
-      insertText: key,
-    }))
-  }
-
-  // 获取Table数据
-  const getTableSuggest = (dbName: any) => {
-    const tableNames = hintData[dbName]
-    if (!tableNames) {
-      return []
-    }
-    return tableNames.map((name: any) => ({
-      label: name,
-      kind: monaco.languages.CompletionItemKind.Constant,
-      insertText: name,
-    }))
-  }
 
   // 获取 SQL 语法提示
   const getSQLSuggest = () => {
