@@ -38,7 +38,7 @@ export function TreeNode(props: TreeNodeIProps) {
 
   //展开-收起
   const handleClick = (data: ITreeNode) => {
-    if (!showChildren && !data.children) {
+    if (!showChildren && !data.children && loadData) {
       setIsLoading(true)
     }
 

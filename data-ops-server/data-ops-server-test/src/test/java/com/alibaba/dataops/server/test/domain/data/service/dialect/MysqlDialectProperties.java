@@ -28,6 +28,11 @@ public class MysqlDialectProperties implements DialectProperties {
     }
 
     @Override
+    public String getErrorUrl() {
+        return "jdbc:mysql://error.rm-8vb099vo8309mcngk.mysql.zhangbei.rds.aliyuncs.com:3306";
+    }
+
+    @Override
     public String getUsername() {
         return "grow";
     }
@@ -56,7 +61,6 @@ public class MysqlDialectProperties implements DialectProperties {
             + ") COMMENT ='测试表';";
     }
 
-
     @Override
     public String getDropTableSql(String tableName) {
         return "drop table " + tableName + ";";
@@ -73,6 +77,12 @@ public class MysqlDialectProperties implements DialectProperties {
         return "select *\n"
             + "from " + tableName + "\n"
             + "where `id` = '" + id + "';";
+    }
+
+    @Override
+    public String getTableNotFoundSqlById(String tableName) {
+        return "select *\n"
+            + "from " + tableName + "_notfound;";
     }
 
     @Override

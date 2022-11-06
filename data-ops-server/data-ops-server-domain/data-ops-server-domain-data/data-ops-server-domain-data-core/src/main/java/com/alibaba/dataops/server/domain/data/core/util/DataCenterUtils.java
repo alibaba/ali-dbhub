@@ -10,7 +10,7 @@ import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.core.dialect.SqlExecutor;
-import com.alibaba.dataops.server.domain.data.core.model.DataSourceWrapper;
+import com.alibaba.dataops.server.domain.data.core.model.DataDataSource;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.excption.CommonErrorEnum;
@@ -46,7 +46,7 @@ public class DataCenterUtils implements InitializingBean {
      * 数据源
      * key: dataSourceId
      */
-    public static final Map<Long, DataSourceWrapper> DATA_SOURCE_CACHE = Maps.newConcurrentMap();
+    public static final Map<Long, DataDataSource> DATA_SOURCE_CACHE = Maps.newConcurrentMap();
 
     /**
      * 数据执行模板列表
@@ -108,11 +108,11 @@ public class DataCenterUtils implements InitializingBean {
      * @return
      */
     public static DbTypeEnum getDbTypeByDataSourceId(Long dataSourceId) {
-        DataSourceWrapper dataSourceWrapper = DATA_SOURCE_CACHE.get(dataSourceId);
-        if (dataSourceWrapper == null) {
+        DataDataSource dataDataSource = DATA_SOURCE_CACHE.get(dataSourceId);
+        if (dataDataSource == null) {
             throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
         }
-        return dataSourceWrapper.getDbType();
+        return dataDataSource.getDbType();
     }
 
     /**

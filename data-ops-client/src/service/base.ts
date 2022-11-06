@@ -31,7 +31,7 @@ const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
 const locaServiceUrl = 'http://127.0.0.1:8080';
 
 const baseURL = location.href.indexOf('dist/index.html') > -1 ? locaServiceUrl : location.origin;
-
+console.log(baseURL)
 const errorHandler = (error: ResponseError) => {
   const { response } = error;
   if(!response) return

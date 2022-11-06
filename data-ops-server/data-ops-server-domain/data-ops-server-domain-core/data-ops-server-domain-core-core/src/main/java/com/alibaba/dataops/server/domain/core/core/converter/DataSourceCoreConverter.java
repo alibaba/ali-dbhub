@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.alibaba.dataops.server.domain.core.api.model.DataSourceDTO;
 import com.alibaba.dataops.server.domain.core.api.param.ConsoleConnectParam;
-import com.alibaba.dataops.server.domain.core.api.param.DataSourceExecuteParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceManageCreateParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceTestParam;
 import com.alibaba.dataops.server.domain.core.api.param.DataSourceUpdateParam;
@@ -69,9 +68,11 @@ public abstract class DataSourceCoreConverter {
      * @return
      */
     @Mappings({
-        @Mapping(source = "type", target = "dbType")
+        @Mapping(source = "type", target = "dbType"),
+        @Mapping(source = "user", target = "username")
     })
-    public abstract DataSourceCreateParam param2param(DataSourceTestParam dataSourceTestParam);
+    public abstract com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceTestParam param2param(DataSourceTestParam dataSourceTestParam);
+
 
     /**
      * 模型转换

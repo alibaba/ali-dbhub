@@ -18,6 +18,7 @@ import com.alibaba.dataops.server.domain.data.api.service.JdbcTemplateDataServic
 import com.alibaba.dataops.server.test.common.BaseTest;
 import com.alibaba.dataops.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dataops.server.test.domain.data.utils.TestUtils;
+import com.alibaba.fastjson2.JSON;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -97,7 +98,7 @@ public class JdbcTemplateDataServiceTest extends BaseTest {
             Assertions.assertTrue(executeResult.getSuccess(), "查询数据失败");
             List<CellDTO> headerList = executeResult.getHeaderList();
             Assertions.assertEquals(4L, headerList.size(), "查询数据失败");
-            Assertions.assertEquals("ID", headerList.get(0).getStringValue(), "查询数据失败");
+            Assertions.assertEquals(dialectProperties.toCase("ID"), headerList.get(0).getStringValue(), "查询数据失败");
 
             List<List<CellDTO>> dataList = executeResult.getDataList();
             Assertions.assertEquals(1L, dataList.size(), "查询数据失败");
@@ -106,6 +107,16 @@ public class JdbcTemplateDataServiceTest extends BaseTest {
             Assertions.assertEquals(DATE.getTime(), data1.get(1).getDateValue(), "查询数据失败");
             Assertions.assertEquals(NUMBER, data1.get(2).getBigDecimalValue().longValue(), "查询数据失败");
             Assertions.assertEquals(STRING, data1.get(3).getStringValue(), "查询数据失败");
+
+            // 异常sql
+            templateQueryParam = new TemplateExecuteParam();
+            templateQueryParam.setConsoleId(consoleId);
+            templateQueryParam.setDataSourceId(dataSourceId);
+            templateQueryParam.setSql(dialectProperties.getTableNotFoundSqlById(TABLE_NAME));
+            executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
+            log.info("异常sql执行结果:{}", JSON.toJSONString(executeResult));
+            Assertions.assertFalse(executeResult.getSuccess(),"异常sql错误");
+            Assertions.assertNotNull(executeResult.getMessage(),"异常sql错误");
         }
     }
 

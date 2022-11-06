@@ -1,6 +1,5 @@
 package com.alibaba.dataops.server.tools.base.excption;
 
-
 import com.alibaba.dataops.server.tools.base.enums.BaseErrorEnum;
 
 import lombok.Data;
@@ -43,5 +42,10 @@ public class SystemException extends RuntimeException {
 
     public SystemException(BaseErrorEnum errorEnum, String message) {
         this(errorEnum.getCode(), message);
+    }
+
+    public SystemException(BaseErrorEnum errorEnum, Throwable throwable) {
+        super(errorEnum.getDescription(), throwable);
+        this.code = errorEnum.getCode();
     }
 }
