@@ -71,7 +71,7 @@ request.interceptors.request.use((url, options) => {
 export default function createRequest<P = void, R = {}>(url:string, options:IOptions){
   const {method = 'get', mock = false} = options;
   // const _baseURL = mock ? 'mockUrl' : mockUrl;
-  const _baseURL = 'http://127.0.0.1:8080/'
+  const _baseURL = 'http://127.0.0.1:8080'
 
   return function(params: any){
     const paramsInUrl: string[] = [];
