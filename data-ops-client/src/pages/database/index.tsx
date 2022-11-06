@@ -353,7 +353,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   const addWindowTab = (windowList: ITabItem[]) => {
     let p = {
-      name: `Default Tab${windowList?.length + 1}`,
+      name: `Default Tab`,
       type: dataBaseType,
       dataSourceId: params.id,
       databaseName: currentDB?.name!,

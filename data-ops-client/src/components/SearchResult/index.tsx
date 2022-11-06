@@ -143,6 +143,6 @@ export function TableBox({ headerList, dataList, className }: ITableProps) {
   }, [dataList])
 
   return <div className={classnames(className, styles.tableBox)}>
-    <Table pagination={false} columns={columns} dataSource={tableData} size="small" />
+    <Table bordered pagination={false} columns={columns} dataSource={tableData} size="small" />
   </div>
 }
