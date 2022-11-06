@@ -11,6 +11,7 @@ import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
 import com.alibaba.dataops.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.PagerUtils;
+import com.alibaba.fastjson2.JSON;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,16 @@ public class JdbcTemplateDataServiceImpl implements JdbcTemplateDataService {
         JdbcDataTemplate jdbcDataTemplate = DataCenterUtils.getJdbcDataTemplate(param.getDataSourceId(),
             param.getConsoleId(), param.getDatabaseName());
         String sql = param.getSql();
-        ExecuteResultDTO executeResult = null;
+        ExecuteResultDTO executeResult;
         try {
             executeResult = jdbcDataTemplate.execute(sql, param.getPageSize());
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            log.warn("执行sql:{}异常", JSON.toJSONString(param), e);
+            executeResult = ExecuteResultDTO.builder()
+                .sql(param.getSql())
+                .success(Boolean.FALSE)
+                .message(e.getMessage())
+                .build();
         }
         return DataResult.of(executeResult);
     }

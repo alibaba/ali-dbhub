@@ -28,6 +28,11 @@ public class H2DialectProperties implements DialectProperties {
     }
 
     @Override
+    public String getErrorUrl() {
+        return "jdbc:h2:tcp://error:8084/error";
+    }
+
+    @Override
     public String getUsername() {
         return null;
     }
@@ -77,6 +82,12 @@ public class H2DialectProperties implements DialectProperties {
         return "select *\n"
             + "from " + tableName + "\n"
             + "where `id` = '" + id + "';";
+    }
+
+    @Override
+    public String getTableNotFoundSqlById(String tableName) {
+        return "select *\n"
+            + "from " + tableName + "_notfound;";
     }
 
     @Override

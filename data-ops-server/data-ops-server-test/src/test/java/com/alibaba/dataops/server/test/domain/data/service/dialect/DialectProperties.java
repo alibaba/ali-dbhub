@@ -26,6 +26,13 @@ public interface DialectProperties {
     String getUrl();
 
     /**
+     * 异常连接
+     *
+     * @return
+     */
+    String getErrorUrl();
+
+    /**
      * 用户名
      *
      * @return
@@ -85,6 +92,13 @@ public interface DialectProperties {
      * @return
      */
     String getSelectSqlById(String tableName, Long id);
+
+    /**
+     * 获取一条表结构不存在的sql
+     *
+     * @return
+     */
+    String getTableNotFoundSqlById(String tableName);
 
     /**
      * 转换大小写

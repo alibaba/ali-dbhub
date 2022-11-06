@@ -16,6 +16,7 @@ import com.alibaba.dataops.server.domain.core.api.service.DataSourceCoreService;
 import com.alibaba.dataops.server.domain.core.core.converter.DataSourceCoreConverter;
 import com.alibaba.dataops.server.domain.core.repository.entity.DataSourceDO;
 import com.alibaba.dataops.server.domain.core.repository.mapper.DataSourceMapper;
+import com.alibaba.dataops.server.domain.data.api.model.DataSourceConnectDTO;
 import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
@@ -47,6 +48,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -140,22 +142,22 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
 
     @Override
     public ActionResult test(DataSourceTestParam param) {
-        com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam dataSourceCreateParam
+        com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceTestParam dataSourceTestParam
             = dataSourceCoreConverter.param2param(param);
-        ActionResult actionResult = dataSourceDataService.create(dataSourceCreateParam);
-        if (!actionResult.getSuccess()) {
+        DataSourceConnectDTO dataSourceConnect = dataSourceDataService.test(dataSourceTestParam).getData();
+        if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
             throw new BusinessException(DatasourceErrorEnum.DATASOURCE_TEST_ERROR);
         }
         // TODO 关闭连接
-        return actionResult;
+        return ActionResult.isSuccess();
     }
 
     @Override
     public ListResult<DatabaseDTO> attach(Long id) {
         DataSourceDO dataSourceDO = dataSourceMapper.selectById(id);
         DataSourceCreateParam param = dataSourceCoreConverter.do2param(dataSourceDO);
-        ActionResult actionResult = dataSourceDataService.create(param);
-        if (!actionResult.getSuccess()) {
+        DataSourceConnectDTO dataSourceConnect = dataSourceDataService.create(param).getData();
+        if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
             throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
         }
 

@@ -14,7 +14,7 @@ public enum DbTypeEnum implements BaseEnum<String> {
     /**
      * MySQL
      */
-    MYSQL("MySQL", "com.mysql.jdbc.Driver"),
+    MYSQL("MySQL", "com.mysql.cj.jdbc.Driver"),
 
     /**
      * Oracle
