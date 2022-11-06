@@ -16,7 +16,11 @@
 <body>
   <div id="root"></div>
   <script>
-
+    console.log('run startServer');
+    console.log('window===>', window.myAPI)
+    if (window.myAPI) {
+      window.myAPI.startServerForSpawn();
+    }
   </script>
 </body>
 
