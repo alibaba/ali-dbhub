@@ -7,461 +7,21 @@ import { Dropdown } from 'antd';
 import { ITreeNode } from '@/types';
 import { TreeNodeType } from '@/utils/constants'
 import Menu, { IMenu } from '@/components/Menu'
+import StateIndicator from '@/components/StateIndicator'
+import LoadingContent from '../Loading/LoadingContent';
+import request from 'umi-request';
+import noData from '@/assets/search-no-data.png'
 
 interface IProps {
   className?: any;
-  treeData: ITreeNode[] | null;
-  loadData: Function;
+  treeData: ITreeNode[] | undefined;
+  loadData?: Function;
 }
-
-const treeList: ITreeNode[] = [
-  {
-    key: '0-1',
-    name: 'database',
-    type: TreeNodeType.DATABASE,
-    children: [
-      {
-        key: '0-1-1',
-        name: '表',
-        type: TreeNodeType.TABLE,
-        children: [
-          {
-            key: '1',
-            name: 'activity_audio_emp_recode',
-            type: TreeNodeType.TABLE,
-            children: [
-              {
-                key: '1',
-                name: '列(10)',
-                type: TreeNodeType.LINE,
-                children: [
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                ]
-              },
-              {
-                key: '1',
-                name: '索引(10)',
-                type: TreeNodeType.INDEXES,
-                children: [
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                ]
-              }
-            ],
-          },
-          {
-            key: '1',
-            name: 'activity_audio_emp_recode',
-            type: TreeNodeType.TABLE,
-            children: [
-              {
-                key: '1',
-                name: '列(10)',
-                type: TreeNodeType.LINE,
-                children: [
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                ]
-              },
-              {
-                key: '1',
-                name: '索引(10)',
-                type: TreeNodeType.INDEXES,
-                children: [
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                ]
-              }
-            ],
-          },
-          {
-            key: '1',
-            name: 'activity_audio_emp_recode',
-            type: TreeNodeType.TABLE,
-            children: [
-              {
-                key: '1',
-                name: '列(10)',
-                type: TreeNodeType.LINE,
-                children: [
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                ]
-              },
-              {
-                key: '1',
-                name: '索引(10)',
-                type: TreeNodeType.INDEXES,
-                children: [
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                ]
-              }
-            ],
-          },
-          {
-            key: '1',
-            name: 'activity_audio_emp_recode',
-            type: TreeNodeType.TABLE,
-            children: [
-              {
-                key: '1',
-                name: '列(10)',
-                type: TreeNodeType.LINE,
-                children: [
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'role_id',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'remark',
-                    type: TreeNodeType.LINE,
-                  },
-                  {
-                    key: '0-1',
-                    name: 'deleted',
-                    type: TreeNodeType.LINE,
-                  },
-                ]
-              },
-              {
-                key: '1',
-                name: '索引(10)',
-                type: TreeNodeType.INDEXES,
-                children: [
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                  {
-                    key: '1',
-                    name: 'idx_follower_id',
-                    type: TreeNodeType.INDEXES,
-                  },
-                ]
-              }
-            ],
-          },
-        ]
-      },
-      {
-        key: '0-1-1',
-        name: '查询',
-        type: TreeNodeType.SEARCH,
-        children: [
-          {
-            key: '1',
-            name: 'SQL1',
-            type: TreeNodeType.SAVE,
-          },
-          {
-            key: '1',
-            name: 'SQL2',
-            type: TreeNodeType.SAVE,
-          },
-          {
-            key: '1',
-            name: 'SQL3',
-            type: TreeNodeType.SAVE,
-          },
-        ]
-      }
-    ]
-  },
-];
-
 interface TreeNodeIProps {
   data: ITreeNode;
   level: number;
   show: boolean;
-  loadData: Function;
+  loadData?: Function;
 }
 
 
@@ -481,15 +41,20 @@ export function TreeNode(props: TreeNodeIProps) {
     if (!showChildren && !data.children) {
       setIsLoading(true)
     }
-    loadData(data).then((res: ITreeNode[]) => {
-      if (res?.length) {
-        data.children = res
-      }
-      setIsLoading(false)
-      setTimeout(() => {
-        setShowChildren(!showChildren);
-      }, 0);
-    })
+
+    if (loadData) {
+      loadData(data).then((res: ITreeNode[]) => {
+        if (res?.length) {
+          data.children = res
+        }
+        setIsLoading(false)
+        setTimeout(() => {
+          setShowChildren(!showChildren);
+        }, 0);
+      })
+    } else {
+      setShowChildren(!showChildren);
+    }
   };
 
   const renderMenu = () => {
@@ -510,8 +75,8 @@ export function TreeNode(props: TreeNodeIProps) {
     </div>
   }
 
-  const recognizeIcon = (type: TreeNodeType) => {
-    switch (type) {
+  const recognizeIcon = (nodeType: TreeNodeType) => {
+    switch (nodeType) {
       case TreeNodeType.TABLE:
         return '\ue63e';
       case TreeNodeType.DATABASE:
@@ -555,14 +120,17 @@ export function TreeNode(props: TreeNodeIProps) {
             </div>
           }
           <div className={styles.typeIcon}>
-            <Iconfont code={recognizeIcon(data.type)}></Iconfont>
+            <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
           </div>
-          <div className={styles.name}>{data.name}</div>
+          <div className={styles.contentText}>
+            <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
+            <div className={styles.type}>{data.dataType}</div>
+          </div>
         </div>
       </div>
     </Dropdown>
     {
-      data.children?.length &&
+      !!data.children?.length &&
       data.children.map((item: any, i: number) => {
         return (
           <TreeNode loadData={loadData} key={i} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
@@ -574,11 +142,18 @@ export function TreeNode(props: TreeNodeIProps) {
 
 export default function Tree(props: IProps) {
   const { className, treeData, loadData } = props;
+  const treeDataEmpty = () => {
+    return ''
+  }
   return (
     <div className={classnames(className, styles.box)}>
-      {treeData?.length && treeData.map((item) => {
-        return <TreeNode loadData={loadData} key={item.name} show={true} level={0} data={item}></TreeNode>
-      })}
+      <LoadingContent data={treeData} handleEmpty empty={treeDataEmpty()}>
+        {
+          treeData?.map((item) => {
+            return <TreeNode loadData={loadData} key={item.name} show={true} level={0} data={item}></TreeNode>
+          })
+        }
+      </LoadingContent>
     </div>
   );
 };

@@ -60,7 +60,6 @@ export default memo<IProps>(function ScrollLoading({ className, children, scroll
   // 填充数据
   const replenishData = (a: HTMLElement, b: HTMLElement) => {
     if (a.clientHeight <= b.clientHeight && !finishedRef.current) {
-      console.log(finishedRef.current)
       onReachBottomRef.current().then(() => {
         setTimeout(() => {
           replenishData(a, b);

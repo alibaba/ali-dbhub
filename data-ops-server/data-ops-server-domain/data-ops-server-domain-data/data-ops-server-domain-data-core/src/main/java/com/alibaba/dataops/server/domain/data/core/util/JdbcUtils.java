@@ -7,6 +7,10 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
@@ -101,6 +105,18 @@ public class JdbcUtils {
                 cell.setDateValue(EasyOptionalUtils.mapTo(rs.getDate(index), Date::getTime));
                 return cell;
             }
+        }
+        if (obj instanceof LocalDateTime) {
+            LocalDateTime localDateTime = (LocalDateTime)obj;
+            cell.setType(CellTypeEnum.DATA.getCode());
+            cell.setDateValue(localDateTime.toInstant(ZoneOffset.ofHours(+8)).toEpochMilli());
+            return cell;
+        }
+        if (obj instanceof LocalDate) {
+            LocalDate localDate = (LocalDate)obj;
+            cell.setType(CellTypeEnum.DATA.getCode());
+            cell.setDateValue(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
+            return cell;
         }
         if (obj instanceof Number) {
             cell.setType(CellTypeEnum.BIG_DECIMAL.getCode());

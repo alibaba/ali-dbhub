@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableIndexDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.SqlExecutor;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableColumnDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableIndexColumnDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableIndexDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorColumnQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorIndexQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorTablePageQueryParam;
@@ -17,7 +17,6 @@ import com.alibaba.dataops.server.tools.base.enums.YesOrNoEnum;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dataops.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dataops.server.tools.common.util.EasyCollectionUtils;
-import com.alibaba.dataops.server.tools.common.util.EasyEnumUtils;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -95,13 +94,15 @@ public class H2SqlExecutor implements SqlExecutor {
                     .comment(rs.getString("REMARKS"))
                     .build();
 
-                YesOrNoEnum nullable = EasyEnumUtils.getEnum(YesOrNoEnum.class, rs.getString("IS_NULLABLE"));
-                if (nullable != null) {
-                    column.setNullable(nullable.getCode());
+                if (YesOrNoEnum.YES.getCode().equalsIgnoreCase(rs.getString("IS_NULLABLE"))) {
+                    column.setNullable(YesOrNoEnum.YES.getCode());
+                } else {
+                    column.setNullable(YesOrNoEnum.NO.getCode());
                 }
-                YesOrNoEnum autoIncrement = EasyEnumUtils.getEnum(YesOrNoEnum.class, rs.getString("IS_IDENTITY"));
-                if (nullable != null) {
-                    column.setAutoIncrement(autoIncrement.getCode());
+                if (YesOrNoEnum.YES.getCode().equalsIgnoreCase(rs.getString("IS_IDENTITY"))) {
+                    column.setAutoIncrement(YesOrNoEnum.YES.getCode());
+                } else {
+                    column.setAutoIncrement(YesOrNoEnum.NO.getCode());
                 }
                 return column;
             }));
@@ -122,8 +123,7 @@ public class H2SqlExecutor implements SqlExecutor {
                 + "FROM INFORMATION_SCHEMA.INDEXES\n"
                 + "WHERE TABLE_NAME in (:tableNameList)\n"
                 + "  AND INDEX_SCHEMA = :databaseName\n"
-                + "  AND TABLE_SCHEMA = :databaseName"
-                + "        order by INDEX_NAME",
+                + "  AND TABLE_SCHEMA = :databaseName",
 
             queryParam,
             (rs, rowNum) -> {
@@ -132,10 +132,14 @@ public class H2SqlExecutor implements SqlExecutor {
                     .tableName(rs.getString("TABLE_NAME"))
                     .comment(rs.getString("REMARKS"))
                     .build();
-                H2IndexTypeEnum indexType = EasyEnumUtils.getEnum(H2IndexTypeEnum.class,
-                    rs.getString("INDEX_TYPE_NAME"));
-                if (indexType != null) {
-                    index.setType(indexType.getIndexType().getCode());
+
+                String indexTypeName = rs.getString("INDEX_TYPE_NAME");
+                if (H2IndexTypeEnum.PRIMARY_KEY.getCode().equalsIgnoreCase(indexTypeName)) {
+                    index.setType(H2IndexTypeEnum.PRIMARY_KEY.getIndexType().getCode());
+                } else if (H2IndexTypeEnum.UNIQUE.getCode().equalsIgnoreCase(indexTypeName)) {
+                    index.setType(H2IndexTypeEnum.UNIQUE.getIndexType().getCode());
+                } else {
+                    index.setType(H2IndexTypeEnum.NORMAL.getIndexType().getCode());
                 }
                 return index;
             });
@@ -161,10 +165,10 @@ public class H2SqlExecutor implements SqlExecutor {
                     .tableName(rs.getString("TABLE_NAME"))
                     .indexName(rs.getString("INDEX_NAME"))
                     .build();
-                H2CollationEnum collation = EasyEnumUtils.getEnum(H2CollationEnum.class,
-                    rs.getString("ORDERING_SPECIFICATION"));
-                if (collation != null) {
-                    column.setCollation(collation.getCollation().getCode());
+                if (H2CollationEnum.DESC.getCode().equalsIgnoreCase(rs.getString("ORDERING_SPECIFICATION"))) {
+                    column.setCollation(H2CollationEnum.DESC.getCollation().getCode());
+                } else {
+                    column.setCollation(H2CollationEnum.ASC.getCollation().getCode());
                 }
                 return column;
             });

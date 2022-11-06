@@ -50,6 +50,8 @@ const backgroundList = [
   // },
 ];
 
+let colorSchemeListeners: ((theme: string) => void)[] = [];
+
 export default memo<IProps>(function Setting({ className }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [lang, setLang] = useState(localStorage.getItem('lang'));
@@ -73,6 +75,8 @@ export default memo<IProps>(function Setting({ className }) {
     html.setAttribute('theme', item.code);
     localStorage.setItem('theme', item.code);
     setCurrentTheme(item.code)
+    colorSchemeListeners.forEach(t => t(item.code));
+
   }
 
   const changePrimaryColor = (item: any) => {
@@ -140,3 +144,7 @@ export default memo<IProps>(function Setting({ className }) {
     </>
   );
 });
+
+export function addColorSchemeListener(callback: (theme: string) => void) {
+  colorSchemeListeners.push(callback);
+}

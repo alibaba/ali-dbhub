@@ -3,6 +3,7 @@ package com.alibaba.dataops.server.domain.data.core.dialect;
 import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableColumnDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableIndexDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorColumnQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorIndexQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorTablePageQueryParam;

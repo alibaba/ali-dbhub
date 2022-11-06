@@ -11,7 +11,6 @@ import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
 import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
 import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dataops.server.tools.base.constant.EasyToolsConstant;
-import com.alibaba.druid.pool.DruidDataSource;
 
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
@@ -55,19 +54,19 @@ public class JdbcDataTemplate {
     /**
      * 数据库连接源
      */
-    private DruidDataSource druidDataSource;
+    private DataDataSource dataDataSource ;
 
     /**
      * 执行错误异常转换器
      */
     private SQLExceptionTranslator sqlExceptionTranslator;
 
-    public JdbcDataTemplate(Long dataSourceId, Long consoleId, Connection connection, DruidDataSource druidDataSource) {
+    public JdbcDataTemplate(Long dataSourceId, Long consoleId, Connection connection, DataDataSource dataDataSource ) {
         this.dataSourceId = dataSourceId;
         this.consoleId = consoleId;
         this.connection = connection;
-        this.druidDataSource = druidDataSource;
-        this.sqlExceptionTranslator = new SQLErrorCodeSQLExceptionTranslator(druidDataSource);
+        this.dataDataSource = dataDataSource;
+        this.sqlExceptionTranslator = new SQLErrorCodeSQLExceptionTranslator(dataDataSource);
     }
 
     /**

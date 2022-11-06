@@ -35,4 +35,9 @@ public class DdlVO {
      * @see com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum
      */
     private String type;
+
+    /**
+     * ddl内容
+     */
+    private String ddl;
 }

@@ -1,4 +1,4 @@
-import { DatabaseTypeCode, TreeNodeType} from '@/utils/constants'
+import { DatabaseTypeCode, TreeNodeType, WindowTabStatus,TableDataType} from '@/utils/constants'
 
 export interface IDatabase {
   name: string;
@@ -28,7 +28,7 @@ export interface IConnectionBase{
   envType: string;
 }
 export interface IHistoryRecord{
-  id?: number;
+  id?: string;
   name: string;
   dataSourceId: string;
   databaseName: string;
@@ -53,10 +53,52 @@ export interface ITable{
 export interface ITreeNode{
   key: string;
   name: string;
-  type: TreeNodeType;
+  nodeType: TreeNodeType;
+  dataType?: string;
   isLeaf?: boolean;
   children?: ITreeNode[];
 }
+export interface IDB {
+  name: string;
+  description: string;
+  count: number;
+}
+export interface IWindowTab {
+  id?:string;
+  name: string;
+  type: DatabaseTypeCode;
+  dataSourceId: string;
+  databaseName: string;
+  consoleId?: string;
+  status?: WindowTabStatus;
+  ddl?: string;
+  sql?:string;
+}
+
+export interface ITableHeaderItem {
+  type: TableDataType;
+  stringValue: string;
+}
+
+export interface ITableCellItem {
+  type: TableDataType;
+  stringValue: string;
+  dateValue: number;
+  byteValue: number[];
+  emptyValue: any;
+  bigDecimalValue: string;
+}
+
+export interface IManageResultData {
+  dataList: ITableCellItem[][];
+  headerList: ITableHeaderItem[];
+  description: string;
+  message: string;
+  sql: string;
+  success: boolean;
+
+}
+
 
 
 

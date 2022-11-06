@@ -20,8 +20,9 @@
 }
 
 .resultHeader{
+  flex-shrink: 0;
   overflow: scroll;
-  padding: 5px 10px 0px 10px;
+  padding: 0px 10px 0px 10px;
   background-color: var(--color-bg-200);
   border-bottom: 1px solid var(--color-border);
   &::-webkit-scrollbar {
@@ -48,6 +49,7 @@
 
 .resultContent{
   flex: 1;
+  width: 100%;
   position:relative;
   overflow: scroll;
 }
@@ -72,6 +74,10 @@
   }
 }
 
+.reversalIconBox{
+  transform: rotate(180deg);
+}
+
 .tableStatus{
   display: flex;
   align-items: center;
@@ -86,6 +92,23 @@
   .successDot{
     background-color: #52c41a;
   }
+}
+
+
+.tableBox{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  opacity: 0;
+  overflow: scroll;
+}
+
+.cursorTableBox{
+  z-index: 1;
+  opacity: 1;
 }
 
 

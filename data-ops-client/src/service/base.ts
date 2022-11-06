@@ -1,11 +1,12 @@
 import { extend, ResponseError } from 'umi-request';
 import { message } from 'antd';
 
-
 export interface IOptions{
   method?: "get" | 'post' | 'put' | 'delete';
   mock?: boolean;
 }
+
+console.log('location', location)
 
 // TODO:
 const codeMessage:{[errorCode:number]:string} = {
@@ -26,8 +27,11 @@ const codeMessage:{[errorCode:number]:string} = {
   504: '网关超时。',
 };
 
-// const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
-const mockUrl = 'http://localhost:8000';
+const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
+const locaServiceUrl = 'http://127.0.0.1:8080';
+
+// const baseURL = location.href.indexOf('dist/index.html') > -1 ? locaServiceUrl : mockUrl;
+const baseURL = location.origin;
 
 const errorHandler = (error: ResponseError) => {
   const { response } = error;
@@ -40,7 +44,7 @@ const errorHandler = (error: ResponseError) => {
 const request = extend({
   errorHandler,
   // prefix: '/api',
-  // credentials: 'include', // 默认请求是否带上cookie
+  credentials: 'include', // 默认请求是否带上cookie
   headers:{
     'Content-Type': 'application/json' 
   }
@@ -54,14 +58,10 @@ request.interceptors.request.use((url, options) => {
   };
 });
 
-
-
 // request.interceptors.response.use(async response => {
 //   const res = await response.clone().json();
-//   console.log(response)
 //   const { code, message } = res;
 //   if (code !== 0) {
-//     console.log('error', res);
 //     message.error(`${code}: ${message}`)
 //     return response;
 //   }
@@ -70,10 +70,8 @@ request.interceptors.request.use((url, options) => {
 
 export default function createRequest<P = void, R = {}>(url:string, options:IOptions){
   const {method = 'get', mock = false} = options;
-  // const _baseURL = mock ? 'mockUrl' : mockUrl;
-  const _baseURL = 'http://127.0.0.1:8080'
-
-  return function(params: any){
+  const _baseURL = mock ? mockUrl : baseURL
+  return function(params: P){
     const paramsInUrl: string[] = [];
     const _url = url.replace(/:(.+?)\b/, (_, name:string) => {
       const value = params[name];
@@ -95,20 +93,22 @@ export default function createRequest<P = void, R = {}>(url:string, options:IOpt
           break
         case 'delete':
           dataName = 'params';
+          break
+        case 'post':
+          dataName = 'data';
           break;
         case 'put':
           dataName = 'data';
           break;
-        case 'post':
-          dataName = 'data';
-          break;
       }
+      
       request[method](`${_baseURL}${_url}`,{[dataName]: params})
       .then(res=>{
         if(!res) return
         const {success, errorCode, errorMessage, data} = res
         if(!success){
           message.error(`${errorCode}: ${errorMessage}`)
+          reject(`${errorCode}: ${errorMessage}`)
         }
         resolve(data)
       })

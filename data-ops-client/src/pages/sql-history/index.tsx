@@ -7,13 +7,14 @@ import Iconfont from '@/components/Iconfont';
 import SearchInput from '@/components/SearchInput';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import ScrollLoading from '@/components/ScrollLoading';
-import sqlServer, { IGetSaveListParams } from '@/service/sql';
+import sqlServer, { IGetHistoryListParams } from '@/service/history';
+import connectionServer from '@/service/connection'
 import { IPageParams, IHistoryRecord } from '@/types';
 import { DatabaseTypeCode, databaseType } from '@/utils/constants';
-import { useDebounce } from '@/utils/hooks'
-import { Input } from 'antd';
+import { useDebounce, useUpdateEffect } from '@/utils/hooks'
+import { Input, Select } from 'antd';
 import styles from './index.less';
-import request from 'umi-request';
+import type { SelectProps } from 'antd';
 
 interface IProps {
   className?: string;
@@ -39,47 +40,99 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
 
   const [currentTab, setCurrentTab] = useState(tabs[0].key);
   const [dataList, setDataList] = useState<IHistoryRecord[] | null>();
-  const [searchKey, setSearchKey] = useState<string>();
   const [finished, setFinished] = useState(false);
-  const scrollerRef = useRef(null)
+  const [connectionOptions, setConnectionOptions] = useState<SelectProps['options']>();
+  const [currentConnection, setCurrentConnection] = useState<string>();
+  const [databaseOptions, setDatabaseOptions] = useState<SelectProps['options']>();
+  const [currentDatabase, setCurrentDatabase] = useState<string>();
+  const scrollerRef = useRef(null);
+  const initialListParams: IGetHistoryListParams = {
+    searchKey: '',
+    pageNo: 1,
+    pageSize: 1000,
+    dataSourceId: '',
+    databaseName: ''
+  }
+  const listParams = useRef(initialListParams)
+
+  useUpdateEffect(() => {
+    getList();
+  }, [currentTab])
 
   useEffect(() => {
-    getList(true)
-  }, [currentTab, searchKey])
-
-  const getList = (clear = false) => {
-    if (clear) {
-      setDataList(null)
-    }
-    const api = currentTab == TabsKey.SAVE ? sqlServer.getSaveList : sqlServer.getHistoryList
-
-    let p: IPageParams | IGetSaveListParams = {
-      searchKey,
+    let p = {
       pageNo: 1,
-      pageSize: 10,
-      dataSourceId: 1,
-      databaseName: '1'
+      pageSize: 100
     }
-    return api(p).then(res => {
+    connectionServer.getList(p).then(res => {
+      let list: SelectProps['options'] = []
+      list = res.data.map(item => {
+        return {
+          label: item.alias,
+          value: item.id,
+        }
+      })
+      setConnectionOptions(list)
+    })
+  }, [])
+
+
+  const getList = () => {
+    const api = currentTab == TabsKey.SAVE ? sqlServer.getSaveList : sqlServer.getHistoryList;
+    return api(listParams.current).then(res => {
       if (!res.hasNextPage) {
         setFinished(true)
       }
-      if (dataList?.length && !clear) {
-        setDataList([...dataList, ...res.data])
-      } else {
+      if (listParams.current.pageNo === 1) {
         setDataList(res.data)
+      } else {
+        setDataList([...dataList!, ...res.data])
       }
+      listParams.current.pageNo++
     })
   }
 
-  const onChange = (key: string) => {
-    setCurrentTab(key)
+  const onChangeTab = (key: string) => {
+    listParams.current.pageNo = 1;
+    setCurrentTab(key);
   };
 
   const searchInputChange = (value: string) => {
-    setSearchKey(value)
+    listParams.current.pageNo = 1;
+    listParams.current.searchKey = value;
+    getList();
   }
   const searchChange = useDebounce(searchInputChange, 500)
+
+  const jumpToDatabasePage = (item: IHistoryRecord) => {
+    if (currentTab == TabsKey.SAVE) {
+      location.href = `/#/database/${item.type}/${item.dataSourceId}?databaseName=${item.databaseName}&windowTabName=${item.name}`
+    }
+  }
+
+  const handleChangeConnection = (value: string) => {
+    console.log(value)
+    listParams.current.dataSourceId = value;
+    let p = {
+      id: value
+    }
+    connectionServer.getDBList(p).then(res => {
+      let list: SelectProps['options'] = []
+      list = res.map(item => {
+        return {
+          label: item.name,
+          value: item.name,
+        }
+      })
+      setDatabaseOptions(list)
+    })
+  };
+  const handleChangeDatabase = (value: string) => {
+    console.log(value)
+    listParams.current.databaseName = value;
+    listParams.current.pageNo = 1;
+    getList();
+  };
 
 
   return <div className={classnames(className, styles.box)}>
@@ -88,45 +141,58 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
     </div>
     <Tabs
       className={styles.tabs}
-      onChange={onChange}
+      onChange={onChangeTab}
       currentTab={currentTab}
       tabs={tabs}
     ></Tabs>
     <div className={styles.searchInputBox}>
       <SearchInput onChange={searchChange} className={styles.searchInput} placeholder='搜索'></SearchInput>
+      <Select
+        className={styles.select}
+        // allowClear
+        placeholder="请选择链接"
+        onChange={handleChangeConnection}
+        options={connectionOptions}
+      />
+      <Select
+        // allowClear
+        className={styles.select}
+        placeholder="请选择数据库"
+        onChange={handleChangeDatabase}
+        options={databaseOptions}
+      />
     </div>
     <div className={styles.sqlListBox} ref={scrollerRef}>
-      <LoadingContent data={dataList} handleEmpty>
-        {
-          <ScrollLoading
-            finished={finished}
-            scrollerElement={scrollerRef}
-            onReachBottom={getList}
-            threshold={300}
-          >
-            <div className={styles.sqlList}>
-              {
-                dataList?.map(item => {
-                  return <div key={item.id} className={styles.cardItem}>
-                    <div className={styles.ddlType}>
-                      <img src={databaseType[item.type].img} alt="" />
-                    </div>
-                    <div className={styles.name}>
-                      {item.name}
-                    </div>
-                    <div className={styles.databaseName}>
-                      {item.databaseName}
-                    </div>
-                    <div className={styles.arrows}>
-                      <Iconfont code='&#xe685;'></Iconfont>
-                    </div>
+      <ScrollLoading
+        finished={finished}
+        scrollerElement={scrollerRef}
+        onReachBottom={getList}
+        threshold={300}
+      >
+        <div className={styles.sqlList}>
+          {
+            dataList?.map(item => {
+              return <div onClick={jumpToDatabasePage.bind(null, item)} key={item.id} className={styles.cardItem}>
+                <div className={styles.ddlType}>
+                  <img src={databaseType[item.type].img} alt="" />
+                </div>
+                <div className={styles.name}>
+                  {item.name}
+                </div>
+                <div className={styles.databaseName}>
+                  {item.databaseName}
+                </div>
+                {
+                  currentTab == TabsKey.SAVE &&
+                  < div className={styles.arrows}>
+                    <Iconfont code='&#xe685;'></Iconfont>
                   </div>
-                })
-              }
-            </div>
-          </ScrollLoading>
-        }
-      </LoadingContent>
-    </div>
-  </div>
+                }
+              </div>
+            })
+          }
+        </div>
+      </ScrollLoading>
+    </div >
+  </div >
 })

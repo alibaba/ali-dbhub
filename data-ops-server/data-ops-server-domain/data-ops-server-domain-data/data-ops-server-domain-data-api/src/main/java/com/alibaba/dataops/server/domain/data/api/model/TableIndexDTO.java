@@ -47,5 +47,5 @@ public class TableIndexDTO {
     /**
      * 索引包含的列
      */
-    private List<TableColumnDTO> columnList;
+    private List<TableIndexColumnDTO> columnList;
 }

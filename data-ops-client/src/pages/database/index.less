@@ -5,12 +5,23 @@
   height: 100vh;
 }
 
+.asideBox{
+  position: relative;
+  width: 250px;
+  background-color: var(--color-bg-200);
+  overflow: hidden;
+}
+
 .aside {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-width: 250px;
+  height: 100%;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  width: 250px;
-  background-color: var(--color-bg-200);
 
   .header{
     flex-shrink: 0;
@@ -59,7 +70,11 @@
   display: flex;
   align-items: center;
   button{
+    height: 24px;
+    line-height: 24px;
+    font-size: 14px;
     border: 0;
+    padding: 0px 10px;
     margin: 0px 5px;
   }
 }
@@ -193,5 +208,27 @@
 .searchResult{
   height: 0;
   flex: 1;
+}
+
+.appHeader{
+  // border: 0;
+}
+
+.tabsBox{
+  :global {
+    .custom-tabs-nav{
+      transform: translateY(15px) translateX(5px);
+    }
+    .custom-tabs-card > .custom-tabs-nav .custom-tabs-tab{
+      border-bottom: 0;
+    }
+    .custom-tabs > .custom-tabs-nav .custom-tabs-nav-add {
+      border-bottom: 0;
+    }
+    .custom-tabs-top > .custom-tabs-nav::before{
+
+      border-bottom: 0px !important;
+    }
+  }
 }
 

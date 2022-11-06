@@ -1,24 +1,7 @@
 package com.alibaba.dataops.server.test.domain.data.service;
 
-import java.util.List;
-import java.util.stream.IntStream;
-
 import javax.annotation.Resource;
 
-import com.alibaba.dataops.server.domain.data.api.enums.CellTypeEnum;
-import com.alibaba.dataops.server.domain.data.api.enums.DbTypeEnum;
-import com.alibaba.dataops.server.domain.data.api.model.CellDTO;
-import com.alibaba.dataops.server.domain.data.api.model.DatabaseDTO;
-import com.alibaba.dataops.server.domain.data.api.model.ExecuteResultDTO;
-import com.alibaba.dataops.server.domain.data.api.model.SqlDTO;
-import com.alibaba.dataops.server.domain.data.api.model.TableDTO;
-import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
-import com.alibaba.dataops.server.domain.data.api.param.database.DatabaseQueryAllParam;
-import com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceCreateParam;
-import com.alibaba.dataops.server.domain.data.api.param.sql.SqlAnalyseParam;
-import com.alibaba.dataops.server.domain.data.api.param.table.TablePageQueryParam;
-import com.alibaba.dataops.server.domain.data.api.param.table.TableSelector;
-import com.alibaba.dataops.server.domain.data.api.param.template.TemplateExecuteParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DataSourceDataService;
 import com.alibaba.dataops.server.domain.data.api.service.DatabaseDataService;
@@ -27,18 +10,8 @@ import com.alibaba.dataops.server.domain.data.api.service.SqlDataService;
 import com.alibaba.dataops.server.domain.data.api.service.TableDataService;
 import com.alibaba.dataops.server.test.common.BaseTest;
 import com.alibaba.dataops.server.test.domain.data.utils.TestUtils;
-import com.alibaba.dataops.server.tools.base.constant.EasyToolsConstant;
-import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
-import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.fastjson2.JSON;
 
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer;
-import org.springframework.boot.sql.init.DatabaseInitializationSettings;
 
 /**
  * h2的data服测试
@@ -67,82 +40,82 @@ public class H2DataServiceTest extends BaseTest {
     @Resource
     private TableDataService tableDataService;
 
-    @Test
-    @Order(1)
-    public void prepareData() {
-        DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setDriverClassName(DbTypeEnum.H2.getClassName());
-        druidDataSource.setUrl(URL);
-
-        // 初始化数据库
-        DatabaseInitializationSettings databaseInitializationSettings = new DatabaseInitializationSettings();
-        databaseInitializationSettings.setSchemaLocations(Lists.newArrayList("classpath:h2/init.sql"));
-        DataSourceScriptDatabaseInitializer dataSourceScriptDatabaseInitializer
-            = new DataSourceScriptDatabaseInitializer(druidDataSource, databaseInitializationSettings);
-        dataSourceScriptDatabaseInitializer.initializeDatabase();
-    }
-
-    @Test
-    @Order(2)
-    public void createDataSource() {
-        DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
-        dataSourceCreateParam.setDataSourceId(DATA_SOURCE_ID);
-        dataSourceCreateParam.setDbType(DbTypeEnum.H2.getCode());
-        dataSourceCreateParam.setUrl(URL);
-        ActionResult actionResult = dataSourceDataService.create(dataSourceCreateParam);
-        Assertions.assertTrue(actionResult.success(), "创建数据库连接池失败");
-    }
-
-    @Test
-    @Order(2)
-    public void createConsole() {
-        ConsoleCreateParam consoleCreateParam = new ConsoleCreateParam();
-        consoleCreateParam.setDataSourceId(DATA_SOURCE_ID);
-        consoleCreateParam.setConsoleId(CONSOLE_ID);
-        consoleCreateParam.setDatabaseName(DATABASE_NAME);
-        ActionResult actionResult = consoleDataService.create(consoleCreateParam);
-        Assertions.assertTrue(actionResult.success(), "创建控制台失败");
-    }
-
-    @Test
-    @Order(3)
-    public void query() {
-        TemplateExecuteParam templateExecuteParam = new TemplateExecuteParam();
-        templateExecuteParam.setConsoleId(CONSOLE_ID);
-        templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
-        templateExecuteParam.setSql("select * from test_query where id=1;");
-        ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateExecuteParam).getData();
-        log.info("查询数据返回{}", JSON.toJSONString(executeResult));
-        List<List<CellDTO>> dataList = executeResult.getDataList();
-        Assertions.assertEquals(1, dataList.size(), "查询语句异常");
-        List<CellDTO> data1 = dataList.get(0);
-        Assertions.assertEquals(DATA_NAME, data1.get(1).getStringValue(), "未查询到姓名");
-    }
-
-    @Test
-    @Order(4)
-    public void insert() {
-        TemplateExecuteParam templateExecuteParam = new TemplateExecuteParam();
-        templateExecuteParam.setConsoleId(CONSOLE_ID);
-        templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
-        templateExecuteParam.setSql(
-            "INSERT INTO `test_query` (id,name,date,number) VALUES (9999,'姓名insert','2022-01-02',1234);");
-        ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateExecuteParam).getData();
-        log.info("插入数据返回:{}", executeResult);
-        Assertions.assertEquals(1, executeResult.getUpdateCount(), " 插入数据失败");
-
-        // 查数据
-        templateExecuteParam = new TemplateExecuteParam();
-        templateExecuteParam.setConsoleId(CONSOLE_ID);
-        templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
-        templateExecuteParam.setSql("select * from test_query where id=9999;");
-        executeResult = jdbcTemplateDataService.execute(templateExecuteParam).getData();
-        log.info("查询数据返回{}", JSON.toJSONString(executeResult));
-        List<List<CellDTO>> dataList = executeResult.getDataList();
-        Assertions.assertEquals(1, dataList.size(), "查询语句异常");
-        List<CellDTO> data1 = dataList.get(0);
-        Assertions.assertEquals("姓名insert", data1.get(1).getStringValue(), "未查询到姓名");
-    }
+    //@Test
+    //@Order(1)
+    //public void prepareData() {
+    //    DruidDataSource druidDataSource = new DruidDataSource();
+    //    druidDataSource.setDriverClassName(DbTypeEnum.H2.getClassName());
+    //    druidDataSource.setUrl(URL);
+    //
+    //    // 初始化数据库
+    //    DatabaseInitializationSettings databaseInitializationSettings = new DatabaseInitializationSettings();
+    //    databaseInitializationSettings.setSchemaLocations(Lists.newArrayList("classpath:h2/init.sql"));
+    //    DataSourceScriptDatabaseInitializer dataSourceScriptDatabaseInitializer
+    //        = new DataSourceScriptDatabaseInitializer(druidDataSource, databaseInitializationSettings);
+    //    dataSourceScriptDatabaseInitializer.initializeDatabase();
+    //}
+    //
+    //@Test
+    //@Order(2)
+    //public void createDataSource() {
+    //    DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
+    //    dataSourceCreateParam.setDataSourceId(DATA_SOURCE_ID);
+    //    dataSourceCreateParam.setDbType(DbTypeEnum.H2.getCode());
+    //    dataSourceCreateParam.setUrl(URL);
+    //    ActionResult actionResult = dataSourceDataService.create(dataSourceCreateParam);
+    //    Assertions.assertTrue(actionResult.success(), "创建数据库连接池失败");
+    //}
+    //
+    //@Test
+    //@Order(2)
+    //public void createConsole() {
+    //    ConsoleCreateParam consoleCreateParam = new ConsoleCreateParam();
+    //    consoleCreateParam.setDataSourceId(DATA_SOURCE_ID);
+    //    consoleCreateParam.setConsoleId(CONSOLE_ID);
+    //    consoleCreateParam.setDatabaseName(DATABASE_NAME);
+    //    ActionResult actionResult = consoleDataService.create(consoleCreateParam);
+    //    Assertions.assertTrue(actionResult.success(), "创建控制台失败");
+    //}
+    //
+    //@Test
+    //@Order(3)
+    //public void query() {
+    //    TemplateExecuteParam templateExecuteParam = new TemplateExecuteParam();
+    //    templateExecuteParam.setConsoleId(CONSOLE_ID);
+    //    templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateExecuteParam.setSql("select * from test_query where id=1;");
+    //    ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateExecuteParam).getData();
+    //    log.info("查询数据返回{}", JSON.toJSONString(executeResult));
+    //    List<List<CellDTO>> dataList = executeResult.getDataList();
+    //    Assertions.assertEquals(1, dataList.size(), "查询语句异常");
+    //    List<CellDTO> data1 = dataList.get(0);
+    //    Assertions.assertEquals(DATA_NAME, data1.get(1).getStringValue(), "未查询到姓名");
+    //}
+    //
+    //@Test
+    //@Order(4)
+    //public void insert() {
+    //    TemplateExecuteParam templateExecuteParam = new TemplateExecuteParam();
+    //    templateExecuteParam.setConsoleId(CONSOLE_ID);
+    //    templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateExecuteParam.setSql(
+    //        "INSERT INTO `test_query` (id,name,date,number) VALUES (9999,'姓名insert','2022-01-02',1234);");
+    //    ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateExecuteParam).getData();
+    //    log.info("插入数据返回:{}", executeResult);
+    //    Assertions.assertEquals(1, executeResult.getUpdateCount(), " 插入数据失败");
+    //
+    //    // 查数据
+    //    templateExecuteParam = new TemplateExecuteParam();
+    //    templateExecuteParam.setConsoleId(CONSOLE_ID);
+    //    templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateExecuteParam.setSql("select * from test_query where id=9999;");
+    //    executeResult = jdbcTemplateDataService.execute(templateExecuteParam).getData();
+    //    log.info("查询数据返回{}", JSON.toJSONString(executeResult));
+    //    List<List<CellDTO>> dataList = executeResult.getDataList();
+    //    Assertions.assertEquals(1, dataList.size(), "查询语句异常");
+    //    List<CellDTO> data1 = dataList.get(0);
+    //    Assertions.assertEquals("姓名insert", data1.get(1).getStringValue(), "未查询到姓名");
+    //}
     //
     //@Test
     //@Order(5)
@@ -246,106 +219,84 @@ public class H2DataServiceTest extends BaseTest {
     //    List<Map<String, Object>> dataList = jdbcTemplateDataService.queryForList(templateQueryParam).getData();
     //    log.info("查询数据返回{}", JSON.toJSONString(dataList));
     //}
-
-    @Test
-    @Order(10)
-    public void execute() {
-        TemplateExecuteParam templateQueryParam = new TemplateExecuteParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("select * from test_query where id=1;");
-        ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
-        log.info("查询数据返回{}", JSON.toJSONString(executeResult));
-        List<CellDTO> headerList = executeResult.getHeaderList();
-        Assertions.assertEquals(4, headerList.size(), "查询结果异常");
-        List<List<CellDTO>> dataList = executeResult.getDataList();
-        Assertions.assertEquals(1, dataList.size(), "查询结果异常");
-        List<CellDTO> cellList = dataList.get(0);
-        Assertions.assertEquals(4, cellList.size(), "查询结果异常");
-        Assertions.assertEquals(CellTypeEnum.BIG_DECIMAL.getCode(), cellList.get(0).getType(), "查询结果异常");
-        Assertions.assertEquals(CellTypeEnum.DATA.getCode(), cellList.get(2).getType(), "查询结果异常");
-    }
-
-    @Test
-    @Order(11)
-    public void analyse() {
-        SqlAnalyseParam sqlAnalyseParam = new SqlAnalyseParam();
-        sqlAnalyseParam.setDataSourceId(DATA_SOURCE_ID);
-        sqlAnalyseParam.setSql("select * from test_query where id=1;select * from test_query where id=122;");
-        List<SqlDTO> sqlList = sqlDataService.analyse(sqlAnalyseParam).getData();
-        log.info("分析数据返回{}", JSON.toJSONString(sqlList));
-        Assertions.assertEquals(2, sqlList.size(), "查询结果异常");
-        Assertions.assertEquals("SELECT *\nFROM test_query\nWHERE id = 1;", sqlList.get(0).getSql(), "查询结果异常");
-        Assertions.assertEquals("SELECT *\nFROM test_query\nWHERE id = 122;", sqlList.get(1).getSql(), "查询结果异常");
-    }
-
-    @Test
-    @Order(13)
-    public void database() {
-        DatabaseQueryAllParam databaseQueryAllParam = new DatabaseQueryAllParam();
-        databaseQueryAllParam.setDataSourceId(DATA_SOURCE_ID);
-        List<DatabaseDTO> databaseList = databaseDataService.queryAll(databaseQueryAllParam).getData();
-        log.info("分析数据返回{}", JSON.toJSONString(databaseList));
-    }
-
-    @Test
-    @Order(14)
-    public void table() {
-        TablePageQueryParam tablePageQueryParam = new TablePageQueryParam();
-        tablePageQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        tablePageQueryParam.setDatabaseName("PUBLIC");
-        tablePageQueryParam.setTableName("TEST_QUERY");
-        List<TableDTO> tableList = tableDataService.pageQuery(tablePageQueryParam, TableSelector.builder()
-            .columnList(Boolean.TRUE)
-            .indexList(Boolean.TRUE)
-            .build()).getData();
-        log.info("分析数据返回{}", JSON.toJSONString(tableList));
-    }
-
-    /**
-     * 测试sql自动分页
-     */
-    @Test
-    @Order(15)
-    public void pageQuery() {
-        IntStream.range(0, 1000).forEach(i -> {
-            TemplateExecuteParam templateExecuteParam = new TemplateExecuteParam();
-            templateExecuteParam.setConsoleId(CONSOLE_ID);
-            templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
-            templateExecuteParam.setSql(
-                "INSERT INTO `test_query` (name,date,number) VALUES ('pageQueryName','2022-01-02','" + i + "');");
-            jdbcTemplateDataService.execute(templateExecuteParam);
-        });
-
-        TemplateExecuteParam templateQueryParam = new TemplateExecuteParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("select * from test_query where name='pageQueryName';");
-        ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
-        Assertions.assertEquals(EasyToolsConstant.MAX_PAGE_SIZE, executeResult.getDataList().size(), "查询结果异常");
-        Assertions.assertEquals(1, executeResult.getPageNo(), "查询结果异常");
-        Assertions.assertEquals(EasyToolsConstant.MAX_PAGE_SIZE, executeResult.getPageSize(), "查询结果异常");
-
-        templateQueryParam = new TemplateExecuteParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("select * from test_query where name='pageQueryName';");
-        templateQueryParam.setPageNo(2);
-        templateQueryParam.setPageSize(100);
-        executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
-        Assertions.assertEquals(100, executeResult.getDataList().size(), "查询结果异常");
-        Assertions.assertEquals(2, executeResult.getPageNo(), "查询结果异常");
-        Assertions.assertEquals(100, executeResult.getPageSize(), "查询结果异常");
-        Assertions.assertEquals("100", executeResult.getDataList().get(0).get(3).getStringValue(), "查询结果异常");
-
-        templateQueryParam = new TemplateExecuteParam();
-        templateQueryParam.setConsoleId(CONSOLE_ID);
-        templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
-        templateQueryParam.setSql("select * from test_query where name='pageQueryName';");
-        templateQueryParam.setPageSize(Integer.MAX_VALUE);
-        executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
-        Assertions.assertEquals(1000, executeResult.getDataList().size(), "查询结果异常");
-        Assertions.assertEquals(1, executeResult.getPageNo(), "查询结果异常");
-        Assertions.assertEquals(0, executeResult.getPageSize(), "查询结果异常");
-    }
+    //
+    //@Test
+    //@Order(10)
+    //public void execute() {
+    //    TemplateExecuteParam templateQueryParam = new TemplateExecuteParam();
+    //    templateQueryParam.setConsoleId(CONSOLE_ID);
+    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateQueryParam.setSql("select * from test_query where id=1;");
+    //    ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
+    //    log.info("查询数据返回{}", JSON.toJSONString(executeResult));
+    //    List<CellDTO> headerList = executeResult.getHeaderList();
+    //    Assertions.assertEquals(4, headerList.size(), "查询结果异常");
+    //    List<List<CellDTO>> dataList = executeResult.getDataList();
+    //    Assertions.assertEquals(1, dataList.size(), "查询结果异常");
+    //    List<CellDTO> cellList = dataList.get(0);
+    //    Assertions.assertEquals(4, cellList.size(), "查询结果异常");
+    //    Assertions.assertEquals(CellTypeEnum.BIG_DECIMAL.getCode(), cellList.get(0).getType(), "查询结果异常");
+    //    Assertions.assertEquals(CellTypeEnum.DATA.getCode(), cellList.get(2).getType(), "查询结果异常");
+    //}
+    //
+    //@Test
+    //@Order(11)
+    //public void analyse() {
+    //    SqlAnalyseParam sqlAnalyseParam = new SqlAnalyseParam();
+    //    sqlAnalyseParam.setDataSourceId(DATA_SOURCE_ID);
+    //    sqlAnalyseParam.setSql("select * from test_query where id=1;select * from test_query where id=122;");
+    //    List<SqlDTO> sqlList = sqlDataService.analyse(sqlAnalyseParam).getData();
+    //    log.info("分析数据返回{}", JSON.toJSONString(sqlList));
+    //    Assertions.assertEquals(2, sqlList.size(), "查询结果异常");
+    //    Assertions.assertEquals("SELECT *\nFROM test_query\nWHERE id = 1;", sqlList.get(0).getSql(), "查询结果异常");
+    //    Assertions.assertEquals("SELECT *\nFROM test_query\nWHERE id = 122;", sqlList.get(1).getSql(), "查询结果异常");
+    //}
+    //
+    //
+    ///**
+    // * 测试sql自动分页
+    // */
+    //@Test
+    //@Order(15)
+    //public void pageQuery() {
+    //    IntStream.range(0, 1000).forEach(i -> {
+    //        TemplateExecuteParam templateExecuteParam = new TemplateExecuteParam();
+    //        templateExecuteParam.setConsoleId(CONSOLE_ID);
+    //        templateExecuteParam.setDataSourceId(DATA_SOURCE_ID);
+    //        templateExecuteParam.setSql(
+    //            "INSERT INTO `test_query` (name,date,number) VALUES ('pageQueryName','2022-01-02','" + i + "');");
+    //        jdbcTemplateDataService.execute(templateExecuteParam);
+    //    });
+    //
+    //    TemplateExecuteParam templateQueryParam = new TemplateExecuteParam();
+    //    templateQueryParam.setConsoleId(CONSOLE_ID);
+    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateQueryParam.setSql("select * from test_query where name='pageQueryName';");
+    //    ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
+    //    Assertions.assertEquals(EasyToolsConstant.MAX_PAGE_SIZE, executeResult.getDataList().size(), "查询结果异常");
+    //    Assertions.assertEquals(1, executeResult.getPageNo(), "查询结果异常");
+    //    Assertions.assertEquals(EasyToolsConstant.MAX_PAGE_SIZE, executeResult.getPageSize(), "查询结果异常");
+    //
+    //    templateQueryParam = new TemplateExecuteParam();
+    //    templateQueryParam.setConsoleId(CONSOLE_ID);
+    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateQueryParam.setSql("select * from test_query where name='pageQueryName';");
+    //    templateQueryParam.setPageNo(2);
+    //    templateQueryParam.setPageSize(100);
+    //    executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
+    //    Assertions.assertEquals(100, executeResult.getDataList().size(), "查询结果异常");
+    //    Assertions.assertEquals(2, executeResult.getPageNo(), "查询结果异常");
+    //    Assertions.assertEquals(100, executeResult.getPageSize(), "查询结果异常");
+    //    Assertions.assertEquals("100", executeResult.getDataList().get(0).get(3).getStringValue(), "查询结果异常");
+    //
+    //    templateQueryParam = new TemplateExecuteParam();
+    //    templateQueryParam.setConsoleId(CONSOLE_ID);
+    //    templateQueryParam.setDataSourceId(DATA_SOURCE_ID);
+    //    templateQueryParam.setSql("select * from test_query where name='pageQueryName';");
+    //    templateQueryParam.setPageSize(Integer.MAX_VALUE);
+    //    executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
+    //    Assertions.assertEquals(1000, executeResult.getDataList().size(), "查询结果异常");
+    //    Assertions.assertEquals(1, executeResult.getPageNo(), "查询结果异常");
+    //    Assertions.assertEquals(0, executeResult.getPageSize(), "查询结果异常");
+    //}
 }

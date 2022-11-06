@@ -10,7 +10,7 @@ import com.alibaba.dataops.server.domain.data.core.dialect.common.param.Executor
 import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorIndexQueryParam;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableColumnDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableDTO;
-import com.alibaba.dataops.server.domain.data.core.dialect.ExecutorTableIndexDTO;
+import com.alibaba.dataops.server.domain.data.core.dialect.common.model.ExecutorTableIndexDTO;
 import com.alibaba.dataops.server.domain.data.core.dialect.common.param.ExecutorTablePageQueryParam;
 import com.alibaba.dataops.server.domain.data.core.service.impl.TableDataServiceImpl.QueryContext;
 

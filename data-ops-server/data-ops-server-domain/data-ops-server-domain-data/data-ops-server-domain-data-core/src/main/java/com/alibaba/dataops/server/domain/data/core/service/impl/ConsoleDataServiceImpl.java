@@ -7,13 +7,12 @@ import java.util.Map;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCloseParam;
 import com.alibaba.dataops.server.domain.data.api.param.console.ConsoleCreateParam;
 import com.alibaba.dataops.server.domain.data.api.service.ConsoleDataService;
-import com.alibaba.dataops.server.domain.data.core.model.DataSourceWrapper;
+import com.alibaba.dataops.server.domain.data.core.model.DataDataSource;
 import com.alibaba.dataops.server.domain.data.core.model.JdbcDataTemplate;
 import com.alibaba.dataops.server.domain.data.core.util.DataCenterUtils;
 import com.alibaba.dataops.server.tools.base.excption.BusinessException;
 import com.alibaba.dataops.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dataops.server.tools.common.enums.ErrorEnum;
-import com.alibaba.druid.pool.DruidDataSource;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -30,18 +29,17 @@ public class ConsoleDataServiceImpl implements ConsoleDataService {
 
     @Override
     public ActionResult create(ConsoleCreateParam param) {
-        DataSourceWrapper dataSourceWrapper = DataCenterUtils.DATA_SOURCE_CACHE.get(param.getDataSourceId());
-        if (dataSourceWrapper == null) {
+        DataDataSource dataDataSource = DataCenterUtils.DATA_SOURCE_CACHE.get(param.getDataSourceId());
+        if (dataDataSource == null) {
             throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
         }
-        DruidDataSource druidDataSource = dataSourceWrapper.getDruidDataSource();
 
         Long consoleId = param.getConsoleId();
         // 尝试关闭
         close(ConsoleCloseParam.builder().dataSourceId(param.getDataSourceId()).consoleId(consoleId).build());
         Connection connection;
         try {
-            connection = druidDataSource.getConnection();
+            connection = dataDataSource.getConnection();
         } catch (SQLException e) {
             throw new BusinessException("连接数据库异常", e);
         }
@@ -49,7 +47,7 @@ public class ConsoleDataServiceImpl implements ConsoleDataService {
         Map<Long, JdbcDataTemplate> jdbcDataTemplateMap = DataCenterUtils.JDBC_TEMPLATE_CACHE.computeIfAbsent(
             param.getDataSourceId(), key -> Maps.newConcurrentMap());
         JdbcDataTemplate jdbcDataTemplate = new JdbcDataTemplate(param.getDataSourceId(), consoleId, connection,
-            druidDataSource);
+            dataDataSource);
         jdbcDataTemplateMap.put(consoleId, jdbcDataTemplate);
         // 切换到当前database
         try {
@@ -76,7 +74,7 @@ public class ConsoleDataServiceImpl implements ConsoleDataService {
         try {
             jdbcDataTemplate.getConnection().close();
         } catch (SQLException e) {
-            throw new BusinessException("数据库关闭连接异常", e);
+            log.error("关闭数据库连接异常", e);
         }
         return ActionResult.isSuccess();
     }

@@ -40,7 +40,7 @@ export default defineConfig({
           routes: [
             {
               exact: true,
-              path: '/database/:id',
+              path: '/database/:type/:id',
               component: '@/pages/database',
             },
           ],
@@ -83,7 +83,7 @@ export default defineConfig({
   chainWebpack,
   proxy: {
     '/api': {
-      'target': 'http://127.0.0.1:8080/',
+      'target': 'http://127.0.0.1:8080',
       'changeOrigin': true
     },
   },

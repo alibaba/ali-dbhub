@@ -18,13 +18,13 @@ import {
   Input,
   Checkbox,
   message,
-  Menu,
+  // Menu,
   Pagination
 } from 'antd';
 
 import styles from './index.less';
 import globalStyle from '@/global.less';
-// import Menu, { IMenu, MenuItem } from '@/components/Menu'
+import Menu, { IMenu, MenuItem } from '@/components/Menu';
 
 const { Option } = Select;
 
@@ -71,11 +71,10 @@ export default memo<IProps>(function ConnectionPage(props) {
   const [finished, setFinished] = useState(false);
   const [rowData, setRowData] = useState<IConnectionBase | null>();
   const [form] = Form.useForm();
-  const scrollerRef = useRef(null)
-  const [pageNo, setPageNo] = useState(0)
+  const scrollerRef = useRef(null);
+  const [pageNo, setPageNo] = useState(0);
 
   useEffect(() => {
-    // console.log(scrollerRef.current)
   }, [])
 
   type IParams = {
@@ -92,9 +91,7 @@ export default memo<IProps>(function ConnectionPage(props) {
       pageNo: pageNo + 1,
       pageSize: 10
     }
-
     return connectionServer.getList(p).then(res => {
-
       if (connectionList?.length && superposition) {
         setConnectionList([...connectionList, ...res.data])
       } else {
@@ -104,67 +101,16 @@ export default memo<IProps>(function ConnectionPage(props) {
       if (!res.hasNextPage) {
         setFinished(true)
       }
-
     })
   }
 
   const jumpPage = (item: IConnectionBase) => {
     history.push({
-      pathname: `/database/${item.id}`,
+      pathname: `/database/${item.type}/${item.id}`,
     });
   };
 
-  const renderMenu = (rowData: IConnectionBase) => {
-    const editConnection = () => {
-      setRowData(rowData);
-      setIsModalVisible(true);
-      form.setFieldsValue(rowData);
-    }
 
-    const deleteConnection = () => {
-      resetGetList()
-      connectionServer.remove({ id: rowData.id! }).then(res => {
-        message.success('删除成功');
-        getConnectionList();
-      })
-    }
-
-    const cloneConnection = () => {
-      resetGetList()
-      connectionServer.clone({ id: rowData.id! }).then(res => {
-        message.success('克隆成功');
-        getConnectionList();
-      })
-    }
-
-    const clickMenuList = (item) => {
-      switch (item.key) {
-        case handleType.EDIT:
-          return editConnection();
-        case handleType.DELETE:
-          return deleteConnection();
-        case handleType.CLONE:
-          return cloneConnection();
-      }
-    }
-    return <Menu
-      selectable
-      defaultSelectedKeys={['3']}
-      items={
-        menuList.map((item) => {
-          return {
-            key: item.key,
-            label: <>
-              <span onClick={clickMenuList.bind(null, item)}>
-                <Iconfont code={item.icon!}></Iconfont>
-                {item.title}
-              </span>
-            </>
-          }
-        })
-      }
-    />
-  };
 
   const showLinkModal = () => {
     setIsModalVisible(true);
@@ -201,11 +147,70 @@ export default memo<IProps>(function ConnectionPage(props) {
     form.validateFields().then(res => {
       saveConnection(res, type)
     }).catch(error => {
-      console.log(error)
     })
   }
 
-  const renderCard = (item: IConnectionBase) => {
+  const RenderCard = ({ item }: { item: IConnectionBase }) => {
+    const [openDropdown, setOpenDropdown] = useState(false);
+    const closeDropdownFn = () => {
+      setOpenDropdown(false);
+    }
+    useEffect(() => {
+      if (openDropdown) {
+        document.documentElement.addEventListener('click', closeDropdownFn);
+      }
+      return () => {
+        document.documentElement.removeEventListener('click', closeDropdownFn);
+      }
+    }, [openDropdown])
+
+    const renderMenu = (rowData: IConnectionBase) => {
+      const editConnection = () => {
+        setRowData(rowData);
+        setIsModalVisible(true);
+        form.setFieldsValue(rowData);
+      }
+
+      const deleteConnection = () => {
+        resetGetList()
+        connectionServer.remove({ id: rowData.id! }).then(res => {
+          message.success('删除成功');
+          getConnectionList();
+        })
+      }
+
+      const cloneConnection = () => {
+        resetGetList()
+        connectionServer.clone({ id: rowData.id! }).then(res => {
+          message.success('克隆成功');
+          getConnectionList();
+        })
+      }
+
+      const clickMenuList = (item) => {
+        switch (item.key) {
+          case handleType.EDIT:
+            return editConnection();
+          case handleType.DELETE:
+            return deleteConnection();
+          case handleType.CLONE:
+            return cloneConnection();
+        }
+      }
+      return <Menu>
+        {
+          menuList.map((item, index) => {
+            return <MenuItem key={index}>
+              <span onClick={clickMenuList.bind(null, item)}>
+                <Iconfont code={item.icon!}></Iconfont>
+                {item.title}
+              </span>
+            </MenuItem>
+          })
+        }
+      </Menu>
+    };
+
     return <div key={item.id} className={styles.connectionItem}>
       <div className={styles.left} onClick={jumpPage.bind(null, item)}>
         <div
@@ -219,8 +224,8 @@ export default memo<IProps>(function ConnectionPage(props) {
       {
         !onlyList &&
         <div className={styles.right}>
-          <Dropdown overlay={renderMenu(item)} trigger={['hover']}>
-            <a onClick={(e) => e.preventDefault()}>
+          <Dropdown open={openDropdown} overlay={renderMenu(item)} trigger={['hover']}>
+            <a onClick={(event) => { event.stopPropagation(); setOpenDropdown(true) }}>
               <div className={styles.moreActions}>
                 <Iconfont code="&#xe601;" />
               </div>
@@ -255,7 +260,7 @@ export default memo<IProps>(function ConnectionPage(props) {
           threshold={200}
         >
           <div className={styles.connectionList}>
-            {connectionList?.map(item => renderCard(item))}
+            {connectionList?.map(item => <RenderCard key={item.id} item={item}></RenderCard>)}
           </div>
         </ScrollLoading>
       </div>

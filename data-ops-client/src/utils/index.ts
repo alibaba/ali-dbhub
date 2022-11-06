@@ -1,5 +1,6 @@
 import i18n, { isEN } from "@/i18n";
 import { TreeNodeType } from '@/utils/constants'
+import { ITreeNode } from '@/types'
 
 export function formatDate(date:any, fmt = 'yyyy-MM-dd') {
   if (!date) {
@@ -71,13 +72,14 @@ export function formatNaturalDate(date: any) {
   return formatDate(d);
 }
 
-export function toTreeList(data:any[],name:string,key:string,type:TreeNodeType,isLeaf=true){
-  return data?.map(item=>{
+export function toTreeList(data:any[],name:string,type:string,nodeType:TreeNodeType,isLeaf=true){
+  return data?.map((item,index)=>{
     return {
-      key: item[key],
+      key: `${index+1}-${index+1}`,
+      dataType: item[type],
+      nodeType: nodeType,
       name: item[name],
       isLeaf,
-      type
     }
   })
 }
@@ -89,4 +91,37 @@ export function createRandom(minNum:number,maxNum:number){
 
 // 
 export function createRandomId(length:number){
+}
+
+// 模糊匹配树并且高亮
+export function approximateTreeNode(treeData: ITreeNode[], target: string, isDelete = true){
+  if(target){
+    const newTree:ITreeNode[] = JSON.parse(JSON.stringify(treeData));
+    newTree.map((item,index)=>{
+      if(item.children?.length){
+        item.children = approximateTreeNode(item.children, target,false);
+      }
+      if(item.name?.toUpperCase()?.indexOf(target?.toUpperCase()) == -1 && isDelete){
+        delete newTree[index];
+      }else{
+        item.name = item.name?.replace(target,`<span style='color:red;'>${target}</span>`);
+      }
+    })
+    return newTree.filter(i=>i)
+  }else{
+    return treeData
+  }
+}
+
+export function getLocationHash(){
+    const righthash = location.hash.split('?')[1]
+    const params:any = {}
+    if (righthash) {
+      const arr = righthash.split('&')
+      arr.map(item => {
+        const splitRes = item.split('=')
+        params[splitRes[0]] = splitRes[1]
+      })
+    }
+    return params
 }

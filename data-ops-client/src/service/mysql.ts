@@ -8,7 +8,7 @@ export interface IGetListParams extends IPageParams  {
 
 export interface IExecuteSqlParams {
   sql:string,
-  dataSourceId:number,
+  dataSourceId:string,
   databaseName:string,
   consoleId: string,
 }

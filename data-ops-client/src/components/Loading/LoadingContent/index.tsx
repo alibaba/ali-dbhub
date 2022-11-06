@@ -22,7 +22,15 @@ export default function LoadingContent<T>(props: PropsWithChildren<IProps<T>>) {
         :
         <>
           {
-            isEmpty ? <StateIndicator state='empty'></StateIndicator> : children
+            isEmpty ?
+              <>
+                {
+                  empty ||
+                  <StateIndicator state='empty'></StateIndicator>
+
+                }
+              </>
+              : children
           }
         </>
     }

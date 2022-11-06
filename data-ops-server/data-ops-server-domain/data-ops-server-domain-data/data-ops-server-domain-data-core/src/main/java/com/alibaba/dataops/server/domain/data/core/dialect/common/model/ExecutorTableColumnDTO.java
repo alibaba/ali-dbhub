@@ -60,7 +60,6 @@ public class ExecutorTableColumnDTO {
      */
     private String autoIncrement;
 
-
     /**
      * 注释
      */
