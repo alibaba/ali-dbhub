@@ -68,7 +68,8 @@ public abstract class DataSourceCoreConverter {
      * @return
      */
     @Mappings({
-        @Mapping(source = "type", target = "dbType")
+        @Mapping(source = "type", target = "dbType"),
+        @Mapping(source = "user", target = "username")
     })
     public abstract com.alibaba.dataops.server.domain.data.api.param.datasource.DataSourceTestParam param2param(DataSourceTestParam dataSourceTestParam);
 
