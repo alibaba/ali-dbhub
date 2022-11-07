@@ -4,6 +4,7 @@ import { message } from 'antd';
 export interface IOptions{
   method?: "get" | 'post' | 'put' | 'delete';
   mock?: boolean;
+  errorLevel?: 'toast' | 'prompt' | 'critical' | false;
 }
 
 console.log('location', location)
@@ -68,7 +69,7 @@ request.interceptors.request.use((url, options) => {
 // });
 
 export default function createRequest<P = void, R = {}>(url:string, options:IOptions){
-  const {method = 'get', mock = false} = options;
+  const {method = 'get', mock = false,errorLevel = 'toast'} = options;
   const _baseURL = mock ? mockUrl : baseURL
   return function(params: P){
     const paramsInUrl: string[] = [];
@@ -105,7 +106,7 @@ export default function createRequest<P = void, R = {}>(url:string, options:IOpt
       .then(res=>{
         if(!res) return
         const {success, errorCode, errorMessage, data} = res
-        if(!success){
+        if(!success && errorLevel === 'toast'){
           message.error(`${errorCode}: ${errorMessage}`)
           reject(`${errorCode}: ${errorMessage}`)
         }
