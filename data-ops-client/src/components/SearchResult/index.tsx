@@ -4,13 +4,12 @@ import classnames from 'classnames';
 import Tabs from '@/components/Tabs';
 import type { ColumnsType } from 'antd/es/table';
 import Iconfont from '@/components/Iconfont';
+import StateIndicator from '@/components/StateIndicator';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import { Button, DatePicker, Input, Table, Modal } from 'antd';
 import { StatusType, TableDataType, TableDataTypeCorresValue } from '@/utils/constants';
 import { formatDate } from '@/utils';
 import { IManageResultData, ITableHeaderItem, ITableCellItem } from '@/types';
-import ResizeObserver from 'rc-resize-observer';
-// import { VariableSizeGrid as Grid } from 'react-window';
 
 
 interface IProps {
@@ -96,7 +95,7 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
       <LoadingContent data={manageResultDataList} handleEmpty>
         {
           manageResultDataList.map((item, index) => {
-            return <TableBox className={classnames({ [styles.cursorTableBox]: (index + '') == currentTab })} headerList={item.headerList} dataList={item.dataList}></TableBox>
+            return <TableBox key={index} className={classnames({ [styles.cursorTableBox]: (index + '') == currentTab })} data={item} headerList={item.headerList} dataList={item.dataList}></TableBox>
           })
         }
       </LoadingContent>
@@ -115,13 +114,14 @@ interface ITableProps {
   headerList: ITableHeaderItem[];
   dataList: ITableCellItem[][];
   className?: string;
+  data: any;
 }
 
-export function TableBox({ headerList, dataList, className }: ITableProps) {
+export function TableBox({ headerList, dataList, className, data }: ITableProps) {
   const [columns, setColumns] = useState<any>();
   const [tableData, setTableData] = useState<any>();
   useEffect(() => {
-    const columns = headerList.map((item, index) => {
+    const columns = headerList?.map((item, index) => {
       return {
         title: item.stringValue,
         dataIndex: dataList.length && TableDataTypeCorresValue[dataList[0][index].type],
@@ -132,7 +132,7 @@ export function TableBox({ headerList, dataList, className }: ITableProps) {
   }, [headerList])
 
   useEffect(() => {
-    const tableData = dataList.map((item: ITableCellItem[]) => {
+    const tableData = dataList?.map((item: ITableCellItem[]) => {
       const rowData: any = {}
       item.map((i: ITableCellItem) => {
         rowData[TableDataTypeCorresValue[i.type]] = i[TableDataTypeCorresValue[i.type]]
@@ -143,6 +143,13 @@ export function TableBox({ headerList, dataList, className }: ITableProps) {
   }, [dataList])
 
   return <div className={classnames(className, styles.tableBox)}>
-    <Table bordered pagination={false} columns={columns} dataSource={tableData} size="small" />
+    {
+      columns?.length ? <Table bordered pagination={false} columns={columns} dataSource={tableData} size="small" />
+        :
+        <>
+          <StateIndicator state='error' text={data.message}></StateIndicator>
+        </>
+    }
+
   </div>
 }

@@ -5,7 +5,7 @@ import AppHeader from '@/components/AppHeader';
 import Tabs, { ITab } from '@/components/Tabs';
 import Iconfont from '@/components/Iconfont';
 import SearchInput from '@/components/SearchInput';
-import LoadingContent from '@/components/Loading/LoadingContent';
+import StateIndicator from '@/components/StateIndicator';
 import ScrollLoading from '@/components/ScrollLoading';
 import sqlServer, { IGetHistoryListParams } from '@/service/history';
 import connectionServer from '@/service/connection'
@@ -40,7 +40,8 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
 
   const [currentTab, setCurrentTab] = useState(tabs[0].key);
   const [dataList, setDataList] = useState<IHistoryRecord[] | null>();
-  const [finished, setFinished] = useState(false);
+  // const [finished, setFinished] = useState(false);
+  const finished = useRef(false)
   const [connectionOptions, setConnectionOptions] = useState<SelectProps['options']>();
   const [currentConnection, setCurrentConnection] = useState<string>();
   const [databaseOptions, setDatabaseOptions] = useState<SelectProps['options']>();
@@ -49,13 +50,14 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
   const initialListParams: IGetHistoryListParams = {
     searchKey: '',
     pageNo: 1,
-    pageSize: 1000,
+    pageSize: 20,
     dataSourceId: '',
     databaseName: ''
   }
   const listParams = useRef(initialListParams)
 
   useUpdateEffect(() => {
+    finished.current = false
     getList();
   }, [currentTab])
 
@@ -81,7 +83,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
     const api = currentTab == TabsKey.SAVE ? sqlServer.getSaveList : sqlServer.getHistoryList;
     return api(listParams.current).then(res => {
       if (!res.hasNextPage) {
-        setFinished(true)
+        finished.current = true
       }
       if (listParams.current.pageNo === 1) {
         setDataList(res.data)
@@ -164,7 +166,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
     </div>
     <div className={styles.sqlListBox} ref={scrollerRef}>
       <ScrollLoading
-        finished={finished}
+        finished={finished.current}
         scrollerElement={scrollerRef}
         onReachBottom={getList}
         threshold={300}
@@ -190,9 +192,13 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
                 }
               </div>
             })
+
           }
         </div>
       </ScrollLoading>
+
+      {!dataList?.length && <StateIndicator state='empty'></StateIndicator>}
+      {finished.current && !!dataList?.length && <div className={styles.tips}>----列表是有底线的----</div>}
     </div >
   </div >
 })
