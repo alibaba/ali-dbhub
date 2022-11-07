@@ -103,12 +103,6 @@ export default memo<IProps>(function Setting({ className }) {
         onCancel={handleCancel}
         footer={false}
       >
-        {/* <div className={styles.nav}>
-
-        </div>
-        <div className={styles.main}>
-
-        </div> */}
         <div className={styles.title}>
           背景
         </div>
@@ -119,7 +113,7 @@ export default memo<IProps>(function Setting({ className }) {
             );
           })}
         </ul>
-        <div className={styles.title}>
+        {/* <div className={styles.title}>
           主题色
         </div>
         <ul className={styles.primaryColorList}>
@@ -130,7 +124,7 @@ export default memo<IProps>(function Setting({ className }) {
               </li>
             );
           })}
-        </ul>
+        </ul> */}
         <div className={styles.title}>
           语言
         </div>

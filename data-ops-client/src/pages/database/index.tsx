@@ -32,6 +32,7 @@ interface ITabItem extends IWindowTab {
 }
 
 const basicsTree: ITreeNode[] = []
+let monacoEditorExternal: any
 
 export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData: any, activeTabKey: string, windowTab: IWindowTab }) {
   const params: { id: string, type: string } = useParams();
@@ -56,12 +57,13 @@ export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData:
 
   const getEditor = (editor: any) => {
     monacoEditor.current = editor
+    monacoEditorExternal = editor
     const model = editor.getModel(editor)
     model.setValue(windowTab.sql || windowTab.ddl || '')
   }
 
   const callback = () => {
-    // monacoEditor.current && monacoEditor.current.layout()
+    monacoEditor.current && monacoEditor.current.layout()
   }
 
   const getMonacoEditorValue = () => {
@@ -348,7 +350,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   const callback = () => {
-    // editor && editor.layout()
+    monacoEditorExternal && monacoEditorExternal.layout()
   }
 
   const addWindowTab = (windowList: ITabItem[]) => {
