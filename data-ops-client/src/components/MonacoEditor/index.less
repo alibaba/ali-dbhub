@@ -2,9 +2,24 @@
 
 .box{
   height: 100%;
+  :global{
+    .monaco-editor{
+      width: 100% !important;
+      >div{
+        width: 100% !important;
+        .editor-scrollable{
+          width: 100% !important;
+        }
+      }
+    }
+    .view-lines{
+      width: calc(100% - 62px) !important;
+    }
+  }
 }
 
 .editorContainer{
   height: 100%;
   resize: vertical; overflow: auto
 }
+

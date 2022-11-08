@@ -22,26 +22,13 @@ interface DataType {
 }
 
 export default memo<IProps>(function SearchResult({ className, manageResultDataList = [] }) {
-  function size() {
-    let a: any = []
-
-    for (let i = 0; i < 200000; i++) {
-      a.push({
-        id: i,
-        startTime: 1665540690000,
-        databaseName: 'ATA',
-        sql: 'SELECT * FROM adbs',
-        status: StatusType.SUCCESS,
-      })
-    }
-    return
-  }
   const [isUnfold, setIsUnfold] = useState(true);
-  const [currentTab, setCurrentTab] = useState('0')
+  const [currentTab, setCurrentTab] = useState('0');
 
-  const renderStartTime = (text: string) => {
-    return formatDate(text, 'yyyy-MM-dd hh:mm:ss')
-  }
+  useEffect(() => {
+    setCurrentTab('0')
+  }, [manageResultDataList])
+
   const renderStatus = (text: string) => {
     return <div className={styles.tableStatus}>
       <i className={classnames(styles.dot, { [styles.successDot]: text == StatusType.SUCCESS })}></i>
