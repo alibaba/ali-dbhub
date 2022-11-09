@@ -50,17 +50,17 @@ const menuList: IMenu[] = [
   {
     key: handleType.EDIT,
     icon: '\ue60f',
-    title: '修改名称',
+    title: i18n('connection.button.edit'),
   },
   {
     key: handleType.CLONE,
     icon: '\ue6ca',
-    title: '克隆连接',
+    title: i18n('connection.button.clone'),
   },
   {
     key: handleType.DELETE,
     icon: '\ue604',
-    title: '删除链接',
+    title: i18n('connection.button.delete'),
   }
 ];
 
@@ -249,7 +249,7 @@ export default memo<IProps>(function ConnectionPage(props) {
             onClick={showLinkModal}
           >
             <Iconfont code="&#xe631;"></Iconfont>
-            {i18n('database.input.newLink')}
+            {i18n('connection.input.newLink')}
           </Button>
         </div>
       }

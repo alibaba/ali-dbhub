@@ -14,3 +14,30 @@
   justify-content: center;
   align-items: center;
 }
+
+.textShadow {
+  font-size: 30px;
+  color: pink;
+  font-weight: 700;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background: linear-gradient(to right , rgb(229, 88, 88) 0, #fff 20px , rgb(213, 29, 29) 30px);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-position: 0;
+  animation: shine 2.5s linear infinite;
+}
+@keyframes shine {
+   0% {
+       background-position: 0;
+   }
+   50% {
+       background-position: 230px;
+   }
+   100% {
+       background-position: 230px;
+   }
+}

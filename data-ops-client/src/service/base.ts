@@ -70,7 +70,7 @@ request.interceptors.request.use((url, options) => {
 
 export default function createRequest<P = void, R = {}>(url:string, options:IOptions){
   const {method = 'get', mock = false,errorLevel = 'toast'} = options;
-  const _baseURL = mock ? mockUrl : baseURL
+  const _baseURL = mock ? mockUrl : baseURL;
   return function(params: P){
     const paramsInUrl: string[] = [];
     const _url = url.replace(/:(.+?)\b/, (_, name:string) => {

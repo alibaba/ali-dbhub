@@ -27,11 +27,11 @@ enum TabsKey {
 
 const tabs: ITab[] = [
   {
-    label: '我的保存',
+    label: i18n('history.tab.mySave'),
     key: TabsKey.SAVE
   },
   {
-    label: '执行记录',
+    label: i18n('history.tab.executionHistory'),
     key: TabsKey.HISTPRY
   }
 ]
@@ -139,7 +139,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
 
   return <div className={classnames(className, styles.box)}>
     <div className={styles.header}>
-      <div className={styles.title}>我的SQL</div>
+      <div className={styles.title}>{i18n('history.title.myHistory')}</div>
     </div>
     <Tabs
       className={styles.tabs}
@@ -148,18 +148,18 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
       tabs={tabs}
     ></Tabs>
     <div className={styles.searchInputBox}>
-      <SearchInput onChange={searchChange} className={styles.searchInput} placeholder='搜索'></SearchInput>
+      <SearchInput onChange={searchChange} className={styles.searchInput} placeholder={i18n('common.text.search')}></SearchInput>
       <Select
         className={styles.select}
         // allowClear
-        placeholder="请选择链接"
+        placeholder={i18n('common.placeholder.select', '连接')}
         onChange={handleChangeConnection}
         options={connectionOptions}
       />
       <Select
         // allowClear
         className={styles.select}
-        placeholder="请选择数据库"
+        placeholder={i18n('common.placeholder.select', '数据库')}
         onChange={handleChangeDatabase}
         options={databaseOptions}
       />

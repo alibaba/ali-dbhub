@@ -129,8 +129,8 @@ export function DatabaseQuery({ activeTabKey, windowTab }: { activeTabKey: strin
   return <>
     <div className={classnames(styles.databaseQuery, { [styles.databaseQueryConceal]: windowTab.id !== activeTabKey })}>
       <div className={styles.operatingArea}>
-        <Button type="primary" onClick={executeSql}>执行</Button>
-        <Button onClick={saveWindowTabTab}>保存</Button>
+        <Button type="primary" onClick={executeSql}>{i18n('common.button.execute')}</Button>
+        <Button onClick={saveWindowTabTab}>{i18n('common.button.save')}</Button>
       </div>
       <div ref={monacoEditorBox} className={styles.monacoEditor}>
         {
@@ -263,13 +263,13 @@ export default memo<IProps>(function DatabasePage({ className }) {
           children: [
             {
               key: '1',
-              name: '列',
+              name: i18n('common.text.column'),
               nodeType: TreeNodeType.LINE,
               children: toTreeList(item.columnList, 'name', 'nodeType', TreeNodeType.LINE)
             },
             {
               key: '2',
-              name: '索引',
+              name: i18n('common.text.indexes'),
               nodeType: TreeNodeType.INDEXES,
               children: toTreeList(item.indexList, 'name', 'nodeType', TreeNodeType.INDEXES)
             }
@@ -402,7 +402,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
             </Dropdown>
 
             <div className={styles.searchBox}>
-              <SearchInput onChange={searchTable} placeholder='搜索'></SearchInput>
+              <SearchInput onChange={searchTable} placeholder={i18n('common.text.search')}></SearchInput>
               <div className={classnames(styles.refresh, styles.button)} onClick={() => { currentDB && getTableList(currentDB) }}>
                 <Iconfont code="&#xec08;"></Iconfont>
               </div>
@@ -413,7 +413,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
           </div>
           <div className={styles.overview}>
             <Iconfont code="&#xe63d;"></Iconfont>
-            <span>{i18n('database.button.overview')}</span>
+            <span>{i18n('connection.button.overview')}</span>
           </div>
           <Tree className={styles.tree} treeData={treeData}></Tree>
         </div>

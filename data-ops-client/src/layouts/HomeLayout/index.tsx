@@ -25,7 +25,7 @@ const navConfig: INavItem[] = [
   },
 
   {
-    title: '我的SQL',
+    title: i18n('home.nav.myHistory'),
     icon: '\ue610',
     path: '/sql-history'
   }

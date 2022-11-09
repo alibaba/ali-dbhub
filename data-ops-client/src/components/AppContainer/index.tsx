@@ -5,6 +5,7 @@ import { ConfigProvider } from 'antd';
 import { history } from 'umi';
 import { useLogin } from '@/utils/hooks';
 import miscService from '@/service/misc'
+import i18n from '@/i18n';
 
 interface IProps {
   className?: any;
@@ -68,7 +69,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         </div>
         :
         <div className={styles.starting}>
-          服务启动中...
+          {i18n('common.text.serviceStarting')}
         </div>
     }
   </ConfigProvider>
