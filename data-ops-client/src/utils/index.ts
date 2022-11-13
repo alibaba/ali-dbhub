@@ -114,10 +114,10 @@ export function approximateTreeNode(treeData: ITreeNode[], target: string, isDel
 }
 
 export function getLocationHash(){
-    const righthash = location.hash.split('?')[1]
+    const rightHash = location.hash.split('?')[1]
     const params:any = {}
-    if (righthash) {
-      const arr = righthash.split('&')
+    if (rightHash) {
+      const arr = rightHash.split('&')
       arr.map(item => {
         const splitRes = item.split('=')
         params[splitRes[0]] = splitRes[1]
