@@ -25,7 +25,7 @@ function createWindow() {
     },
   });
   //  * 加载应用-----  electron-quick-start中默认的加载入口
-  mainWindow.loadURL('http://localhost:8000');
+  mainWindow.loadURL('http://localhost:10824');
   // if (isPro) {
     // mainWindow.loadFile(`${__dirname}/dist/index.html`);
   // } else {

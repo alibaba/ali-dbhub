@@ -11,7 +11,7 @@
   ],
   "description": "Electron Application",
   "scripts": {
-    "build": "rm -rf ../electorn-build && cp -r ../dist ./ && electron-builder"
+    "build": "rm -rf ../electron-build && cp -r ../dist ./ && electron-builder"
   },
   "devDependencies": {
     "electron": "^20.1.4",
