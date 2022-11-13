@@ -6,6 +6,7 @@ spring:
       settings:
         trace: true
         web-allow-others: true
+# 端口号
 server:
   port: 7001
 # flywaydb 输出执行sql的日志
