@@ -13,13 +13,7 @@ spring:
     basename: i18n/messages/messages
     encoding: UTF-8
     fallbackToSystemLocale: true
-  h2:
-    console:
-      enabled: true
-      path: /h2
-      settings:
-        trace: true
-        web-allow-others: true
+  #  用于数据库表结构版本管理
   flyway:
     locations: classpath:db/migration
   jmx:
