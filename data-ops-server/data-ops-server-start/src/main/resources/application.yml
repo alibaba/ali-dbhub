@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     # 配置自带数据库的相对路径
@@ -27,3 +28,5 @@ spring:
 #    lazy-initialization: true
   jmx:
     enabled: false
+server:
+  port: 10824
