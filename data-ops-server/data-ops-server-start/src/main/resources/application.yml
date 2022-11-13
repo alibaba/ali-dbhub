@@ -30,3 +30,6 @@ spring:
     enabled: false
 server:
   port: 10824
+data:
+  ops:
+    version: 1.0.0
