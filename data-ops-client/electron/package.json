@@ -2,7 +2,7 @@
   "name": "data-ops-electron",
   "private": true,
   "license": "MIT",
-  "author": "yuqin",
+  "author": "yuqin, hexi",
   "version": "0.0.1",
   "main": "main.js",
   "homepage": "./",
