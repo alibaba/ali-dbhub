@@ -1,0 +1,15 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+        trace: true
+        web-allow-others: true
+server:
+  port: 7001
+# flywaydb 输出执行sql的日志
+logging:
+  level:
+    org:
+      flywaydb: debug
