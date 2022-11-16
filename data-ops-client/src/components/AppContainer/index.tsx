@@ -4,7 +4,8 @@ import classnames from 'classnames';
 import { ConfigProvider } from 'antd';
 import { history } from 'umi';
 import { useLogin } from '@/utils/hooks';
-import connectionService from '@/service/connection'
+import miscService from '@/service/misc'
+import i18n from '@/i18n';
 
 interface IProps {
   className?: any;
@@ -32,15 +33,16 @@ export default memo<IProps>(function AppContainer({ className, children }) {
   }, [])
 
   function detectionService() {
+    let flag = 1
     const time = setInterval(() => {
-      let p = {
-        pageNo: 1,
-        pageSize: 1,
-      }
-      connectionService.getList(p).then(res => {
+      flag++
+      miscService.testService().then(() => {
         clearInterval(time)
         setServiceStart(true)
       })
+      if (flag > 20) {
+        clearInterval(time)
+      }
     }, 300)
   }
 
@@ -67,7 +69,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         </div>
         :
         <div className={styles.starting}>
-          服务启动中...
+          {i18n('common.text.serviceStarting')}
         </div>
     }
   </ConfigProvider>

@@ -5,7 +5,8 @@ import Loading from '../Loading/Loading';
 
 interface IProps {
   className?: string;
-  state: 'loading' | 'empty' | 'error'
+  state: 'loading' | 'empty' | 'error';
+  text: string;
 }
 
 export const enum State {
@@ -14,12 +15,17 @@ export const enum State {
   ERROR = 'error',
 }
 
-export default memo<IProps>(function StateIndicator({ className, state }) {
+export default memo<IProps>(function StateIndicator({ className, state, text }) {
 
   const renderState = () => {
     switch (state) {
       case 'loading':
         return <Loading></Loading>;
+      case 'error':
+        return <div className={styles.errorBox}>
+          <div className={classnames(className, styles[state])}></div >
+          <div className={styles.errorText}>{text}</div>
+        </div>
       default:
         return <div className={classnames(className, styles[state])}></div >
     }

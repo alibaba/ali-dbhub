@@ -4,6 +4,7 @@ import { message } from 'antd';
 export interface IOptions{
   method?: "get" | 'post' | 'put' | 'delete';
   mock?: boolean;
+  errorLevel?: 'toast' | 'prompt' | 'critical' | false;
 }
 
 console.log('location', location)
@@ -28,9 +29,9 @@ const codeMessage:{[errorCode:number]:string} = {
 };
 
 const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
-const locaServiceUrl = 'http://127.0.0.1:8080';
+const localServiceUrl = 'http://127.0.0.1:10824';
 
-const baseURL = location.href.indexOf('dist/index.html') > -1 ? locaServiceUrl : location.origin;
+const baseURL = location.href.indexOf('dist/index.html') > -1 ? localServiceUrl : location.origin;
 console.log(baseURL)
 const errorHandler = (error: ResponseError) => {
   const { response } = error;
@@ -68,8 +69,8 @@ request.interceptors.request.use((url, options) => {
 // });
 
 export default function createRequest<P = void, R = {}>(url:string, options:IOptions){
-  const {method = 'get', mock = false} = options;
-  const _baseURL = mock ? mockUrl : baseURL
+  const {method = 'get', mock = false,errorLevel = 'toast'} = options;
+  const _baseURL = mock ? mockUrl : baseURL;
   return function(params: P){
     const paramsInUrl: string[] = [];
     const _url = url.replace(/:(.+?)\b/, (_, name:string) => {
@@ -105,7 +106,7 @@ export default function createRequest<P = void, R = {}>(url:string, options:IOpt
       .then(res=>{
         if(!res) return
         const {success, errorCode, errorMessage, data} = res
-        if(!success){
+        if(!success && errorLevel === 'toast'){
           message.error(`${errorCode}: ${errorMessage}`)
           reject(`${errorCode}: ${errorMessage}`)
         }

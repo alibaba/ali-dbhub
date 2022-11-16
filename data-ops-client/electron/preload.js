@@ -14,7 +14,7 @@ contextBridge.exposeInMainWorld('myAPI', {
       if (data.toString().indexOf('Started Application') !== -1) {
         console.log('load success');
         // TODO: 
-        // window.location.href = 'http://localhost:8000';
+        // window.location.href = 'http://localhost:10824';
       }
     });
     ls.stderr.on('data', (data) => {

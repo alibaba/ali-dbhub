@@ -28,7 +28,6 @@ export default memo(function MonacoEditor(props: IProps) {
   const [editor, setEditor] = useState<any>();
   const themeColor = useTheme();
 
-
   useEffect(() => {
     const editor = monaco.editor.create(document.getElementById(`monaco-editor-${id}`)!, {
       value: '',
@@ -83,29 +82,6 @@ export default memo(function MonacoEditor(props: IProps) {
     monaco.editor.setTheme(themeColor == 'dark' ? 'BlackTheme' : 'Default');
   }, [themeColor])
 
-  // 获取 SQL 语法提示
-  const getSQLSuggest = () => {
-    return keywords.map((key: any) => ({
-      label: key,
-      kind: monaco.languages.CompletionItemKind.Enum,
-      insertText: key,
-    }))
-  }
-
-  // 获取选中区域的值
-  const getSelectionVal = () => {
-    const selection = editor.getSelection() // 获取光标选中的值
-    const { startLineNumber, endLineNumber, startColumn, endColumn } = selection
-    const model = editor.getModel(editor)
-    const value = model.getValueInRange({
-      startLineNumber,
-      startColumn,
-      endLineNumber,
-      endColumn,
-    })
-    return value
-  }
-
   // 设置编辑器的值
   const setValue = (editor: any, value: string) => {
     const model = editor.getModel(editor)
@@ -126,3 +102,74 @@ export default memo(function MonacoEditor(props: IProps) {
     <div id={`monaco-editor-${id}`} className={styles.editorContainer} />
   </div>
 });
+
+export interface IHintData {
+  [keys: string]: string[]
+}
+
+export function setEditorHint(hintData: IHintData) {
+  // 获取 SQL 语法提示
+  const getSQLSuggest = () => {
+    return keywords.map((key: any) => ({
+      label: key,
+      kind: monaco.languages.CompletionItemKind.Enum,
+      insertText: key,
+    }))
+  }
+
+  // 获取一级数据
+  const getFirstSuggest = () => {
+    return Object.keys(hintData).map((key) => ({
+      label: key,
+      kind: monaco.languages.CompletionItemKind.Constant,
+      insertText: key,
+    }))
+  }
+
+  // 获取二级数据
+  const getSecondSuggest = (keys: string) => {
+    const secondNames = hintData[keys]
+    if (!secondNames) {
+      return []
+    }
+    return secondNames?.map((name: any) => ({
+      label: name,
+      kind: monaco.languages.CompletionItemKind.Constant,
+      insertText: name,
+    }))
+  }
+
+  // 编辑器提示的提示实力
+  const editorHintExamples = monaco.languages.registerCompletionItemProvider('sql', {
+    triggerCharacters: ['.', ...keywords],
+    provideCompletionItems: (model: any, position: any) => {
+      let suggestions: any = []
+      const { lineNumber, column } = position
+      const textBeforePointer = model.getValueInRange({
+        startLineNumber: lineNumber,
+        startColumn: 0,
+        endLineNumber: lineNumber,
+        endColumn: column,
+      })
+
+      const tokens = textBeforePointer.trim().split(/\s+/)
+      const lastToken = tokens[tokens.length - 1] // 获取最后一段非空字符串
+
+      if (lastToken.endsWith('.')) {
+        const tokenNoDot = lastToken.slice(0, lastToken.length - 1)
+        if (Object.keys(hintData.current).includes(tokenNoDot)) {
+          suggestions = [...getSecondSuggest(tokenNoDot)]
+        }
+      } else if (lastToken === '.') {
+        suggestions = []
+      } else {
+        suggestions = [...getFirstSuggest(), ...getSQLSuggest()]
+      }
+      return {
+        suggestions
+      }
+    },
+  })
+
+  return editorHintExamples
+}

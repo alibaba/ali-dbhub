@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export default memo<IProps>(function SearchInput({ className, placeholder, onChange }) {
-  const [isFocus, setisFocus] = useState(false)
+  const [isFocus, setisFocus] = useState(false);
   return <div className={classnames(className, styles.searchInput, { [styles.focus]: isFocus })}>
     <Iconfont code="&#xe600;"></Iconfont>
     <Input

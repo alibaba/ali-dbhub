@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import { formatNaturalDate } from '@/utils/index';
 import Iconfont from '@/components/Iconfont';
 import ScrollLoading from '@/components/ScrollLoading';
+import StateIndicator from '@/components/StateIndicator';
 import i18n from '@/i18n';
 import { history } from 'umi';
 import connectionServer from '@/service/connection'
@@ -49,17 +50,17 @@ const menuList: IMenu[] = [
   {
     key: handleType.EDIT,
     icon: '\ue60f',
-    title: '修改名称',
+    title: i18n('connection.button.edit'),
   },
   {
     key: handleType.CLONE,
     icon: '\ue6ca',
-    title: '克隆连接',
+    title: i18n('connection.button.clone'),
   },
   {
     key: handleType.DELETE,
     icon: '\ue604',
-    title: '删除链接',
+    title: i18n('connection.button.delete'),
   }
 ];
 
@@ -248,7 +249,7 @@ export default memo<IProps>(function ConnectionPage(props) {
             onClick={showLinkModal}
           >
             <Iconfont code="&#xe631;"></Iconfont>
-            {i18n('database.input.newLink')}
+            {i18n('connection.input.newLink')}
           </Button>
         </div>
       }
@@ -259,10 +260,14 @@ export default memo<IProps>(function ConnectionPage(props) {
           onReachBottom={getConnectionList.bind(null, { superposition: true })}
           threshold={200}
         >
-          <div className={styles.connectionList}>
-            {connectionList?.map(item => <RenderCard key={item.id} item={item}></RenderCard>)}
-          </div>
+          {
+            !!connectionList?.length &&
+            <div className={styles.connectionList}>
+              {connectionList?.map(item => <RenderCard key={item.id} item={item}></RenderCard>)}
+            </div>
+          }
         </ScrollLoading>
+        {!connectionList?.length && <StateIndicator state='empty'></StateIndicator>}
       </div>
       <Modal
         title="连接数据库"
@@ -305,13 +310,13 @@ export default memo<IProps>(function ConnectionPage(props) {
           >
             <Input />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="端口"
             name="linkName"
           // rules={[{ required: true, message: '端口不可为空！' }]}
           >
             <Input />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="用户名"
             name="user"

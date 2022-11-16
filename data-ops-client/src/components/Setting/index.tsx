@@ -3,6 +3,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import Iconfont from '@/components/Iconfont';
 import { Modal, Button, Radio } from 'antd';
+import i18n from '@/i18n';
 
 interface IProps {
   className?: any;
@@ -103,14 +104,8 @@ export default memo<IProps>(function Setting({ className }) {
         onCancel={handleCancel}
         footer={false}
       >
-        {/* <div className={styles.nav}>
-
-        </div>
-        <div className={styles.main}>
-
-        </div> */}
         <div className={styles.title}>
-          背景
+          {i18n('common.text.background')}
         </div>
         <ul className={styles.backgroundList}>
           {backgroundList.map((item) => {
@@ -119,7 +114,7 @@ export default memo<IProps>(function Setting({ className }) {
             );
           })}
         </ul>
-        <div className={styles.title}>
+        {/* <div className={styles.title}>
           主题色
         </div>
         <ul className={styles.primaryColorList}>
@@ -130,14 +125,14 @@ export default memo<IProps>(function Setting({ className }) {
               </li>
             );
           })}
-        </ul>
+        </ul> */}
         <div className={styles.title}>
-          语言
+          {i18n('common.text.language')}
         </div>
         <div>
           <Radio.Group onChange={changeLang} value={lang}>
-            <Radio value='zh-cn'>中文</Radio>
-            <Radio value='en'>英文</Radio>
+            <Radio value='zh-cn'>{i18n('common.text.zh-cn')}</Radio>
+            <Radio value='en'>{i18n('common.text.en')}</Radio>
           </Radio.Group>
         </div>
       </Modal>

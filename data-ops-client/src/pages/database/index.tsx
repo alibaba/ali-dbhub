@@ -8,7 +8,7 @@ import AppHeader from '@/components/AppHeader';
 import Iconfont from '@/components/Iconfont';
 import Tree from '@/components/Tree';
 import Loading from '@/components/Loading/Loading';
-import MonacoEditor from '@/components/MonacoEditor';
+import MonacoEditor, { setEditorHint, IHintData } from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
 import SearchResult from '@/components/SearchResult';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
@@ -32,14 +32,14 @@ interface ITabItem extends IWindowTab {
 }
 
 const basicsTree: ITreeNode[] = []
+let monacoEditorExternal: any
 
-export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData: any, activeTabKey: string, windowTab: IWindowTab }) {
+export function DatabaseQuery({ activeTabKey, windowTab }: { activeTabKey: string, windowTab: IWindowTab }) {
   const params: { id: string, type: string } = useParams();
   const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode;
   const [manageResultDataList, setManageResultDataList] = useState<any>();
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
   const monacoEditor = useRef<any>(null);
-  const editorHintData = useRef<any>(null);
 
   useEffect(() => {
     connectConsole();
@@ -56,12 +56,13 @@ export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData:
 
   const getEditor = (editor: any) => {
     monacoEditor.current = editor
+    monacoEditorExternal = editor
     const model = editor.getModel(editor)
     model.setValue(windowTab.sql || windowTab.ddl || '')
   }
 
   const callback = () => {
-    // monacoEditor.current && monacoEditor.current.layout()
+    monacoEditor.current && monacoEditor.current.layout()
   }
 
   const getMonacoEditorValue = () => {
@@ -72,8 +73,22 @@ export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData:
     }
   }
 
+  // 获取选中区域的值
+  const getSelectionVal = () => {
+    const selection = monacoEditorExternal.getSelection() // 获取光标选中的值
+    const { startLineNumber, endLineNumber, startColumn, endColumn } = selection
+    const model = monacoEditorExternal.getModel(monacoEditorExternal)
+    const value = model.getValueInRange({
+      startLineNumber,
+      startColumn,
+      endLineNumber,
+      endColumn,
+    })
+    return value
+  }
+
   const executeSql = () => {
-    const sql = getMonacoEditorValue()
+    const sql = getSelectionVal() || getMonacoEditorValue()
     if (!sql) {
       message.warning('请输入sql');
       return
@@ -114,12 +129,11 @@ export function DatabaseQuery({ treeData, activeTabKey, windowTab }: { treeData:
   return <>
     <div className={classnames(styles.databaseQuery, { [styles.databaseQueryConceal]: windowTab.id !== activeTabKey })}>
       <div className={styles.operatingArea}>
-        <Button type="primary" onClick={executeSql}>执行</Button>
-        <Button onClick={saveWindowTabTab}>保存</Button>
+        <Button type="primary" onClick={executeSql}>{i18n('common.button.execute')}</Button>
+        <Button onClick={saveWindowTabTab}>{i18n('common.button.save')}</Button>
       </div>
       <div ref={monacoEditorBox} className={styles.monacoEditor}>
         {
-          // editorHintData.current &&
           <MonacoEditor id={windowTab.id!} defaultValue={windowTab.sql} getEditor={getEditor}></MonacoEditor>
         }
       </div>
@@ -144,8 +158,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [DBList, setDBList] = useState<IDB[]>();
   const [openDropdown, setOpenDropdown] = useState(false);
   const monacoHint = useRef<any>(null);
-  const editorHintData = useRef<any>(null);
-
 
   const closeDropdownFn = () => {
     setOpenDropdown(false)
@@ -153,82 +165,18 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   const disposalEditorHintData = (tableList: any) => {
     try {
+      monacoHint.current?.dispose()
       const myEditorHintData: any = {}
       tableList?.map((item: any) => {
         myEditorHintData[item.name] = item.children[0].children.map((item: any) => {
           return item.name
         })
       })
-      editorHintData.current = myEditorHintData
+      monacoHint.current = setEditorHint(myEditorHintData);
     }
     catch {
-      editorHintData.current = {}
+
     }
-  }
-
-  const registerCompletion = () => {
-    monacoHint.current = monaco.languages.registerCompletionItemProvider('sql', {
-      triggerCharacters: ['.', ...keywords],
-      provideCompletionItems: (model: any, position: any) => {
-        let suggestions: any = []
-        const { lineNumber, column } = position
-        const textBeforePointer = model.getValueInRange({
-          startLineNumber: lineNumber,
-          startColumn: 0,
-          endLineNumber: lineNumber,
-          endColumn: column,
-        })
-
-        const tokens = textBeforePointer.trim().split(/\s+/)
-        const lastToken = tokens[tokens.length - 1] // 获取最后一段非空字符串
-
-        if (lastToken.endsWith('.')) {
-          const tokenNoDot = lastToken.slice(0, lastToken.length - 1)
-          if (Object.keys(editorHintData.current).includes(tokenNoDot)) {
-            suggestions = [...getTableSuggest(tokenNoDot)]
-          }
-        } else if (lastToken === '.') {
-          suggestions = []
-        } else {
-          suggestions = [...getDBSuggest(), ...getSQLSuggest()]
-        }
-        console.log(suggestions)
-        return {
-          suggestions
-        }
-      },
-    })
-  }
-
-  // 获取 SQL 语法提示
-  const getSQLSuggest = () => {
-    return keywords.map((key: any) => ({
-      label: key,
-      kind: monaco.languages.CompletionItemKind.Enum,
-      insertText: key,
-    }))
-  }
-
-  // 获取DB数据
-  const getDBSuggest = () => {
-    return Object.keys(editorHintData.current).map((key) => ({
-      label: key,
-      kind: monaco.languages.CompletionItemKind.Constant,
-      insertText: key,
-    }))
-  }
-
-  // 获取Table数据
-  const getTableSuggest = (dbName: any) => {
-    const tableNames = editorHintData.current[dbName]
-    if (!tableNames) {
-      return []
-    }
-    return tableNames.map((name: any) => ({
-      label: name,
-      kind: monaco.languages.CompletionItemKind.Constant,
-      insertText: name,
-    }))
   }
 
   useEffect(() => {
@@ -299,6 +247,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   const getTableList = (currentDB: IDB) => {
+    setTreeData(null)
     let p = {
       dataSourceId: params.id,
       databaseName: currentDB?.name,
@@ -314,13 +263,13 @@ export default memo<IProps>(function DatabasePage({ className }) {
           children: [
             {
               key: '1',
-              name: '列',
+              name: i18n('common.text.column'),
               nodeType: TreeNodeType.LINE,
               children: toTreeList(item.columnList, 'name', 'nodeType', TreeNodeType.LINE)
             },
             {
               key: '2',
-              name: '索引',
+              name: i18n('common.text.indexes'),
               nodeType: TreeNodeType.INDEXES,
               children: toTreeList(item.indexList, 'name', 'nodeType', TreeNodeType.INDEXES)
             }
@@ -330,9 +279,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
       fixedTreeData.current = tableList
       setTreeData(tableList)
-      monacoHint.current?.dispose()
       disposalEditorHintData(tableList)
-      registerCompletion();
       return tableList
     })
 
@@ -348,7 +295,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   const callback = () => {
-    // editor && editor.layout()
+    monacoEditorExternal && monacoEditorExternal.layout()
   }
 
   const addWindowTab = (windowList: ITabItem[]) => {
@@ -455,18 +402,18 @@ export default memo<IProps>(function DatabasePage({ className }) {
             </Dropdown>
 
             <div className={styles.searchBox}>
-              <SearchInput onChange={searchTable} placeholder='搜索'></SearchInput>
-              {/* <div className={classnames(styles.refresh, styles.button)}>
+              <SearchInput onChange={searchTable} placeholder={i18n('common.text.search')}></SearchInput>
+              <div className={classnames(styles.refresh, styles.button)} onClick={() => { currentDB && getTableList(currentDB) }}>
                 <Iconfont code="&#xec08;"></Iconfont>
               </div>
-              <div className={classnames(styles.create, styles.button)}>
+              {/* <div className={classnames(styles.create, styles.button)}>
                 <Iconfont code="&#xe631;"></Iconfont>
               </div> */}
             </div>
           </div>
           <div className={styles.overview}>
             <Iconfont code="&#xe63d;"></Iconfont>
-            <span>{i18n('database.button.overview')}</span>
+            <span>{i18n('connection.button.overview')}</span>
           </div>
           <Tree className={styles.tree} treeData={treeData}></Tree>
         </div>
@@ -488,7 +435,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
           {
             currentDB &&
             windowList?.map((i: IWindowTab) => {
-              return <DatabaseQuery treeData={treeData} windowTab={i} key={i.databaseName + i.id} activeTabKey={activeKey!}></DatabaseQuery>
+              return <DatabaseQuery windowTab={i} key={i.databaseName + i.id} activeTabKey={activeKey!}></DatabaseQuery>
             })
           }
         </div>

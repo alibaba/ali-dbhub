@@ -7,6 +7,7 @@ export interface IGetConnectionParams {
   pageSize: number;
 }
 
+
 const getList = createRequest<IGetConnectionParams, IPageResponse<IConnectionBase>>('/api/connection/manage/list',{});
 
 const getDetaile = createRequest<{id:string}, IConnectionBase>('/api/connection/manage/:id',{});

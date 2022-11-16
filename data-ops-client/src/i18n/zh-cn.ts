@@ -9,18 +9,35 @@ export default {
   'common.tip.later': '后',
   'common.tip.now': '现在',
   'common.tip.justNow': '刚刚',
+  'common.text.search': '搜索',
+  'common.placeholder.select': '请选择{1}',
+  'common.text.serviceStarting': '服务启动中...',
+  'common.text.column': '列',
+  'common.text.indexes': '索引',
+  'common.button.save': '保存',
+  'common.button.execute': '执行',
+  'common.text.background': '背景',
+  'common.text.language': '语言',
+  'common.text.en': '英文',
+  'common.text.zh-cn': '中文',
 
   'home.nav.database': '连接管理',
-  'home.nav.mySql': '我的SQL',
+  'home.nav.myHistory': '历史记录',
   'home.text.visitedTime': '最近访问时间：',
+
+  'history.title.myHistory': '我的SQL',
+  'history.tab.mySave': '我的保存',
+  'history.tab.executionHistory': '执行记录',
 
   'home.title.name': '数据库',
   'home.title.link': '连接',
   'home.title.setting': '设置',
   'home.title.query': '查询',
 
-  'database.buttonn.colorSwitch': '颜色切换',
-  'database.button.overview': '连接概览',
-  'database.input.search': '搜索表',
-  'database.input.newLink': '新建连接'
+  'connection.buttonn.colorSwitch': '颜色切换',
+  'connection.button.overview': '连接概览',
+  'connection.input.newLink': '新建连接',
+  'connection.button.edit': '修改连接',
+  'connection.button.clone': '克隆连接',
+  'connection.button.delete': '删除连接' 
 }

@@ -5,7 +5,7 @@ import AppHeader from '@/components/AppHeader';
 import Tabs, { ITab } from '@/components/Tabs';
 import Iconfont from '@/components/Iconfont';
 import SearchInput from '@/components/SearchInput';
-import LoadingContent from '@/components/Loading/LoadingContent';
+import StateIndicator from '@/components/StateIndicator';
 import ScrollLoading from '@/components/ScrollLoading';
 import sqlServer, { IGetHistoryListParams } from '@/service/history';
 import connectionServer from '@/service/connection'
@@ -27,11 +27,11 @@ enum TabsKey {
 
 const tabs: ITab[] = [
   {
-    label: '我的保存',
+    label: i18n('history.tab.mySave'),
     key: TabsKey.SAVE
   },
   {
-    label: '执行记录',
+    label: i18n('history.tab.executionHistory'),
     key: TabsKey.HISTPRY
   }
 ]
@@ -40,7 +40,8 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
 
   const [currentTab, setCurrentTab] = useState(tabs[0].key);
   const [dataList, setDataList] = useState<IHistoryRecord[] | null>();
-  const [finished, setFinished] = useState(false);
+  // const [finished, setFinished] = useState(false);
+  const finished = useRef(false)
   const [connectionOptions, setConnectionOptions] = useState<SelectProps['options']>();
   const [currentConnection, setCurrentConnection] = useState<string>();
   const [databaseOptions, setDatabaseOptions] = useState<SelectProps['options']>();
@@ -49,13 +50,14 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
   const initialListParams: IGetHistoryListParams = {
     searchKey: '',
     pageNo: 1,
-    pageSize: 1000,
+    pageSize: 20,
     dataSourceId: '',
     databaseName: ''
   }
   const listParams = useRef(initialListParams)
 
   useUpdateEffect(() => {
+    finished.current = false
     getList();
   }, [currentTab])
 
@@ -81,7 +83,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
     const api = currentTab == TabsKey.SAVE ? sqlServer.getSaveList : sqlServer.getHistoryList;
     return api(listParams.current).then(res => {
       if (!res.hasNextPage) {
-        setFinished(true)
+        finished.current = true
       }
       if (listParams.current.pageNo === 1) {
         setDataList(res.data)
@@ -137,7 +139,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
 
   return <div className={classnames(className, styles.box)}>
     <div className={styles.header}>
-      <div className={styles.title}>我的SQL</div>
+      <div className={styles.title}>{i18n('history.title.myHistory')}</div>
     </div>
     <Tabs
       className={styles.tabs}
@@ -146,25 +148,25 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
       tabs={tabs}
     ></Tabs>
     <div className={styles.searchInputBox}>
-      <SearchInput onChange={searchChange} className={styles.searchInput} placeholder='搜索'></SearchInput>
+      <SearchInput onChange={searchChange} className={styles.searchInput} placeholder={i18n('common.text.search')}></SearchInput>
       <Select
         className={styles.select}
         // allowClear
-        placeholder="请选择链接"
+        placeholder={i18n('common.placeholder.select', '连接')}
         onChange={handleChangeConnection}
         options={connectionOptions}
       />
       <Select
         // allowClear
         className={styles.select}
-        placeholder="请选择数据库"
+        placeholder={i18n('common.placeholder.select', '数据库')}
         onChange={handleChangeDatabase}
         options={databaseOptions}
       />
     </div>
     <div className={styles.sqlListBox} ref={scrollerRef}>
       <ScrollLoading
-        finished={finished}
+        finished={finished.current}
         scrollerElement={scrollerRef}
         onReachBottom={getList}
         threshold={300}
@@ -190,9 +192,13 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
                 }
               </div>
             })
+
           }
         </div>
       </ScrollLoading>
+
+      {!dataList?.length && <StateIndicator state='empty'></StateIndicator>}
+      {finished.current && !!dataList?.length && <div className={styles.tips}>----列表是有底线的----</div>}
     </div >
   </div >
 })
