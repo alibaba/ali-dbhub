@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         # os: [windows-latest, macos-latest, ubuntu-latest]
-        os: [macos-latest, windows-latest]
+        os: [macos-latest]
 
     # create steps
     steps:
@@ -43,9 +43,9 @@ jobs:
           npm install 
           npm run build
 
-      - name: change dir
-        if: runner.os == 'Windows'
-        run: dir
+      # - name: change dir
+      #   if: runner.os == 'Windows'
+      #   run: dir
 
       - name: npm install electron
         run: |
@@ -58,21 +58,21 @@ jobs:
       #   run: |
       #     npx rimraf "electron-build/!(*.exe)"
 
-      - name: Cleanup Artifacts for MacOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          npx rimraf "electron-build/!(*.dmg)"
+      # - name: Cleanup Artifacts for MacOS
+      #   if: matrix.os == 'macos-latest'
+      #   run: |
+      #     npx rimraf "electron-build/!(*.dmg)"
 
       - name: upload artifacts
         uses: actions/upload-artifact@main
         with:
           name: ${{ matrix.os }}
-          path: electron-build
+          path: ~/work/data-ops/data-ops/data-ops-client/electron-build
 
       - name: release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: "~/work/data-ops/data-ops/data-ops-client/electron-build/**"
+          files: ~/work/data-ops/data-ops/data-ops-client/electron-build/**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
