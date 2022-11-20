@@ -1,26 +1,38 @@
-name: test build electron 22
+#
+#    Copyright 2009-2021 the original author or authors.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
 
-on: [ push, pull_request ]
-# on:
-#   push:
-#     tags:
-#       - "v*.*.*"
+name: testsz3
+
+on: [push, pull_request]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 8]
+        distribution: [ 'adopt' ]
+      fail-fast: false
+      max-parallel: 4
+    name: Test JDK ${{ matrix.java }}
 
-  release:
-    # job's name
-    name: build and release electron app
-    runs-on: ${{ matrix.os }}
-
-  strategy:
-    fail-fast: false
-    matrix:
-    # os: [windows-latest, macos-latest, ubuntu-latest]
-    os: [ macos-15.0 ]
-
-  # create steps
-  steps:
-    # check out repository
-    - name: Check out git repository
-      uses: actions/checkout@main
+    steps:
+      - uses: actions/checkout@main
+      - name: Set up JDK
+        uses: actions/setup-java@main
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ matrix.distribution }}
