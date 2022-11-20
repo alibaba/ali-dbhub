@@ -53,10 +53,10 @@ jobs:
       #   run: |
       #     npx rimraf "electron-build/!(*.exe)"
 
-      - name: Cleanup Artifacts for MacOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          npx rimraf "electron-build/!(*.dmg)"
+      # - name: Cleanup Artifacts for MacOS
+      #   if: matrix.os == 'macos-latest'
+      #   run: |
+      #     npx rimraf "electron-build/!(*.dmg)"
 
       - name: upload artifacts
         uses: actions/upload-artifact@main
