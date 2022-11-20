@@ -2,10 +2,11 @@
 name: Build Electron
 
 # Workflow's trigger
-on:
-  push:
-    tags:
-      - "v*.*.*"
+on: [ push, pull_request ]
+# on:
+#   push:
+#     tags:
+#       - "v*.*.*"
 
 # Workflow's jobs
 jobs:
