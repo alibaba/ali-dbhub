@@ -1,4 +1,4 @@
-name: test build electron
+name: test build electron 22
 
 on: [ push, pull_request ]
 # on:
