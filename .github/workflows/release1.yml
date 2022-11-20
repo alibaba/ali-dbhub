@@ -15,7 +15,6 @@ jobs:
         with:
           java-version: 8
           distribution: 'adopt'
-          java-package: jre
           cache: maven
       - name: Test with Maven22
         run: echo $JAVA_HOME
