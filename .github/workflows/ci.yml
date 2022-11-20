@@ -11,15 +11,9 @@ jobs:
       - name: Install Java and Maven
         uses: actions/setup-java@main
         with:
-          java-version: 8
+          java-version: '8'
           distribution: 'adopt'
-      - name: Cache local Maven repository
-        uses: actions/cache@main
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2
+          cache: 'maven'
       # 安装各种数据库 用于测试
       - name: Docker Compose Action
         uses: isbang/compose-action@v1.4.1
