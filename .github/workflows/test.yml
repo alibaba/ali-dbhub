@@ -1,4 +1,3 @@
-
 name: test build electron
 
 on: [ push, pull_request ]
@@ -18,7 +17,7 @@ jobs:
     fail-fast: false
     matrix:
     # os: [windows-latest, macos-latest, ubuntu-latest]
-    os: [macos-15.0]
+    os: [ macos-15.0 ]
 
   # create steps
   steps:
