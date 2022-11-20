@@ -83,7 +83,7 @@ export default defineConfig({
   chainWebpack,
   proxy: {
     '/api': {
-      'target': 'http://localhost/:10824',
+      'target': 'http://localhost:10824',
       'changeOrigin': true
     },
   },
