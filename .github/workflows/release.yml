@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         # os: [windows-latest, macos-latest, ubuntu-latest]
-        os: [macos-latest]
+        os: [macos-latest, windows-latest]
 
     # create steps
     steps:
