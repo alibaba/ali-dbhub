@@ -152,6 +152,7 @@ export function setEditorHint(hintData: IHintData) {
         endColumn: column,
       })
 
+
       const tokens = textBeforePointer.trim().split(/\s+/)
       const lastToken = tokens[tokens.length - 1] // 获取最后一段非空字符串
 
