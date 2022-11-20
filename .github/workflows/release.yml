@@ -43,6 +43,10 @@ jobs:
           npm install 
           npm run build
 
+      - name: change dir
+        if: runner.os == 'Windows'
+        run: dir
+
       - name: npm install electron
         run: |
           cd ~/work/data-ops/data-ops/data-ops-client/electron
