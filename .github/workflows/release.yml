@@ -13,12 +13,13 @@ jobs:
   release:
     # job's name
     name: build and release electron app
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-latest
+    # runs-on: ${{ matrix.os }}
         
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     os: [windows-latest, macos-latest, ubuntu-latest]
 
     # create steps
     steps:
