@@ -55,7 +55,8 @@ public abstract class DataSourceCoreConverter {
      */
     @Mappings({
         @Mapping(source = "type", target = "dbType"),
-        @Mapping(source = "id", target = "dataSourceId")
+        @Mapping(source = "id", target = "dataSourceId"),
+        @Mapping(source = "userName", target = "username"),
     })
     public abstract DataSourceCreateParam do2param(DataSourceDO dataSourceDO);
 
