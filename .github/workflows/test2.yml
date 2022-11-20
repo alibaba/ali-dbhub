@@ -19,15 +19,12 @@ name: testsz3
 on: [push, pull_request]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  release:
+    runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
-        java: [ 8]
-        distribution: [ 'adopt' ]
-      fail-fast: false
-      max-parallel: 4
-    name: Test JDK ${{ matrix.java }}
+        os: [macos-latest]
 
     steps:
       - uses: actions/checkout@main
