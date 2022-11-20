@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         # os: [windows-latest, macos-latest, ubuntu-latest]
-        os: [macos-latest]
+        os: [macos-10.15]
 
     # create steps
     steps:
@@ -53,26 +53,42 @@ jobs:
           npm install
           npm run build
 
+      # - name: Build/release Electron app
+      #   uses: samuelmeuli/action-electron-builder@v1
+      #   with:
+      #     # GitHub token, automatically provided to the action
+      #     # (No need to define this secret in the repo settings)
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      #     # If the commit is tagged with a version (e.g. "v1.0.0"),
+      #     # release the app after building
+      #     release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
       # - name: Cleanup Artifacts for Windows
       #   if: matrix.os == 'windows-latest'
       #   run: |
-      #     npx rimraf "electron-build/!(*.exe)"
+      #     npx rimraf "~/work/data-ops/data-ops/data-ops-client/electron-build/!(*.exe)"
 
-      # - name: Cleanup Artifacts for MacOS
-      #   if: matrix.os == 'macos-latest'
-      #   run: |
-      #     npx rimraf "electron-build/!(*.dmg)"
+      - name: Cleanup Artifacts for MacOS
+        if: matrix.os == 'macos-10.15'
+        run: |
+          npx rimraf "~/work/data-ops/data-ops/data-ops-client/electron-build/!(*.dmg)"
 
       - name: upload artifacts
         uses: actions/upload-artifact@main
         with:
           name: ${{ matrix.os }}
-          path: ~/work/data-ops/data-ops/data-ops-client/electron-build
+          path: ~/work/data-ops/data-ops/data-ops-client/electron-build/**
 
+
+      - name: xxxx
+        run:
+          cd ~/work/data-ops/data-ops/data-ops-client
+          
       - name: release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ~/work/data-ops/data-ops/data-ops-client/electron-build/**
+          files: /electron-build/**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
