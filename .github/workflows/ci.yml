@@ -20,7 +20,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-m2
-      # 安装mysql 用于测试
+      # 安装各种数据库 用于测试
       - name: Docker Compose Action
         uses: isbang/compose-action@v1.4.1
         with:
