@@ -81,10 +81,10 @@ export default defineConfig({
     type: 'none',
   },
   chainWebpack,
-  proxy: {
-    '/api': {
-      'target': 'http://localhost:10824',
-      'changeOrigin': true
-    },
-  },
+  // proxy: {
+  //   '/api': {
+  //     'target': 'http://localhost:10824',
+  //     'changeOrigin': true
+  //   },
+  // },
 });
