@@ -14,7 +14,7 @@
 #    limitations under the License.
 #
 
-name: testsz3
+name: testsz34
 
 on: [push, pull_request]
 
@@ -38,4 +38,4 @@ jobs:
           node-version: 16
           cache: 'npm'
           cache-dependency-path: data-ops-client/package-lock.json
-      - run: npm install data-ops-client/package.json
+      - run: npm build data-ops-client/package.json
