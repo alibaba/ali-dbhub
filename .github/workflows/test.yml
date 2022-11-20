@@ -19,7 +19,7 @@ jobs:
     # os: [windows-latest, macos-latest, ubuntu-latest]
     os: [macos-15.0]
 
-        # create steps
+  # create steps
   steps:
     # check out repository
     - name: Check out git repository
@@ -29,7 +29,7 @@ jobs:
       uses: actions/setup-node@main
       with:
         node-version: 16
-        
+
     - name: npm install & build
       run: |
         cd ~/work/data-ops/data-ops/data-ops-client
