@@ -1,0 +1,30 @@
+
+
+name: release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+      - name: Install Java and Maven
+        uses: actions/setup-java@main
+        with:
+          java-version: 8
+          distribution: 'adopt'
+      - name: Build Java
+        run: mvn clean package -B -Dmaven.test.skip=true -f data-ops-server/pom.xml
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./README.md
+          asset_name: README.md
+          asset_content_type: application/octet-stream

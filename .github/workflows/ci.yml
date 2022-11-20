@@ -1,6 +1,6 @@
 name: Java CI
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   test:
@@ -20,11 +20,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-m2
-#      - name: Install Mysql
-#        uses: actions/setup-java@main
-#        with:
-#          java-version: 8
-#          distribution: 'adopt'
+      # 安装各种数据库 用于测试
+      - name: Docker Compose Action
+        uses: isbang/compose-action@v1.4.1
+        with:
+          compose-file: "./docker/docker-compose.yml"
       - name: Test with Maven
-        run: docker-compose -v
-#        run: mvn test -B -Dmaven.test.skip=false -pl data-ops-server-test -am -f data-ops-server/pom.xml
+        run: mvn test -B -Dmaven.test.skip=false -pl data-ops-server-test -am -f data-ops-server/pom.xml

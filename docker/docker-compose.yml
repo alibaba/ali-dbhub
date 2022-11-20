@@ -1,0 +1,12 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    container_name: mysql-latest
+    environment:
+      - "MYSQL_ROOT_PASSWORD=dataops"
+      - "MYSQL_DATABASE=data_ops_test"
+      - "TZ=Asia/Shanghai"
+    ports:
+      - 3306:3306

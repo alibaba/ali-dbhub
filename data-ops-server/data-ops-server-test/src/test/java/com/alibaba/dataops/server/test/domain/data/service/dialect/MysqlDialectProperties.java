@@ -24,7 +24,7 @@ public class MysqlDialectProperties implements DialectProperties {
 
     @Override
     public String getUrl() {
-        return "jdbc:mysql://rm-8vb099vo8309mcngk.mysql.zhangbei.rds.aliyuncs.com:3306";
+        return "jdbc:mysql://127.0.0.1:3306";
     }
 
     @Override
@@ -34,12 +34,12 @@ public class MysqlDialectProperties implements DialectProperties {
 
     @Override
     public String getUsername() {
-        return "grow";
+        return "root";
     }
 
     @Override
     public String getPassword() {
-        return "v5EdRurYac";
+        return "dataops";
     }
 
     @Override
