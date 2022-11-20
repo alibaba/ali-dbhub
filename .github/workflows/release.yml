@@ -47,15 +47,13 @@ jobs:
       #   if: runner.os == 'Windows'
       #   run: dir
 
-      # - name: npm install electron
-      #   run: |
-      #     cd ~/work/data-ops/data-ops/data-ops-client/electron
-      #     npm install
-      #     npm run build
-
-      - name: Build/release Electron app
+      - name: npm install electron
         run: |
           cd ~/work/data-ops/data-ops/data-ops-client/electron
+#           npm install
+#           npm run build
+
+      - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
           # GitHub token, automatically provided to the action
