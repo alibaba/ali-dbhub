@@ -14,28 +14,20 @@
 #    limitations under the License.
 #
 
-name: testsz3
+name: testsz34
 
 on: [push, pull_request]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  release:
+    runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
-        java: [ 8]
-        distribution: [ 'adopt' ]
-      fail-fast: false
-      max-parallel: 4
-    name: Test JDK ${{ matrix.java }}
+        os: [macos-latest]
 
     steps:
       - uses: actions/checkout@main
-      - name: Set up JDK
-        uses: actions/setup-java@main
-        with:
-          java-version: ${{ matrix.java }}
-          distribution: ${{ matrix.distribution }}
       # check out repository
       - name: Check out git repository
         uses: actions/checkout@main
@@ -44,3 +36,6 @@ jobs:
         uses: actions/setup-node@main
         with:
           node-version: 16
+          cache: 'npm'
+          cache-dependency-path: data-ops-client/package-lock.json
+      - run: npm install
