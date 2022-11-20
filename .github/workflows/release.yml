@@ -25,11 +25,11 @@ jobs:
     steps:
       # step1: check out repository
       - name: Check out git repository
-        uses: actions/checkout@main
+        uses: actions/checkout@v3
 
       # step2: install node env
       - name: Install Node.js
-        uses: actions/setup-node@main
+        uses: actions/setup-node@v3
         with:
           node-version: 16
 
@@ -67,7 +67,7 @@ jobs:
 
       # step5: create release
       - name: release
-        uses: softprops/action-gh-release@main
+        uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: "electron-build/**"
