@@ -2,7 +2,7 @@
 name: Build Electron
 
 # Workflow's trigger
-on: [ push, pull_request ]
+on: [push, pull_request]
 # on:
 #   push:
 #     tags:
@@ -20,7 +20,7 @@ jobs:
     fail-fast: false
     matrix:
       # os: [windows-latest, macos-latest, ubuntu-latest]
-      os: [ macos-latest ]
+      os: [macos-latest]
 
   # create steps
   steps:
@@ -48,10 +48,10 @@ jobs:
         npm install
         npm run build
 
-      # - name: Cleanup Artifacts for Windows
-      #   if: matrix.os == 'windows-latest'
-      #   run: |
-      #     npx rimraf "electron-build/!(*.exe)"
+    # - name: Cleanup Artifacts for Windows
+    #   if: matrix.os == 'windows-latest'
+    #   run: |
+    #     npx rimraf "electron-build/!(*.exe)"
 
     - name: Cleanup Artifacts for MacOS
       if: matrix.os == 'macos-latest'

@@ -1,13 +1,12 @@
 name: test build electron
 
-on: [ push, pull_request ]
+on: [push, pull_request]
 # on:
 #   push:
 #     tags:
 #       - "v*.*.*"
 
 jobs:
-
   release:
     # job's name
     name: build and release electron app
@@ -16,8 +15,8 @@ jobs:
   strategy:
     fail-fast: false
     matrix:
-    # os: [windows-latest, macos-latest, ubuntu-latest]
-    os: [ macos-15.0 ]
+      # os: [windows-latest, macos-latest, ubuntu-latest]
+      os: [macos-15.0]
 
   # create steps
   steps:
