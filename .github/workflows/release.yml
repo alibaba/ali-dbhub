@@ -13,13 +13,12 @@ jobs:
   release:
     # job's name
     name: build and release electron app
-    runs-on: macos-latest
-    # runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
         
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     os: [windows-latest, macos-latest, ubuntu-latest]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     # create steps
     steps:
@@ -48,22 +47,21 @@ jobs:
           npm install
           npm run build
           
-    
-    #  - name: Cleanup Artifacts for Windows
-    #       if: matrix.os == 'windows-latest'
-    #       run: |
-    #         npx rimraf "dist/!(*.exe)"
+      - name: Cleanup Artifacts for Windows
+        if: matrix.os == 'windows-latest'
+          run: |
+            npx rimraf "electron-build/!(*.exe)"
         
-    #     - name: Cleanup Artifacts for MacOS
-    #       if: matrix.os == 'macos-latest'
-    #       run: |
-    #         npx rimraf "dist/!(*.dmg)"
+      - name: Cleanup Artifacts for MacOS
+        if: matrix.os == 'macos-latest'
+          run: |
+            npx rimraf "electron-build/!(*.dmg)"
             
-    #     - name: upload artifacts
-    #       uses: actions/upload-artifact@v3.0.0
-    #       with:
-    #         name: ${{ matrix.os }}
-    #         path: dist
+      - name: upload artifacts
+        uses: actions/upload-artifact@v3.0.0
+          with:
+            name: ${{ matrix.os }}
+            path: electron-build
 
 
       # step5: create release
