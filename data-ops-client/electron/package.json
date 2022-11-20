@@ -9,6 +9,10 @@
   "keywords": [
     "electron"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alibaba/data-ops"
+  },
   "description": "Electron Application",
   "scripts": {
     "electron:build": "electron-builder"
@@ -17,6 +21,7 @@
     "electron": "^20.1.4",
     "electron-builder": "^23.3.3"
   },
+  "icon": "logo/logo.png",
   "build": {
     "appId": "com.data-opt",
     "directories": {
