@@ -1,23 +1,23 @@
-name: Java CI
+# name: Java CI
 
-on: [ push, pull_request ]
+# on: [ push, pull_request ]
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@main
-      - name: Install Java and Maven
-        uses: actions/setup-java@main
-        with:
-          java-version: '8'
-          distribution: 'adopt'
-          cache: 'maven'
-      # 安装各种数据库 用于测试
-      - name: Docker Compose Action
-        uses: isbang/compose-action@v1.4.1
-        with:
-          compose-file: "./docker/docker-compose.yml"
-      - name: Test with Maven
-        run: mvn test -B -Dmaven.test.skip=false -pl data-ops-server-test -am -f data-ops-server/pom.xml
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Check out Git repository
+#         uses: actions/checkout@main
+#       - name: Install Java and Maven
+#         uses: actions/setup-java@main
+#         with:
+#           java-version: '8'
+#           distribution: 'adopt'
+#           cache: 'maven'
+#       # 安装各种数据库 用于测试
+#       - name: Docker Compose Action
+#         uses: isbang/compose-action@v1.4.1
+#         with:
+#           compose-file: "./docker/docker-compose.yml"
+#       - name: Test with Maven
+#         run: mvn test -B -Dmaven.test.skip=false -pl data-ops-server-test -am -f data-ops-server/pom.xml
