@@ -38,4 +38,4 @@ jobs:
           node-version: 16
           cache: 'npm'
           cache-dependency-path: data-ops-client/package-lock.json
-      - run: npm build data-ops-client/package.json
+      - run: npm install
