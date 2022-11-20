@@ -21,4 +21,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2
       - name: Test with Maven
-        run: mvn test -B -Dmaven.test.skip=false -pl data-ops-server-test -am -f data-ops-server/pom.xml
+        run: docker -v
+#        run: mvn test -B -Dmaven.test.skip=false -pl data-ops-server-test -am -f data-ops-server/pom.xml
