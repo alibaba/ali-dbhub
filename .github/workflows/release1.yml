@@ -16,9 +16,9 @@ jobs:
         id: upload-release-asset
         uses: actions/upload-release-asset@main
         env:
-          GITHUB_TOKEN: ${{ secrets.DATA_OPS_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./README.md
           asset_name: README.md
-          asset_content_type: application/text
+          asset_content_type: application/octet-stream
