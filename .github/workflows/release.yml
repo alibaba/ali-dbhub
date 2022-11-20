@@ -1,5 +1,5 @@
 # Workflow's name
-name: Build Electron App For Win/Mac
+name: Build Electron
 
 # Workflow's trigger
 on:
@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-node@main
         with:
           node-version: 16
-          # cache: 'npm'
+          cache: 'npm'
 
       # step3: npm install & build React
       - name: npm install & build
