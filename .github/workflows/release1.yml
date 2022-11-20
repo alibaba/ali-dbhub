@@ -13,9 +13,9 @@ jobs:
       - name: Install Java and Maven
         uses: actions/setup-java@main
         with:
-          java-version: 8
+          java-version: '8'
           distribution: 'adopt'
-          cache: maven
+          cache: 'maven'
       - name: Test with Maven22
         run: echo $JAVA_HOME
       - name: Test with Maven23
