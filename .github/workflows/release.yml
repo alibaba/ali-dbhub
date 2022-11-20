@@ -13,6 +13,8 @@ jobs:
   release:
     # job's name
     name: build and release electron app
+    
+    runs-on: ubuntu-latest
 
     # create steps
     steps:
