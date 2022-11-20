@@ -2,6 +2,8 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
+const isDev = require('electron-is-dev');
+const { autoUpdater } = require('electron-updater');
 const isPro = process.env.NODE_ENV !== 'development';
 // 修改main.js实时更新
 // reloader(module);
@@ -31,10 +33,10 @@ function createWindow() {
     mainWindow.loadFile(`${__dirname}/dist/index.html`);
   // } else {
 
-  
-  //   // 打开开发者工具，默认不打开
-  //   mainWindow.webContents.openDevTools();
-  // }
+  // 如果是开发环境下，我们就打开控制台
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
 
   // 关闭window时触发下列事件.
   mainWindow.on('closed', function () {
@@ -61,3 +63,4 @@ app.on('activate', function () {
 });
 
 // 你可以在这个脚本中续写或者使用require引入独立的js文件.
+

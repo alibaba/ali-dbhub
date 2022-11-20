@@ -11,18 +11,26 @@
   ],
   "description": "Electron Application",
   "scripts": {
-    "build": "rm -rf ../electron-build && cp -r ../dist ./ && electron-builder"
+    "dev": "electron .",
+    "build": "rm -rf ../electron-build && cp -r ../dist ./ && electron-builder",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder -p always", 
+  },
+  "dependencies": {
+    "electron-is-dev": "^2.0.0",
+    "electron-updater": "^5.3.0"
   },
   "devDependencies": {
-    "electron": "^20.1.4",
-    "electron-builder": "^23.3.3"
+    "concurrently": "^7.5.0",
+    "electron": "^21.3.0",
+    "electron-builder": "^23.6.0",
+    "wait-on": "^6.0.1"
   },
   "build": {
     "appId": "com.data-opt",
     "directories": {
       "output": "../electron-build"
     },
-    "asar": false,
     "files": [
       "dist/**/*",
       "main.js",
@@ -36,6 +44,7 @@
     },
     "mac": {
       "icon": "logo/logo.png",
+      "artifactName": "${productName}-Mac-${version}-${arch}.${ext}",
       "target": [
         {
           "target": "dmg",
@@ -47,9 +56,19 @@
     },
     "win": {
       "target": [
+        "msi",
         "nsis",
         "zip"
-      ]
-    }
+      ],
+      "verifyUpdateCodeSignature": false,
+      "icon": "logo/logo.png",
+      "artifactName": "${productName}-Win-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "allowToChangeInstallationDirectory": false,
+      "oneClick": false,
+      "perMachine": false
+    },
+    "asar": false
   }
 }
