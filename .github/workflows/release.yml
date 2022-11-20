@@ -32,8 +32,8 @@ jobs:
         uses: actions/setup-node@main
         with:
           node-version: 16
-          cache: 'npm'
-          cache-dependency-path: data-ops-client/yarn.lock
+          # cache: 'npm'
+          # cache-dependency-path: data-ops-client/yarn.lock
 
       - name: npm install & build
         run: |
