@@ -28,11 +28,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@main
-      - name: Set up JDK
-        uses: actions/setup-java@main
-        with:
-          java-version: ${{ matrix.java }}
-          distribution: ${{ matrix.distribution }}
       # check out repository
       - name: Check out git repository
         uses: actions/checkout@main
