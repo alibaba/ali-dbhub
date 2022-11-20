@@ -18,22 +18,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        # os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [macos-latest]
 
     # create steps
     steps:
-      # step1: check out repository
+      # check out repository
       - name: Check out git repository
         uses: actions/checkout@main
 
-      # step2: install node env
+      # install node env
       - name: Install Node.js
         uses: actions/setup-node@main
         with:
           node-version: 16
           # cache: 'npm'
 
-      # step3: npm install & build React
       - name: npm install & build
         run: |
           cd ~/work/data-ops/data-ops/data-ops-client
@@ -46,10 +46,10 @@ jobs:
           npm install
           npm run build
           
-      - name: Cleanup Artifacts for Windows
-        if: matrix.os == 'windows-latest'
-        run: |
-          npx rimraf "electron-build/!(*.exe)"
+      # - name: Cleanup Artifacts for Windows
+      #   if: matrix.os == 'windows-latest'
+      #   run: |
+      #     npx rimraf "electron-build/!(*.exe)"
         
       - name: Cleanup Artifacts for MacOS
         if: matrix.os == 'macos-latest'
@@ -57,7 +57,7 @@ jobs:
           npx rimraf "electron-build/!(*.dmg)"
             
       - name: upload artifacts
-        uses: actions/upload-artifact@v3.0.0
+        uses: actions/upload-artifact@main
         with:
           name: ${{ matrix.os }}
           path: electron-build
