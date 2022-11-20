@@ -29,7 +29,10 @@ jobs:
       # step3: npm install & build React
       - name: npm install & build
         run: |
-          npm install
+          pwd
+          cd ~
+          pwd
+          npm install 
           npm run build
 
       # step4: npm install & build electron
