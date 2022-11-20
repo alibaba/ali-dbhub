@@ -2,9 +2,7 @@
 
 name: release
 
-on:
-  release:
-    types: [created]
+on: [ push, pull_request ]
 
 jobs:
   publish:
@@ -17,14 +15,9 @@ jobs:
         with:
           java-version: 8
           distribution: 'adopt'
+          java-package: jre
+          cache: maven
+      - name: Test with Maven22
+        run: echo $JAVA_HOME
       - name: Build Java
         run: mvn clean package -B -Dmaven.test.skip=true -f data-ops-server/pom.xml
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./README.md
-          asset_name: README.md
-          asset_content_type: application/octet-stream
