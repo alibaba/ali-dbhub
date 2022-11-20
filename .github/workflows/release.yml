@@ -38,6 +38,7 @@ jobs:
 
       - name: npm install & build
         run: |
+          pwd
           cd ~/work/data-ops/data-ops/data-ops-client
           npm install 
           npm run build
