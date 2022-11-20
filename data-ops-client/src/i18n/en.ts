@@ -12,6 +12,7 @@ export default {
   'common.text.search': 'search',
   'common.placeholder.select': 'Place Select {1}',
   'common.text.serviceStarting': 'Service Starting ...',
+  'common.text.serviceFail': 'Service startup failed. Please try refreshing the page...',
   'common.text.column': 'column',
   'common.text.indexes': 'indexes',
   'common.button.save': 'Save',

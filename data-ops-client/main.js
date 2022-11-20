@@ -21,7 +21,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js'),
+      // preload: path.join(__dirname, 'preload.js'),
     },
   });
   //  * 加载应用-----  electron-quick-start中默认的加载入口
