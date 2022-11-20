@@ -6,7 +6,7 @@ import Loading from '../Loading/Loading';
 interface IProps {
   className?: string;
   state: 'loading' | 'empty' | 'error';
-  text: string;
+  text?: string;
 }
 
 export const enum State {

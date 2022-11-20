@@ -46,7 +46,7 @@ enum handleType {
   CLONE = 'clone'
 }
 
-const menuList: IMenu[] = [
+const menuList = [
   {
     key: handleType.EDIT,
     icon: '\ue60f',
@@ -131,8 +131,12 @@ export default memo<IProps>(function ConnectionPage(props) {
   const saveConnection = (values: IConnectionBase, type: submitType) => {
     let p = values
     connectionServer[type](p).then(res => {
-      getConnectionList()
-      closeModal();
+      if (type === submitType.TEST) {
+        message.success(res === false ? '测试连接失败' : '测试连接成功')
+      } else {
+        getConnectionList()
+        closeModal();
+      }
     })
   };
 
@@ -188,7 +192,7 @@ export default memo<IProps>(function ConnectionPage(props) {
         })
       }
 
-      const clickMenuList = (item) => {
+      const clickMenuList = (item: any) => {
         switch (item.key) {
           case handleType.EDIT:
             return editConnection();

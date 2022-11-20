@@ -10,7 +10,6 @@ import Menu, { IMenu } from '@/components/Menu'
 import StateIndicator from '@/components/StateIndicator'
 import LoadingContent from '../Loading/LoadingContent';
 import request from 'umi-request';
-import noData from '@/assets/search-no-data.png'
 
 interface IProps {
   className?: any;
@@ -57,23 +56,23 @@ export function TreeNode(props: TreeNodeIProps) {
     }
   };
 
-  const renderMenu = () => {
-    const tableMenu: IMenu[] = [
-      {
-        title: '打开SQL窗口',
-        type: 'new-tab',
-        icon: '\ue603'
-      },
-      {
-        title: '删除表',
-        type: 'delete',
-        icon: '\ue604'
-      }
-    ]
-    return <div className={styles.menuBox}>
-      <Menu data={tableMenu}></Menu>
-    </div>
-  }
+  // const renderMenu = () => {
+  //   const tableMenu: IMenu[] = [
+  //     {
+  //       title: '打开SQL窗口',
+  //       type: 'new-tab',
+  //       icon: '\ue603'
+  //     },
+  //     {
+  //       title: '删除表',
+  //       type: 'delete',
+  //       icon: '\ue604'
+  //     }
+  //   ]
+  //   return <div className={styles.menuBox}>
+  //     <Menu data={tableMenu}></Menu>
+  //   </div>
+  // }
 
   const recognizeIcon = (nodeType: TreeNodeType) => {
     switch (nodeType) {
@@ -95,40 +94,40 @@ export function TreeNode(props: TreeNodeIProps) {
   }
 
   return <>
-    <Dropdown overlay={renderMenu()} trigger={['contextMenu']}>
-      <div className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
-        <div className={styles.left}>
-          {
-            indentArr.map((item, i) => {
-              return <div key={i} className={styles.indent}></div>
-            })
-          }
+    {/* <Dropdown overlay={renderMenu()} trigger={['contextMenu']}>
+    </Dropdown> */}
+    <div className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
+      <div className={styles.left}>
+        {
+          indentArr.map((item, i) => {
+            return <div key={i} className={styles.indent}></div>
+          })
+        }
+      </div>
+      <div className={styles.right}>
+        {
+          !data.isLeaf &&
+          <div className={styles.arrows} onClick={handleClick.bind(null, data)}>
+            {
+              isLoading
+                ?
+                <div className={styles.loadingIcon}>
+                  <Iconfont code='&#xe6cd;' />
+                </div>
+                :
+                <Iconfont code={showChildren ? "\ue61e" : "\ue65f"} />
+            }
+          </div>
+        }
+        <div className={styles.typeIcon}>
+          <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
         </div>
-        <div className={styles.right}>
-          {
-            !data.isLeaf &&
-            <div className={styles.arrows} onClick={handleClick.bind(null, data)}>
-              {
-                isLoading
-                  ?
-                  <div className={styles.loadingIcon}>
-                    <Iconfont code='&#xe6cd;' />
-                  </div>
-                  :
-                  <Iconfont code={showChildren ? "\ue61e" : "\ue65f"} />
-              }
-            </div>
-          }
-          <div className={styles.typeIcon}>
-            <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
-          </div>
-          <div className={styles.contentText}>
-            <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
-            <div className={styles.type}>{data.dataType}</div>
-          </div>
+        <div className={styles.contentText}>
+          <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
+          <div className={styles.type}>{data.dataType}</div>
         </div>
       </div>
-    </Dropdown>
+    </div>
     {
       !!data.children?.length &&
       data.children.map((item: any, i: number) => {
