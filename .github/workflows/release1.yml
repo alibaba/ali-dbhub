@@ -12,6 +12,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@main
+      - name: Install Java and Maven
+        uses: actions/setup-java@main
+        with:
+          java-version: 8
+          distribution: 'adopt'
+      - name: Build Java
+        run: mvn clean package -B -Dmaven.test.skip=true -f data-ops-server/pom.xml
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@main

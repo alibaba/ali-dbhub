@@ -77,6 +77,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>data-ops-server-start</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
