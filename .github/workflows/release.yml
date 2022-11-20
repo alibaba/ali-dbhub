@@ -39,6 +39,7 @@ jobs:
         run: |
           cd ~/work/data-ops/data-ops/data-ops-client/electron
           rm -rf ../electron-build && cp -r ../dist ./
+          yarn
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
