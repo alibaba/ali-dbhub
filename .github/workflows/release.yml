@@ -13,18 +13,24 @@ jobs:
   release:
     # job's name
     name: build and release electron app
-    
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
+        
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     # create steps
     steps:
       # step1: check out repository
       - name: Check out git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
 
       # step2: install node env
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@main
+        with:
+          node-version: 16
 
       # step3: npm install & build React
       - name: npm install & build
@@ -40,9 +46,27 @@ jobs:
           npm install
           npm run dev
           
+    
+    #  - name: Cleanup Artifacts for Windows
+    #       if: matrix.os == 'windows-latest'
+    #       run: |
+    #         npx rimraf "dist/!(*.exe)"
+        
+    #     - name: Cleanup Artifacts for MacOS
+    #       if: matrix.os == 'macos-latest'
+    #       run: |
+    #         npx rimraf "dist/!(*.dmg)"
+            
+    #     - name: upload artifacts
+    #       uses: actions/upload-artifact@v3.0.0
+    #       with:
+    #         name: ${{ matrix.os }}
+    #         path: dist
+
+
       # step5: create release
       - name: release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@main
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: "electron-build/**"

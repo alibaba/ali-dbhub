@@ -39,9 +39,6 @@
       "jre/**/*",
       "my.bat"
     ],
-    "electronDownload": {
-      "mirror": "https://npm.taobao.org/mirrors/electron/"
-    },
     "mac": {
       "icon": "logo/logo.png",
       "artifactName": "${productName}-Mac-${version}-${arch}.${ext}",
