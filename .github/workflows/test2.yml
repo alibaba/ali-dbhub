@@ -36,3 +36,5 @@ jobs:
         uses: actions/setup-node@main
         with:
           node-version: 16
+          cache: 'npm'
+      - run: npm install data-ops-client/package.json
