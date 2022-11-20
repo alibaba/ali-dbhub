@@ -1,11 +1,10 @@
 package com.alibaba.dataops.server.domain.core.repository.entity;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +14,7 @@ import lombok.Setter;
  * </p>
  *
  * @author data-ops
- * @since 2022-09-18
+ * @since 2022-11-20
  */
 @Getter
 @Setter

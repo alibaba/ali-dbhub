@@ -1,0 +1,55 @@
+##
+##    Copyright 2009-2021 the original author or authors.
+##
+##    Licensed under the Apache License, Version 2.0 (the "License");
+##    you may not use this file except in compliance with the License.
+##    You may obtain a copy of the License at
+##
+##       http://www.apache.org/licenses/LICENSE-2.0
+##
+##    Unless required by applicable law or agreed to in writing, software
+##    distributed under the License is distributed on an "AS IS" BASIS,
+##    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+##    See the License for the specific language governing permissions and
+##    limitations under the License.
+##
+#
+#name: Publish package to the Maven Central Repository
+#
+#
+#
+#on:
+#  release:
+#    types: [created]
+#
+#jobs:
+#  publish:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Check out Git repository
+#        uses: actions/checkout@main
+#      - name: Install Java and Maven
+#        uses: actions/setup-java@main
+#        with:
+#          java-version: 8
+#          distribution: 'adopt'
+#          server-id: ossrh
+#          server-username: MAVEN_USERNAME
+#          server-password: MAVEN_PASSWORD
+#      - name: Cache local Maven repository
+#        uses: actions/cache@v3
+#        with:
+#          path: ~/.m2/repository
+#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: |
+#            ${{ runner.os }}-m2
+#      - id: install-secret-key
+#        name: Install GPG secret key
+#        run: |
+#          cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import
+#      - name: Publish package
+#        run: |
+#          mvn --batch-mode -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}  clean deploy -Dmaven.test.skip=true -Dmaven.javadoc.skip=false -Dgpg.skip=false
+#        env:
+#          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+#          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}

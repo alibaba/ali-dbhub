@@ -1,0 +1,24 @@
+name: Java CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+      - name: Install Java and Maven
+        uses: actions/setup-java@main
+        with:
+          java-version: 8
+          distribution: 'adopt'
+      - name: Cache local Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2
+      - name: Test with Maven
+        run: mvn test -B -Dmaven.test.skip=false -pl data-ops-server-test -am -f data-ops-server/pom.xml
