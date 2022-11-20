@@ -30,9 +30,10 @@ const codeMessage:{[errorCode:number]:string} = {
 };
 
 const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
-const localServiceUrl = 'http://127.0.0.1:10824';
+const onLineServiceUrl = 'http://127.0.0.1:10824';
+const localServiceUrl = 'http://127.0.0.1:7001';
 
-const baseURL = location.href.indexOf('dist/index.html') > -1 ? localServiceUrl : location.origin;
+const baseURL = location.href.indexOf('dist/index.html') > -1 ? onLineServiceUrl : localServiceUrl;
 console.log(baseURL)
 const errorHandler = (error: ResponseError,errorLevel:IErrorLevel) => {
   const { response } = error;
