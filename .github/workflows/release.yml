@@ -70,7 +70,7 @@ jobs:
       #     npx rimraf "~/work/data-ops/data-ops/data-ops-client/electron-build/!(*.exe)"
 
       - name: Cleanup Artifacts for MacOS
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-10.15'
         run: |
           npx rimraf "~/work/data-ops/data-ops/data-ops-client/electron-build/!(*.dmg)"
 
