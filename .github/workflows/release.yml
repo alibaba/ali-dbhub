@@ -25,13 +25,14 @@ jobs:
     steps:
       # step1: check out repository
       - name: Check out git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
 
       # step2: install node env
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@main
         with:
           node-version: 16
+          cache: 'npm'
 
       # step3: npm install & build React
       - name: npm install & build
@@ -45,7 +46,7 @@ jobs:
         run: |
           cd ~/work/data-ops/data-ops/data-ops-client/electron
           npm install
-          npm run dev
+          npm run build
           
     
     #  - name: Cleanup Artifacts for Windows
