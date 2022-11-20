@@ -80,10 +80,15 @@ jobs:
           name: ${{ matrix.os }}
           path: ~/work/data-ops/data-ops/data-ops-client/electron-build/**
 
+
+      - name: xxxx
+        run:
+          cd ~/work/data-ops/data-ops/data-ops-client
+          
       - name: release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ~/work/data-ops/data-ops/data-ops-client/electron-build/**
+          files: /electron-build/**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
