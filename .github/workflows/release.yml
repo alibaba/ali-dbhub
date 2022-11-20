@@ -13,6 +13,8 @@ jobs:
   release:
     # job's name
     name: build and release electron app
+    
+    runs-on: macos-latest
 
     # create steps
     steps:
@@ -27,13 +29,14 @@ jobs:
       # step3: npm install & build React
       - name: npm install & build
         run: |
-          npm install
+          cd ~/work/data-ops/data-ops/data-ops-client
+          npm install 
           npm run build
 
       # step4: npm install & build electron
       - name: npm install electron
         run: |
-          cd electron
+          cd ~/work/data-ops/data-ops/data-ops-client/electron
           npm install
           npm run dev
           

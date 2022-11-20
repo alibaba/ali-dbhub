@@ -14,7 +14,7 @@
     "dev": "electron .",
     "build": "rm -rf ../electron-build && cp -r ../dist ./ && electron-builder",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -p always", 
+    "dist": "electron-builder -p always"
   },
   "dependencies": {
     "electron-is-dev": "^2.0.0",
