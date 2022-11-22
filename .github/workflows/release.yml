@@ -16,11 +16,32 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
+        os: [ macos-latest ]
 
     steps:
       - name: Check out git repository
         uses: actions/checkout@main
+      # 安装java
+      - name: Install Java and Maven
+        uses: actions/setup-java@main
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: 'maven'
+
+      # 编译服务端java版本
+      - name: Build Java
+        run: mvn clean package -B -Dmaven.test.skip=true -f data-ops-server/pom.xml
+
+      # 打包jre
+      - name: Build jre
+        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument --output jre --no-man-pages --no-header-files --compress=2
+
+      # 复制jre & 服务端java 到制修订位置
+      - name: Copy app &  jre
+        run: |
+          cp jre data-ops-client/electron/
+          cp data-ops-server/data-ops-server-start/target/data-ops-server-start.jar data-ops-client/electron/app/
 
       - name: Install Node.js
         uses: actions/setup-node@main
