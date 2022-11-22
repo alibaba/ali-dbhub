@@ -1,4 +1,8 @@
 spring:
+  datasource:
+    # 配置自带数据库的相对路径
+    url: jdbc:h2:~/.data-ops/db/data_ops_dev;MODE=MYSQL
+    driver-class-name: org.h2.Driver
   h2:
     console:
       enabled: true
