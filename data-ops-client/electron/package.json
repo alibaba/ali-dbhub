@@ -1,5 +1,5 @@
 {
-  "name": "data-ops-electron",
+  "name": "data-ops",
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
@@ -19,7 +19,8 @@
   },
   "devDependencies": {
     "electron": "^20.1.4",
-    "electron-builder": "^23.3.3"
+    "electron-builder": "^23.3.3",
+    "electron-is-dev": "^2.0.0"
   },
   "icon": "logo/logo.png",
   "build": {
