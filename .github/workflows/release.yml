@@ -40,7 +40,7 @@ jobs:
       # 复制jre & 服务端java 到制修订位置
       - name: Copy app &  jre
         run: |
-          cp jre data-ops-client/electron/
+          cp -r jre data-ops-client/electron/
           cp data-ops-server/data-ops-server-start/target/data-ops-server-start.jar data-ops-client/electron/app/
 
       - name: Install Node.js
