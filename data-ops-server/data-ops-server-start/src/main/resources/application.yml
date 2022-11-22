@@ -2,10 +2,6 @@ spring:
   # 默认开发环境
   profiles:
     active: dev
-  datasource:
-    # 配置自带数据库的相对路径
-    url: jdbc:h2:~/.data-ops/db/data_ops;MODE=MYSQL
-    driver-class-name: org.h2.Driver
   jpa:
     # 展示sql
     show-sql: true
