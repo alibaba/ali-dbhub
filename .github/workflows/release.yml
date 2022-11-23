@@ -41,8 +41,7 @@ jobs:
       - name: Copy app &  jre
         run: |
           cp -r jre data-ops-client/electron/
-          mkdir data-ops-client/electron/app
-          cp data-ops-server/data-ops-server-start/target/data-ops-server-start.jar data-ops-client/electron/app/
+          cp data-ops-server/data-ops-server-start/target/data-ops-server-start.jar data-ops-client/electron/
 
       - name: Install Node.js
         uses: actions/setup-node@main
