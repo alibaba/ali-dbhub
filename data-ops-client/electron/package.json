@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
@@ -39,7 +39,6 @@
       "my.bat"
     ],
     "mac": {
-      "artifactName":"${name}-${version}-${os}-${arch}-${platform}",
       "icon": "logo/logo.png",
       "target": [
         {
