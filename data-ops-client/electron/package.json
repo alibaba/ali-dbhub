@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
@@ -22,6 +22,7 @@
     "electron-builder": "^23.3.3",
     "electron-is-dev": "^2.0.0"
   },
+  
   "icon": "logo/logo.png",
   "build": {
     "appId": "com.data-opt",
@@ -38,6 +39,7 @@
       "my.bat"
     ],
     "mac": {
+      "artifactName":"${name}-${version}-${os}-${arch}-${platform}",
       "icon": "logo/logo.png",
       "target": [
         {
