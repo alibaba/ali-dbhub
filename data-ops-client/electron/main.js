@@ -2,7 +2,7 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
-const isDev = require('electron-is-dev');
+// const isDev = require('electron-is-dev');
 const { autoUpdater } = require('electron-updater');
 const isPro = process.env.NODE_ENV !== 'development';
 // 修改main.js实时更新
@@ -34,9 +34,9 @@ function createWindow() {
   // } else {
 
   // 如果是开发环境下，我们就打开控制台
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
-  }
+  // if (isDev) {
+  //   mainWindow.webContents.openDevTools();
+  // }
 
   // 关闭window时触发下列事件.
   mainWindow.on('closed', function () {
