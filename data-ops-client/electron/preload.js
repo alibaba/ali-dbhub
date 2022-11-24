@@ -5,7 +5,7 @@ const path = require('path');
 const appName = 'data-ops-server-start.jar';
 contextBridge.exposeInMainWorld('myAPI', {
   startServerForSpawn: () => {
-    const path1 = path.join(__dirname, `${appName}`);
+    const path1 = path.join(__dirname, `app/${appName}`);
     console.log('path1', path1);
     const ls = spawn(path.join(__dirname, 'jre/Contents/Home/bin/java')  , ['-jar', path1]);
     ls.stdout.on('data', (buffer) => {
