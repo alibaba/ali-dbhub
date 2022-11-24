@@ -42,6 +42,7 @@ jobs:
         run: |
           cp -r jre data-ops-client/electron/
           cp data-ops-server/data-ops-server-start/target/data-ops-server-start.jar data-ops-client/electron/
+          ls data-ops-client/electron
 
       - name: Install Node.js
         uses: actions/setup-node@main
