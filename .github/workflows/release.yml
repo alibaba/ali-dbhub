@@ -52,21 +52,24 @@ jobs:
           # cache: "yarn"
           # cache-dependency-path: ali-dbhub-client/yarn.lock
 
-      - name: Install UNM dependencies for macOS
-        if: runner.os == 'Windows'
-        run: |
-          dir
-        shell: bash
+      # - name: change directory ali-dbhub-client
+
+    
+      # - name: Install UNM dependencies for macOS
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     dir
+      #   shell: bash
 
       - name: npm install & build
         run: |
-          cd ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client
+          cd ali-dbhub-client
           npm install 
           npm run build
 
       - name: npm install electron
         run: |
-          cd ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client/electron
+          cd electron
           rm -rf ../electron-build && cp -r ../dist ./
           yarn
 
@@ -88,12 +91,12 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: ali-dbhub-mac
-          path: ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client/electron-build/*.dmg
+          path: ./ali-dbhub-client/electron-build/*.dmg
           if-no-files-found: ignore
 
       - name: upload artifacts window
         uses: actions/upload-artifact@main
         with:
           name: ali-dbhub-window
-          path: ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client/electron-build/*Setup*.exe
+          path: ./ali-dbhub-client/electron-build/*Setup*.exe
           if-no-files-found: ignore
