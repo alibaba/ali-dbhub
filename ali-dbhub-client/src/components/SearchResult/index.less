@@ -1,0 +1,113 @@
+@import '../../var.less';
+
+.box{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.recordIcon{
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+.searchResult{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.resultHeader{
+  flex-shrink: 0;
+  overflow-x: scroll;
+  padding: 0px 10px;
+  background-color: var(--color-bg-300);
+  border-bottom: 1px solid var(--color-border);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  & ::after{
+    height: 0px;
+  }
+
+  .statusIcon{
+    margin-right: 4px;
+    font-size: 12px;
+  }
+
+  .successIcon{
+    color: rgb(71, 157, 255);
+  }
+  
+  .failIcon{
+    color: red;
+  }
+}
+
+.resultContent{
+  flex: 1;
+  width: 100%;
+  position:relative;
+  overflow: scroll;
+}
+
+.footer{
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding: 0px 10px;
+  border-top: 1px solid var(--color-border);
+  height: 50px;
+  background-color: var(--color-bg-200);
+}
+
+.iconBox{
+  padding: 4px 10px;
+  border-radius: 3px;
+  &:hover{
+    cursor: pointer;
+    background-color: var(--color-bg-hover);
+  }
+}
+
+.reversalIconBox{
+  transform: rotate(180deg);
+}
+
+.tableStatus{
+  display: flex;
+  align-items: center;
+  .dot{
+    display: inline-block;
+    margin-right: 5px;
+    width: 10px;
+    height: 10px;
+    background-color: #ff4d4f;
+    border-radius: 50%;
+  }
+  .successDot{
+    background-color: #52c41a;
+  }
+}
+
+
+.tableBox{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  opacity: 0;
+  overflow: scroll;
+}
+
+.cursorTableBox{
+  z-index: 1;
+  opacity: 1;
+}
+
+
