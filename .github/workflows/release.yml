@@ -57,14 +57,12 @@ jobs:
           cd ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client
           npm install 
           npm run build
-          shell: bash
 
       - name: npm install electron
         run: |
           cd ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client/electron
           rm -rf ../electron-build && cp -r ../dist ./
           yarn
-        shell: bash
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
@@ -80,9 +78,16 @@ jobs:
           mac_certs_password: ${{ secrets.mac_certs_password }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
-      - name: upload artifacts
+      - name: upload artifacts mac
         uses: actions/upload-artifact@main
         with:
-          name: dataOps-mac
-          path: ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client/electron-build/**
+          name: ali-dbhub-mac
+          path: ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client/electron-build/*.dmg
+          if-no-files-found: ignore
+
+      - name: upload artifacts window
+        uses: actions/upload-artifact@main
+        with:
+          name: ali-dbhub-window
+          path: ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client/electron-build/*Setup*.exe
           if-no-files-found: ignore
