@@ -2,12 +2,13 @@ const { contextBridge } = require('electron');
 const { spawn, exec } = require('child_process');
 const path = require('path');
 
-const appName = 'data-ops-server-start.jar';
+
+const appName = 'ali-dbhub-server-start.jar';
 contextBridge.exposeInMainWorld('myAPI', {
   startServerForSpawn: () => {
     const path1 = path.join(__dirname, `app/${appName}`);
     console.log('path1', path1);
-    const ls = spawn(path.join(__dirname, 'jre/Contents/Home/bin/java')  , ['-jar', path1]);
+    const ls = spawn(path.join(__dirname, 'jre/bin/java')  , ['-jar', '-Dspring.profiles.active=release', path1]);
     ls.stdout.on('data', (buffer) => {
       console.log(buffer.toString('utf8'));
       const data = buffer.toString('utf8');
