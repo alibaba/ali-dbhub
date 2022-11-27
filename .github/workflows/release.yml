@@ -32,7 +32,7 @@ jobs:
 
       # 编译服务端java版本
       - name: Build Java
-        run: mvn clean package -B -Dmaven.test.skip=true -f ali-dbhub-server/pom.xml
+        run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
 
       # 打包jre
       - name: Build jre
