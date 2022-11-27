@@ -15,18 +15,20 @@ interface IProps {
   className?: any;
   treeData: ITreeNode[] | undefined;
   loadData?: Function;
+  nodeClick?: Function;
 }
 interface TreeNodeIProps {
   data: ITreeNode;
   level: number;
   show: boolean;
   loadData?: Function;
+  nodeClick?: Function;
 }
 
 
 
 export function TreeNode(props: TreeNodeIProps) {
-  const { data, level, show = false, loadData } = props
+  const { data, level, show = false, loadData, nodeClick } = props
   const [showChildren, setShowChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -122,7 +124,7 @@ export function TreeNode(props: TreeNodeIProps) {
         <div className={styles.typeIcon}>
           <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
         </div>
-        <div className={styles.contentText}>
+        <div className={styles.contentText} onClick={() => { nodeClick && nodeClick(data); console.log(data) }}>
           <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
           <div className={styles.type}>{data.dataType}</div>
         </div>
@@ -140,7 +142,7 @@ export function TreeNode(props: TreeNodeIProps) {
 }
 
 export default function Tree(props: IProps) {
-  const { className, treeData, loadData } = props;
+  const { className, treeData, loadData, nodeClick } = props;
   const treeDataEmpty = () => {
     return ''
   }
@@ -149,7 +151,7 @@ export default function Tree(props: IProps) {
       <LoadingContent data={treeData} handleEmpty empty={treeDataEmpty()}>
         {
           treeData?.map((item) => {
-            return <TreeNode loadData={loadData} key={item.name} show={true} level={0} data={item}></TreeNode>
+            return <TreeNode nodeClick={nodeClick} loadData={loadData} key={item.name} show={true} level={0} data={item}></TreeNode>
           })
         }
       </LoadingContent>
