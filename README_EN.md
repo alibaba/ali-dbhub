@@ -3,36 +3,32 @@
 [![GitHub Stars](https://img.shields.io/github/stars/alibaba/ali-dbhub)](https://github.com/alibaba/ali-dbhub/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/alibaba/ali-dbhub)](https://github.com/alibaba/ali-dbhub/fork)
 [![GitHub Contributors](https://img.shields.io/github/contributors/alibaba/ali-dbhub)](https://github.com/alibaba/ali-dbhub/graphs/contributors)
-
 # AliDBHub
+##### Language： [中文](README.md) | English
 
-##### 语言： 中文 | [English](README_EN.md)
-DataOps 是面向开发人员的免费多平台数据库工具。多种数据库一个工具。它用于查询、创建和管理数据库，数据库可以在本地、服务器或云端。支持 MySQL、PostgreSQL、Microsoft SQL Server、Oracle、H2等，未来我们会不断完善其他非关系型数据的支持，如Redis。
+AliDBHub is a free multi-platform database tool for developers.Many databases one tool. It is designed to query, create, and manage databases. Databases can work locally, on a server, or in the cloud. Supports MySQL, PostgreSQL, Microsoft SQL Server, Oracle, and more. 
 
-## Demo演示
-
+## Demo
 
 
-## 下载安装
 
-Mac、Windows客户端应用下载地址 <a href="https://github.com/alibaba/ali-dbhub/releases">GitHub releases</a>.
+## Download
 
-网页版本待更新...
-## 运行环境
+You can download desktop client from <a href="https://github.com/alibaba/ali-dbhub/releases">GitHub releases</a>.  
 
-客户端可以根据操作系统自行选择安装。
+## Running
 
-注意：
-如果需要本地调试
+Just run an installer (or unzip an archive) and run `AliDBHub`.
 
-1: java运行 <a href="https://adoptopenjdk.net/" target="_blank">Open JDK 17</a> Node运行环境Node16 <a href="https://nodejs.org/" target="_blank">Node.js</a>.
-2: jre参考打包发布中jre安装方式.
-## 文档
+Note: AliDBHub needs Java to run. <a href="https://adoptopenjdk.net/" target="_blank">Open JDK 17</a> and <a href="https://nodejs.org/" target="_blank">Node.js</a>.  
+You can change default JDK version by replacing directory `jre` in AliDBHub installation folder.
+
+## Documentation
 
 * <a href="https://github.com/alibaba/ali-dbhub/wiki">WIKI</a>
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
 
-## 贡献者
+## Contributors
 
 <a href="https://github.com/alibaba/ali-dbhub/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=alibaba/ali-dbhub" />
