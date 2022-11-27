@@ -31,9 +31,9 @@ function createWindow() {
   });
 
   if (process.platform === 'win32') { // 如果平台是win32，也即windows
-    options.show = true // 当window创建的时候打开
-    options.frame = false // 创建一个frameless窗口，详情：https://electronjs.org/docs/api/frameless-window
-    options.backgroundColor = '#3f3c37'
+    mainWindow.show = true // 当window创建的时候打开
+    mainWindow.frame = false // 创建一个frameless窗口，详情：https://electronjs.org/docs/api/frameless-window
+    mainWindow.backgroundColor = '#3f3c37'
   }
 
   //  * 加载应用-----  electron-quick-start中默认的加载入口
