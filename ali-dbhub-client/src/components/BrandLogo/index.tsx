@@ -10,7 +10,7 @@ interface IProps {
 
 export default memo<IProps>(function BrandLogo({ className, size = 48 }) {
   return (
-    <div className={classnames(className, styles.box)} style={{ height: `${size}px`, width: `${size}px` }}>
+    <div className={classnames(className, styles.box)} style={{ height: `${size}px` }}>
       <img src={logo} alt="" />
     </div>
   );
