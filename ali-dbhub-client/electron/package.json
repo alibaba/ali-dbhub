@@ -23,7 +23,7 @@
     "electron-is-dev": "^2.0.0"
   },
   
-  "icon": "logo/logo.svg",
+  "icon": "logo/logo.png",
   "build": {
     "appId": "com.ali-dbhub",
     "directories": {
@@ -39,7 +39,7 @@
       "my.bat"
     ],
     "mac": {
-      "icon": "logo/logo.svg",
+      "icon": "logo/logo.png",
       "target": [
         {
           "target": "dmg",
@@ -58,7 +58,7 @@
         }
       ],
       "publisherName": "AliDBHub",
-      "icon": "logo/logo.svg"
+      "icon": "logo/logo.png"
     }
   }
 }
