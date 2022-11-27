@@ -118,7 +118,7 @@ export function DatabaseQuery({ activeTabKey, windowTab }: { activeTabKey: strin
       type: dataBaseType,
       dataSourceId: params.id,
       databaseName: windowTab?.databaseName,
-      status: WindowTabStatus.DRAFT,
+      status: WindowTabStatus.RELEASE,
       ddl: getMonacoEditorValue()
     }
     historyServer.saveWindowTab(p).then(res => {
@@ -134,7 +134,7 @@ export function DatabaseQuery({ activeTabKey, windowTab }: { activeTabKey: strin
       </div>
       <div ref={monacoEditorBox} className={styles.monacoEditor}>
         {
-          <MonacoEditor id={windowTab.id!} defaultValue={windowTab.sql} getEditor={getEditor}></MonacoEditor>
+          <MonacoEditor id={windowTab.id!} getEditor={getEditor}></MonacoEditor>
         }
       </div>
       <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
@@ -247,7 +247,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   const getTableList = (currentDB: IDB) => {
-    setTreeData(null)
+    setTreeData(undefined)
     let p = {
       dataSourceId: params.id,
       databaseName: currentDB?.name,

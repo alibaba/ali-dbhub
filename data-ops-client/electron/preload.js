@@ -2,7 +2,7 @@ const { contextBridge } = require('electron');
 const { spawn, exec } = require('child_process');
 const path = require('path');
 
-const appName = 'data-ops-server-start-1.0.0-SNAPSHOT.jar';
+const appName = 'data-ops-server-start.jar';
 contextBridge.exposeInMainWorld('myAPI', {
   startServerForSpawn: () => {
     const path1 = path.join(__dirname, `app/${appName}`);

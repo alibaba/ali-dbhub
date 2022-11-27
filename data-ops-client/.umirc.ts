@@ -1,7 +1,7 @@
 import { defineConfig } from 'umi';
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 // const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin');
-
+console.log('我是umirc')
 
 const chainWebpack = (config:any, { webpack }:any) => {
   config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
@@ -81,10 +81,10 @@ export default defineConfig({
     type: 'none',
   },
   chainWebpack,
-  proxy: {
-    '/api': {
-      'target': 'http://127.0.0.1:10824',
-      'changeOrigin': true
-    },
-  },
+  // proxy: {
+  //   '/api': {
+  //     'target': 'http://localhost:10824',
+  //     'changeOrigin': true
+  //   },
+  // },
 });

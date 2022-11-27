@@ -1,6 +1,7 @@
 import { extend, ResponseError } from 'umi-request';
-import { message } from 'antd';
+import { message } from 'antd'; 
 
+export type IErrorLevel = 'toast' | 'prompt' | 'critical' | false;
 export interface IOptions{
   method?: "get" | 'post' | 'put' | 'delete';
   mock?: boolean;
@@ -29,20 +30,22 @@ const codeMessage:{[errorCode:number]:string} = {
 };
 
 const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
-const localServiceUrl = 'http://127.0.0.1:10824';
+const onLineServiceUrl = 'http://127.0.0.1:10824';
+const localServiceUrl = 'http://127.0.0.1:7001';
 
-const baseURL = location.href.indexOf('dist/index.html') > -1 ? localServiceUrl : location.origin;
+const baseURL = location.href.indexOf('dist/index.html') > -1 ? onLineServiceUrl : localServiceUrl;
 console.log(baseURL)
-const errorHandler = (error: ResponseError) => {
+const errorHandler = (error: ResponseError,errorLevel:IErrorLevel) => {
   const { response } = error;
   if(!response) return
   const errortext = codeMessage[response.status] || response.statusText;
   const { status } = response;
-  message.error(`${status}: ${errortext}`)
+  if(errorLevel === 'toast'){
+    message.error(`${status}: ${errortext}`)
+  }
 };
 
 const request = extend({
-  errorHandler,
   // prefix: '/api',
   credentials: 'include', // 默认请求是否带上cookie
   headers:{
@@ -113,6 +116,7 @@ export default function createRequest<P = void, R = {}>(url:string, options:IOpt
         resolve(data)
       })
       .catch(error=>{
+        errorHandler(error, errorLevel)
         reject(error)
       })
     }) 
