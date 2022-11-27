@@ -70,7 +70,7 @@ jobs:
       - name: npm install electron
         run: |
           cd ali-dbhub-client/electron
-          rm -rf ../electron-build && cp -r ../dist ./
+          cp -r ../dist ./
           yarn
 
       - name: Build/release Electron app
