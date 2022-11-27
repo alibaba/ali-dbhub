@@ -17,7 +17,9 @@ function createWindow() {
     width: 1200,
     minWidth: 800,
     height: 800,
-    title: 'dataOps',
+    center: true,
+    title: 'AliDBHub',
+    resizable: false,
     frame: false,
     titleBarStyle: 'hidden',
     webPreferences: {
@@ -26,6 +28,12 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
+
+  if (process.platform === 'win32') { // 如果平台是win32，也即windows
+    options.show = true // 当window创建的时候打开
+    options.frame = false // 创建一个frameless窗口，详情：https://electronjs.org/docs/api/frameless-window
+    options.backgroundColor = '#3f3c37'
+  }
 
   //  * 加载应用-----  electron-quick-start中默认的加载入口
   // mainWindow.loadURL('http://localhost:10824');
