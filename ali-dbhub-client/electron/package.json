@@ -1,5 +1,5 @@
 {
-  "name": "data-ops",
+  "name": "ali-dbhub-client",
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/alibaba/data-ops"
+    "url": "https://github.com/alibaba/ali-dbhub"
   },
   "description": "Electron Application",
   "scripts": {
@@ -25,7 +25,7 @@
   
   "icon": "logo/logo.png",
   "build": {
-    "appId": "com.data-opt",
+    "appId": "com.ali-dbhub",
     "directories": {
       "output": "../electron-build"
     },
