@@ -69,14 +69,14 @@ jobs:
 
       - name: npm install electron
         run: |
-          cd electron
+          cd ali-dbhub-client/electron
           rm -rf ../electron-build && cp -r ../dist ./
           yarn
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          package_root: "./ali-dbhub-client/electron"
+          package_root: "ali-dbhub-client/electron"
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -91,12 +91,12 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: ali-dbhub-mac
-          path: ./ali-dbhub-client/electron-build/*.dmg
+          path: ali-dbhub-client/electron-build/*.dmg
           if-no-files-found: ignore
 
       - name: upload artifacts window
         uses: actions/upload-artifact@main
         with:
           name: ali-dbhub-window
-          path: ./ali-dbhub-client/electron-build/*Setup*.exe
+          path: ali-dbhub-client/electron-build/*Setup*.exe
           if-no-files-found: ignore
