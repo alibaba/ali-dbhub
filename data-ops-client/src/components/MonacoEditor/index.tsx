@@ -15,7 +15,6 @@ interface IProps {
   className?: string;
   height?: number;
   getEditor: any;
-  defaultValue: string | undefined;
 }
 
 // export const hintData: any = {
@@ -24,7 +23,7 @@ interface IProps {
 // }
 
 export default memo(function MonacoEditor(props: IProps) {
-  const { defaultValue, className, getEditor, id = 0 } = props;
+  const { className, getEditor, id = 0 } = props;
   const [editor, setEditor] = useState<any>();
   const themeColor = useTheme();
 
@@ -45,7 +44,6 @@ export default memo(function MonacoEditor(props: IProps) {
     };
     getEditor(editor)
     setEditor(editor)
-    setValue(editor, defaultValue || '')
     monaco.editor.defineTheme('BlackTheme', {
       base: 'vs-dark',
       inherit: true,
@@ -152,13 +150,19 @@ export function setEditorHint(hintData: IHintData) {
         endColumn: column,
       })
 
+
       const tokens = textBeforePointer.trim().split(/\s+/)
       const lastToken = tokens[tokens.length - 1] // 获取最后一段非空字符串
 
       if (lastToken.endsWith('.')) {
         const tokenNoDot = lastToken.slice(0, lastToken.length - 1)
-        if (Object.keys(hintData.current).includes(tokenNoDot)) {
-          suggestions = [...getSecondSuggest(tokenNoDot)]
+        try {
+          if (Object?.keys(hintData?.current)?.includes(tokenNoDot)) {
+            suggestions = [...getSecondSuggest(tokenNoDot)]
+          }
+        }
+        catch {
+
         }
       } else if (lastToken === '.') {
         suggestions = []

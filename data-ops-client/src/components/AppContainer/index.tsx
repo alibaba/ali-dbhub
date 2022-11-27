@@ -14,18 +14,7 @@ interface IProps {
 
 export default memo<IProps>(function AppContainer({ className, children }) {
   const [serviceStart, setServiceStart] = useState(false);
-  // const [isLogin] = useLogin();
-  // // 路由守卫
-  // const unlisten = history.listen((location, action) => {
-  //   console.log(location)
-  //   if (!isLogin && location.pathname !== '/login') {
-  //     history.push('/login')
-  //   }
-  //   if (isLogin && location.pathname === '/login') {
-  //     history.push('/')
-  //   }
-  // })
-  // unlisten();
+  const [serviceFail, setServiceFail] = useState(false);
 
   useEffect(() => {
     settings();
@@ -41,7 +30,9 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         setServiceStart(true)
       })
       if (flag > 20) {
+        setServiceFail(true)
         clearInterval(time)
+        // setServiceStart(true)
       }
     }, 300)
   }
@@ -59,8 +50,6 @@ export default memo<IProps>(function AppContainer({ className, children }) {
     // }
   }
 
-
-
   return <ConfigProvider prefixCls='custom'>
     {
       serviceStart ?
@@ -69,7 +58,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         </div>
         :
         <div className={styles.starting}>
-          {i18n('common.text.serviceStarting')}
+          {serviceFail ? i18n('common.text.serviceFail') : i18n('common.text.serviceStarting')}
         </div>
     }
   </ConfigProvider>

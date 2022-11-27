@@ -1,22 +1,29 @@
 {
-  "name": "data-ops-electron",
+  "name": "data-ops",
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "0.0.1",
+  "version": "0.0.60",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
     "electron"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alibaba/data-ops"
+  },
   "description": "Electron Application",
   "scripts": {
-    "build": "rm -rf ../electron-build && cp -r ../dist ./ && electron-builder"
+    "electron:build": "electron-builder"
   },
   "devDependencies": {
     "electron": "^20.1.4",
-    "electron-builder": "^23.3.3"
+    "electron-builder": "^23.3.3",
+    "electron-is-dev": "^2.0.0"
   },
+  
+  "icon": "logo/logo.png",
   "build": {
     "appId": "com.data-opt",
     "directories": {
@@ -31,16 +38,14 @@
       "jre/**/*",
       "my.bat"
     ],
-    "electronDownload": {
-      "mirror": "https://npm.taobao.org/mirrors/electron/"
-    },
     "mac": {
       "icon": "logo/logo.png",
       "target": [
         {
           "target": "dmg",
           "arch": [
-            "x64"
+            "x64",
+            "arm64"
           ]
         }
       ]
