@@ -149,7 +149,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
     ></Tabs>
     <div className={styles.searchInputBox}>
       <SearchInput onChange={searchChange} className={styles.searchInput} placeholder={i18n('common.text.search')}></SearchInput>
-      <Select
+      {/* <Select
         className={styles.select}
         // allowClear
         placeholder={i18n('common.placeholder.select', '连接')}
@@ -162,7 +162,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
         placeholder={i18n('common.placeholder.select', '数据库')}
         onChange={handleChangeDatabase}
         options={databaseOptions}
-      />
+      /> */}
     </div>
     <div className={styles.sqlListBox} ref={scrollerRef}>
       <ScrollLoading

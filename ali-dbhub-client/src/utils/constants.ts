@@ -1,5 +1,6 @@
 import mysqlLogo from '@/assets/mysql-logo.png';
 import redisLogo from '@/assets/redis-logo.png';
+import h2Logo from '@/assets/h2-logo.png';
 import {IDatabase} from '@/types'
 
 export enum StatusType {
@@ -24,14 +25,14 @@ export const databaseType:{
     img: mysqlLogo,
     code: DatabaseTypeCode.MYSQL
   },
-  [DatabaseTypeCode.REDIS]:{
-    name: 'Redis',
-    img: redisLogo,
-    code: DatabaseTypeCode.REDIS
-  },
+  // [DatabaseTypeCode.REDIS]:{
+  //   name: 'Redis',
+  //   img: redisLogo,
+  //   code: DatabaseTypeCode.REDIS
+  // },
   [DatabaseTypeCode.H2]:{
     name: 'H2',
-    img: redisLogo,
+    img: h2Logo,
     code: DatabaseTypeCode.H2
   },
 }

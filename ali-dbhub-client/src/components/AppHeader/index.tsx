@@ -6,7 +6,7 @@ import Setting from '@/components/Setting';
 
 interface IProps {
   className?: any;
-  showRight: boolean;
+  showRight?: boolean;
 }
 
 export default memo<PropsWithChildren<IProps>>(function AppHeader(props) {

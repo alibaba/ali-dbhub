@@ -11,6 +11,8 @@ export interface IGetHistoryListParams extends IPageParams  {
 
 const saveWindowTab = createRequest<IWindowTab, string>('/api/ddl/create',{method: 'post'});
 
+const updateWindowTab = createRequest<IWindowTab, string>('/api/ddl/update',{method: 'put'});
+
 const getSaveList = createRequest<IGetHistoryListParams, IPageResponse<IWindowTab>>('/api/ddl/list',{});
 
 const deleteWindowTab = createRequest<{id:string}, string>('/api/ddl/:id',{method: 'delete'});
@@ -21,6 +23,7 @@ const getHistoryList = createRequest<IGetHistoryListParams, IPageResponse<IHisto
 
 export default {
   getSaveList,
+  updateWindowTab,
   getHistoryList,
   saveWindowTab,
   deleteWindowTab,
