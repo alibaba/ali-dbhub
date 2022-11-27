@@ -5,8 +5,8 @@ services:
     restart: always
     container_name: mysql-latest
     environment:
-      - "MYSQL_ROOT_PASSWORD=dataops"
-      - "MYSQL_DATABASE=data_ops_test"
+      - "MYSQL_ROOT_PASSWORD=ali_dbhub"
+      - "MYSQL_DATABASE=ali_dbhub_test"
       - "TZ=Asia/Shanghai"
     ports:
       - 3306:3306
