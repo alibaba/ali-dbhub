@@ -11,6 +11,7 @@ import Loading from '@/components/Loading/Loading';
 import MonacoEditor, { setEditorHint, IHintData } from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
 import SearchResult from '@/components/SearchResult';
+import LoadingContent from '@/components/Loading/LoadingContent';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import connectionServer from '@/service/connection';
 import historyServer from '@/service/history';
@@ -34,16 +35,20 @@ interface ITabItem extends IWindowTab {
 const basicsTree: ITreeNode[] = []
 let monacoEditorExternal: any
 
-export function DatabaseQuery({ activeTabKey, windowTab }: { activeTabKey: string, windowTab: IWindowTab }) {
+export function DatabaseQuery({ activeTabKey, windowTab, treeNodeClickMessage }: { activeTabKey: string, windowTab: IWindowTab, treeNodeClickMessage: any }) {
   const params: { id: string, type: string } = useParams();
   const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode;
-  const [manageResultDataList, setManageResultDataList] = useState<any>();
+  const [manageResultDataList, setManageResultDataList] = useState<any>([]);
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
   const monacoEditor = useRef<any>(null);
 
   useEffect(() => {
     connectConsole();
   }, [])
+
+  useEffect(() => {
+
+  }, [treeNodeClickMessage])
 
   const connectConsole = () => {
     let p = {
@@ -99,6 +104,7 @@ export function DatabaseQuery({ activeTabKey, windowTab }: { activeTabKey: strin
       dataSourceId: windowTab?.dataSourceId,
       databaseName: windowTab?.databaseName
     }
+    setManageResultDataList(null);
     mysqlServer.executeSql(p).then(res => {
       let p = {
         dataSourceId: windowTab?.dataSourceId,
@@ -109,11 +115,14 @@ export function DatabaseQuery({ activeTabKey, windowTab }: { activeTabKey: strin
       }
       historyServer.createHistory(p)
       setManageResultDataList(res)
+    }).catch(error => {
+      setManageResultDataList([])
     })
   }
 
   const saveWindowTabTab = () => {
     let p = {
+      id: windowTab.id,
       name: windowTab?.name,
       type: dataBaseType,
       dataSourceId: params.id,
@@ -121,7 +130,7 @@ export function DatabaseQuery({ activeTabKey, windowTab }: { activeTabKey: strin
       status: WindowTabStatus.RELEASE,
       ddl: getMonacoEditorValue()
     }
-    historyServer.saveWindowTab(p).then(res => {
+    historyServer.updateWindowTab(p).then(res => {
       message.success('保存成功');
     })
   }
@@ -139,7 +148,9 @@ export function DatabaseQuery({ activeTabKey, windowTab }: { activeTabKey: strin
       </div>
       <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
       <div className={styles.searchResult}>
-        <SearchResult manageResultDataList={manageResultDataList}></SearchResult>
+        <LoadingContent data={manageResultDataList} handleEmpty>
+          <SearchResult manageResultDataList={manageResultDataList}></SearchResult>
+        </LoadingContent>
       </div>
     </div>
   </>
@@ -157,6 +168,9 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const fixedTreeData = useRef<ITreeNode[]>();
   const [DBList, setDBList] = useState<IDB[]>();
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [windowName, setWindowName] = useState<string>('');
+  const [treeNodeClickMessage, setTreeNodeClickMessage] = useState({});
   const monacoHint = useRef<any>(null);
 
   const closeDropdownFn = () => {
@@ -178,6 +192,10 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
     }
   }
+
+  useEffect(() => {
+    setWindowName('')
+  }, [isModalVisible])
 
   useEffect(() => {
     if (openDropdown) {
@@ -300,7 +318,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   const addWindowTab = (windowList: ITabItem[]) => {
     let p = {
-      name: `Default Tab`,
+      name: windowName || 'Default Tab',
       type: dataBaseType,
       dataSourceId: params.id,
       databaseName: currentDB?.name!,
@@ -317,7 +335,8 @@ export default memo<IProps>(function DatabasePage({ className }) {
           key: res
         }
       ])
-      setActiveKey(res)
+      setActiveKey(res);
+      setIsModalVisible(false);
     })
   };
 
@@ -345,7 +364,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   const onEdit = (targetKey: any, action: 'add' | 'remove') => {
     if (action === 'add') {
-      addWindowTab(windowList);
+      setIsModalVisible(true)
     } else {
       closeWindowTab(targetKey);
     }
@@ -382,6 +401,17 @@ export default memo<IProps>(function DatabasePage({ className }) {
       }
     </Menu>
   }
+  function handleOk() {
+    addWindowTab(windowList);
+  }
+
+  function handleCancel() {
+    setIsModalVisible(false);
+  }
+
+  function nodeClickCallBack(data: any) {
+    setTreeNodeClickMessage(data)
+  }
 
   return <>
     <div className={classnames(className, styles.box)}>
@@ -415,7 +445,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
             <Iconfont code="&#xe63d;"></Iconfont>
             <span>{i18n('connection.button.overview')}</span>
           </div>
-          <Tree className={styles.tree} treeData={treeData}></Tree>
+          <Tree nodeClick={nodeClickCallBack} className={styles.tree} treeData={treeData}></Tree>
         </div>
       </div>
       <DraggableDivider callback={callback} volatileRef={letfRef} />
@@ -435,11 +465,29 @@ export default memo<IProps>(function DatabasePage({ className }) {
           {
             currentDB &&
             windowList?.map((i: IWindowTab) => {
-              return <DatabaseQuery windowTab={i} key={i.databaseName + i.id} activeTabKey={activeKey!}></DatabaseQuery>
+              return <DatabaseQuery treeNodeClickMessage={treeNodeClickMessage} windowTab={i} key={i.databaseName + i.id} activeTabKey={activeKey!}></DatabaseQuery>
             })
           }
         </div>
       </div>
     </div>
+    <Modal
+      title="新窗口名称"
+      open={isModalVisible}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      footer={
+        <>
+          <Button onClick={handleCancel} className={styles.cancel}>
+            取消
+          </Button>
+          <Button type="primary" onClick={handleOk} className={styles.cancel}>
+            添加
+          </Button>
+        </>
+      }
+    >
+      <Input value={windowName} onChange={(e) => { setWindowName(e.target.value) }} />
+    </Modal>
   </>
 });

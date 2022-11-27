@@ -8,7 +8,7 @@ import i18n from '@/i18n';
 import { history } from 'umi';
 import connectionServer from '@/service/connection'
 import { IConnectionBase } from '@/types'
-import { databaseTypeList, DatabaseTypeCode } from '@/utils/constants'
+import { databaseTypeList, DatabaseTypeCode, databaseType } from '@/utils/constants'
 import {
   Dropdown,
   Space,
@@ -221,7 +221,7 @@ export default memo<IProps>(function ConnectionPage(props) {
         <div
           className={styles.logo}
           style={{
-            backgroundImage: `url(https://cdn.apifox.cn/app/project-icon/builtin/9.jpg)`,
+            backgroundImage: `url(${databaseType[item.type].img})`,
           }}
         ></div>
         <div className={styles.name}>{item.alias}</div>
