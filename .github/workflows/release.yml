@@ -16,11 +16,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest ]
+        os: [ macos-latest, windows-latest ]
 
     steps:
       - name: Check out git repository
         uses: actions/checkout@main
+
       # 安装java
       - name: Install Java and Maven
         uses: actions/setup-java@main
@@ -56,12 +57,14 @@ jobs:
           cd ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client
           npm install 
           npm run build
+          shell: bash
 
       - name: npm install electron
         run: |
           cd ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client/electron
           rm -rf ../electron-build && cp -r ../dist ./
           yarn
+        shell: bash
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
