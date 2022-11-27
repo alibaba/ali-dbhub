@@ -52,6 +52,12 @@ jobs:
           # cache: "yarn"
           # cache-dependency-path: ali-dbhub-client/yarn.lock
 
+      - name: Install UNM dependencies for macOS
+        if: runner.os == 'Windows'
+        run: |
+          dir
+        shell: bash
+
       - name: npm install & build
         run: |
           cd ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client
