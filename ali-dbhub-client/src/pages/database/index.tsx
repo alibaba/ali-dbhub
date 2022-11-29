@@ -122,7 +122,7 @@ export function DatabaseQuery({ activeTabKey, windowTab, treeNodeClickMessage }:
 
   const saveWindowTabTab = () => {
     let p = {
-      id: windowTab.id,
+      id: windowTab?.id,
       name: windowTab?.name,
       type: dataBaseType,
       dataSourceId: params.id,
@@ -215,21 +215,22 @@ export default memo<IProps>(function DatabasePage({ className }) {
   useEffect(() => {
     if (!currentDB) return
     getWindowList()
+    getTableList(currentDB)
   }, [currentDB])
 
   useEffect(() => {
     if (!DBList?.length) return
     const locationHash: any = getLocationHash()
-    console.log(locationHash)
+    let flag = false;
     DBList.map(item => {
       if (locationHash?.databaseName && item.name == locationHash?.databaseName) {
+        flag = true
         setCurrentDB(item)
-        getTableList(item)
-      } else {
-        setCurrentDB(DBList?.[0])
-        getTableList(DBList?.[0])
       }
     })
+    if (!flag) {
+      setCurrentDB(DBList?.[0])
+    }
   }, [DBList])
 
   const getWindowList = () => {
@@ -248,7 +249,18 @@ export default memo<IProps>(function DatabasePage({ className }) {
             key: item.id!
           }
         })
-        setActiveKey(list?.[0]?.id)
+        const locationHash: any = getLocationHash()
+        let flag = false;
+        list?.map(item => {
+          debugger
+          if (locationHash?.id && item.id == locationHash?.id) {
+            setActiveKey(item?.id)
+            flag = true
+          }
+        })
+        if (!flag) {
+          setActiveKey(list?.[0]?.id)
+        }
         setWindowList(list)
       } else {
         addWindowTab([])
@@ -272,6 +284,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
       pageNo: 1,
       pageSize: 10,
     }
+
     return mysqlServer.getList(p).then(res => {
       const tableList: ITreeNode[] = res.data?.map(item => {
         return {
