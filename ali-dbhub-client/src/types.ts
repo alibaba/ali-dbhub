@@ -98,7 +98,3 @@ export interface IManageResultData {
   success: boolean;
 
 }
-
-
-
-
