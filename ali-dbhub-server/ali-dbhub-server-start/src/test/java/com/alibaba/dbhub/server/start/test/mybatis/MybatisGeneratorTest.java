@@ -42,7 +42,7 @@ public class MybatisGeneratorTest extends BaseTest {
         String xmlDir = System.getProperty("user.dir")
             + "/../ali-dbhub-server-domain/ali-dbhub-server-domain-core/ali-dbhub-server-domain-" + repository
             + "-repository/src/main/resources/com/alibaba/dataops/server/domain/" + repository + "/repository";
-
+yu
         // 不要生成service controller
         Map<OutputFile, String> pathInfo = new HashMap<>();
         pathInfo.put(OutputFile.service, null);
