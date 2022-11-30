@@ -58,17 +58,17 @@
             </dependency>
             <dependency>
                 <groupId>com.alibaba.dbhub</groupId>
-                <artifactId>ali-dbhub-server-domain-core-api</artifactId>
+                <artifactId>ali-dbhub-server-domain-api</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.dbhub</groupId>
-                <artifactId>ali-dbhub-server-domain-core-core</artifactId>
+                <artifactId>ali-dbhub-server-domain-core</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.dbhub</groupId>
-                <artifactId>ali-dbhub-server-domain-core-repository</artifactId>
+                <artifactId>ali-dbhub-server-domain-repository</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

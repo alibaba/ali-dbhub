@@ -3,11 +3,10 @@ package com.alibaba.dbhub.server.web.api.controller;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-import com.alibaba.dbhub.server.domain.core.api.service.TestCoreService;
+import com.alibaba.dbhub.server.domain.api.service.TestCoreService;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.web.api.converter.TestWebApiConverter;
-import com.alibaba.dbhub.server.web.api.request.test.TestCreateRequest;
 import com.alibaba.dbhub.server.web.api.request.test.TestCreateRequest;
 
 import lombok.extern.slf4j.Slf4j;

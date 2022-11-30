@@ -1,6 +1,6 @@
 package com.alibaba.dbhub.server.web.api.converter;
 
-import com.alibaba.dbhub.server.domain.core.api.test.TestCreateParam;
+import com.alibaba.dbhub.server.domain.api.test.TestCreateParam;
 import com.alibaba.dbhub.server.web.api.request.test.TestCreateRequest;
 
 import org.mapstruct.Mapper;
