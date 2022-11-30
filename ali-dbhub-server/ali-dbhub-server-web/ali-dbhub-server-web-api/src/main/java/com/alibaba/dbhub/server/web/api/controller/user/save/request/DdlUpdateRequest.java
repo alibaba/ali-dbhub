@@ -28,4 +28,9 @@ public class DdlUpdateRequest {
      */
     @NotNull
     private String ddl;
+
+    /**
+     * 更新状态 DRAFT/RELEASE
+     */
+    private String status;
 }
