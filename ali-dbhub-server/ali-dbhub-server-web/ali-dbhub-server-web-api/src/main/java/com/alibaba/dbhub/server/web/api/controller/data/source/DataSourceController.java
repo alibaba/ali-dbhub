@@ -5,9 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dbhub.server.domain.core.api.param.ConsoleConnectParam;
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourceTestParam;
-import com.alibaba.dbhub.server.domain.core.api.service.DataSourceCoreService;
+import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceTestParam;
+import com.alibaba.dbhub.server.domain.api.service.DataSourceCoreService;
 import com.alibaba.dbhub.server.domain.data.api.model.DatabaseDTO;
 import com.alibaba.dbhub.server.domain.data.api.param.console.ConsoleCloseParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
@@ -20,11 +20,6 @@ import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourc
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceCloseRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceTestRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DatabaseVO;
-import com.alibaba.dbhub.server.web.api.controller.data.source.converter.DataSourceWebConverter;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleCloseRequest;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleConnectRequest;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceCloseRequest;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceTestRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

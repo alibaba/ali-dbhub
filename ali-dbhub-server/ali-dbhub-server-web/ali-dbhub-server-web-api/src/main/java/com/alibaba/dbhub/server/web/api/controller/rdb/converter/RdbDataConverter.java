@@ -2,7 +2,7 @@ package com.alibaba.dbhub.server.web.api.controller.rdb.converter;
 
 import java.util.List;
 
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourceExecuteParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceExecuteParam;
 import com.alibaba.dbhub.server.domain.data.api.model.CellDTO;
 import com.alibaba.dbhub.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dbhub.server.domain.data.api.model.TableColumnDTO;
@@ -10,15 +10,6 @@ import com.alibaba.dbhub.server.domain.data.api.model.TableDTO;
 import com.alibaba.dbhub.server.domain.data.api.model.TableIndexDTO;
 import com.alibaba.dbhub.server.domain.data.api.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.data.api.param.table.TableQueryParam;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.DataManageRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableBriefQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableManageRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.CellVO;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ColumnVO;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.IndexVO;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.TableVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DataManageRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableBriefQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;

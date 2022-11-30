@@ -2,8 +2,8 @@ package com.alibaba.dbhub.server.web.api.controller.rdb;
 
 import java.util.List;
 
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourceExecuteParam;
-import com.alibaba.dbhub.server.domain.core.api.service.DataSourceCoreService;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceExecuteParam;
+import com.alibaba.dbhub.server.domain.api.service.DataSourceCoreService;
 import com.alibaba.dbhub.server.domain.data.api.model.ExecuteResultDTO;
 import com.alibaba.dbhub.server.domain.data.api.model.TableDTO;
 import com.alibaba.dbhub.server.domain.data.api.param.table.TablePageQueryParam;
@@ -15,14 +15,6 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
-import com.alibaba.dbhub.server.web.api.controller.rdb.converter.RdbDataConverter;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableBriefQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDeleteRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableManageRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableSqlExportRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.TableVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.converter.RdbDataConverter;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableBriefQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDeleteRequest;
