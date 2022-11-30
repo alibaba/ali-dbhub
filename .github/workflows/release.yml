@@ -16,11 +16,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest ]
+        os: [ macos-latest, windows-latest ]
 
     steps:
       - name: Check out git repository
         uses: actions/checkout@main
+
       # 安装java
       - name: Install Java and Maven
         uses: actions/setup-java@main
@@ -31,7 +32,7 @@ jobs:
 
       # 编译服务端java版本
       - name: Build Java
-        run: mvn clean package -B -Dmaven.test.skip=true -f ali-dbhub-server/pom.xml
+        run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
 
       # 打包jre
       - name: Build jre
@@ -51,22 +52,31 @@ jobs:
           # cache: "yarn"
           # cache-dependency-path: ali-dbhub-client/yarn.lock
 
+      # - name: change directory ali-dbhub-client
+
+    
+      # - name: Install UNM dependencies for macOS
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     dir
+      #   shell: bash
+
       - name: npm install & build
         run: |
-          cd ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client
+          cd ali-dbhub-client
           npm install 
           npm run build
 
       - name: npm install electron
         run: |
-          cd ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client/electron
-          rm -rf ../electron-build && cp -r ../dist ./
+          cd ali-dbhub-client/electron
+          cp -r ../dist ./
           yarn
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          package_root: "./ali-dbhub-client/electron"
+          package_root: "ali-dbhub-client/electron"
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -77,9 +87,16 @@ jobs:
           mac_certs_password: ${{ secrets.mac_certs_password }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
-      - name: upload artifacts
+      - name: upload artifacts mac
         uses: actions/upload-artifact@main
         with:
-          name: dataOps-mac
-          path: ~/work/ali-dbhub/ali-dbhub/ali-dbhub-client/electron-build/**
+          name: ali-dbhub-mac
+          path: ali-dbhub-client/electron-build/*.dmg
+          if-no-files-found: ignore
+
+      - name: upload artifacts window
+        uses: actions/upload-artifact@main
+        with:
+          name: ali-dbhub-window
+          path: ali-dbhub-client/electron-build/*Setup*.exe
           if-no-files-found: ignore

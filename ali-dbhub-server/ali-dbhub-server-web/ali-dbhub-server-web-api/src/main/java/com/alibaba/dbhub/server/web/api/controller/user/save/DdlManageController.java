@@ -58,10 +58,8 @@ public class DdlManageController {
     @GetMapping("/list")
     public WebPageResult<DdlVO> list(DdlQueryRequest request) {
         UserSavedDdlPageQueryParam param = ddlManageWebConverter.queryReq2param(request);
-        if (StringUtils.isNotBlank(request.getDatabaseName()) && Objects.nonNull(request.getDataSourceId())) {
-            // 如果db不为空，则只查询db下面关联的临时保存
-            param.setStatus(StatusEnum.DRAFT.getCode());
-        } else {
+        if (StringUtils.isBlank(request.getDatabaseName()) && Objects.isNull(request.getDataSourceId())) {
+            // 如果dbname为空，则查询db下面关联的所有保存
             param.setStatus(StatusEnum.RELEASE.getCode());
         }
         PageResult<UserSavedDdlDTO> dtoPageResult = userSavedDdlCoreService.queryPage(param);
