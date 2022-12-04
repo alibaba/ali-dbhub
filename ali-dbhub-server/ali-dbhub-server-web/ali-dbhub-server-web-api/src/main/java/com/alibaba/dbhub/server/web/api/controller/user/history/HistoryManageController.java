@@ -2,18 +2,13 @@ package com.alibaba.dbhub.server.web.api.controller.user.history;
 
 import java.util.List;
 
-import com.alibaba.dbhub.server.domain.core.api.model.UserExecutedDdlDTO;
-import com.alibaba.dbhub.server.domain.core.api.param.UserExecutedDdlCreateParam;
-import com.alibaba.dbhub.server.domain.core.api.param.UserExecutedDdlPageQueryParam;
-import com.alibaba.dbhub.server.domain.core.api.service.UserExecutedDdlCoreService;
+import com.alibaba.dbhub.server.domain.api.model.UserExecutedDdlDTO;
+import com.alibaba.dbhub.server.domain.api.param.UserExecutedDdlCreateParam;
+import com.alibaba.dbhub.server.domain.api.param.UserExecutedDdlPageQueryParam;
+import com.alibaba.dbhub.server.domain.api.service.UserExecutedDdlCoreService;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.web.WebPageResult;
-import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
-import com.alibaba.dbhub.server.web.api.controller.user.history.converter.HistoryWebConverter;
-import com.alibaba.dbhub.server.web.api.controller.user.history.request.HistoryCreateRequest;
-import com.alibaba.dbhub.server.web.api.controller.user.history.request.HistoryQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.user.history.vo.HistoryVO;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dbhub.server.web.api.controller.user.history.converter.HistoryWebConverter;
 import com.alibaba.dbhub.server.web.api.controller.user.history.request.HistoryCreateRequest;

@@ -2,12 +2,12 @@ package com.alibaba.dbhub.server.web.api.controller.data.source;
 
 import java.util.List;
 
-import com.alibaba.dbhub.server.domain.core.api.model.DataSourceDTO;
-import com.alibaba.dbhub.server.domain.core.api.service.DataSourceCoreService;
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourceManageCreateParam;
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourcePageQueryParam;
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourceSelector;
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourceUpdateParam;
+import com.alibaba.dbhub.server.domain.api.model.DataSourceDTO;
+import com.alibaba.dbhub.server.domain.api.service.DataSourceCoreService;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceManageCreateParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceSelector;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
@@ -19,10 +19,6 @@ import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourc
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceUpdateRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DataSourceVO;
-import com.alibaba.dbhub.server.web.api.controller.data.source.converter.DataSourceWebConverter;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceCloneRequest;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceCreateRequest;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceQueryRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;

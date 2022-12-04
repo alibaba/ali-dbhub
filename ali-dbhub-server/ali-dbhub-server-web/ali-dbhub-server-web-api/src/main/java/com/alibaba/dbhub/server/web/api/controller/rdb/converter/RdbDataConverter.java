@@ -2,23 +2,14 @@ package com.alibaba.dbhub.server.web.api.controller.rdb.converter;
 
 import java.util.List;
 
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourceExecuteParam;
-import com.alibaba.dbhub.server.domain.data.api.model.CellDTO;
-import com.alibaba.dbhub.server.domain.data.api.model.ExecuteResultDTO;
-import com.alibaba.dbhub.server.domain.data.api.model.TableColumnDTO;
-import com.alibaba.dbhub.server.domain.data.api.model.TableDTO;
-import com.alibaba.dbhub.server.domain.data.api.model.TableIndexDTO;
-import com.alibaba.dbhub.server.domain.data.api.param.table.TablePageQueryParam;
-import com.alibaba.dbhub.server.domain.data.api.param.table.TableQueryParam;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.DataManageRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableBriefQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableManageRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.CellVO;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ColumnVO;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.IndexVO;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.TableVO;
+import com.alibaba.dbhub.server.domain.support.model.Cell;
+import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
+import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.model.TableColumn;
+import com.alibaba.dbhub.server.domain.support.model.TableIndex;
+import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
+import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceExecuteParam;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DataManageRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableBriefQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;
@@ -76,34 +67,18 @@ public abstract class RdbDataConverter {
     /**
      * 模型转换
      *
-     * @param cellDTO
+     * @param cell
      * @return
      */
-    public abstract CellVO cellDto2vo(CellDTO cellDTO);
+    public abstract CellVO cellDto2vo(Cell cell);
 
     /**
      * 模型转换
      *
-     * @param cellDTOS
+     * @param cells
      * @return
      */
-    public abstract List<CellVO> cellDto2vo(List<CellDTO> cellDTOS);
-
-    /**
-     * 模型转换
-     *
-     * @param dto
-     * @return
-     */
-    public abstract ExecuteResultVO dto2vo(ExecuteResultDTO dto);
-
-    /**
-     * 模型转换
-     *
-     * @param dtos
-     * @return
-     */
-    public abstract List<ExecuteResultVO> dto2vo(List<ExecuteResultDTO> dtos);
+    public abstract List<CellVO> cellDto2vo(List<Cell> cells);
 
     /**
      * 模型转换
@@ -111,7 +86,7 @@ public abstract class RdbDataConverter {
      * @param dto
      * @return
      */
-    public abstract ColumnVO columnDto2vo(TableColumnDTO dto);
+    public abstract ExecuteResultVO dto2vo(ExecuteResult dto);
 
     /**
      * 模型转换
@@ -119,7 +94,23 @@ public abstract class RdbDataConverter {
      * @param dtos
      * @return
      */
-    public abstract List<ColumnVO> columnDto2vo(List<TableColumnDTO> dtos);
+    public abstract List<ExecuteResultVO> dto2vo(List<ExecuteResult> dtos);
+
+    /**
+     * 模型转换
+     *
+     * @param dto
+     * @return
+     */
+    public abstract ColumnVO columnDto2vo(TableColumn dto);
+
+    /**
+     * 模型转换
+     *
+     * @param dtos
+     * @return
+     */
+    public abstract List<ColumnVO> columnDto2vo(List<TableColumn> dtos);
 
     /**
      * 模型转换
@@ -130,7 +121,7 @@ public abstract class RdbDataConverter {
     @Mappings({
         @Mapping(source = "columnList", target = "columnList")
     })
-    public abstract IndexVO indexDto2vo(TableIndexDTO dto);
+    public abstract IndexVO indexDto2vo(TableIndex dto);
 
     /**
      * 模型转换
@@ -138,7 +129,7 @@ public abstract class RdbDataConverter {
      * @param dtos
      * @return
      */
-    public abstract List<IndexVO> indexDto2vo(List<TableIndexDTO> dtos);
+    public abstract List<IndexVO> indexDto2vo(List<TableIndex> dtos);
 
     /**
      * 模型转换
@@ -150,7 +141,7 @@ public abstract class RdbDataConverter {
         @Mapping(source = "columnList", target = "columnList"),
         @Mapping(source = "indexList", target = "indexList"),
     })
-    public abstract TableVO tableDto2vo(TableDTO dto);
+    public abstract TableVO tableDto2vo(Table dto);
 
     /**
      * 模型转换
@@ -158,5 +149,5 @@ public abstract class RdbDataConverter {
      * @param dtos
      * @return
      */
-    public abstract List<TableVO> tableDto2vo(List<TableDTO> dtos);
+    public abstract List<TableVO> tableDto2vo(List<Table> dtos);
 }
