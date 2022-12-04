@@ -131,8 +131,18 @@ public class DataCenterUtils implements InitializingBean {
      * @param dataSourceId
      * @return
      */
-    public static DatabaseSpi getSqlExecutorByDataSourceId(Long dataSourceId) {
-        DatabaseSpi databaseSpi = SQL_EXECUTOR_MAP.get(getDbTypeByDataSourceId(dataSourceId));
+    public static DatabaseSpi getDatabaseSpiByDataSourceId(Long dataSourceId) {
+        return getDatabaseSpi(getDbTypeByDataSourceId(dataSourceId));
+    }
+
+    /**
+     * 根据dataSourceId 获取Dialect方言类型
+     *
+     * @param dbType
+     * @return
+     */
+    public static DatabaseSpi getDatabaseSpi(DbTypeEnum dbType) {
+        DatabaseSpi databaseSpi = SQL_EXECUTOR_MAP.get(dbType);
         if (databaseSpi == null) {
             throw new SystemException(CommonErrorEnum.PARAM_ERROR);
         }
