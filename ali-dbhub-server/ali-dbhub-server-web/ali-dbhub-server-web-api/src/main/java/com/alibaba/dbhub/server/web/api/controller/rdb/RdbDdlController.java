@@ -7,6 +7,8 @@ import com.alibaba.dbhub.server.domain.api.service.DlTemplateService;
 import com.alibaba.dbhub.server.domain.api.service.TableService;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
 import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
+import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
@@ -20,8 +22,10 @@ import com.alibaba.dbhub.server.web.api.controller.rdb.converter.RdbWebConverter
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DdlExportRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DdlRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableBriefQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableCreateDdlQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDeleteRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableUpdateDdlQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.TableVO;
 
@@ -79,6 +83,29 @@ public class RdbDdlController {
      */
     @GetMapping("/export")
     public DataResult<String> export(DdlExportRequest request) {
+        ShowCreateTableParam param = rdbWebConverter.ddlExport2showCreate(request);
+        return tableService.showCreateTable(param);
+    }
+
+    /**
+     * 建表语句样例
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/create/example")
+    public DataResult<String> createExample(TableCreateDdlQueryRequest request) {
+        return null;
+    }
+
+    /**
+     * 更新表语句样例
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/update/example")
+    public DataResult<String> updateExample(TableUpdateDdlQueryRequest request) {
         return null;
     }
 
@@ -121,6 +148,7 @@ public class RdbDdlController {
      */
     @DeleteMapping("/delete")
     public ActionResult delete(@RequestBody TableDeleteRequest request) {
-        return null;
+        DropParam dropParam = rdbWebConverter.tableDelete2dropParam(request);
+        return tableService.drop(dropParam);
     }
 }
