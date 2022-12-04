@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * jdbc服务实现
+ * 和spring的冲突了，所以加了个前缀
  *
  * @author Jiaju Zhuang
  */
