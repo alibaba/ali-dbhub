@@ -30,18 +30,18 @@ public class MybatisGeneratorTest extends BaseTest {
 
     @Test
     public void coreGenerator() {
-        doGenerator("core", Lists.newArrayList("test"));
+        doGenerator(Lists.newArrayList("test"));
     }
 
-    private void doGenerator(String repository, List<String> tableList) {
+    private void doGenerator(List<String> tableList) {
 
         // 当前项目地址 拿到的是ali-dbhub-server-start地址
         String outputDir = System.getProperty("user.dir")
-            + "/../ali-dbhub-server-domain/ali-dbhub-server-domain-core/ali-dbhub-server-domain-" + repository
-            + "-repository/src/main/java";
+            + "/../ali-dbhub-server-domain/ali-dbhub-server-domain-core/ali-dbhub-server-domain-repository/src/main"
+            + "/java";
         String xmlDir = System.getProperty("user.dir")
-            + "/../ali-dbhub-server-domain/ali-dbhub-server-domain-core/ali-dbhub-server-domain-" + repository
-            + "-repository/src/main/resources/com/alibaba/dataops/server/domain/" + repository + "/repository";
+            + "/../ali-dbhub-server-domain/ali-dbhub-server-domain-core/ali-dbhub-server-domain-repository/src/main"
+            + "/resources/com/alibaba/dataops/server/domain/repository";
 
         // 不要生成service controller
         Map<OutputFile, String> pathInfo = new HashMap<>();
@@ -65,7 +65,7 @@ public class MybatisGeneratorTest extends BaseTest {
             //包配置
             .packageConfig(builder -> {
                 // 设置父包名
-                builder.parent("com.alibaba.dbhub.server.domain." + repository + ".repository")
+                builder.parent("com.alibaba.dbhub.server.domain.repository")
                     //生成实体层
                     .entity("entity")
                     .pathInfo(pathInfo)

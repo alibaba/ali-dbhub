@@ -2,14 +2,14 @@ package com.alibaba.dbhub.server.web.api.controller.data.source.converter;
 
 import java.util.List;
 
-import com.alibaba.dbhub.server.domain.core.api.model.DataSourceDTO;
-import com.alibaba.dbhub.server.domain.core.api.param.ConsoleConnectParam;
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourceManageCreateParam;
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourcePageQueryParam;
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourceTestParam;
-import com.alibaba.dbhub.server.domain.core.api.param.DataSourceUpdateParam;
-import com.alibaba.dbhub.server.domain.data.api.model.DatabaseDTO;
-import com.alibaba.dbhub.server.domain.data.api.param.console.ConsoleCloseParam;
+import com.alibaba.dbhub.server.domain.support.model.Database;
+import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCloseParam;
+import com.alibaba.dbhub.server.domain.api.model.DataSourceDTO;
+import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceManageCreateParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceTestParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleCloseRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleConnectRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceCreateRequest;
@@ -86,7 +86,7 @@ public abstract class DataSourceWebConverter {
      * @param databaseDTO
      * @return
      */
-    public abstract DatabaseVO databaseDto2vo(DatabaseDTO databaseDTO);
+    public abstract DatabaseVO databaseDto2vo(Database databaseDTO);
 
     /**
      * 模型转换
@@ -94,7 +94,7 @@ public abstract class DataSourceWebConverter {
      * @param databaseDTOS
      * @return
      */
-    public abstract List<DatabaseVO> databaseDto2vo(List<DatabaseDTO> databaseDTOS);
+    public abstract List<DatabaseVO> databaseDto2vo(List<Database> databaseDTOS);
 
     /**
      * 参数转换

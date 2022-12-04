@@ -39,3 +39,21 @@ export function useTheme() {
   },[]);
   return currentColorScheme;
 }
+
+export function useCanDoubleClick() {
+  const count = useRef(0);
+  return ({ onClick, onDoubleClick }: { onClick?: Function, onDoubleClick?: Function }) => {
+    count.current = count.current + 1
+    if (count.current == 2) {
+      onDoubleClick && onDoubleClick()
+      count.current = 0
+    } else {
+      setTimeout(() => {
+        if (count.current == 1) {
+          onClick && onClick()
+        }
+        count.current = 0
+      }, 200);
+    }
+  }
+}

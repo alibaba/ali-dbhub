@@ -2,7 +2,7 @@ package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
 
 import java.math.BigDecimal;
 
-import com.alibaba.dbhub.server.domain.data.api.enums.CellTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
 
 import lombok.Data;
 

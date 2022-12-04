@@ -2,7 +2,7 @@ package com.alibaba.dbhub.server.web.api.controller.user.save.request;
 
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dbhub.server.domain.data.api.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.tools.base.enums.StatusEnum;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
 

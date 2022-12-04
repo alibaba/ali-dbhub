@@ -2,14 +2,10 @@ package com.alibaba.dbhub.server.web.api.controller.user.save.converter;
 
 import java.util.List;
 
-import com.alibaba.dbhub.server.domain.core.api.model.UserSavedDdlDTO;
-import com.alibaba.dbhub.server.domain.core.api.param.UserSavedDdlCreateParam;
-import com.alibaba.dbhub.server.domain.core.api.param.UserSavedDdlPageQueryParam;
-import com.alibaba.dbhub.server.domain.core.api.param.UserSavedDdlUpdateParam;
-import com.alibaba.dbhub.server.web.api.controller.user.save.request.DdlCreateRequest;
-import com.alibaba.dbhub.server.web.api.controller.user.save.request.DdlQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.user.save.request.DdlUpdateRequest;
-import com.alibaba.dbhub.server.web.api.controller.user.save.vo.DdlVO;
+import com.alibaba.dbhub.server.domain.api.model.UserSavedDdlDTO;
+import com.alibaba.dbhub.server.domain.api.param.UserSavedDdlCreateParam;
+import com.alibaba.dbhub.server.domain.api.param.UserSavedDdlPageQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.UserSavedDdlUpdateParam;
 import com.alibaba.dbhub.server.web.api.controller.user.save.request.DdlCreateRequest;
 import com.alibaba.dbhub.server.web.api.controller.user.save.request.DdlQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.user.save.request.DdlUpdateRequest;

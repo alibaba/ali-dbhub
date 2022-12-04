@@ -2,7 +2,7 @@ package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
 
 import java.util.List;
 
-import com.alibaba.dbhub.server.domain.data.api.enums.IndexTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
 import com.alibaba.dbhub.server.tools.base.enums.YesOrNoEnum;
 
 import lombok.Data;
