@@ -13,11 +13,10 @@ import lombok.ToString;
  *
  * @author Jiaju Zhuang
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Builder
-@ToString
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TestPageQueryParam extends PageQueryParam {
 
     /**
