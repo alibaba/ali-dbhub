@@ -3,9 +3,12 @@ package com.alibaba.dbhub.server.domain.core.impl;
 import com.alibaba.dbhub.server.domain.api.service.TableService;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.operations.TableOperations;
+import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
+import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 
@@ -23,6 +26,16 @@ public class TableServiceImpl implements TableService {
     @Autowired
     private TableOperations tableOperations;
 
+    @Override
+    public DataResult<String> showCreateTable(ShowCreateTableParam param) {
+        return DataResult.of(tableOperations.showCreateTable(param));
+    }
+
+    @Override
+    public ActionResult drop(DropParam param) {
+        tableOperations.drop(param);
+        return ActionResult.isSuccess();
+    }
 
     @Override
     public DataResult<Table> query(TableQueryParam param, TableSelector selector) {
