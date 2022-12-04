@@ -1,10 +1,12 @@
 package com.alibaba.dbhub.server.domain.api.service;
 
 import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
 import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 
@@ -24,6 +26,14 @@ public interface TableService {
      * @return
      */
     DataResult<String> showCreateTable(ShowCreateTableParam param);
+
+    /**
+     * 删除表
+     *
+     * @param param
+     * @return
+     */
+    ActionResult drop(DropParam param);
 
     /**
      * 查询表信息
