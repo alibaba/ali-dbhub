@@ -10,16 +10,16 @@ import lombok.Setter;
 
 /**
  * <p>
- * 测试表
+ * 我的执行记录表
  * </p>
  *
  * @author ali-dbhub
- * @since 2022-11-20
+ * @since 2022-12-04
  */
 @Getter
 @Setter
-@TableName("TEST")
-public class TestDO implements Serializable {
+@TableName("OPERATION_LOG")
+public class OperationLogDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,17 +30,32 @@ public class TestDO implements Serializable {
     private Long id;
 
     /**
-     * 名字
+     * 创建时间
      */
-    private String name;
+    private LocalDateTime gmtCreate;
 
     /**
-     * 时间
+     * 修改时间
      */
-    private LocalDateTime date;
+    private LocalDateTime gmtModified;
 
     /**
-     * 数字
+     * 数据源连接ID
      */
-    private Integer number;
+    private Long dataSourceId;
+
+    /**
+     * db名称
+     */
+    private String databaseName;
+
+    /**
+     * 数据库类型
+     */
+    private String type;
+
+    /**
+     * ddl内容
+     */
+    private String ddl;
 }

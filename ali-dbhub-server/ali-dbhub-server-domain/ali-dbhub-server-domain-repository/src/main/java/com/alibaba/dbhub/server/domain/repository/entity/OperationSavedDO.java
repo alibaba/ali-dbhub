@@ -10,16 +10,16 @@ import lombok.Setter;
 
 /**
  * <p>
- * 我的执行记录表
+ * 我的保存表
  * </p>
  *
  * @author ali-dbhub
- * @since 2022-09-30
+ * @since 2022-12-04
  */
 @Getter
 @Setter
-@TableName("USER_EXECUTED_DDL")
-public class UserExecutedDdlDO implements Serializable {
+@TableName("OPERATION_SAVED")
+public class OperationSavedDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -50,12 +50,27 @@ public class UserExecutedDdlDO implements Serializable {
     private String databaseName;
 
     /**
+     * 保存名称
+     */
+    private String name;
+
+    /**
      * 数据库类型
      */
     private String type;
 
     /**
+     * ddl语句状态:DRAFT/RELEASE
+     */
+    private String status;
+
+    /**
      * ddl内容
      */
     private String ddl;
+
+    /**
+     * 是否在tab中被打开,y表示打开,n表示未打开
+     */
+    private String tabOpened;
 }

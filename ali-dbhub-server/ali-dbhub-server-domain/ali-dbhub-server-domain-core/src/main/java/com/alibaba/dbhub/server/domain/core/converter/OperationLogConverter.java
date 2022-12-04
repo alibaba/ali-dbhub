@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.alibaba.dbhub.server.domain.api.model.OperationLog;
 import com.alibaba.dbhub.server.domain.api.param.OperationLogCreateParam;
-import com.alibaba.dbhub.server.domain.repository.entity.UserExecutedDdlDO;
+import com.alibaba.dbhub.server.domain.repository.entity.OperationLogDO;
 
 import org.mapstruct.Mapper;
 
@@ -22,7 +22,7 @@ public abstract class OperationLogConverter {
      * @param param
      * @return
      */
-    public abstract UserExecutedDdlDO param2do(OperationLogCreateParam param);
+    public abstract OperationLogDO param2do(OperationLogCreateParam param);
 
     /**
      * 模型转换
@@ -30,7 +30,7 @@ public abstract class OperationLogConverter {
      * @param userExecutedDdlDO
      * @return
      */
-    public abstract OperationLog do2dto(UserExecutedDdlDO userExecutedDdlDO);
+    public abstract OperationLog do2dto(OperationLogDO userExecutedDdlDO);
 
     /**
      * 模型转换
@@ -38,5 +38,5 @@ public abstract class OperationLogConverter {
      * @param userExecutedDdlDOS
      * @return
      */
-    public abstract List<OperationLog> do2dto(List<UserExecutedDdlDO> userExecutedDdlDOS);
+    public abstract List<OperationLog> do2dto(List<OperationLogDO> userExecutedDdlDOS);
 }

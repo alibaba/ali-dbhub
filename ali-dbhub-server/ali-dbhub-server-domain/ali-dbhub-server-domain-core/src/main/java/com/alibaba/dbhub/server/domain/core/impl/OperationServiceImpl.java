@@ -10,8 +10,8 @@ import com.alibaba.dbhub.server.domain.api.param.OperationSavedParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationUpdateParam;
 import com.alibaba.dbhub.server.domain.api.service.OperationService;
 import com.alibaba.dbhub.server.domain.core.converter.OperationConverter;
-import com.alibaba.dbhub.server.domain.repository.entity.UserSavedDdlDO;
-import com.alibaba.dbhub.server.domain.repository.mapper.UserSavedDdlMapper;
+import com.alibaba.dbhub.server.domain.repository.entity.OperationSavedDO;
+import com.alibaba.dbhub.server.domain.repository.mapper.OperationSavedMapper;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
@@ -32,37 +32,37 @@ import org.springframework.stereotype.Service;
 public class OperationServiceImpl implements OperationService {
 
     @Autowired
-    private UserSavedDdlMapper userSavedDdlMapper;
+    private OperationSavedMapper operationSavedMapper;
 
     @Autowired
     private OperationConverter operationConverter;
 
     @Override
     public DataResult<Long> create(OperationSavedParam param) {
-        UserSavedDdlDO userSavedDdlDO = operationConverter.param2do(param);
+        OperationSavedDO userSavedDdlDO = operationConverter.param2do(param);
         userSavedDdlDO.setGmtCreate(LocalDateTime.now());
         userSavedDdlDO.setGmtModified(LocalDateTime.now());
-        userSavedDdlMapper.insert(userSavedDdlDO);
+        operationSavedMapper.insert(userSavedDdlDO);
         return DataResult.of(userSavedDdlDO.getId());
     }
 
     @Override
     public ActionResult update(OperationUpdateParam param) {
-        UserSavedDdlDO userSavedDdlDO = operationConverter.param2do(param);
+        OperationSavedDO userSavedDdlDO = operationConverter.param2do(param);
         userSavedDdlDO.setGmtModified(LocalDateTime.now());
-        userSavedDdlMapper.updateById(userSavedDdlDO);
+        operationSavedMapper.updateById(userSavedDdlDO);
         return ActionResult.isSuccess();
     }
 
     @Override
     public ActionResult delete(Long id) {
-        userSavedDdlMapper.deleteById(id);
+        operationSavedMapper.deleteById(id);
         return ActionResult.isSuccess();
     }
 
     @Override
     public PageResult<Operation> queryPage(OperationPageQueryParam param) {
-        QueryWrapper<UserSavedDdlDO> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<OperationSavedDO> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(param.getSearchKey())) {
             queryWrapper.like("name", param.getSearchKey());
         }
@@ -77,8 +77,8 @@ public class OperationServiceImpl implements OperationService {
         }
         Integer start = param.getPageNo();
         Integer offset = param.getPageSize();
-        Page<UserSavedDdlDO> page = new Page<>(start, offset);
-        IPage<UserSavedDdlDO> iPage = userSavedDdlMapper.selectPage(page, queryWrapper);
+        Page<OperationSavedDO> page = new Page<>(start, offset);
+        IPage<OperationSavedDO> iPage = operationSavedMapper.selectPage(page, queryWrapper);
         List<Operation> userSavedDdlDOS = operationConverter.do2dto(iPage.getRecords());
         return PageResult.of(userSavedDdlDOS, iPage.getTotal(), param);
     }

@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.domain.repository.mapper;
 
-import com.alibaba.dbhub.server.domain.repository.entity.UserSavedDdlDO;
-
+import com.alibaba.dbhub.server.domain.repository.entity.OperationSavedDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -10,8 +9,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author ali-dbhub
- * @since 2022-09-25
+ * @since 2022-12-04
  */
-public interface UserSavedDdlMapper extends BaseMapper<UserSavedDdlDO> {
+public interface OperationSavedMapper extends BaseMapper<OperationSavedDO> {
 
 }
