@@ -95,7 +95,7 @@ public class RdbDdlController {
      */
     @GetMapping("/create/example")
     public DataResult<String> createExample(TableCreateDdlQueryRequest request) {
-        return null;
+        return tableService.createTableExample(request.getDbType());
     }
 
     /**
@@ -106,7 +106,7 @@ public class RdbDdlController {
      */
     @GetMapping("/update/example")
     public DataResult<String> updateExample(TableUpdateDdlQueryRequest request) {
-        return null;
+        return tableService.alterTableExample(request.getDbType());
     }
 
     /**
