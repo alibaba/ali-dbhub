@@ -46,8 +46,10 @@ export enum TreeNodeType {
   DATABASE = 'database',
   SEARCH = 'search',
   LINE = 'line',
+  LINETOTAL = 'lineTotal',
   SAVE = 'save',
-  INDEXES = 'indexes'
+  INDEXES = 'indexes',
+  INDEXESTOTAL = 'indexesTotal',
 }
 
 export enum WindowTabStatus {
