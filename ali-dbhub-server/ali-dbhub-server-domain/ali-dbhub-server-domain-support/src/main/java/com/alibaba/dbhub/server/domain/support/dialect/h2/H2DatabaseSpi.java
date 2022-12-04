@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class H2DatabaseSpi implements DatabaseSpi {
     private static final SpiExample EXAMPLE=SpiExample.builder()
-        .createTable("")
+        .createTable(" ")
         .alterTable("")
         .build();
 
