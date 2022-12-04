@@ -57,6 +57,7 @@ export interface ITreeNode{
   dataType?: string;
   isLeaf?: boolean;
   children?: ITreeNode[];
+  parent?: ITreeNode;
 }
 export interface IDB {
   name: string;
@@ -98,7 +99,3 @@ export interface IManageResultData {
   success: boolean;
 
 }
-
-
-
-

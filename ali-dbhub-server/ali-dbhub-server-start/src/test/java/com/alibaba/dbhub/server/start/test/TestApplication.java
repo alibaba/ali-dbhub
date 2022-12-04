@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 /**
  * 本地环境的启动。
  * 主要为了读取本地的一些配置 比如日志输出就和其他环境不一样
+ *
+ * @author 是仪
  */
 @SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j

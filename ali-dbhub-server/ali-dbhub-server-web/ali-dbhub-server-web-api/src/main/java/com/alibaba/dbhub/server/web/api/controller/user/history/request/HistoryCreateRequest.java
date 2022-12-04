@@ -2,8 +2,8 @@ package com.alibaba.dbhub.server.web.api.controller.user.history.request;
 
 import javax.validation.constraints.NotNull;
 
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-import com.alibaba.dbhub.server.domain.data.api.enums.DbTypeEnum;
 
 import lombok.Data;
 

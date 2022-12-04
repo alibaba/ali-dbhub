@@ -22,6 +22,7 @@ import { toTreeList, createRandom, approximateTreeNode, getLocationHash } from '
 import { databaseType, DatabaseTypeCode, TreeNodeType, WindowTabStatus } from '@/utils/constants'
 const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
+import { useUpdateEffect } from '@/utils/hooks';
 const { keywords } = language;
 
 interface IProps {
@@ -35,19 +36,34 @@ interface ITabItem extends IWindowTab {
 const basicsTree: ITreeNode[] = []
 let monacoEditorExternal: any
 
-export function DatabaseQuery({ activeTabKey, windowTab, treeNodeClickMessage }: { activeTabKey: string, windowTab: IWindowTab, treeNodeClickMessage: any }) {
+export function DatabaseQuery({ activeTabKey, windowTab, treeNodeClickMessage }: { activeTabKey: string, windowTab: IWindowTab, treeNodeClickMessage: ITreeNode }) {
   const params: { id: string, type: string } = useParams();
   const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode;
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
   const monacoEditor = useRef<any>(null);
+  // const [monacoEditorValue, setMonacoEditorValue] = useState('SELECT * FROM')
 
   useEffect(() => {
     connectConsole();
   }, [])
 
-  useEffect(() => {
-
+  useUpdateEffect(() => {
+    const model = monacoEditorExternal.getModel(monacoEditorExternal)
+    const value = model.getValue()
+    if (treeNodeClickMessage.nodeType == TreeNodeType.TABLE) {
+      if (value == 'SELECT * FROM') {
+        model.setValue(`SELECT * FROM ${treeNodeClickMessage.name};`)
+      } else {
+        model.setValue(`${value}\nSELECT * FROM ${treeNodeClickMessage.name};`)
+      }
+    } else if (treeNodeClickMessage.nodeType == TreeNodeType.LINE) {
+      if (value == 'SELECT * FROM') {
+        model.setValue(`SELECT * FROM ${treeNodeClickMessage?.parent?.name} WHERE ${treeNodeClickMessage.name} = ''`)
+      } else {
+        model.setValue(`${value}\nSELECT * FROM ${treeNodeClickMessage?.parent?.name} WHERE ${treeNodeClickMessage.name} = ''`)
+      }
+    }
   }, [treeNodeClickMessage])
 
   const connectConsole = () => {
@@ -122,7 +138,7 @@ export function DatabaseQuery({ activeTabKey, windowTab, treeNodeClickMessage }:
 
   const saveWindowTabTab = () => {
     let p = {
-      id: windowTab.id,
+      id: windowTab?.id,
       name: windowTab?.name,
       type: dataBaseType,
       dataSourceId: params.id,
@@ -170,7 +186,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [windowName, setWindowName] = useState<string>('');
-  const [treeNodeClickMessage, setTreeNodeClickMessage] = useState({});
+  const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode>();
   const monacoHint = useRef<any>(null);
 
   const closeDropdownFn = () => {
@@ -179,8 +195,8 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   const disposalEditorHintData = (tableList: any) => {
     try {
-      monacoHint.current?.dispose()
-      const myEditorHintData: any = {}
+      monacoHint.current?.dispose();
+      const myEditorHintData: any = {};
       tableList?.map((item: any) => {
         myEditorHintData[item.name] = item.children[0].children.map((item: any) => {
           return item.name
@@ -194,7 +210,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   useEffect(() => {
-    setWindowName('')
+    setWindowName('');
   }, [isModalVisible])
 
   useEffect(() => {
@@ -215,21 +231,22 @@ export default memo<IProps>(function DatabasePage({ className }) {
   useEffect(() => {
     if (!currentDB) return
     getWindowList()
+    getTableList(currentDB)
   }, [currentDB])
 
   useEffect(() => {
     if (!DBList?.length) return
     const locationHash: any = getLocationHash()
-    console.log(locationHash)
+    let flag = false;
     DBList.map(item => {
       if (locationHash?.databaseName && item.name == locationHash?.databaseName) {
+        flag = true
         setCurrentDB(item)
-        getTableList(item)
-      } else {
-        setCurrentDB(DBList?.[0])
-        getTableList(DBList?.[0])
       }
     })
+    if (!flag) {
+      setCurrentDB(DBList?.[0])
+    }
   }, [DBList])
 
   const getWindowList = () => {
@@ -248,7 +265,17 @@ export default memo<IProps>(function DatabasePage({ className }) {
             key: item.id!
           }
         })
-        setActiveKey(list?.[0]?.id)
+        const locationHash: any = getLocationHash()
+        let flag = false;
+        list?.map(item => {
+          if (locationHash?.id && item.id == locationHash?.id) {
+            setActiveKey(item?.id)
+            flag = true
+          }
+        })
+        if (!flag) {
+          setActiveKey(list?.[0]?.id)
+        }
         setWindowList(list)
       } else {
         addWindowTab([])
@@ -272,6 +299,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
       pageNo: 1,
       pageSize: 10,
     }
+
     return mysqlServer.getList(p).then(res => {
       const tableList: ITreeNode[] = res.data?.map(item => {
         return {
@@ -282,14 +310,26 @@ export default memo<IProps>(function DatabasePage({ className }) {
             {
               key: '1',
               name: i18n('common.text.column'),
-              nodeType: TreeNodeType.LINE,
-              children: toTreeList(item.columnList, 'name', 'nodeType', TreeNodeType.LINE)
+              nodeType: TreeNodeType.LINETOTAL,
+              children: toTreeList({
+                data: item.columnList, nodeType: TreeNodeType.LINE, parent: {
+                  name: item.name,
+                  nodeType: TreeNodeType.TABLE,
+                  key: item.name
+                }
+              })
             },
             {
               key: '2',
               name: i18n('common.text.indexes'),
-              nodeType: TreeNodeType.INDEXES,
-              children: toTreeList(item.indexList, 'name', 'nodeType', TreeNodeType.INDEXES)
+              nodeType: TreeNodeType.INDEXESTOTAL,
+              children: toTreeList({
+                data: item.indexList, nodeType: TreeNodeType.INDEXES, parent: {
+                  name: item.name,
+                  nodeType: TreeNodeType.TABLE,
+                  key: item.name
+                }
+              })
             }
           ]
         }
@@ -401,6 +441,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
       }
     </Menu>
   }
+
   function handleOk() {
     addWindowTab(windowList);
   }
@@ -409,7 +450,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
     setIsModalVisible(false);
   }
 
-  function nodeClickCallBack(data: any) {
+  function nodeDoubleClick(data: ITreeNode) {
     setTreeNodeClickMessage(data)
   }
 
@@ -445,7 +486,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
             <Iconfont code="&#xe63d;"></Iconfont>
             <span>{i18n('connection.button.overview')}</span>
           </div>
-          <Tree nodeClick={nodeClickCallBack} className={styles.tree} treeData={treeData}></Tree>
+          <Tree nodeDoubleClick={nodeDoubleClick} className={styles.tree} treeData={treeData}></Tree>
         </div>
       </div>
       <DraggableDivider callback={callback} volatileRef={letfRef} />
@@ -465,7 +506,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
           {
             currentDB &&
             windowList?.map((i: IWindowTab) => {
-              return <DatabaseQuery treeNodeClickMessage={treeNodeClickMessage} windowTab={i} key={i.databaseName + i.id} activeTabKey={activeKey!}></DatabaseQuery>
+              return <DatabaseQuery treeNodeClickMessage={treeNodeClickMessage!} windowTab={i} key={i.databaseName + i.id} activeTabKey={activeKey!}></DatabaseQuery>
             })
           }
         </div>

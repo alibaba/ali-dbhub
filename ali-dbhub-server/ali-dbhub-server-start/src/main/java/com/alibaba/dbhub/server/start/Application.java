@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan(value = {"com.alibaba.dbhub.server"})
-@MapperScan("com.alibaba.dbhub.server.domain.*.repository.mapper")
+@MapperScan("com.alibaba.dbhub.server.domain.repository.mapper")
 public class Application {
 
     public static void main(String[] args) {

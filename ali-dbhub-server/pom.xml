@@ -58,32 +58,22 @@
             </dependency>
             <dependency>
                 <groupId>com.alibaba.dbhub</groupId>
-                <artifactId>ali-dbhub-server-domain-core-api</artifactId>
+                <artifactId>ali-dbhub-server-domain-api</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.dbhub</groupId>
-                <artifactId>ali-dbhub-server-domain-core-core</artifactId>
+                <artifactId>ali-dbhub-server-domain-core</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.dbhub</groupId>
-                <artifactId>ali-dbhub-server-domain-core-repository</artifactId>
+                <artifactId>ali-dbhub-server-domain-repository</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.dbhub</groupId>
-                <artifactId>ali-dbhub-server-domain-data-api</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.alibaba.dbhub</groupId>
-                <artifactId>ali-dbhub-server-domain-data-core</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.alibaba.dbhub</groupId>
-                <artifactId>ali-dbhub-server-domain-data-repository</artifactId>
+                <artifactId>ali-dbhub-server-domain-support</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -188,6 +178,21 @@
 
     <build>
         <plugins>
+            <!-- 编译 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.2</version>
+                <configuration>
+                    <!-- 配置 mapstruct 禁用builer-->
+                    <compilerArgs>
+                        <arg>
+                            -Amapstruct.disableBuilders=true
+                        </arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
             <!-- 支持maven revision 来配置统版本-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

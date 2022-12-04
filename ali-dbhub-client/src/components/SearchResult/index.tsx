@@ -130,6 +130,6 @@ export function TableBox({ headerList, dataList, className, data }: ITableProps)
   }, [dataList])
 
   return <div className={classnames(className, styles.tableBox)}>
-    <StateIndicator state='error' text={data.message}></StateIndicator>
+    <Table bordered pagination={false} columns={columns} dataSource={tableData} size="small" />
   </div>
 }

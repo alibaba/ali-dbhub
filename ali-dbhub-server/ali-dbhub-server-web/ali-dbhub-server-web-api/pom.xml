@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.alibaba.dbhub</groupId>
-            <artifactId>ali-dbhub-server-domain-core-api</artifactId>
+            <artifactId>ali-dbhub-server-domain-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
