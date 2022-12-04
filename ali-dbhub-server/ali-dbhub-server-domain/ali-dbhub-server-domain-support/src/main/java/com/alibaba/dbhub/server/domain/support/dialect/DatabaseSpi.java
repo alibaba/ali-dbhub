@@ -1,13 +1,15 @@
 package com.alibaba.dbhub.server.domain.support.dialect;
 
+import java.util.List;
+
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTable;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndex;
+import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiShowCrateTableParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiColumnQueryParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiIndexQueryParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiTablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 
 /**
@@ -24,6 +26,13 @@ public interface DatabaseSpi {
      */
     DbTypeEnum supportDbType();
 
+    /**
+     * 展示建表语句
+     *
+     * @param param
+     * @return
+     */
+    String showCrateTable(SpiShowCrateTableParam param);
 
     /**
      * 分页查询表信息
@@ -39,7 +48,7 @@ public interface DatabaseSpi {
      * @param param
      * @return
      */
-    ListResult<SpiTableColumn> queryListColumn(SpiColumnQueryParam param);
+    List<SpiTableColumn> queryListColumn(SpiColumnQueryParam param);
 
     /**
      * 查询列的信息
@@ -47,5 +56,5 @@ public interface DatabaseSpi {
      * @param param
      * @return
      */
-    ListResult<SpiTableIndex> queryListIndex(SpiIndexQueryParam param);
+    List<SpiTableIndex> queryListIndex(SpiIndexQueryParam param);
 }

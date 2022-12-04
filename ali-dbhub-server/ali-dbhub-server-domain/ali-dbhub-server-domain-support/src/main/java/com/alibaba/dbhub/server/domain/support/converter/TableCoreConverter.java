@@ -7,10 +7,12 @@ import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableColu
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndex;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiColumnQueryParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiIndexQueryParam;
+import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiShowCrateTableParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiTablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
+import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.template.TableTemplate.QueryContext;
 
@@ -31,6 +33,14 @@ public abstract class TableCoreConverter {
      * @return
      */
     public abstract List<Table> dto2dto(List<SpiTable> list);
+
+    /**
+     * 转换
+     *
+     * @param param
+     * @return
+     */
+    public abstract SpiShowCrateTableParam param2param(ShowCreateTableParam param);
 
     /**
      * 转换

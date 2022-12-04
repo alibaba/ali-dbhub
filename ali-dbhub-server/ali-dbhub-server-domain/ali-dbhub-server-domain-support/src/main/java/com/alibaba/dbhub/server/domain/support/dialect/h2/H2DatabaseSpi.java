@@ -4,17 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.dialect.DatabaseSpi;
-import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTable;
-import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndexColumn;
+import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndex;
+import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndexColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiColumnQueryParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiIndexQueryParam;
+import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiShowCrateTableParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiTablePageQueryParam;
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.tools.base.enums.YesOrNoEnum;
-import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 
@@ -22,6 +22,7 @@ import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,6 +37,32 @@ public class H2DatabaseSpi implements DatabaseSpi {
     @Override
     public DbTypeEnum supportDbType() {
         return DbTypeEnum.H2;
+    }
+
+    @Override
+    public String showCrateTable(SpiShowCrateTableParam param) {
+        // 拼接参数
+        Map<String, Object> queryParam = Maps.newHashMap();
+        queryParam.put("databaseName", param.getDatabaseName());
+        queryParam.put("tableName", param.getTableName());
+
+        // 拼接sql
+        String sql = " select SQL \n"
+            + "        from INFORMATION_SCHEMA.TABLES\n"
+            + "        where TABLE_SCHEMA = :databaseName\n"
+            + "   AND    TABLE_NAME = :tableName";
+        try {
+
+            List<String> createTableList = param.getNamedParameterJdbcTemplate().query(sql,
+                queryParam,
+                (rs, rowNum) -> rs.getString("SQL"));
+            return EasyCollectionUtils.findFirst(createTableList);
+        } catch (BadSqlGrammarException e) {
+            // 这里有个坑 就是 h2的内存模式无法获取建表语句
+            // 报错直接返回空
+            log.warn("h2查询建表语句失败", e);
+            return null;
+        }
     }
 
     @Override
@@ -64,13 +91,13 @@ public class H2DatabaseSpi implements DatabaseSpi {
     }
 
     @Override
-    public ListResult<SpiTableColumn> queryListColumn(SpiColumnQueryParam param) {
+    public List<SpiTableColumn> queryListColumn(SpiColumnQueryParam param) {
         // 拼接参数
         Map<String, Object> queryParam = Maps.newHashMap();
         queryParam.put("databaseName", param.getDatabaseName());
         queryParam.put("tableNameList", param.getTableNameList());
 
-        return ListResult.of(param.getNamedParameterJdbcTemplate().query(
+        return param.getNamedParameterJdbcTemplate().query(
             "SELECT COLUMN_NAME            ,\n"
                 + "       TABLE_NAME             ,\n"
                 + "       DATA_TYPE             ,\n"
@@ -105,11 +132,11 @@ public class H2DatabaseSpi implements DatabaseSpi {
                     column.setAutoIncrement(YesOrNoEnum.NO.getCode());
                 }
                 return column;
-            }));
+            });
     }
 
     @Override
-    public ListResult<SpiTableIndex> queryListIndex(SpiIndexQueryParam param) {
+    public List<SpiTableIndex> queryListIndex(SpiIndexQueryParam param) {
         // 拼接参数
         Map<String, Object> queryParam = Maps.newHashMap();
         queryParam.put("databaseName", param.getDatabaseName());
@@ -144,7 +171,7 @@ public class H2DatabaseSpi implements DatabaseSpi {
                 return index;
             });
         if (CollectionUtils.isEmpty(indexList)) {
-            return ListResult.of(indexList);
+            return indexList;
         }
 
         // 重新查询所有的表信息
@@ -183,7 +210,7 @@ public class H2DatabaseSpi implements DatabaseSpi {
             }
             executorTableIndex.setColumnList(map.get(executorTableIndex.getName()));
         }
-        return ListResult.of(indexList);
+        return indexList;
     }
 
 }

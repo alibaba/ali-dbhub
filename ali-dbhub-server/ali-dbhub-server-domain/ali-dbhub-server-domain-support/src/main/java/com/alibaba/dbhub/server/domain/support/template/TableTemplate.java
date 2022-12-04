@@ -11,11 +11,13 @@ import com.alibaba.dbhub.server.domain.support.dialect.DatabaseSpi;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTable;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiColumnQueryParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiIndexQueryParam;
+import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiShowCrateTableParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiTablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.operations.TableOperations;
+import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
@@ -45,6 +47,19 @@ public class TableTemplate implements TableOperations {
 
     @Resource
     private TableCoreConverter tableCoreConverter;
+
+    @Override
+    public String showCreateTable(ShowCreateTableParam param) {
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = DataCenterUtils.getDefaultJdbcTemplate(
+            param.getDataSourceId());
+        DatabaseSpi databaseSpi = DataCenterUtils.getSqlExecutorByDataSourceId(param.getDataSourceId());
+
+        // 构建查询表信息参数
+        SpiShowCrateTableParam spiShowCrateTableParam = tableCoreConverter.param2param(param);
+        spiShowCrateTableParam.setNamedParameterJdbcTemplate(namedParameterJdbcTemplate);
+
+        return databaseSpi.showCrateTable(spiShowCrateTableParam);
+    }
 
     @Override
     public Table query(TableQueryParam param, TableSelector selector) {
@@ -93,7 +108,7 @@ public class TableTemplate implements TableOperations {
         SpiIndexQueryParam spiIndexQueryParam = tableCoreConverter.context2paramIndex(queryContext);
         spiIndexQueryParam.setTableNameList(tableNameList);
         List<TableIndex> tableIndexList = tableCoreConverter.dto2dtoIndex(
-            queryContext.getDatabaseSpi().queryListIndex(spiIndexQueryParam).getData());
+            queryContext.getDatabaseSpi().queryListIndex(spiIndexQueryParam));
         Map<String, List<TableIndex>> tableIndexMap = EasyCollectionUtils.stream(tableIndexList)
             .collect(Collectors.groupingBy(TableIndex::getTableName));
         for (Table table : list) {
@@ -110,7 +125,7 @@ public class TableTemplate implements TableOperations {
         SpiColumnQueryParam spiColumnQueryParam = tableCoreConverter.context2paramColumn(queryContext);
         spiColumnQueryParam.setTableNameList(tableNameList);
         List<TableColumn> tableColumnList = tableCoreConverter.dto2dtoColumn(
-            queryContext.getDatabaseSpi().queryListColumn(spiColumnQueryParam).getData());
+            queryContext.getDatabaseSpi().queryListColumn(spiColumnQueryParam));
         Map<String, List<TableColumn>> tableColumnMap = EasyCollectionUtils.stream(tableColumnList)
             .collect(Collectors.groupingBy(TableColumn::getTableName));
         for (Table table : list) {
