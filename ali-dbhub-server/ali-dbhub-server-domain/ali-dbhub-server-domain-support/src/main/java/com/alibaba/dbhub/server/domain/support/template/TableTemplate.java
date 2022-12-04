@@ -10,6 +10,7 @@ import com.alibaba.dbhub.server.domain.support.converter.TableCoreConverter;
 import com.alibaba.dbhub.server.domain.support.dialect.DatabaseSpi;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTable;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiColumnQueryParam;
+import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiDropParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiIndexQueryParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiShowCrateTableParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiTablePageQueryParam;
@@ -17,6 +18,7 @@ import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.operations.TableOperations;
+import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
 import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
@@ -59,6 +61,19 @@ public class TableTemplate implements TableOperations {
         spiShowCrateTableParam.setNamedParameterJdbcTemplate(namedParameterJdbcTemplate);
 
         return databaseSpi.showCrateTable(spiShowCrateTableParam);
+    }
+
+    @Override
+    public void drop(DropParam param) {
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = DataCenterUtils.getDefaultJdbcTemplate(
+            param.getDataSourceId());
+        DatabaseSpi databaseSpi = DataCenterUtils.getSqlExecutorByDataSourceId(param.getDataSourceId());
+
+        // 构建查询表信息参数
+        SpiDropParam spiDropParam = tableCoreConverter.param2param(param);
+        spiDropParam.setNamedParameterJdbcTemplate(namedParameterJdbcTemplate);
+
+        databaseSpi.drop(spiDropParam);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.alibaba.dbhub.server.domain.support.dialect.mysql;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableInde
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndexColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndexColumnUnion;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiColumnQueryParam;
+import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiDropParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiIndexQueryParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiShowCrateTableParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiTablePageQueryParam;
@@ -43,14 +45,16 @@ public class MysqlDatabaseSpi implements DatabaseSpi {
 
     @Override
     public String showCrateTable(SpiShowCrateTableParam param) {
-        // 拼接参数
-        Map<String, Object> queryParam = Maps.newHashMap();
-        queryParam.put("databaseName", param.getDatabaseName());
-        queryParam.put("tableName", param.getTableName());
         List<String> createTableList = param.getNamedParameterJdbcTemplate().query(
             "SHOW CREATE TABLE " + param.getDatabaseName() + "." + param.getTableName() + "; ",
             (rs, rowNum) -> rs.getString(2));
         return EasyCollectionUtils.findFirst(createTableList);
+    }
+
+    @Override
+    public void drop(SpiDropParam param) {
+        param.getNamedParameterJdbcTemplate().update(
+            "drop TABLE " + param.getDatabaseName() + "." + param.getTableName() + "; ", Collections.EMPTY_MAP);
     }
 
     @Override
