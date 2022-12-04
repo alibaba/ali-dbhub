@@ -36,6 +36,22 @@ public interface TableService {
     ActionResult drop(DropParam param);
 
     /**
+     * 创建表结构的样例
+     *
+     * @param dbType
+     * @return
+     */
+    DataResult<String> createTableExample(String dbType);
+
+    /**
+     * 修改表结构的样例
+     *
+     * @param dbType
+     * @return
+     */
+    DataResult<String> alterTableExample(String dbType);
+
+    /**
      * 查询表信息
      *
      * @param param
