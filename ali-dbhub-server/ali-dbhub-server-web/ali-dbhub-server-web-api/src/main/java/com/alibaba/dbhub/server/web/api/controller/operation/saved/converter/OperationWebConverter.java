@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.web.api.controller.log.manual.converter;
+package com.alibaba.dbhub.server.web.api.controller.operation.saved.converter;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ import com.alibaba.dbhub.server.domain.api.model.Operation;
 import com.alibaba.dbhub.server.domain.api.param.OperationPageQueryParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationSavedParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationUpdateParam;
-import com.alibaba.dbhub.server.web.api.controller.log.manual.request.OperationCreateRequest;
-import com.alibaba.dbhub.server.web.api.controller.log.manual.request.OperationQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.log.manual.request.OperationUpdateRequest;
-import com.alibaba.dbhub.server.web.api.controller.log.manual.vo.OperationVO;
+import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.OperationCreateRequest;
+import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.OperationQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.OperationUpdateRequest;
+import com.alibaba.dbhub.server.web.api.controller.operation.saved.vo.OperationVO;
 
 import org.mapstruct.Mapper;
 

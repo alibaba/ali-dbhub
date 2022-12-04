@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.web.api.controller.log.manual.request;
+package com.alibaba.dbhub.server.web.api.controller.operation.saved.request;
 
 import com.alibaba.dbhub.server.tools.base.wrapper.request.PageQueryRequest;
 

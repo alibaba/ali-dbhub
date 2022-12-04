@@ -1,13 +1,13 @@
-package com.alibaba.dbhub.server.web.api.controller.log.auto.converter;
+package com.alibaba.dbhub.server.web.api.controller.operation.log.converter;
 
 import java.util.List;
 
 import com.alibaba.dbhub.server.domain.api.model.OperationLog;
 import com.alibaba.dbhub.server.domain.api.param.OperationLogCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationLogPageQueryParam;
-import com.alibaba.dbhub.server.web.api.controller.log.auto.request.OperationLogCreateRequest;
-import com.alibaba.dbhub.server.web.api.controller.log.auto.request.OperationLogQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.log.auto.vo.OperationLogVO;
+import com.alibaba.dbhub.server.web.api.controller.operation.log.request.OperationLogCreateRequest;
+import com.alibaba.dbhub.server.web.api.controller.operation.log.request.OperationLogQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.operation.log.vo.OperationLogVO;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

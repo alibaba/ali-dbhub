@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.web.api.controller.log.auto.vo;
+package com.alibaba.dbhub.server.web.api.controller.operation.saved.vo;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 
@@ -10,7 +10,7 @@ import lombok.Data;
  * @date 2022/09/18
  */
 @Data
-public class OperationLogVO {
+public class OperationVO {
 
     /**
      * 主键
@@ -37,4 +37,9 @@ public class OperationLogVO {
      * @see DbTypeEnum
      */
     private String type;
+
+    /**
+     * ddl内容
+     */
+    private String ddl;
 }
