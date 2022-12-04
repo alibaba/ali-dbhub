@@ -47,4 +47,9 @@ public class OperationUpdateParam {
      * ddl内容
      */
     private String ddl;
+
+    /**
+     * 是否在tab中被打开,y表示打开,n表示未打开
+     */
+    private String tabOpened;
 }

@@ -30,18 +30,20 @@ public class MybatisGeneratorTest extends BaseTest {
 
     @Test
     public void coreGenerator() {
-        doGenerator(Lists.newArrayList("test"));
+        doGenerator(Lists.newArrayList("data_source"));
+        doGenerator(Lists.newArrayList("operation_log"));
+        doGenerator(Lists.newArrayList("operation_saved"));
     }
 
     private void doGenerator(List<String> tableList) {
 
         // 当前项目地址 拿到的是ali-dbhub-server-start地址
         String outputDir = System.getProperty("user.dir")
-            + "/../ali-dbhub-server-domain/ali-dbhub-server-domain-core/ali-dbhub-server-domain-repository/src/main"
+            + "/../ali-dbhub-server-domain/ali-dbhub-server-domain-repository/src/main"
             + "/java";
         String xmlDir = System.getProperty("user.dir")
-            + "/../ali-dbhub-server-domain/ali-dbhub-server-domain-core/ali-dbhub-server-domain-repository/src/main"
-            + "/resources/com/alibaba/dataops/server/domain/repository";
+            + "/../ali-dbhub-server-domain/ali-dbhub-server-domain-repository/src/main"
+            + "/resources/com/alibaba/dbhub/server/domain/repository";
 
         // 不要生成service controller
         Map<OutputFile, String> pathInfo = new HashMap<>();
