@@ -37,8 +37,27 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class H2DatabaseSpi implements DatabaseSpi {
     private static final SpiExample EXAMPLE=SpiExample.builder()
-        .createTable(" ")
-        .alterTable(" ")
+        .createTable("-- 创建一个表\n"
+            + "CREATE TABLE `test` (\n"
+            + "\t`id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',\n"
+            + "\t-- 创建时间 创建时自动设置当前时间，后续不再变更\n"
+            + "\t`gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',\n"
+            + "\t-- 修改时间 创建时自动设置当前时间，修改时自动再次设置为当前时间\n"
+            + "\t`gmt_modified` datetime NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT '修改时间',\n"
+            + "\t`date` datetime NULL COMMENT '日期',\n"
+            + "\t`string` varchar(128) NOT NULL DEFAULT 'Test' COMMENT '字符串',\n"
+            + "\tPRIMARY KEY (`id`)\n"
+            + ");\n"
+            + "-- 文档： https://www.h2database.com/html/commands.html#create_table")
+        .alterTable("-- 新增字段\n"
+            + "ALTER TABLE `test`\n"
+            + "    ADD COLUMN `number` bigint NULL COMMENT '数字';\n"
+            + "-- 新增唯一索引\n"
+            + "CREATE UNIQUE INDEX uk_number ON `test` (`number`);\n"
+            + "-- 删除字段\n"
+            + "ALTER TABLE `test`\n"
+            + "    DROP COLUMN `number`;\n"
+            + "-- 文档: https://www.h2database.com/html/commands.html#alter_table_add")
         .build();
 
     @Override
