@@ -22,7 +22,6 @@
     "electron-builder": "^23.3.3",
     "electron-is-dev": "^2.0.0"
   },
-  
   "icon": "logo/logo.png",
   "build": {
     "appId": "com.ali-dbhub",
@@ -51,13 +50,15 @@
       ]
     },
     "win": {
-      "target": [{
-        "target": "nsis",
-        "arch": [
-          "x64",
-          "ia32"
-        ]
-      }],
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
       "publisherName": "AliDBHub",
       "icon": "logo/logo.png"
     }

@@ -13,6 +13,13 @@ let mainWindow;
 
 function createWindow() {
   //创建浏览器窗口,宽高自定义具体大小你开心就好
+  let options = {};
+  if (process.platform === 'win32') { // 如果平台是win32，也即windows
+    options.show = true // 当window创建的时候打开
+    options.frame = true // 创建一个frameless窗口，详情：https://electronjs.org/docs/api/frameless-window
+    options.backgroundColor = '#3f3c37'
+  }
+
   mainWindow = new BrowserWindow({
     width: 1200,
     minWidth: 800,
@@ -22,18 +29,17 @@ function createWindow() {
     resizable: false,
     frame: false,
     titleBarStyle: 'hidden',
+    ...options,
     webPreferences: {
+      webSercurity:false,
       nodeIntegration: true,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js'),
     },
   });
+  mainWindow.webContents.openDevTools();
 
-  if (process.platform === 'win32') { // 如果平台是win32，也即windows
-    options.show = true // 当window创建的时候打开
-    options.frame = false // 创建一个frameless窗口，详情：https://electronjs.org/docs/api/frameless-window
-    options.backgroundColor = '#3f3c37'
-  }
+``
 
   //  * 加载应用-----  electron-quick-start中默认的加载入口
   // mainWindow.loadURL('http://localhost:10824');
