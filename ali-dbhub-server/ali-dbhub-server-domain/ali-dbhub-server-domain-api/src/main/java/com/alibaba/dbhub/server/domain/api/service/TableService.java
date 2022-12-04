@@ -1,6 +1,7 @@
 package com.alibaba.dbhub.server.domain.api.service;
 
 import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
@@ -15,6 +16,14 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
  * @date 2022/09/23
  */
 public interface TableService {
+
+    /**
+     * 查询表信息
+     *
+     * @param param
+     * @return
+     */
+    DataResult<String> showCreateTable(ShowCreateTableParam param);
 
     /**
      * 查询表信息

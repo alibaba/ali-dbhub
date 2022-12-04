@@ -7,6 +7,7 @@ import com.alibaba.dbhub.server.domain.api.service.DlTemplateService;
 import com.alibaba.dbhub.server.domain.api.service.TableService;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
 import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
@@ -79,7 +80,8 @@ public class RdbDdlController {
      */
     @GetMapping("/export")
     public DataResult<String> export(DdlExportRequest request) {
-        return null;
+        ShowCreateTableParam param = rdbWebConverter.ddlExport2showCreate(request);
+        return tableService.showCreateTable(param);
     }
 
     /**
