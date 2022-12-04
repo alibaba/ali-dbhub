@@ -8,8 +8,10 @@ import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
+import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
+import com.alibaba.dbhub.server.web.api.controller.rdb.request.DdlExportRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DmlRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableBriefQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;
@@ -63,6 +65,14 @@ public abstract class RdbWebConverter {
      * @return
      */
     public abstract TablePageQueryParam tablePageRequest2param(TableBriefQueryRequest request);
+
+    /**
+     * 参数转换
+     *
+     * @param request
+     * @return
+     */
+    public abstract ShowCreateTableParam ddlExport2showCreate(DdlExportRequest request);
 
     /**
      * 模型转换

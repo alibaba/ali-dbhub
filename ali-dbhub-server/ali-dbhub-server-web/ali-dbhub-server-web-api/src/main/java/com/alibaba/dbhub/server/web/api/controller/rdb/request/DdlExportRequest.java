@@ -20,10 +20,4 @@ public class DdlExportRequest extends DataSourceBaseRequest {
     @NotNull
     private String tableName;
 
-    /**
-     * 控制台id
-     */
-    @NotNull
-    private Long consoleId;
-
 }
