@@ -17,6 +17,7 @@ import com.alibaba.dbhub.server.domain.support.operations.JdbcOperations;
 import com.alibaba.dbhub.server.domain.support.operations.TableOperations;
 import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCreateParam;
 import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam;
+import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
 import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
@@ -147,6 +148,25 @@ public class TableOperationsTest extends BaseTest {
 
             TableIndex idxNumberString = tableIndexMap.get(dialectProperties.toCase(TABLE_NAME + "_idx_number_string"));
             Assertions.assertEquals(2, idxNumberString.getColumnList().size(), "查询表结构失败");
+
+            // 删除表结构
+            DropParam dropParam = DropParam.builder()
+                .dataSourceId(dataSourceId)
+                .databaseName(dialectProperties.getDatabaseName())
+                .tableName(dialectProperties.toCase(TABLE_NAME))
+                .build();
+            tableOperations.drop(dropParam);
+            //  查询表结构
+            tablePageQueryParam = new TablePageQueryParam();
+            tablePageQueryParam.setDataSourceId(dataSourceId);
+            tablePageQueryParam.setDatabaseName(dialectProperties.getDatabaseName());
+            tablePageQueryParam.setTableName(dialectProperties.toCase(TABLE_NAME));
+            tableList = tableOperations.pageQuery(tablePageQueryParam, TableSelector.builder()
+                .columnList(Boolean.TRUE)
+                .indexList(Boolean.TRUE)
+                .build()).getData();
+            log.info("删除表后数据返回{}", JSON.toJSONString(tableList));
+            Assertions.assertEquals(0L, tableList.size(), "查询表结构失败");
         }
 
     }

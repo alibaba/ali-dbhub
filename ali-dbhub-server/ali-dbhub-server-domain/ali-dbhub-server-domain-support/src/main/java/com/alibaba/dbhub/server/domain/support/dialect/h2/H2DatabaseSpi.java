@@ -1,5 +1,6 @@
 package com.alibaba.dbhub.server.domain.support.dialect.h2;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableColu
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndex;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndexColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiColumnQueryParam;
+import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiDropParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiIndexQueryParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiShowCrateTableParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiTablePageQueryParam;
@@ -63,6 +65,12 @@ public class H2DatabaseSpi implements DatabaseSpi {
             log.warn("h2查询建表语句失败", e);
             return null;
         }
+    }
+
+    @Override
+    public void drop(SpiDropParam param) {
+        param.getNamedParameterJdbcTemplate().update(
+            "drop table " + param.getDatabaseName() + "." + param.getTableName() + "; ", Collections.EMPTY_MAP);
     }
 
     @Override

@@ -6,12 +6,14 @@ import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTable;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndex;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiColumnQueryParam;
+import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiDropParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiIndexQueryParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiShowCrateTableParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiTablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
+import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
 import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.template.TableTemplate.QueryContext;
@@ -42,6 +44,13 @@ public abstract class TableCoreConverter {
      */
     public abstract SpiShowCrateTableParam param2param(ShowCreateTableParam param);
 
+    /**
+     * 转换
+     *
+     * @param param
+     * @return
+     */
+    public abstract SpiDropParam param2param(DropParam param);
     /**
      * 转换
      *
