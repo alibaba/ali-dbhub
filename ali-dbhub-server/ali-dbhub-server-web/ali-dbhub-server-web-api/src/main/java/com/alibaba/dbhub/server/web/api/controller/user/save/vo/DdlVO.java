@@ -1,6 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.user.save.vo;
 
-import com.alibaba.dbhub.server.domain.data.api.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 
 import lombok.Data;
 

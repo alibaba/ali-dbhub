@@ -12,10 +12,10 @@ import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
 import com.alibaba.dbhub.server.tools.base.enums.BaseErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.Result;
 import com.alibaba.dbhub.server.tools.base.wrapper.param.PageQueryParam;
-import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
-import com.alibaba.dbhub.server.tools.base.wrapper.Result;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 /**
  * data的返回对象
@@ -24,6 +24,8 @@ import lombok.Data;
  * @author 是仪
  */
 @Data
+@SuperBuilder
+@AllArgsConstructor
 public class WebPageResult<T> implements Serializable, Result<List<T>> {
     private static final long serialVersionUID = EasyToolsConstant.SERIAL_VERSION_UID;
     /**
