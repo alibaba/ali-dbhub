@@ -2,7 +2,7 @@ package com.alibaba.dbhub.server.test.domain.data.service.dialect;
 
 import java.util.Date;
 
-import com.alibaba.dbhub.server.domain.data.api.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 
 /**
  * 方言配置

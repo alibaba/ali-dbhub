@@ -28,7 +28,7 @@ public class SystemController {
     private ApplicationContext applicationContext;
 
     @Autowired
-    private AliDbhubProperties AliDBHubProperties;
+    private AliDbhubProperties aliDbhubProperties;
 
     /**
      * 检测是否成功
@@ -47,7 +47,7 @@ public class SystemController {
      */
     @GetMapping("/get_version")
     public String getVersion() {
-        return AliDBHubProperties.getVersion();
+        return aliDbhubProperties.getVersion();
     }
 
     /**

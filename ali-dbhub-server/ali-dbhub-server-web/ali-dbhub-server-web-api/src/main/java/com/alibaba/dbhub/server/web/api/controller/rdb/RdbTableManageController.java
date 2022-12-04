@@ -2,13 +2,13 @@ package com.alibaba.dbhub.server.web.api.controller.rdb;
 
 import java.util.List;
 
+import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
+import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
+import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
+import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceExecuteParam;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceCoreService;
-import com.alibaba.dbhub.server.domain.data.api.model.ExecuteResultDTO;
-import com.alibaba.dbhub.server.domain.data.api.model.TableDTO;
-import com.alibaba.dbhub.server.domain.data.api.param.table.TablePageQueryParam;
-import com.alibaba.dbhub.server.domain.data.api.param.table.TableQueryParam;
-import com.alibaba.dbhub.server.domain.data.api.param.table.TableSelector;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
@@ -62,7 +62,7 @@ public class RdbTableManageController {
         TableSelector tableSelector = new TableSelector();
         tableSelector.setColumnList(true);
         tableSelector.setIndexList(true);
-        PageResult<TableDTO> tableDTOPageResult = dataSourceCoreService.pageQuery(queryParam, tableSelector);
+        PageResult<Table> tableDTOPageResult = dataSourceCoreService.pageQuery(queryParam, tableSelector);
         List<TableVO> tableVOS = rdbDataConverter.tableDto2vo(tableDTOPageResult.getData());
         return WebPageResult.of(tableVOS, tableDTOPageResult.getTotal(), request.getPageNo(), request.getPageSize());
     }
@@ -90,7 +90,7 @@ public class RdbTableManageController {
         TableSelector tableSelector = new TableSelector();
         tableSelector.setColumnList(true);
         tableSelector.setIndexList(true);
-        DataResult<TableDTO> tableDTODataResult = dataSourceCoreService.query(queryParam, tableSelector);
+        DataResult<Table> tableDTODataResult = dataSourceCoreService.query(queryParam, tableSelector);
         TableVO tableVO = rdbDataConverter.tableDto2vo(tableDTODataResult.getData());
         return DataResult.of(tableVO);
     }
@@ -104,7 +104,7 @@ public class RdbTableManageController {
     @PutMapping("/manage")
     public ListResult<ExecuteResultVO> manage(@RequestBody TableManageRequest request) {
         DataSourceExecuteParam param = rdbDataConverter.tableManageRequest2param(request);
-        ListResult<ExecuteResultDTO> resultDTOListResult = dataSourceCoreService.execute(param);
+        ListResult<ExecuteResult> resultDTOListResult = dataSourceCoreService.execute(param);
         List<ExecuteResultVO> resultVOS = rdbDataConverter.dto2vo(resultDTOListResult.getData());
         return ListResult.of(resultVOS);
     }

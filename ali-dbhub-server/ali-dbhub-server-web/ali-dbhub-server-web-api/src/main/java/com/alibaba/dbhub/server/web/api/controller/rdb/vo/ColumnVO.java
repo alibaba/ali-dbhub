@@ -1,6 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
 
-import com.alibaba.dbhub.server.domain.data.api.enums.ColumnTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.ColumnTypeEnum;
 import com.alibaba.dbhub.server.tools.base.enums.YesOrNoEnum;
 
 import lombok.Data;

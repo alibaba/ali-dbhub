@@ -4,6 +4,27 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
+import com.alibaba.dbhub.server.domain.support.model.Database;
+import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
+import com.alibaba.dbhub.server.domain.support.model.Sql;
+import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.operations.ConsoleOperations;
+import com.alibaba.dbhub.server.domain.support.operations.DataSourceOperations;
+import com.alibaba.dbhub.server.domain.support.operations.DatabaseOperations;
+import com.alibaba.dbhub.server.domain.support.operations.JdbcOperations;
+import com.alibaba.dbhub.server.domain.support.operations.SqlOperations;
+import com.alibaba.dbhub.server.domain.support.operations.TableOperations;
+import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCloseParam;
+import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCreateParam;
+import com.alibaba.dbhub.server.domain.support.param.database.DatabaseQueryAllParam;
+import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCloseParam;
+import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam;
+import com.alibaba.dbhub.server.domain.support.param.sql.SqlAnalyseParam;
+import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
+import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
+import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
+import com.alibaba.dbhub.server.domain.support.param.template.TemplateExecuteParam;
 import com.alibaba.dbhub.server.domain.api.model.DataSourceDTO;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceExecuteParam;
@@ -16,27 +37,6 @@ import com.alibaba.dbhub.server.domain.api.service.DataSourceCoreService;
 import com.alibaba.dbhub.server.domain.core.converter.DataSourceCoreConverter;
 import com.alibaba.dbhub.server.domain.repository.entity.DataSourceDO;
 import com.alibaba.dbhub.server.domain.repository.mapper.DataSourceMapper;
-import com.alibaba.dbhub.server.domain.data.api.model.DataSourceConnectDTO;
-import com.alibaba.dbhub.server.domain.data.api.model.DatabaseDTO;
-import com.alibaba.dbhub.server.domain.data.api.model.ExecuteResultDTO;
-import com.alibaba.dbhub.server.domain.data.api.model.SqlDTO;
-import com.alibaba.dbhub.server.domain.data.api.model.TableDTO;
-import com.alibaba.dbhub.server.domain.data.api.param.console.ConsoleCloseParam;
-import com.alibaba.dbhub.server.domain.data.api.param.console.ConsoleCreateParam;
-import com.alibaba.dbhub.server.domain.data.api.param.database.DatabaseQueryAllParam;
-import com.alibaba.dbhub.server.domain.data.api.param.datasource.DataSourceCloseParam;
-import com.alibaba.dbhub.server.domain.data.api.param.datasource.DataSourceCreateParam;
-import com.alibaba.dbhub.server.domain.data.api.param.sql.SqlAnalyseParam;
-import com.alibaba.dbhub.server.domain.data.api.param.table.TablePageQueryParam;
-import com.alibaba.dbhub.server.domain.data.api.param.table.TableQueryParam;
-import com.alibaba.dbhub.server.domain.data.api.param.table.TableSelector;
-import com.alibaba.dbhub.server.domain.data.api.param.template.TemplateExecuteParam;
-import com.alibaba.dbhub.server.domain.data.api.service.ConsoleDataService;
-import com.alibaba.dbhub.server.domain.data.api.service.DataSourceDataService;
-import com.alibaba.dbhub.server.domain.data.api.service.DatabaseDataService;
-import com.alibaba.dbhub.server.domain.data.api.service.JdbcTemplateDataService;
-import com.alibaba.dbhub.server.domain.data.api.service.SqlDataService;
-import com.alibaba.dbhub.server.domain.data.api.service.TableDataService;
 import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
 import com.alibaba.dbhub.server.tools.base.excption.DatasourceErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
@@ -65,22 +65,22 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
     private DataSourceMapper dataSourceMapper;
 
     @Autowired
-    private DataSourceDataService dataSourceDataService;
+    private DataSourceOperations dataSourceOperations;
 
     @Autowired
-    private ConsoleDataService consoleDataService;
+    private ConsoleOperations consoleOperations;
 
     @Autowired
-    private JdbcTemplateDataService jdbcTemplateDataService;
+    private JdbcOperations jdbcOperations;
 
     @Autowired
-    private SqlDataService sqlDataService;
+    private SqlOperations sqlOperations;
 
     @Autowired
-    private DatabaseDataService databaseDataService;
+    private DatabaseOperations databaseOperations;
 
     @Autowired
-    private TableDataService tableDataService;
+    private TableOperations tableOperations;
 
     @Autowired
     private DataSourceCoreConverter dataSourceCoreConverter;
@@ -142,9 +142,9 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
 
     @Override
     public ActionResult test(DataSourceTestParam param) {
-        com.alibaba.dbhub.server.domain.data.api.param.datasource.DataSourceTestParam dataSourceTestParam
+        com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceTestParam dataSourceTestParam
             = dataSourceCoreConverter.param2param(param);
-        DataSourceConnectDTO dataSourceConnect = dataSourceDataService.test(dataSourceTestParam).getData();
+        DataSourceConnect dataSourceConnect = dataSourceOperations.test(dataSourceTestParam);
         if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
             throw new BusinessException(DatasourceErrorEnum.DATASOURCE_TEST_ERROR);
         }
@@ -152,10 +152,10 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
     }
 
     @Override
-    public ListResult<DatabaseDTO> attach(Long id) {
+    public ListResult<Database> attach(Long id) {
         DataSourceDO dataSourceDO = dataSourceMapper.selectById(id);
         DataSourceCreateParam param = dataSourceCoreConverter.do2param(dataSourceDO);
-        DataSourceConnectDTO dataSourceConnect = dataSourceDataService.create(param).getData();
+        DataSourceConnect dataSourceConnect = dataSourceOperations.create(param);
         if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
             throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
         }
@@ -163,30 +163,32 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         // 查询database
         DatabaseQueryAllParam queryAllParam = new DatabaseQueryAllParam();
         queryAllParam.setDataSourceId(id);
-        ListResult<DatabaseDTO> databaseDTOS = databaseDataService.queryAll(queryAllParam);
-        return databaseDTOS;
+        return ListResult.of(databaseOperations.queryAll(queryAllParam));
     }
 
     @Override
     public ActionResult close(Long id) {
         DataSourceCloseParam closeParam = new DataSourceCloseParam();
         closeParam.setDataSourceId(id);
-        return dataSourceDataService.close(closeParam);
+        dataSourceOperations.close(closeParam);
+        return ActionResult.isSuccess();
     }
 
     @Override
     public ActionResult createConsole(ConsoleConnectParam param) {
         ConsoleCreateParam createParam = dataSourceCoreConverter.param2consoleParam(param);
-        return consoleDataService.create(createParam);
+        consoleOperations.create(createParam);
+        return ActionResult.isSuccess();
     }
 
     @Override
     public ActionResult closeConsole(ConsoleCloseParam param) {
-        return consoleDataService.close(param);
+        consoleOperations.close(param);
+        return ActionResult.isSuccess();
     }
 
     @Override
-    public ListResult<ExecuteResultDTO> execute(DataSourceExecuteParam param) {
+    public ListResult<ExecuteResult> execute(DataSourceExecuteParam param) {
         if (StringUtils.isBlank(param.getSql())) {
             return ListResult.empty();
         }
@@ -195,19 +197,19 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
         SqlAnalyseParam sqlAnalyseParam = new SqlAnalyseParam();
         sqlAnalyseParam.setDataSourceId(param.getDataSourceId());
         sqlAnalyseParam.setSql(param.getSql());
-        List<SqlDTO> sqlList = sqlDataService.analyse(sqlAnalyseParam).getData();
+        List<Sql> sqlList = sqlOperations.analyse(sqlAnalyseParam);
         if (CollectionUtils.isEmpty(sqlList)) {
             throw new BusinessException(DatasourceErrorEnum.SQL_ANALYSIS_ERROR);
         }
 
-        List<ExecuteResultDTO> result = new ArrayList<>();
+        List<ExecuteResult> result = new ArrayList<>();
         // 执行sql
-        for (SqlDTO sqlDTO : sqlList) {
+        for (Sql sql : sqlList) {
             TemplateExecuteParam templateQueryParam = new TemplateExecuteParam();
             templateQueryParam.setConsoleId(param.getConsoleId());
             templateQueryParam.setDataSourceId(param.getDataSourceId());
-            templateQueryParam.setSql(sqlDTO.getSql());
-            ExecuteResultDTO executeResult = jdbcTemplateDataService.execute(templateQueryParam).getData();
+            templateQueryParam.setSql(sql.getSql());
+            ExecuteResult executeResult = jdbcOperations.execute(templateQueryParam);
             result.add(executeResult);
         }
 
@@ -215,12 +217,12 @@ public class DataSourceCoreServiceImpl implements DataSourceCoreService {
     }
 
     @Override
-    public DataResult<TableDTO> query(TableQueryParam param, TableSelector selector) {
-        return tableDataService.query(param, selector);
+    public DataResult<Table> query(TableQueryParam param, TableSelector selector) {
+        return DataResult.of(tableOperations.query(param, selector));
     }
 
     @Override
-    public PageResult<TableDTO> pageQuery(TablePageQueryParam param, TableSelector selector) {
-        return tableDataService.pageQuery(param, selector);
+    public PageResult<Table> pageQuery(TablePageQueryParam param, TableSelector selector) {
+        return tableOperations.pageQuery(param, selector);
     }
 }

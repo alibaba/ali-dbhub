@@ -2,21 +2,21 @@ package com.alibaba.dbhub.server.domain.api.service;
 
 import javax.validation.constraints.NotNull;
 
+import com.alibaba.dbhub.server.domain.support.model.Database;
+import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
+import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCloseParam;
+import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
+import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
+import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
 import com.alibaba.dbhub.server.domain.api.model.DataSourceDTO;
+import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceExecuteParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceManageCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
-import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
-import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceSelector;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceTestParam;
-import com.alibaba.dbhub.server.domain.data.api.model.DatabaseDTO;
-import com.alibaba.dbhub.server.domain.data.api.model.ExecuteResultDTO;
-import com.alibaba.dbhub.server.domain.data.api.model.TableDTO;
-import com.alibaba.dbhub.server.domain.data.api.param.console.ConsoleCloseParam;
-import com.alibaba.dbhub.server.domain.data.api.param.table.TablePageQueryParam;
-import com.alibaba.dbhub.server.domain.data.api.param.table.TableQueryParam;
-import com.alibaba.dbhub.server.domain.data.api.param.table.TableSelector;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
@@ -94,7 +94,7 @@ public interface DataSourceCoreService {
      * @param id
      * @return
      */
-    ListResult<DatabaseDTO> attach(Long id);
+    ListResult<Database> attach(Long id);
 
     /**
      * 关闭数据源连接
@@ -126,7 +126,7 @@ public interface DataSourceCoreService {
      * @param param
      * @return
      */
-    ListResult<ExecuteResultDTO> execute(DataSourceExecuteParam param);
+    ListResult<ExecuteResult> execute(DataSourceExecuteParam param);
 
     /**
      * 查询表信息
@@ -134,7 +134,7 @@ public interface DataSourceCoreService {
      * @param param
      * @return
      */
-    DataResult<TableDTO> query(TableQueryParam param, TableSelector selector);
+    DataResult<Table> query(TableQueryParam param, TableSelector selector);
 
     /**
      * 分页查询表信息
@@ -142,5 +142,5 @@ public interface DataSourceCoreService {
      * @param param
      * @return
      */
-    PageResult<TableDTO> pageQuery(TablePageQueryParam param, TableSelector selector);
+    PageResult<Table> pageQuery(TablePageQueryParam param, TableSelector selector);
 }
