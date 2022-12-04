@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.web.api.controller.log.auto;
+package com.alibaba.dbhub.server.web.api.controller.operation.log;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
-import com.alibaba.dbhub.server.web.api.controller.log.auto.converter.OperationLogWebConverter;
-import com.alibaba.dbhub.server.web.api.controller.log.auto.request.OperationLogCreateRequest;
-import com.alibaba.dbhub.server.web.api.controller.log.auto.request.OperationLogQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.log.auto.vo.OperationLogVO;
+import com.alibaba.dbhub.server.web.api.controller.operation.log.converter.OperationLogWebConverter;
+import com.alibaba.dbhub.server.web.api.controller.operation.log.request.OperationLogCreateRequest;
+import com.alibaba.dbhub.server.web.api.controller.operation.log.request.OperationLogQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.operation.log.vo.OperationLogVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.web.api.controller.log.auto.request;
+package com.alibaba.dbhub.server.web.api.controller.operation.log.request;
 
 import javax.validation.constraints.NotNull;
 

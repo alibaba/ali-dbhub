@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.web.api.controller.log.manual;
+package com.alibaba.dbhub.server.web.api.controller.operation.saved;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,11 +14,11 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
-import com.alibaba.dbhub.server.web.api.controller.log.manual.converter.OperationWebConverter;
-import com.alibaba.dbhub.server.web.api.controller.log.manual.request.OperationCreateRequest;
-import com.alibaba.dbhub.server.web.api.controller.log.manual.request.OperationQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.log.manual.request.OperationUpdateRequest;
-import com.alibaba.dbhub.server.web.api.controller.log.manual.vo.OperationVO;
+import com.alibaba.dbhub.server.web.api.controller.operation.saved.converter.OperationWebConverter;
+import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.OperationCreateRequest;
+import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.OperationQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.OperationUpdateRequest;
+import com.alibaba.dbhub.server.web.api.controller.operation.saved.vo.OperationVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 @BusinessExceptionAspect
 @RequestMapping("/api/operation/saved")
 @RestController
-public class OperationManualSavedController {
+public class OperationSavedController {
 
     @Autowired
     private OperationService operationService;
