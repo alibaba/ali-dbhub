@@ -57,11 +57,11 @@ public class MysqlDatabaseSpi implements DatabaseSpi {
             + "ALTER TABLE `test`\n"
             + "    ADD COLUMN `number` bigint unsigned NULL COMMENT '数字';\n"
             + "-- 新增唯一索引\n"
-            + "alter table `test`\n"
-            + "    add unique index uk_number (number);\n"
+            + "ALTER TABLE `test`\n"
+            + "    ADD UNIQUE INDEX uk_number (number);\n"
             + "-- 删除字段\n"
-            + "alter table `test`\n"
-            + "    drop COLUMN `number`;\n"
+            + "ALTER TABLE `test`\n"
+            + "    DROP COLUMN `number`;\n"
             + "-- 文档: https://dev.mysql.com/doc/refman/5.7/en/alter-table.html")
         .build();
 
