@@ -28,7 +28,7 @@ function createWindow() {
     title: 'AliDBHub',
     resizable: false,
     frame: false,
-    titleBarStyle: 'hidden',
+    // titleBarStyle: 'hidden',
     ...options,
     webPreferences: {
       webSercurity:false,
