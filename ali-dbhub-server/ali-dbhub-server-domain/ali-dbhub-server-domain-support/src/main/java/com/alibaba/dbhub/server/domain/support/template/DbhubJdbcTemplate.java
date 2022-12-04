@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
-public class JdbcTemplate implements JdbcOperations {
+public class DbhubJdbcTemplate implements JdbcOperations {
 
     @Override
     public ExecuteResult execute(TemplateExecuteParam param) {
