@@ -1,9 +1,8 @@
 package com.alibaba.dbhub.server.domain.api.param;
 
-
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dbhub.server.domain.data.api.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 
 import lombok.Data;
 

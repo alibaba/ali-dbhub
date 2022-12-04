@@ -5,11 +5,11 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.alibaba.dbhub.server.domain.support.model.Database;
+import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCloseParam;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceTestParam;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceCoreService;
-import com.alibaba.dbhub.server.domain.data.api.model.DatabaseDTO;
-import com.alibaba.dbhub.server.domain.data.api.param.console.ConsoleCloseParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
@@ -64,7 +64,7 @@ public class DataSourceController {
      */
     @GetMapping("/attach")
     public ListResult<DatabaseVO> attach(@Valid @NotNull DataSourceAttachRequest request) {
-        ListResult<DatabaseDTO> databaseDTOListResult = dataSourceCoreService.attach(request.getId());
+        ListResult<Database> databaseDTOListResult = dataSourceCoreService.attach(request.getId());
         List<DatabaseVO> databaseVOS = dataSourceWebConverter.databaseDto2vo(databaseDTOListResult.getData());
         return ListResult.of(databaseVOS);
     }

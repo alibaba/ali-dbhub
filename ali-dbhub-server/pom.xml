@@ -178,6 +178,21 @@
 
     <build>
         <plugins>
+            <!-- 编译 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.2</version>
+                <configuration>
+                    <!-- 配置 mapstruct 禁用builer-->
+                    <compilerArgs>
+                        <arg>
+                            -Amapstruct.disableBuilders=true
+                        </arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
             <!-- 支持maven revision 来配置统版本-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

@@ -2,14 +2,14 @@ package com.alibaba.dbhub.server.domain.core.converter;
 
 import java.util.List;
 
+import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCreateParam;
+import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.api.model.DataSourceDTO;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceManageCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceTestParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.domain.repository.entity.DataSourceDO;
-import com.alibaba.dbhub.server.domain.data.api.param.console.ConsoleCreateParam;
-import com.alibaba.dbhub.server.domain.data.api.param.datasource.DataSourceCreateParam;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -72,7 +72,7 @@ public abstract class DataSourceCoreConverter {
         @Mapping(source = "type", target = "dbType"),
         @Mapping(source = "user", target = "username")
     })
-    public abstract com.alibaba.dbhub.server.domain.data.api.param.datasource.DataSourceTestParam param2param(DataSourceTestParam dataSourceTestParam);
+    public abstract com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceTestParam param2param(DataSourceTestParam dataSourceTestParam);
 
 
     /**

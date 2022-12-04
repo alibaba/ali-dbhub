@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "ali.dbhub")
 @Data
-public class AliDBHubProperties {
+public class AliDbhubProperties {
 
     /**
      * 版本

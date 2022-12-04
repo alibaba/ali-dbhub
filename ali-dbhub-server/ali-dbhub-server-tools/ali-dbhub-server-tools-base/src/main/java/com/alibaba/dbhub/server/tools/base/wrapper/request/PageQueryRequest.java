@@ -1,13 +1,15 @@
 package com.alibaba.dbhub.server.tools.base.wrapper.request;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
-import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Range;
 
 /**
@@ -17,7 +19,10 @@ import org.hibernate.validator.constraints.Range;
  * @date 2021/06/26
  */
 @Data
+@SuperBuilder
+@AllArgsConstructor
 public class PageQueryRequest implements Serializable {
+    @Serial
     private static final long serialVersionUID = EasyToolsConstant.SERIAL_VERSION_UID;
     /**
      * 页码
