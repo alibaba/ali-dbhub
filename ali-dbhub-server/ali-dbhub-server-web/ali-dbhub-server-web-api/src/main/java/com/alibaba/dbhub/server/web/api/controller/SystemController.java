@@ -4,7 +4,7 @@
  */
 package com.alibaba.dbhub.server.web.api.controller;
 
-import com.alibaba.dbhub.server.tools.common.config.AliDBHubProperties;
+import com.alibaba.dbhub.server.tools.common.config.AliDbhubProperties;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class SystemController {
     private ApplicationContext applicationContext;
 
     @Autowired
-    private AliDBHubProperties AliDBHubProperties;
+    private AliDbhubProperties aliDbhubProperties;
 
     /**
      * 检测是否成功
@@ -47,7 +47,7 @@ public class SystemController {
      */
     @GetMapping("/get_version")
     public String getVersion() {
-        return AliDBHubProperties.getVersion();
+        return aliDbhubProperties.getVersion();
     }
 
     /**

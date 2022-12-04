@@ -1,14 +1,17 @@
 package com.alibaba.dbhub.server.tools.base.wrapper.param;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
 import com.alibaba.dbhub.server.tools.base.enums.OrderByDirectionEnum;
-import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * 查询的参数
@@ -17,7 +20,11 @@ import lombok.Data;
  * @date 2021/06/26
  */
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class QueryParam implements Serializable {
+    @Serial
     private static final long serialVersionUID = EasyToolsConstant.SERIAL_VERSION_UID;
 
     /**

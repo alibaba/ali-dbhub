@@ -2,7 +2,7 @@ package com.alibaba.dbhub.server.test.domain.data.service.dialect;
 
 import java.util.Date;
 
-import com.alibaba.dbhub.server.domain.data.api.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -39,12 +39,12 @@ public class MysqlDialectProperties implements DialectProperties {
 
     @Override
     public String getPassword() {
-        return "dataops";
+        return "ali_dbhub";
     }
 
     @Override
     public String getDatabaseName() {
-        return "data_ops_test";
+        return "ali_dbhub_test";
     }
 
     @Override

@@ -3,22 +3,17 @@ package com.alibaba.dbhub.server.web.api.controller.user.save;
 import java.util.List;
 import java.util.Objects;
 
-import com.alibaba.dbhub.server.domain.core.api.model.UserSavedDdlDTO;
-import com.alibaba.dbhub.server.domain.core.api.param.UserSavedDdlCreateParam;
-import com.alibaba.dbhub.server.domain.core.api.param.UserSavedDdlPageQueryParam;
-import com.alibaba.dbhub.server.domain.core.api.param.UserSavedDdlUpdateParam;
-import com.alibaba.dbhub.server.domain.core.api.service.UserSavedDdlCoreService;
+import com.alibaba.dbhub.server.domain.api.model.UserSavedDdlDTO;
+import com.alibaba.dbhub.server.domain.api.param.UserSavedDdlCreateParam;
+import com.alibaba.dbhub.server.domain.api.param.UserSavedDdlPageQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.UserSavedDdlUpdateParam;
+import com.alibaba.dbhub.server.domain.api.service.UserSavedDdlCoreService;
 import com.alibaba.dbhub.server.tools.base.enums.StatusEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
-import com.alibaba.dbhub.server.web.api.controller.user.save.converter.DdlManageWebConverter;
-import com.alibaba.dbhub.server.web.api.controller.user.save.request.DdlCreateRequest;
-import com.alibaba.dbhub.server.web.api.controller.user.save.request.DdlQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.user.save.request.DdlUpdateRequest;
-import com.alibaba.dbhub.server.web.api.controller.user.save.vo.DdlVO;
 import com.alibaba.dbhub.server.web.api.controller.user.save.converter.DdlManageWebConverter;
 import com.alibaba.dbhub.server.web.api.controller.user.save.request.DdlCreateRequest;
 import com.alibaba.dbhub.server.web.api.controller.user.save.request.DdlQueryRequest;
@@ -63,10 +58,8 @@ public class DdlManageController {
     @GetMapping("/list")
     public WebPageResult<DdlVO> list(DdlQueryRequest request) {
         UserSavedDdlPageQueryParam param = ddlManageWebConverter.queryReq2param(request);
-        if (StringUtils.isNotBlank(request.getDatabaseName()) && Objects.nonNull(request.getDataSourceId())) {
-            // 如果db不为空，则只查询db下面关联的临时保存
-            param.setStatus(StatusEnum.DRAFT.getCode());
-        } else {
+        if (StringUtils.isBlank(request.getDatabaseName()) && Objects.isNull(request.getDataSourceId())) {
+            // 如果dbname为空，则查询db下面关联的所有保存
             param.setStatus(StatusEnum.RELEASE.getCode());
         }
         PageResult<UserSavedDdlDTO> dtoPageResult = userSavedDdlCoreService.queryPage(param);

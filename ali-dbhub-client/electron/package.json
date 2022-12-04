@@ -1,0 +1,66 @@
+{
+  "name": "ali-dbhub-client",
+  "private": true,
+  "license": "MIT",
+  "author": "yuqin, hexi",
+  "version": "0.0.13",
+  "main": "main.js",
+  "homepage": "./",
+  "keywords": [
+    "electron"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alibaba/ali-dbhub"
+  },
+  "description": "Electron Application",
+  "scripts": {
+    "electron:build": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^20.1.4",
+    "electron-builder": "^23.3.3",
+    "electron-is-dev": "^2.0.0"
+  },
+  "icon": "logo/logo.png",
+  "build": {
+    "appId": "com.ali-dbhub",
+    "directories": {
+      "output": "../electron-build"
+    },
+    "asar": false,
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "preload.js",
+      "app/**/*",
+      "jre/**/*",
+      "my.bat"
+    ],
+    "mac": {
+      "icon": "logo/logo.png",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "publisherName": "AliDBHub",
+      "icon": "logo/logo.png"
+    }
+  }
+}
