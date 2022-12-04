@@ -17,7 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @author Jiaju Zhuang
  */
 @Slf4j
-public class JdbcTemplateTest {
+public class DbhubJdbcTemplateTest {
 
     private static JdbcTemplate jdbcTemplate;
 
