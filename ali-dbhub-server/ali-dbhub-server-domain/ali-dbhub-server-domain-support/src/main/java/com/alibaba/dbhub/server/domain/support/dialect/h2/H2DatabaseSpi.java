@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.alibaba.dbhub.server.domain.support.dialect.DatabaseSpi;
+import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiExample;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTable;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndex;
@@ -35,10 +36,19 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class H2DatabaseSpi implements DatabaseSpi {
+    private static final SpiExample EXAMPLE=SpiExample.builder()
+        .createTable("")
+        .alterTable("")
+        .build();
 
     @Override
     public DbTypeEnum supportDbType() {
         return DbTypeEnum.H2;
+    }
+
+    @Override
+    public SpiExample example() {
+        return EXAMPLE;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.alibaba.dbhub.server.domain.support.dialect;
 
 import java.util.List;
 
+import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiExample;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTable;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndex;
@@ -26,6 +27,13 @@ public interface DatabaseSpi {
      * @return
      */
     DbTypeEnum supportDbType();
+
+    /**
+     * 样例
+     *
+     * @return
+     */
+    SpiExample example();
 
     /**
      * 展示建表语句

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.alibaba.dbhub.server.domain.support.dialect.DatabaseSpi;
+import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiExample;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTable;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndex;
@@ -37,10 +38,41 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class MysqlDatabaseSpi implements DatabaseSpi {
+    private static final SpiExample EXAMPLE=SpiExample.builder()
+        .createTable("-- 创建一个表\n"
+            + "CREATE TABLE `test` (\n"
+            + "\t`id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',\n"
+            + "\t-- 创建时间 创建时自动设置当前时间，后续不再变更\n"
+            + "\t`gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',\n"
+            + "\t-- 修改时间 创建时自动设置当前时间，修改时自动再次设置为当前时间\n"
+            + "\t`gmt_modified` datetime NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT '修改时间',\n"
+            + "\t`date` datetime NULL COMMENT '日期',\n"
+            + "\t`string` varchar(128) NOT NULL DEFAULT 'Test' COMMENT '字符串',\n"
+            + "\tPRIMARY KEY (`id`),\n"
+            + "\t-- 创建索引\n"
+            + "\tKEY `idx_string` (`string`)\n"
+            + ") DEFAULT CHARACTER SET=utf8mb4 COMMENT='测试表';\n"
+            + "-- 文档：https://dev.mysql.com/doc/refman/5.7/en/create-table.html\n")
+        .alterTable("-- 新增字段\n"
+            + "ALTER TABLE `test`\n"
+            + "    ADD COLUMN `number` bigint unsigned NULL COMMENT '数字';\n"
+            + "-- 新增唯一索引\n"
+            + "alter table `test`\n"
+            + "    add unique index uk_number (number);\n"
+            + "-- 删除字段\n"
+            + "alter table `test`\n"
+            + "    drop COLUMN `number`;\n"
+            + "-- 文档: https://dev.mysql.com/doc/refman/5.7/en/alter-table.html")
+        .build();
 
     @Override
     public DbTypeEnum supportDbType() {
         return DbTypeEnum.MYSQL;
+    }
+
+    @Override
+    public SpiExample example() {
+        return EXAMPLE;
     }
 
     @Override

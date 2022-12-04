@@ -54,7 +54,7 @@ public class TableTemplate implements TableOperations {
     public String showCreateTable(ShowCreateTableParam param) {
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = DataCenterUtils.getDefaultJdbcTemplate(
             param.getDataSourceId());
-        DatabaseSpi databaseSpi = DataCenterUtils.getSqlExecutorByDataSourceId(param.getDataSourceId());
+        DatabaseSpi databaseSpi = DataCenterUtils.getDatabaseSpiByDataSourceId(param.getDataSourceId());
 
         // 构建查询表信息参数
         SpiShowCrateTableParam spiShowCrateTableParam = tableCoreConverter.param2param(param);
@@ -67,7 +67,7 @@ public class TableTemplate implements TableOperations {
     public void drop(DropParam param) {
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = DataCenterUtils.getDefaultJdbcTemplate(
             param.getDataSourceId());
-        DatabaseSpi databaseSpi = DataCenterUtils.getSqlExecutorByDataSourceId(param.getDataSourceId());
+        DatabaseSpi databaseSpi = DataCenterUtils.getDatabaseSpiByDataSourceId(param.getDataSourceId());
 
         // 构建查询表信息参数
         SpiDropParam spiDropParam = tableCoreConverter.param2param(param);
@@ -85,7 +85,7 @@ public class TableTemplate implements TableOperations {
     public PageResult<Table> pageQuery(TablePageQueryParam param, TableSelector selector) {
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = DataCenterUtils.getDefaultJdbcTemplate(
             param.getDataSourceId());
-        DatabaseSpi databaseSpi = DataCenterUtils.getSqlExecutorByDataSourceId(param.getDataSourceId());
+        DatabaseSpi databaseSpi = DataCenterUtils.getDatabaseSpiByDataSourceId(param.getDataSourceId());
 
         // 构建查询表信息参数
         SpiTablePageQueryParam spiTablePageQueryParam = tableCoreConverter.param2param(param);
