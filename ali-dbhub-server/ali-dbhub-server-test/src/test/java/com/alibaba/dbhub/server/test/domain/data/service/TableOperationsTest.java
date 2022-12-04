@@ -17,6 +17,7 @@ import com.alibaba.dbhub.server.domain.support.operations.JdbcOperations;
 import com.alibaba.dbhub.server.domain.support.operations.TableOperations;
 import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCreateParam;
 import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam;
+import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
 import com.alibaba.dbhub.server.domain.support.param.template.TemplateExecuteParam;
@@ -86,6 +87,18 @@ public class TableOperationsTest extends BaseTest {
             templateQueryParam.setSql(dialectProperties.getCrateTableSql(TABLE_NAME));
             jdbcOperations.execute(templateQueryParam);
 
+            // 查询建表语句
+            ShowCreateTableParam showCreateTableParam = ShowCreateTableParam.builder()
+                .dataSourceId(dataSourceId)
+                .databaseName(dialectProperties.getDatabaseName())
+                .tableName(dialectProperties.toCase(TABLE_NAME))
+                .build();
+            String createTable = tableOperations.showCreateTable(showCreateTableParam);
+            log.info("建表语句:{}", createTable);
+            if (dialectProperties.getDbType() != DbTypeEnum.H2) {
+                Assertions.assertTrue(createTable.contains(dialectProperties.toCase(TABLE_NAME)), "查询表结构失败");
+            }
+
             //  查询表结构
             TablePageQueryParam tablePageQueryParam = new TablePageQueryParam();
             tablePageQueryParam.setDataSourceId(dataSourceId);
@@ -112,7 +125,8 @@ public class TableOperationsTest extends BaseTest {
             TableColumn string = columnList.get(3);
             Assertions.assertEquals(dialectProperties.toCase("string"), string.getName(), "查询表结构失败");
             Assertions.assertEquals(YesOrNoEnum.YES.getCode(), string.getNullable(), "查询表结构失败");
-            Assertions.assertEquals("DATA", TestUtils.unWrapperDefaultValue(string.getDefaultValue()), "查询表结构失败");
+            Assertions.assertEquals("DATA", TestUtils.unWrapperDefaultValue(string.getDefaultValue()),
+                "查询表结构失败");
 
             List<TableIndex> tableIndexList = table.getIndexList();
             Assertions.assertEquals(4L, tableIndexList.size(), "查询表结构失败");
@@ -122,7 +136,8 @@ public class TableOperationsTest extends BaseTest {
             Assertions.assertEquals("日期索引", idxDate.getComment(), "查询表结构失败");
             Assertions.assertEquals(IndexTypeEnum.NORMAL.getCode(), idxDate.getType(), "查询表结构失败");
             Assertions.assertEquals(1L, idxDate.getColumnList().size(), "查询表结构失败");
-            Assertions.assertEquals(dialectProperties.toCase("date"), idxDate.getColumnList().get(0).getName(), "查询表结构失败");
+            Assertions.assertEquals(dialectProperties.toCase("date"), idxDate.getColumnList().get(0).getName(),
+                "查询表结构失败");
             Assertions.assertEquals(CollationEnum.DESC.getCode(), idxDate.getColumnList().get(0).getCollation(),
                 "查询表结构失败");
 

@@ -22,7 +22,6 @@ public class Table {
      */
     private String name;
 
-
     /**
      * 描述
      */
@@ -38,10 +37,5 @@ public class Table {
      */
     private List<TableIndex> indexList;
 
-    /**
-     * 建表语句
-     * 暂时不支持
-     */
-    private String createSql;
 }
 

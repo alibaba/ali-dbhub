@@ -6,18 +6,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.alibaba.dbhub.server.domain.support.dialect.DatabaseSpi;
-import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
-import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTable;
+import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableColumn;
+import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndex;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndexColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndexColumnUnion;
-import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiTableIndex;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiColumnQueryParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiIndexQueryParam;
+import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiShowCrateTableParam;
 import com.alibaba.dbhub.server.domain.support.dialect.common.param.SpiTablePageQueryParam;
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
 import com.alibaba.dbhub.server.tools.base.enums.YesOrNoEnum;
-import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 
@@ -39,6 +39,18 @@ public class MysqlDatabaseSpi implements DatabaseSpi {
     @Override
     public DbTypeEnum supportDbType() {
         return DbTypeEnum.MYSQL;
+    }
+
+    @Override
+    public String showCrateTable(SpiShowCrateTableParam param) {
+        // 拼接参数
+        Map<String, Object> queryParam = Maps.newHashMap();
+        queryParam.put("databaseName", param.getDatabaseName());
+        queryParam.put("tableName", param.getTableName());
+        List<String> createTableList = param.getNamedParameterJdbcTemplate().query(
+            "SHOW CREATE TABLE " + param.getDatabaseName() + "." + param.getTableName() + "; ",
+            (rs, rowNum) -> rs.getString(2));
+        return EasyCollectionUtils.findFirst(createTableList);
     }
 
     @Override
@@ -67,13 +79,13 @@ public class MysqlDatabaseSpi implements DatabaseSpi {
     }
 
     @Override
-    public ListResult<SpiTableColumn> queryListColumn(SpiColumnQueryParam param) {
+    public List<SpiTableColumn> queryListColumn(SpiColumnQueryParam param) {
         // 拼接参数
         Map<String, Object> queryParam = Maps.newHashMap();
         queryParam.put("databaseName", param.getDatabaseName());
         queryParam.put("tableNameList", param.getTableNameList());
 
-        return ListResult.of(param.getNamedParameterJdbcTemplate().query(
+        return param.getNamedParameterJdbcTemplate().query(
             "SELECT COLUMN_NAME            ,\n"
                 + "       TABLE_NAME             ,\n"
                 + "       DATA_TYPE             ,\n"
@@ -110,11 +122,11 @@ public class MysqlDatabaseSpi implements DatabaseSpi {
                     column.setAutoIncrement(YesOrNoEnum.NO.getCode());
                 }
                 return column;
-            }));
+            });
     }
 
     @Override
-    public ListResult<SpiTableIndex> queryListIndex(SpiIndexQueryParam param) {
+    public List<SpiTableIndex> queryListIndex(SpiIndexQueryParam param) {
         // 拼接参数
         Map<String, Object> queryParam = Maps.newHashMap();
         queryParam.put("databaseName", param.getDatabaseName());
@@ -187,7 +199,7 @@ public class MysqlDatabaseSpi implements DatabaseSpi {
                 .build());
 
         }));
-        return ListResult.of(dataList);
+        return dataList;
     }
 
 }
