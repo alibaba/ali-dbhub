@@ -2,8 +2,6 @@ package com.alibaba.dbhub.server.web.api.controller.rdb.request;
 
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-
 import lombok.Data;
 
 /**
