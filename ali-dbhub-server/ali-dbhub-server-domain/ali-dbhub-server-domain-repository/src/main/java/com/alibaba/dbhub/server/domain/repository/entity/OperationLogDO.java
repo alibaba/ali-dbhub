@@ -10,7 +10,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 数据源连接表
+ * 我的执行记录表
  * </p>
  *
  * @author ali-dbhub
@@ -18,8 +18,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName("DATA_SOURCE")
-public class DataSourceDO implements Serializable {
+@TableName("OPERATION_LOG")
+public class OperationLogDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,24 +40,14 @@ public class DataSourceDO implements Serializable {
     private LocalDateTime gmtModified;
 
     /**
-     * 别名
+     * 数据源连接ID
      */
-    private String alias;
+    private Long dataSourceId;
 
     /**
-     * 连接地址
+     * db名称
      */
-    private String url;
-
-    /**
-     * 用户名
-     */
-    private String userName;
-
-    /**
-     * 密码
-     */
-    private String password;
+    private String databaseName;
 
     /**
      * 数据库类型
@@ -65,7 +55,7 @@ public class DataSourceDO implements Serializable {
     private String type;
 
     /**
-     * 环境类型
+     * ddl内容
      */
-    private String envType;
+    private String ddl;
 }

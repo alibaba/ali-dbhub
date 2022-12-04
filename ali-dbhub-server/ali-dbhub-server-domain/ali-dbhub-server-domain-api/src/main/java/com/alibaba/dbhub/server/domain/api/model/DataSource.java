@@ -1,32 +1,20 @@
-package com.alibaba.dbhub.server.domain.repository.entity;
+package com.alibaba.dbhub.server.domain.api.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.Data;
 
 /**
- * <p>
- * 数据源连接表
- * </p>
- *
- * @author ali-dbhub
- * @since 2022-12-04
+ * @author moji
+ * @version DataSourceDTO.java, v 0.1 2022年09月23日 15:39 moji Exp $
+ * @date 2022/09/23
  */
-@Getter
-@Setter
-@TableName("DATA_SOURCE")
-public class DataSourceDO implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@Data
+public class DataSource {
 
     /**
      * 主键
      */
-    @TableId(value = "ID", type = IdType.AUTO)
     private Long id;
 
     /**
