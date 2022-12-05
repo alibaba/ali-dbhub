@@ -76,6 +76,7 @@ public class OperationSavedController {
     @PostMapping("/create")
     public DataResult<Long> create(@RequestBody OperationCreateRequest request) {
         OperationSavedParam param = operationWebConverter.req2param(request);
+        param.setTabOpened("y");
         return operationService.create(param);
     }
 
