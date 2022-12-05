@@ -12,6 +12,7 @@ import MonacoEditor, { setEditorHint, IHintData } from '@/components/MonacoEdito
 import DraggableDivider from '@/components/DraggableDivider';
 import SearchResult from '@/components/SearchResult';
 import LoadingContent from '@/components/Loading/LoadingContent';
+import OperationTableModal, { IOperationData } from '@/components/OperationTableModal';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import connectionServer from '@/service/connection';
 import historyServer from '@/service/history';
@@ -34,35 +35,47 @@ interface ITabItem extends IWindowTab {
 }
 
 const basicsTree: ITreeNode[] = []
-let monacoEditorExternal: any
+let monacoEditorExternalList: any = {}
 
-export function DatabaseQuery({ activeTabKey, windowTab, treeNodeClickMessage }: { activeTabKey: string, windowTab: IWindowTab, treeNodeClickMessage: ITreeNode }) {
+export interface IDatabaseQueryProps {
+  activeTabKey: string;
+  windowTab: IWindowTab;
+  treeNodeClickMessage: ITreeNode | null;
+  setTreeNodeClickMessage: Function;
+}
+
+export function DatabaseQuery(props: IDatabaseQueryProps) {
+  const { activeTabKey, windowTab, treeNodeClickMessage, setTreeNodeClickMessage } = props
   const params: { id: string, type: string } = useParams();
   const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode;
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
   const monacoEditor = useRef<any>(null);
-  // const [monacoEditorValue, setMonacoEditorValue] = useState('SELECT * FROM')
 
   useEffect(() => {
     connectConsole();
   }, [])
 
-  useUpdateEffect(() => {
-    const model = monacoEditorExternal.getModel(monacoEditorExternal)
-    const value = model.getValue()
-    if (treeNodeClickMessage.nodeType == TreeNodeType.TABLE) {
-      if (value == 'SELECT * FROM') {
-        model.setValue(`SELECT * FROM ${treeNodeClickMessage.name};`)
-      } else {
-        model.setValue(`${value}\nSELECT * FROM ${treeNodeClickMessage.name};`)
+  useEffect(() => {
+    const nodeData = treeNodeClickMessage
+    if (nodeData && windowTab.id === activeTabKey) {
+      console.log(nodeData)
+      const model = monacoEditor.current.getModel(monacoEditor.current)
+      const value = model.getValue()
+      if (nodeData.nodeType == TreeNodeType.TABLE) {
+        if (value == 'SELECT * FROM') {
+          model.setValue(`SELECT * FROM ${nodeData.name};`)
+        } else {
+          model.setValue(`${value}\nSELECT * FROM ${nodeData.name};`)
+        }
+      } else if (nodeData.nodeType == TreeNodeType.LINE) {
+        if (value == 'SELECT * FROM') {
+          model.setValue(`SELECT * FROM ${nodeData?.parent?.name} WHERE ${nodeData.name} = ''`)
+        } else {
+          model.setValue(`${value}\nSELECT * FROM ${nodeData?.parent?.name} WHERE ${nodeData.name} = ''`)
+        }
       }
-    } else if (treeNodeClickMessage.nodeType == TreeNodeType.LINE) {
-      if (value == 'SELECT * FROM') {
-        model.setValue(`SELECT * FROM ${treeNodeClickMessage?.parent?.name} WHERE ${treeNodeClickMessage.name} = ''`)
-      } else {
-        model.setValue(`${value}\nSELECT * FROM ${treeNodeClickMessage?.parent?.name} WHERE ${treeNodeClickMessage.name} = ''`)
-      }
+      setTreeNodeClickMessage(null)
     }
   }, [treeNodeClickMessage])
 
@@ -77,7 +90,7 @@ export function DatabaseQuery({ activeTabKey, windowTab, treeNodeClickMessage }:
 
   const getEditor = (editor: any) => {
     monacoEditor.current = editor
-    monacoEditorExternal = editor
+    monacoEditorExternalList[activeTabKey] = editor
     const model = editor.getModel(editor)
     model.setValue(windowTab.sql || windowTab.ddl || '')
   }
@@ -96,9 +109,9 @@ export function DatabaseQuery({ activeTabKey, windowTab, treeNodeClickMessage }:
 
   // 获取选中区域的值
   const getSelectionVal = () => {
-    const selection = monacoEditorExternal.getSelection() // 获取光标选中的值
+    const selection = monacoEditor.current.getSelection() // 获取光标选中的值
     const { startLineNumber, endLineNumber, startColumn, endColumn } = selection
-    const model = monacoEditorExternal.getModel(monacoEditorExternal)
+    const model = monacoEditor.current.getModel(monacoEditor.current)
     const value = model.getValueInRange({
       startLineNumber,
       startColumn,
@@ -173,7 +186,7 @@ export function DatabaseQuery({ activeTabKey, windowTab, treeNodeClickMessage }:
 }
 
 export default memo<IProps>(function DatabasePage({ className }) {
-  const params: { id: string, type: string } = useParams();
+  const params: { id: string, type: DatabaseTypeCode } = useParams();
   const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode;
   const letfRef = useRef<HTMLDivElement | null>(null);
   const [connectionDetaile, setConnectionDetaile] = useState<IConnectionBase>()
@@ -186,7 +199,8 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [windowName, setWindowName] = useState<string>('');
-  const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode>();
+  const [operationData, setOperationData] = useState<IOperationData | null>();
+  const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode | null>(null);
   const monacoHint = useRef<any>(null);
 
   const closeDropdownFn = () => {
@@ -254,7 +268,8 @@ export default memo<IProps>(function DatabasePage({ className }) {
       pageNo: 1,
       pageSize: 20,
       dataSourceId: params.id,
-      databaseName: currentDB?.name
+      databaseName: currentDB?.name,
+      tabOpened: 'y',
     }
     historyServer.getSaveList(p).then(res => {
       if (res?.data?.length) {
@@ -287,7 +302,12 @@ export default memo<IProps>(function DatabasePage({ className }) {
     connectionServer.getDBList({
       id: params.id
     }).then(res => {
-      setDBList(res)
+      setDBList(res.map(item => {
+        return {
+          ...item,
+          databaseType: params.type
+        }
+      }))
     })
   }
 
@@ -353,7 +373,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   const callback = () => {
-    monacoEditorExternal && monacoEditorExternal.layout()
+    monacoEditorExternalList[activeKey!] && monacoEditorExternalList[activeKey!].layout()
   }
 
   const addWindowTab = (windowList: ITabItem[]) => {
@@ -398,8 +418,12 @@ export default memo<IProps>(function DatabasePage({ className }) {
     }
     setWindowList(newPanes);
     setActiveKey(newActiveKey);
-    let p = { id: targetKey };
-    historyServer.deleteWindowTab(p);
+    let p: any = {
+      id: targetKey,
+      tabOpened: 'n'
+    };
+    historyServer.updateWindowTab(p);
+    // historyServer.deleteWindowTab(p);
   };
 
   const onEdit = (targetKey: any, action: 'add' | 'remove') => {
@@ -454,6 +478,47 @@ export default memo<IProps>(function DatabasePage({ className }) {
     setTreeNodeClickMessage(data)
   }
 
+
+
+  function openOperationTableModal(value: IOperationData) {
+    let data = {
+      ...value,
+      database: currentDB,
+      connectionDetaile: connectionDetaile
+    }
+    if (value.type === 'edit') {
+      data.callback = getTableList
+    }
+    setOperationData(data)
+    if (value.type === 'delete') {
+      Modal.confirm({
+        title: '你确定要删除该表吗',
+        onOk: () => {
+          let p = {
+            tableName: value?.nodeData?.name!,
+            dataSourceId: connectionDetaile?.id!,
+            databaseName: currentDB?.name!
+          }
+          mysqlServer.deleteTable(p).then(res => {
+            getTableList(currentDB!);
+            message.success('删除成功');
+          })
+        },
+        cancelText: '取消',
+        okText: '确认'
+      });
+    }
+  }
+
+  function createTable() {
+    setOperationData({
+      type: 'new',
+      database: currentDB,
+      connectionDetaile: connectionDetaile,
+      callback: getTableList
+    })
+  }
+
   return <>
     <div className={classnames(className, styles.box)}>
       <div ref={letfRef} className={styles.asideBox} id="database-left-aside">
@@ -477,16 +542,20 @@ export default memo<IProps>(function DatabasePage({ className }) {
               <div className={classnames(styles.refresh, styles.button)} onClick={() => { currentDB && getTableList(currentDB) }}>
                 <Iconfont code="&#xec08;"></Iconfont>
               </div>
-              {/* <div className={classnames(styles.create, styles.button)}>
+              <div onClick={createTable} className={classnames(styles.create, styles.button)}>
                 <Iconfont code="&#xe631;"></Iconfont>
-              </div> */}
+              </div>
             </div>
           </div>
           <div className={styles.overview}>
             <Iconfont code="&#xe63d;"></Iconfont>
             <span>{i18n('connection.button.overview')}</span>
           </div>
-          <Tree nodeDoubleClick={nodeDoubleClick} className={styles.tree} treeData={treeData}></Tree>
+          <Tree
+            openOperationTableModal={openOperationTableModal}
+            nodeDoubleClick={nodeDoubleClick}
+            className={styles.tree}
+            treeData={treeData}></Tree>
         </div>
       </div>
       <DraggableDivider callback={callback} volatileRef={letfRef} />
@@ -505,8 +574,14 @@ export default memo<IProps>(function DatabasePage({ className }) {
         <div className={styles.databaseQueryBox}>
           {
             currentDB &&
-            windowList?.map((i: IWindowTab) => {
-              return <DatabaseQuery treeNodeClickMessage={treeNodeClickMessage!} windowTab={i} key={i.databaseName + i.id} activeTabKey={activeKey!}></DatabaseQuery>
+            windowList?.map((i: IWindowTab, index: number) => {
+              return <DatabaseQuery
+                treeNodeClickMessage={treeNodeClickMessage}
+                setTreeNodeClickMessage={setTreeNodeClickMessage}
+                windowTab={i}
+                key={i.databaseName + i.id}
+                activeTabKey={activeKey!}
+              />
             })
           }
         </div>
@@ -530,5 +605,12 @@ export default memo<IProps>(function DatabasePage({ className }) {
     >
       <Input value={windowName} onChange={(e) => { setWindowName(e.target.value) }} />
     </Modal>
+    {
+      (operationData?.type === 'edit' || operationData?.type === 'new' || operationData?.type === 'export') &&
+      <OperationTableModal
+        setOperationData={setOperationData}
+        operationData={operationData!}
+      />
+    }
   </>
 });

@@ -25,6 +25,7 @@ export interface IConnectionBase{
   user: string;
   password: string;
   type: DatabaseTypeCode;
+  tabOpened: 'y' | 'n';
   envType: string;
 }
 export interface IHistoryRecord{
@@ -63,12 +64,13 @@ export interface IDB {
   name: string;
   description: string;
   count: number;
+  databaseType?: DatabaseTypeCode;
 }
 export interface IWindowTab {
   id?:string;
   name: string;
   type: DatabaseTypeCode;
-  dataSourceId: string;
+  dataSourceId: string|number;
   databaseName: string;
   consoleId?: string;
   status?: WindowTabStatus;
