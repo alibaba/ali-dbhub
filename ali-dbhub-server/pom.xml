@@ -229,6 +229,9 @@
                     <includes>
                         <include>/com/alibaba/dbhub/server/test/**/*.java</include>
                     </includes>
+                    <excludes>
+                        <include>/com/alibaba/dbhub/server/test/temp/**/*.java</include>
+                    </excludes>
                     <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
