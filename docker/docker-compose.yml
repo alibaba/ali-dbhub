@@ -1,5 +1,6 @@
 version: '3'
 services:
+  # 运行mysql数据库，用户名：root  密码 ：ali_dbhub 端口：3306
   mysql:
     image: mysql:latest
     restart: always
