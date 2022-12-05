@@ -10,6 +10,7 @@ import { Button, DatePicker, Input, Table, Modal } from 'antd';
 import { StatusType, TableDataType, TableDataTypeCorresValue } from '@/utils/constants';
 import { formatDate } from '@/utils';
 import { IManageResultData, ITableHeaderItem, ITableCellItem } from '@/types';
+import Item from 'antd/lib/list/Item';
 
 
 interface IProps {
@@ -101,10 +102,11 @@ interface ITableProps {
   headerList: ITableHeaderItem[];
   dataList: ITableCellItem[][];
   className?: string;
-  data: any;
+  data: IManageResultData;
 }
 
-export function TableBox({ headerList, dataList, className, data }: ITableProps) {
+export function TableBox(props: ITableProps) {
+  const { headerList, dataList, className, data, ...rest } = props
   const [columns, setColumns] = useState<any>();
   const [tableData, setTableData] = useState<any>();
   useEffect(() => {
@@ -119,17 +121,18 @@ export function TableBox({ headerList, dataList, className, data }: ITableProps)
   }, [headerList])
 
   useEffect(() => {
-    const tableData = dataList?.map((item: ITableCellItem[]) => {
+    const tableData = dataList?.map((item: ITableCellItem[], index) => {
       const rowData: any = {}
       item.map((i: ITableCellItem) => {
         rowData[TableDataTypeCorresValue[i.type]] = i[TableDataTypeCorresValue[i.type]]
       })
+      rowData.key = index
       return rowData
     })
     setTableData(tableData)
   }, [dataList])
 
-  return <div className={classnames(className, styles.tableBox)}>
+  return <div {...rest} className={classnames(className, styles.tableBox)}>
     <Table bordered pagination={false} columns={columns} dataSource={tableData} size="small" />
   </div>
 }

@@ -3,20 +3,21 @@ import globalStyle from '@/global.less';
 import styles from './index.less';
 import classnames from 'classnames';
 import Iconfont from '../Iconfont';
-import { Dropdown } from 'antd';
+import { Dropdown, Modal } from 'antd';
 import { ITreeNode } from '@/types';
 import { TreeNodeType } from '@/utils/constants'
 import Menu, { IMenu, MenuItem } from '@/components/Menu'
 import StateIndicator from '@/components/StateIndicator'
 import LoadingContent from '../Loading/LoadingContent';
 import { useCanDoubleClick } from '@/utils/hooks';
-import request from 'umi-request';
+import { IOperationData } from '@/components/OperationTableModal'
 
 interface IProps {
   className?: any;
   treeData: ITreeNode[] | undefined;
   loadData?: Function;
   nodeDoubleClick?: Function;
+  openOperationTableModal: Function;
 }
 interface TreeNodeIProps {
   data: ITreeNode;
@@ -24,13 +25,14 @@ interface TreeNodeIProps {
   show: boolean;
   loadData?: Function;
   nodeDoubleClick?: Function;
+  openOperationTableModal: Function;
 }
 
 export function TreeNode(props: TreeNodeIProps) {
-  const { data, level, show = false, loadData, nodeDoubleClick } = props
+  const { data, level, show = false, loadData, nodeDoubleClick, openOperationTableModal } = props
   const [showChildren, setShowChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [openDropdown, setOpenDropdown] = useState(true);
   const indentArr = new Array(level);
   for (let i = 0; i < level; i++) {
     indentArr[i] = 'indent'
@@ -38,7 +40,6 @@ export function TreeNode(props: TreeNodeIProps) {
 
   //展开-收起
   const handleClick = (data: ITreeNode) => {
-
     if (!showChildren && !data.children && loadData) {
       setIsLoading(true)
     }
@@ -61,21 +62,30 @@ export function TreeNode(props: TreeNodeIProps) {
   const renderMenu = () => {
     const tableMenu: IMenu<string>[] = [
       {
-        title: '修改表结构',
+        title: '设计表结构',
         key: 'edit',
       },
       {
-        title: '导出表结构',
+        title: '导出建表语句',
         key: 'export',
       },
       {
         title: '删除表',
         key: 'delete',
-      },
+      }
     ]
 
-    function tableClick(value) {
-      console.log(value)
+    function tableClick(item: IMenu<string>) {
+      const operationData: IOperationData = {
+        type: item.key,
+        nodeData: data
+      }
+      openOperationTableModal(operationData)
+      // TODO: 关闭下拉弹窗 有木有更好的方法
+      const customDropdown: any = document.getElementsByClassName('custom-dropdown');
+      for (let i = 0; i < customDropdown.length; i++) {
+        customDropdown[i].classList.add('custom-dropdown-hidden')
+      }
     }
 
     if (data.nodeType == TreeNodeType.TABLE) {
@@ -83,7 +93,7 @@ export function TreeNode(props: TreeNodeIProps) {
         <Menu>
           {
             tableMenu.map(item => {
-              return <MenuItem onClick={tableClick.bind(null, item)}>{item.title}</MenuItem>
+              return <MenuItem key={item.key} onClick={tableClick.bind(null, item)}>{item.title}</MenuItem>
             })
           }
         </Menu>
@@ -121,7 +131,15 @@ export function TreeNode(props: TreeNodeIProps) {
   return <>
     <Dropdown overlay={renderMenu()} trigger={['contextMenu']}>
       <div
-        onClick={() => { treeNodeClick({ onClick: handleClick.bind(null, data), onDoubleClick: () => { nodeDoubleClick && nodeDoubleClick(data) } }) }}
+        onClick={
+          (e) => {
+            console.log(e)
+            treeNodeClick({
+              onClick: handleClick.bind(null, data),
+              onDoubleClick: () => { nodeDoubleClick && nodeDoubleClick(data) }
+            })
+          }
+        }
         className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
         <div className={styles.left}>
           {
@@ -159,7 +177,7 @@ export function TreeNode(props: TreeNodeIProps) {
       !!data.children?.length &&
       data.children.map((item: any, i: number) => {
         return (
-          <TreeNode nodeDoubleClick={nodeDoubleClick} loadData={loadData} key={i} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
+          <TreeNode openOperationTableModal={openOperationTableModal} nodeDoubleClick={nodeDoubleClick} loadData={loadData} key={i} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
         );
       })
     }
@@ -167,19 +185,31 @@ export function TreeNode(props: TreeNodeIProps) {
 }
 
 export default function Tree(props: IProps) {
-  const { className, treeData, loadData, nodeDoubleClick } = props;
+  const { className, treeData, loadData, nodeDoubleClick, openOperationTableModal } = props;
+  const [operationData, setOperationData] = useState();
+
   const treeDataEmpty = () => {
     return ''
   }
   return (
-    <div className={classnames(className, styles.box)}>
-      <LoadingContent data={treeData} handleEmpty empty={treeDataEmpty()}>
-        {
-          treeData?.map((item) => {
-            return <TreeNode nodeDoubleClick={nodeDoubleClick} loadData={loadData} key={item.name} show={true} level={0} data={item}></TreeNode>
-          })
-        }
-      </LoadingContent>
-    </div>
+    <>
+      <div className={classnames(className, styles.box)}>
+        <LoadingContent data={treeData} handleEmpty empty={treeDataEmpty()}>
+          {
+            treeData?.map((item) => {
+              return <TreeNode
+                openOperationTableModal={openOperationTableModal}
+                nodeDoubleClick={nodeDoubleClick}
+                loadData={loadData}
+                key={item.name}
+                show={true}
+                level={0}
+                data={item}
+              ></TreeNode>
+            })
+          }
+        </LoadingContent>
+      </div>
+    </>
   );
 };

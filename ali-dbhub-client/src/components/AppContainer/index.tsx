@@ -18,7 +18,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
 
   useEffect(() => {
     settings();
-    detectionService()
+    detectionService();
   }, [])
 
   function detectionService() {
@@ -44,10 +44,10 @@ export default memo<IProps>(function AppContainer({ className, children }) {
     if (!localStorage.getItem('lang')) {
       localStorage.setItem('lang', 'zh-cn');
     }
-
-    // document.oncontextmenu = (e) => {
-    //   e.preventDefault()
-    // }
+    //禁止右键
+    document.oncontextmenu = (e) => {
+      e.preventDefault()
+    }
   }
 
   return <ConfigProvider prefixCls='custom'>
