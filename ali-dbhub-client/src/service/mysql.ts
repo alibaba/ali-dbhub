@@ -48,7 +48,7 @@ export interface IExecuteTableParams {
   databaseName: string;
 }
 
-const deleteTable = createRequest<IDeleteTableParams, void>('/api/rdb/ddl/delete',{method: 'delete'});
+const deleteTable = createRequest<IDeleteTableParams, void>('/api/rdb/ddl/delete',{method: 'post'});
 const createTableExample = createRequest<{dbType:DatabaseTypeCode}, string>('/api/rdb/ddl/create/example',{method: 'get'});
 const updateTableExample = createRequest<{dbType:DatabaseTypeCode}, string>('/api/rdb/ddl/update/example',{method: 'get'});
 const exportCreateTableSql = createRequest<IDeleteTableParams, string>('/api/rdb/ddl/export',{method: 'get'});

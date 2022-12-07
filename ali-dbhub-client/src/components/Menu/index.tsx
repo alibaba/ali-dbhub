@@ -9,7 +9,6 @@ export interface IMenu<T> {
   icon?: string;
   type?: T;
 }
-
 interface IProps<T> {
   className?: string;
   data?: IMenu<T>[];

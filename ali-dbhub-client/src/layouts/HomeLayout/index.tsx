@@ -7,6 +7,7 @@ import i18n from '@/i18n';
 import classnames from 'classnames';
 import { history, useLocation } from 'umi';
 import styles from './index.less';
+import { openExternal } from '@/utils/index'
 interface Iprops {
 
 }
@@ -23,12 +24,16 @@ const navConfig: INavItem[] = [
     icon: '\uec57',
     path: '/connection'
   },
-
   {
     title: i18n('home.nav.myHistory'),
     icon: '\ue610',
     path: '/sql-history'
-  }
+  },
+  {
+    title: i18n('home.nav.github'),
+    icon: '\ue885',
+    path: 'https://github.com/alibaba/ali-dbhub'
+  },
 ];
 
 export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
@@ -37,8 +42,12 @@ export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
   const [currentNav, setCurrentNav] = useState<string>(defaultNav);
 
   function switchingNav(item: INavItem) {
-    history.push(item.path);
-    setCurrentNav(item.path);
+    if (item.path === 'https://github.com/alibaba/ali-dbhub') {
+      openExternal(item.path)
+    } else {
+      history.push(item.path);
+      setCurrentNav(item.path);
+    }
   }
 
   return (
