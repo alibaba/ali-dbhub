@@ -167,6 +167,8 @@ export function DatabaseQuery(props: IDatabaseQueryProps) {
   return <>
     <div className={classnames(styles.databaseQuery, { [styles.databaseQueryConceal]: windowTab.id !== activeTabKey })}>
       <div className={styles.operatingArea}>
+        {/* <Iconfont code="&#xe73b;" className={styles.icon} onClick={executeSql} />
+        <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} /> */}
         <Button type="primary" onClick={executeSql}>{i18n('common.button.execute')}</Button>
         <Button onClick={saveWindowTabTab}>{i18n('common.button.save')}</Button>
       </div>
@@ -383,7 +385,8 @@ export default memo<IProps>(function DatabasePage({ className }) {
       dataSourceId: params.id,
       databaseName: currentDB?.name!,
       status: WindowTabStatus.DRAFT,
-      ddl: 'SELECT * FROM'
+      ddl: 'SELECT * FROM',
+      tabOpened: 'y'
     }
     historyServer.saveWindowTab(p).then(res => {
       setWindowList([

@@ -130,6 +130,9 @@ export default memo<IProps>(function ConnectionPage(props) {
   // 测试、保存、修改连接
   const saveConnection = (values: IConnectionBase, type: submitType) => {
     let p = values
+    if (type === submitType.UPDATE) {
+      p.id = rowData?.id
+    }
     connectionServer[type](p).then(res => {
       if (type === submitType.TEST) {
         message.success(res === false ? '测试连接失败' : '测试连接成功')
@@ -314,13 +317,12 @@ export default memo<IProps>(function ConnectionPage(props) {
           >
             <Input />
           </Form.Item>
-          {/* <Form.Item
+          <Form.Item
             label="端口"
             name="linkName"
-          // rules={[{ required: true, message: '端口不可为空！' }]}
           >
             <Input />
-          </Form.Item> */}
+          </Form.Item>
           <Form.Item
             label="用户名"
             name="user"
