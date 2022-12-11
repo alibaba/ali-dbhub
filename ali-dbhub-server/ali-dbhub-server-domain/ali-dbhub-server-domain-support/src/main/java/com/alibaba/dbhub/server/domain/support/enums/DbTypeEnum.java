@@ -17,9 +17,19 @@ public enum DbTypeEnum implements BaseEnum<String> {
     MYSQL("MySQL", "com.mysql.cj.jdbc.Driver"),
 
     /**
+     * PostgreSQL
+     */
+    POSTGRESQL("PostgreSQL", "org.postgresql.Driver"),
+
+    /**
      * Oracle
      */
     ORACLE("Oracle", "oracle.jdbc.driver.OracleDriver"),
+
+    /**
+     * SQLServer
+     */
+    SQLSERVER("SQLServer", "com.microsoft.sqlserver.jdbc.SQLServerDriver"),
 
     /**
      * SQLite
