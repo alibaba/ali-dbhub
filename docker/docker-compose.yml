@@ -20,3 +20,13 @@ services:
       POSTGRES_PASSWORD: ali_dbhub
     ports:
       - 5432:5432
+  #连接地址：ip:1521, SID:XE, username:system, password:oracle
+  oracle11:
+    image: oracleinanutshell/oracle-xe-11g
+    container_name: oracle-11
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai
+    restart: always
+    ports:
+      - "1521:1521"
