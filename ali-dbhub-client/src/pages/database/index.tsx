@@ -19,7 +19,7 @@ import historyServer from '@/service/history';
 import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
 import { IConnectionBase, ITreeNode, IWindowTab, IDB } from '@/types'
-import { toTreeList, createRandom, approximateTreeNode, getLocationHash } from '@/utils/index'
+import { toTreeList, createRandom, approximateTreeNode, getLocationHash, setCurrentPosition } from '@/utils/index'
 import { databaseType, DatabaseTypeCode, TreeNodeType, WindowTabStatus } from '@/utils/constants'
 const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
@@ -200,7 +200,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [DBList, setDBList] = useState<IDB[]>();
   const [openDropdown, setOpenDropdown] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [windowName, setWindowName] = useState<string>('');
+  const [windowName, setWindowName] = useState<string>('console_1');
   const [operationData, setOperationData] = useState<IOperationData | null>();
   const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode | null>(null);
   const monacoHint = useRef<any>(null);
@@ -226,7 +226,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   useEffect(() => {
-    setWindowName('');
+    setWindowName('console_1');
   }, [isModalVisible])
 
   useEffect(() => {
@@ -264,6 +264,22 @@ export default memo<IProps>(function DatabasePage({ className }) {
       setCurrentDB(DBList?.[0])
     }
   }, [DBList])
+
+  useEffect(()=>{
+    if(activeKey){
+      setPageHash(currentDB?.name!,activeKey)
+    }
+  },[activeKey])
+
+  function setPageHash(databaseName:string,windowId:string|number){
+    // TODO:这里如果用正则替换应该会优雅一些
+    if(location.hash.split('?')[1]){
+      location.hash = location.hash.split('?')[0] + `?databaseName=${databaseName}&id=${windowId}`
+    }else{
+      location.hash = location.hash + `?databaseName=${databaseName}&id=${windowId}`
+    }
+    setCurrentPosition()
+  }
 
   const getWindowList = () => {
     let p = {
