@@ -41,12 +41,14 @@ export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
     setActiveNav(item.path);
   }
 
+  function jumpHome(){
+    history.push('/')
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.layoutLeft}>
-        <a href="/">
-          <BrandLogo className={styles.brandLogo} />
-        </a>
+        <BrandLogo onClick={jumpHome} className={styles.brandLogo} />
         <ul className={styles.navList}>
           {LNKConfig.map((item) => {
             return (
