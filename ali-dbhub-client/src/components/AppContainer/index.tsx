@@ -1,9 +1,10 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useLayoutEffect, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { ConfigProvider } from 'antd';
 import { history } from 'umi';
 import { useLogin } from '@/utils/hooks';
+import { getLastPosition,setCurrentPosition } from '@/utils';
 import miscService from '@/service/misc'
 import i18n from '@/i18n';
 
@@ -15,6 +16,21 @@ interface IProps {
 export default memo<IProps>(function AppContainer({ className, children }) {
   const [serviceStart, setServiceStart] = useState(false);
   const [serviceFail, setServiceFail] = useState(false);
+
+  function hashchange(){
+    setCurrentPosition()
+  }
+
+  useLayoutEffect(()=>{
+    window.addEventListener('hashchange',hashchange)
+    const hash = getLastPosition()
+    if(hash){
+      location.hash = hash
+    }
+    return ()=>{
+      window.removeEventListener('hashchange',hashchange)
+    }
+  },[])
 
   useEffect(() => {
     settings();
