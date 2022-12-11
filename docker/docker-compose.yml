@@ -6,11 +6,12 @@ services:
     restart: always
     container_name: mysql-latest
     environment:
+      - "MYSQL_ROOT_PASSWORD=root"
       - "MYSQL_ROOT_PASSWORD=ali_dbhub"
       - "MYSQL_DATABASE=ali_dbhub_test"
       - "TZ=Asia/Shanghai"
     ports:
-      - 3305:3305
+      - 3306:3306
   postgres:
     image: postgres:12-alpine
     container_name: demo_postgres
@@ -19,7 +20,7 @@ services:
       POSTGRES_USER: ali_dbhub_test
       POSTGRES_PASSWORD: ali_dbhub
     ports:
-      - 5432:5432
+      - "5432:5432"
   #连接地址：ip:1521, SID:XE, username:system, password:oracle
   oracle11:
     image: oracleinanutshell/oracle-xe-11g
