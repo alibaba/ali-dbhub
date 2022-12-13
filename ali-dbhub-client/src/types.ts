@@ -29,9 +29,9 @@ export interface IConnectionBase{
   envType: string;
 }
 export interface IHistoryRecord{
-  id?: string;
+  id?: string | number;
   name: string;
-  dataSourceId: string;
+  dataSourceId: string | number;
   databaseName: string;
   type: DatabaseTypeCode;
 }

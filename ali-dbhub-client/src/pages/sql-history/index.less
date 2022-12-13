@@ -44,11 +44,33 @@
   overflow: hidden;
 }
 
+.sqlList .cardItem:nth-last-child(1){
+  border: 0;
+}
+
 .tips{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-75);
+    font-size: 16px;
+    height: 24px;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+    margin-bottom: 36px;
+    &::before, &::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 1px;
+      flex: 0 1 100px;
+      margin: 0 8px;
+      background: linear-gradient(to left, var(--color-border) 50%, transparent);
+    }
+    &::after {
+      background: linear-gradient(to right, var(--color-border) 50%, transparent);
+    }
 }
 
 .cardItem {

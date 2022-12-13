@@ -39,7 +39,7 @@ const tabs: ITab[] = [
 export default memo<IProps>(function SQLHistoryPage({ className }) {
 
   const [currentTab, setCurrentTab] = useState(tabs[0].key);
-  const [dataList, setDataList] = useState<IHistoryRecord[] | null>();
+  const [dataList, setDataList] = useState<IHistoryRecord[] | null>(null);
   // const [finished, setFinished] = useState(false);
   const finished = useRef(false)
   const [connectionOptions, setConnectionOptions] = useState<SelectProps['options']>();
@@ -129,13 +129,13 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
       setDatabaseOptions(list)
     })
   };
+
   const handleChangeDatabase = (value: string) => {
     console.log(value)
     listParams.current.databaseName = value;
     listParams.current.pageNo = 1;
     getList();
   };
-
 
   return <div className={classnames(className, styles.box)}>
     <div className={styles.header}>
@@ -197,8 +197,10 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
         </div>
       </ScrollLoading>
 
-      {!dataList?.length && <StateIndicator state='empty'></StateIndicator>}
-      {finished.current && !!dataList?.length && <div className={styles.tips}>----列表是有底线的----</div>}
+      {!dataList?.length && dataList !== null && <StateIndicator state='empty'></StateIndicator>}
+      {finished.current && !!dataList?.length && <div className={styles.tips}>
+        END
+      </div>}
     </div >
   </div >
 })
