@@ -1,7 +1,6 @@
 import i18n, { isEN } from "@/i18n";
 import { TreeNodeType } from '@/utils/constants'
 import { ITreeNode } from '@/types'
-const { exec } = require('child_process')
 
 export function formatDate(date:any, fmt = 'yyyy-MM-dd') {
   if (!date) {
@@ -138,10 +137,6 @@ export function getLocationHash(){
     return params
 }
 
-export function openExternal(href:string){
-  exec(href)
-}
-
 // 储存当前页面的hash
 export function setCurrentPosition(){
   const hash = location.hash
@@ -151,5 +146,4 @@ export function setCurrentPosition(){
 // 获取上一次页面的hash
 export function getLastPosition(){
   return localStorage.getItem('lastPosition')
-  
 }

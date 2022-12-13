@@ -7,14 +7,14 @@ import i18n from '@/i18n';
 import classnames from 'classnames';
 import { history, useLocation } from 'umi';
 import styles from './index.less';
-import { openExternal } from '@/utils/index'
 interface Iprops {
 
 }
 interface INavItem {
   title: string;
-  icon: string,
-  path: string,
+  icon: string;
+  path: string;
+  openBrowser?: boolean;
 }
 
 const navConfig: INavItem[] = [
@@ -31,7 +31,8 @@ const navConfig: INavItem[] = [
   {
     title: i18n('home.nav.github'),
     icon: '\ue885',
-    path: 'https://github.com/alibaba/ali-dbhub'
+    path: 'https://github.com/alibaba/ali-dbhub',
+    openBrowser: true
   },
 ];
 
@@ -41,8 +42,9 @@ export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
   const [currentNav, setCurrentNav] = useState<string>(defaultNav);
 
   function switchingNav(item: INavItem) {
-    if (item.path === 'https://github.com/alibaba/ali-dbhub') {
-      openExternal(item.path)
+    //TODO:
+    if (item.openBrowser) {
+      window.open(item.path)
     } else {
       history.push(item.path);
       setCurrentNav(item.path);
