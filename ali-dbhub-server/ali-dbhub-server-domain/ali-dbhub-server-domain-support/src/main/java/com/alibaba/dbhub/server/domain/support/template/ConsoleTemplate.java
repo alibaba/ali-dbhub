@@ -28,7 +28,7 @@ public class ConsoleTemplate implements ConsoleOperations {
 
     @Override
     public void create(ConsoleCreateParam param) {
-        DataDataSource dataDataSource = DataCenterUtils.DATA_SOURCE_CACHE.get(param.getDataSourceId());
+        DataDataSource dataDataSource = DataCenterUtils.JDBC_ACCESSOR_MAP.get(param.getDataSourceId()).getDataDataSource();
         if (dataDataSource == null) {
             throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
         }
@@ -52,7 +52,7 @@ public class ConsoleTemplate implements ConsoleOperations {
         try {
             jdbcDataTemplate.execute("use " + param.getDatabaseName() + ";", null);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
 

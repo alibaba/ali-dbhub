@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.alibaba.dbhub.server.domain.support.dialect.postgresql.mapper.PostgresqlMetaSchemaMapper;
+import com.alibaba.dbhub.server.domain.support.dialect.postgresql.model.PostgresqlColumn;
 import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
@@ -22,6 +24,8 @@ import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
 import com.alibaba.dbhub.server.domain.support.param.template.TemplateExecuteParam;
+import com.alibaba.dbhub.server.domain.support.util.DataCenterUtils;
+import com.alibaba.dbhub.server.domain.support.util.SqlSessionFactoryUtils;
 import com.alibaba.dbhub.server.test.common.BaseTest;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dbhub.server.test.domain.data.utils.TestUtils;
@@ -170,6 +174,9 @@ public class TableOperationsTest extends BaseTest {
         }
 
     }
+
+
+
 
     @Test
     @Order(Integer.MAX_VALUE)

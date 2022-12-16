@@ -1,6 +1,7 @@
-package com.alibaba.dbhub.server.domain.support.dialect.common.model;
+package com.alibaba.dbhub.server.domain.support.model;
 
 import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
+import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 列信息
+ * 索引+列
  *
  * @author Jiaju Zhuang
  */
@@ -16,14 +17,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SpiTableIndexColumn {
-    /**
-     * 列名
-     */
-    private String name;
+public class TableIndexColumnUnion {
 
     /**
-     * 索引名字
+     * 索引名称
      */
     private String indexName;
 
@@ -31,6 +28,28 @@ public class SpiTableIndexColumn {
      * 表名
      */
     private String tableName;
+
+    /**
+     * 索引类型
+     *
+     * @see IndexTypeEnum
+     */
+    private String type;
+
+    /**
+     * 注释
+     */
+    private String comment;
+
+    /**
+     * 列名
+     */
+    private String columnName;
+
+    /**
+     * 顺序
+     */
+    private Long ordinalPosition;
 
     /**
      * 排序
