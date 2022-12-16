@@ -44,7 +44,7 @@ public class TableColumn {
      *
      * @see YesOrNoEnum
      */
-    private String nullable;
+    private Boolean nullable;
 
     /**
      * 默认值
@@ -56,10 +56,15 @@ public class TableColumn {
      *
      * @see YesOrNoEnum
      */
-    private String autoIncrement;
+    private Boolean autoIncrement;
 
     /**
      * 注释
      */
     private String comment;
+
+    /**
+     * 是否主键
+     */
+    private boolean primaryKey;
 }

@@ -7,19 +7,17 @@ export interface IGetHistoryListParams extends IPageParams  {
   databaseName?: string;
 }
 
+const saveWindowTab = createRequest<IWindowTab, string>('/api/operation/saved/create',{method: 'post'});
 
+const updateWindowTab = createRequest<IWindowTab, string>('/api/operation/saved/update',{method: 'put'});
 
-const saveWindowTab = createRequest<IWindowTab, string>('/api/ddl/create',{method: 'post'});
+const getSaveList = createRequest<IGetHistoryListParams, IPageResponse<IWindowTab>>('/api/operation/saved/list',{});
 
-const updateWindowTab = createRequest<IWindowTab, string>('/api/ddl/update',{method: 'put'});
+const deleteWindowTab = createRequest<{id:string}, string>('/api/operation/saved/:id',{method: 'delete'});
 
-const getSaveList = createRequest<IGetHistoryListParams, IPageResponse<IWindowTab>>('/api/ddl/list',{});
+const createHistory = createRequest<IWindowTab, void>('/api/operation/log/create',{method: 'post'});
 
-const deleteWindowTab = createRequest<{id:string}, string>('/api/ddl/:id',{method: 'delete'});
-
-const createHistory = createRequest<IWindowTab, void>('/api/history/create',{method: 'post'});
-
-const getHistoryList = createRequest<IGetHistoryListParams, IPageResponse<IHistoryRecord>>('/api/history/list',{});
+const getHistoryList = createRequest<IGetHistoryListParams, IPageResponse<IHistoryRecord>>('/api/operation/log/list',{});
 
 export default {
   getSaveList,

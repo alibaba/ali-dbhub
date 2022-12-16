@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.alibaba.dbhub.server.domain.support.dialect.postgresql.mapper.PostgresqlMetaSchemaMapper;
+import com.alibaba.dbhub.server.domain.support.dialect.postgresql.model.PostgresqlColumn;
 import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
@@ -17,9 +19,13 @@ import com.alibaba.dbhub.server.domain.support.operations.JdbcOperations;
 import com.alibaba.dbhub.server.domain.support.operations.TableOperations;
 import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCreateParam;
 import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam;
+import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
+import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
 import com.alibaba.dbhub.server.domain.support.param.template.TemplateExecuteParam;
+import com.alibaba.dbhub.server.domain.support.util.DataCenterUtils;
+import com.alibaba.dbhub.server.domain.support.util.SqlSessionFactoryUtils;
 import com.alibaba.dbhub.server.test.common.BaseTest;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dbhub.server.test.domain.data.utils.TestUtils;
@@ -86,6 +92,18 @@ public class TableOperationsTest extends BaseTest {
             templateQueryParam.setSql(dialectProperties.getCrateTableSql(TABLE_NAME));
             jdbcOperations.execute(templateQueryParam);
 
+            // 查询建表语句
+            ShowCreateTableParam showCreateTableParam = ShowCreateTableParam.builder()
+                .dataSourceId(dataSourceId)
+                .databaseName(dialectProperties.getDatabaseName())
+                .tableName(dialectProperties.toCase(TABLE_NAME))
+                .build();
+            String createTable = tableOperations.showCreateTable(showCreateTableParam);
+            log.info("建表语句:{}", createTable);
+            if (dialectProperties.getDbType() != DbTypeEnum.H2) {
+                Assertions.assertTrue(createTable.contains(dialectProperties.toCase(TABLE_NAME)), "查询表结构失败");
+            }
+
             //  查询表结构
             TablePageQueryParam tablePageQueryParam = new TablePageQueryParam();
             tablePageQueryParam.setDataSourceId(dataSourceId);
@@ -112,7 +130,8 @@ public class TableOperationsTest extends BaseTest {
             TableColumn string = columnList.get(3);
             Assertions.assertEquals(dialectProperties.toCase("string"), string.getName(), "查询表结构失败");
             Assertions.assertEquals(YesOrNoEnum.YES.getCode(), string.getNullable(), "查询表结构失败");
-            Assertions.assertEquals("DATA", TestUtils.unWrapperDefaultValue(string.getDefaultValue()), "查询表结构失败");
+            Assertions.assertEquals("DATA", TestUtils.unWrapperDefaultValue(string.getDefaultValue()),
+                "查询表结构失败");
 
             List<TableIndex> tableIndexList = table.getIndexList();
             Assertions.assertEquals(4L, tableIndexList.size(), "查询表结构失败");
@@ -122,7 +141,8 @@ public class TableOperationsTest extends BaseTest {
             Assertions.assertEquals("日期索引", idxDate.getComment(), "查询表结构失败");
             Assertions.assertEquals(IndexTypeEnum.NORMAL.getCode(), idxDate.getType(), "查询表结构失败");
             Assertions.assertEquals(1L, idxDate.getColumnList().size(), "查询表结构失败");
-            Assertions.assertEquals(dialectProperties.toCase("date"), idxDate.getColumnList().get(0).getName(), "查询表结构失败");
+            Assertions.assertEquals(dialectProperties.toCase("date"), idxDate.getColumnList().get(0).getName(),
+                "查询表结构失败");
             Assertions.assertEquals(CollationEnum.DESC.getCode(), idxDate.getColumnList().get(0).getCollation(),
                 "查询表结构失败");
 
@@ -132,9 +152,31 @@ public class TableOperationsTest extends BaseTest {
 
             TableIndex idxNumberString = tableIndexMap.get(dialectProperties.toCase(TABLE_NAME + "_idx_number_string"));
             Assertions.assertEquals(2, idxNumberString.getColumnList().size(), "查询表结构失败");
+
+            // 删除表结构
+            DropParam dropParam = DropParam.builder()
+                .dataSourceId(dataSourceId)
+                .databaseName(dialectProperties.getDatabaseName())
+                .tableName(dialectProperties.toCase(TABLE_NAME))
+                .build();
+            tableOperations.drop(dropParam);
+            //  查询表结构
+            tablePageQueryParam = new TablePageQueryParam();
+            tablePageQueryParam.setDataSourceId(dataSourceId);
+            tablePageQueryParam.setDatabaseName(dialectProperties.getDatabaseName());
+            tablePageQueryParam.setTableName(dialectProperties.toCase(TABLE_NAME));
+            tableList = tableOperations.pageQuery(tablePageQueryParam, TableSelector.builder()
+                .columnList(Boolean.TRUE)
+                .indexList(Boolean.TRUE)
+                .build()).getData();
+            log.info("删除表后数据返回{}", JSON.toJSONString(tableList));
+            Assertions.assertEquals(0L, tableList.size(), "查询表结构失败");
         }
 
     }
+
+
+
 
     @Test
     @Order(Integer.MAX_VALUE)

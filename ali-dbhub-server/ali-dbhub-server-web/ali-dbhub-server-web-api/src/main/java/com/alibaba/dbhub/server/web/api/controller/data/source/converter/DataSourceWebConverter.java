@@ -2,13 +2,13 @@ package com.alibaba.dbhub.server.web.api.controller.data.source.converter;
 
 import java.util.List;
 
+import com.alibaba.dbhub.server.domain.api.model.DataSource;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
 import com.alibaba.dbhub.server.domain.support.model.Database;
 import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCloseParam;
-import com.alibaba.dbhub.server.domain.api.model.DataSourceDTO;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
-import com.alibaba.dbhub.server.domain.api.param.DataSourceManageCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
-import com.alibaba.dbhub.server.domain.api.param.DataSourceTestParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleCloseRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleConnectRequest;
@@ -40,7 +40,7 @@ public abstract class DataSourceWebConverter {
     @Mappings({
         @Mapping(source = "user", target = "userName")
     })
-    public abstract DataSourceManageCreateParam createReq2param(DataSourceCreateRequest request);
+    public abstract DataSourceCreateParam createReq2param(DataSourceCreateRequest request);
 
     /**
      * 参数转换
@@ -64,21 +64,21 @@ public abstract class DataSourceWebConverter {
     /**
      * 模型转换
      *
-     * @param dataSourceDTO
+     * @param dataSource
      * @return
      */
     @Mappings({
         @Mapping(target = "user", source = "userName")
     })
-    public abstract DataSourceVO dto2vo(DataSourceDTO dataSourceDTO);
+    public abstract DataSourceVO dto2vo(DataSource dataSource);
 
     /**
      * 模型转换
      *
-     * @param dataSourceDTOS
+     * @param dataSources
      * @return
      */
-    public abstract List<DataSourceVO> dto2vo(List<DataSourceDTO> dataSourceDTOS);
+    public abstract List<DataSourceVO> dto2vo(List<DataSource> dataSources);
 
     /**
      * 模型转换
@@ -102,7 +102,7 @@ public abstract class DataSourceWebConverter {
      * @param request
      * @return
      */
-    public abstract DataSourceTestParam testRequest2param(DataSourceTestRequest request);
+    public abstract DataSourcePreConnectParam testRequest2param(DataSourceTestRequest request);
 
     /**
      * 参数转换

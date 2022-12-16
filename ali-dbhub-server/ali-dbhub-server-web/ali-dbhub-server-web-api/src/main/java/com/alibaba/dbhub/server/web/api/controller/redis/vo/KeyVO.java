@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @author moji
- * @version TableVO.java, v 0.1 2022年09月16日 17:16 moji Exp $
+ * @version Table.java, v 0.1 2022年09月16日 17:16 moji Exp $
  * @date 2022/09/16
  */
 @Data

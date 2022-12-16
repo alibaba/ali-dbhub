@@ -24,6 +24,7 @@ export default {
 
   'home.nav.database': 'Database',
   'home.nav.myHistory': 'My History',
+  'home.nav.github': 'GitHub',
   'home.text.visitedTime': 'Last visited:',
 
   'history.title.myHistory': 'My History',

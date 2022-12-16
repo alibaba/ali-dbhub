@@ -8,21 +8,23 @@ export interface IGetConnectionParams {
 }
 
 
-const getList = createRequest<IGetConnectionParams, IPageResponse<IConnectionBase>>('/api/connection/manage/list',{});
+const getList = createRequest<IGetConnectionParams, IPageResponse<IConnectionBase>>('/api/connection/datasource/list',{});
 
-const getDetaile = createRequest<{id:string}, IConnectionBase>('/api/connection/manage/:id',{});
+const getDetaile = createRequest<{id:string}, IConnectionBase>('/api/connection/datasource/:id',{});
 
-const save = createRequest<IConnectionBase, void>('/api/connection/manage/create',{method:'post'});
+const save = createRequest<IConnectionBase, void>('/api/connection/datasource/create',{method:'post'});
 
-const test = createRequest<IConnectionBase, boolean>('/api/connection/test',{});
+const close = createRequest<IConnectionBase, void>('/api/connection/datasource/close',{method:'post'});
 
-const update = createRequest<IConnectionBase, void>('/api/connection/manage/update',{method:'put'});
+const test = createRequest<IConnectionBase, boolean>('/api/connection/datasource/pre_connect',{});
 
-const remove = createRequest<{id:number},void>('/api/connection/manage/:id',{method:'delete'});
+const update = createRequest<IConnectionBase, void>('/api/connection/datasource/update',{method:'put'});
 
-const clone = createRequest<{id:number},void>('/api/connection/manage/clone',{method:'post'});
+const remove = createRequest<{id:number},void>('/api/connection/datasource/:id',{method:'delete'});
 
-const getDBList = createRequest<{id:string}, IDB[]>('/api/connection/attach',{method:'get'});
+const clone = createRequest<{id:number},void>('/api/connection/datasource/clone',{method:'post'});
+
+const getDBList = createRequest<{id:string}, IDB[]>('/api/connection/datasource/connect',{method:'get'});
 
 export default {
   getList,
@@ -32,5 +34,6 @@ export default {
   update,
   remove,
   clone,
-  getDBList
+  getDBList,
+  close
 }

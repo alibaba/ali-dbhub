@@ -40,17 +40,7 @@
   padding: 10px 15px;
   cursor: pointer;
   border-bottom: 1px solid var(--color-border);
-
-  &:hover {
-    background-color: var(--color-bg-hover);
-    .name {
-      color: var(--custom-primary-color);
-    }
-    .logo {
-      filter: brightness(1.1);
-    }
-  }
-
+  
   .left {
     flex: 1;
     display: flex;
@@ -60,6 +50,7 @@
     color: var(--color-text-75);
 
     .logo {
+      flex-shrink: 0;
       width: 34px;
       height: 34px;
       border-radius: 4px;
@@ -72,6 +63,7 @@
       color: var(--color-text-45);
     }
     .name{
+      .f-lines(1);
       line-height: 100%;
     }
   }
@@ -92,6 +84,16 @@
         background-color: var(--color-bg-hover);
         filter: brightness(1.1);
       }
+    }
+  }
+
+  &:hover {
+    background-color: var(--color-bg-hover);
+    .name {
+      color: var(--custom-primary-color);
+    }
+    .logo {
+      filter: brightness(1.1);
     }
   }
 }

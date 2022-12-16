@@ -1,12 +1,34 @@
 version: '3'
 services:
+  # 连接地址：jdbc:mysql://localhost:3306 用户名：root  密码：ali_dbhub 端口：3306
   mysql:
     image: mysql:latest
     restart: always
     container_name: mysql-latest
     environment:
+      - "MYSQL_ROOT_PASSWORD=root"
       - "MYSQL_ROOT_PASSWORD=ali_dbhub"
       - "MYSQL_DATABASE=ali_dbhub_test"
       - "TZ=Asia/Shanghai"
     ports:
       - 3306:3306
+  # 连接地址：jdbc:postgresql://localhost:5432/postgres, 用户名:ali_dbhub_test, 密码:ali_dbhub
+  postgres:
+    image: postgres:12-alpine
+    container_name: demo_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ali_dbhub_test
+      POSTGRES_PASSWORD: ali_dbhub
+    ports:
+      - "5432:5432"
+  #连接地址：jdbc:oracle:thin:@localhost:1521:XE, SID:XE, username:system, password:oracle
+  oracle11:
+    image: oracleinanutshell/oracle-xe-11g
+    container_name: oracle-11
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai
+    restart: always
+    ports:
+      - "1521:1521"
