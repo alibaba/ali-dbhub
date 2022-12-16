@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
@@ -38,7 +38,7 @@
       "my.bat"
     ],
     "mac": {
-      "icon": "logo/logo.png",
+      "icon": "logo/dbhub.icns",
       "target": [
         {
           "target": "dmg",

@@ -24,4 +24,5 @@ public class TableSelector {
      * 索引列表
      */
     private Boolean indexList;
+
 }

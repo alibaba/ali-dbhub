@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.domain.repository.mapper;
 
 import com.alibaba.dbhub.server.domain.repository.entity.DataSourceDO;
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -10,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author ali-dbhub
- * @since 2022-09-29
+ * @since 2022-12-04
  */
 public interface DataSourceMapper extends BaseMapper<DataSourceDO> {
 

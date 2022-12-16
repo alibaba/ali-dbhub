@@ -29,7 +29,7 @@ function createWindow() {
     title: 'AliDBHub',
     resizable: false,
     frame: false,
-    // titleBarStyle: 'hidden',
+    titleBarStyle: 'hidden', // 删除后mac没有了关闭按钮
     ...options,
     webPreferences: {
       webSercurity:false,
@@ -38,6 +38,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
+
   mainWindow.webContents.openDevTools();
 
   if (process.platform === 'win32') { // 如果平台是win32，也即windows
@@ -46,21 +47,19 @@ function createWindow() {
     mainWindow.backgroundColor = '#3f3c37'
   }
 
-  //  * 加载应用-----  electron-quick-start中默认的加载入口
-  // mainWindow.loadURL('http://localhost:10824');
-  // if (isPro) {
-    mainWindow.loadFile(`${__dirname}/dist/index.html`);
-  // } else {
-
-  // 如果是开发环境下，我们就打开控制台
-  // if (isDev) {
-  //   mainWindow.webContents.openDevTools();
-  // }
+  // 加载应用-----  electron-quick-start中默认的加载入口
+  mainWindow.loadFile(`${__dirname}/dist/index.html`);
 
   // 关闭window时触发下列事件.
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
+
+  // 监听打开新窗口事件 用默认浏览器打开
+  mainWindow.webContents.on('new-window', function(event, url){    
+    event.preventDefault();  
+    shell.openExternal(url);
+  })
 }
 
 // 当 Electron 完成初始化并准备创建浏览器窗口时调用此方法

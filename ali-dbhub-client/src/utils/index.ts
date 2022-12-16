@@ -71,6 +71,7 @@ export function formatNaturalDate(date: any) {
   }
   return formatDate(d);
 }
+
 export interface IToTreeProps{
   parent?: any;
   data: any[];
@@ -134,4 +135,15 @@ export function getLocationHash(){
       })
     }
     return params
+}
+
+// 储存当前页面的hash
+export function setCurrentPosition(){
+  const hash = location.hash
+  localStorage.setItem('lastPosition',hash)
+}
+
+// 获取上一次页面的hash
+export function getLastPosition(){
+  return localStorage.getItem('lastPosition')
 }

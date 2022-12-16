@@ -1,5 +1,5 @@
 // 引入electron并创建一个Browserwindow
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow,shell } = require('electron');
 const path = require('path');
 const url = require('url');
 const isPro = process.env.NODE_ENV !== 'development';
@@ -17,8 +17,9 @@ function createWindow() {
     height: 800,
     title: 'dataOps',
     frame: false,
-    titleBarStyle: 'hidden',
+    titleBarStyle: 'hidden', // window 可以自定义样式
     webPreferences: {
+      webSercurity:false,
       nodeIntegration: true,
       contextIsolation: true,
     },
@@ -28,7 +29,6 @@ function createWindow() {
   // if (isPro) {
     // mainWindow.loadFile(`${__dirname}/dist/index.html`);
   // } else {
-  
   //   // 打开开发者工具，默认不打开
   //   mainWindow.webContents.openDevTools();
   // }
@@ -37,7 +37,15 @@ function createWindow() {
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
+
+  // 监听打开新窗口事件 用默认浏览器打开
+  mainWindow.webContents.on('new-window', function(event, url){    
+    event.preventDefault();  
+    shell.openExternal(url);
+  })
 }
+
+
 
 // 当 Electron 完成初始化并准备创建浏览器窗口时调用此方法
 app.on('ready', createWindow);

@@ -30,6 +30,19 @@ public class EasyCollectionUtils {
     }
 
     /**
+     * 将第一个元素返回 如果没有 则返回空
+     *
+     * @param collection 集合
+     * @param <T>        数据类型
+     * @return 返回第一个元素 可能为空
+     */
+    public static <T> T findFirst(Collection<T> collection) {
+        return stream(collection)
+            .findFirst()
+            .orElse(null);
+    }
+
+    /**
      * 将一个集合 转换成一个list
      * <p>
      * 会过滤集合中转换前后的空数据，所以会入参出参数量不一致

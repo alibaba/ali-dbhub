@@ -10,11 +10,11 @@ import styles from './index.less';
 interface Iprops {
 
 }
-
 interface INavItem {
   title: string;
-  icon: string,
-  path: string,
+  icon: string;
+  path: string;
+  openBrowser?: boolean;
 }
 
 const navConfig: INavItem[] = [
@@ -23,12 +23,17 @@ const navConfig: INavItem[] = [
     icon: '\uec57',
     path: '/connection'
   },
-
   {
     title: i18n('home.nav.myHistory'),
     icon: '\ue610',
     path: '/sql-history'
-  }
+  },
+  {
+    title: i18n('home.nav.github'),
+    icon: '\ue885',
+    path: 'https://github.com/alibaba/ali-dbhub',
+    openBrowser: true
+  },
 ];
 
 export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
@@ -37,8 +42,13 @@ export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
   const [currentNav, setCurrentNav] = useState<string>(defaultNav);
 
   function switchingNav(item: INavItem) {
-    history.push(item.path);
-    setCurrentNav(item.path);
+    //TODO:
+    if (item.openBrowser) {
+      window.open(item.path)
+    } else {
+      history.push(item.path);
+      setCurrentNav(item.path);
+    }
   }
 
   return (

@@ -8,8 +8,6 @@ export interface IOptions{
   errorLevel?: 'toast' | 'prompt' | 'critical' | false;
 }
 
-console.log('location', location)
-
 // TODO:
 const codeMessage:{[errorCode:number]:string} = {
   200: '服务器成功返回请求的数据。',

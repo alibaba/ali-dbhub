@@ -24,6 +24,7 @@ export default {
 
   'home.nav.database': '连接管理',
   'home.nav.myHistory': '历史记录',
+  'home.nav.github': 'GitHub',
   'home.text.visitedTime': '最近访问时间：',
 
   'history.title.myHistory': '我的SQL',

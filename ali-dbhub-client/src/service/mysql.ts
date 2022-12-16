@@ -1,5 +1,6 @@
 import createRequest from "./base";
 import { IPageResponse, ITable,IPageParams } from '@/types';
+import { DatabaseTypeCode } from '@/utils/constants';
 
 export interface IGetListParams extends IPageParams  {
   dataSourceId: string;
@@ -8,7 +9,7 @@ export interface IGetListParams extends IPageParams  {
 
 export interface IExecuteSqlParams {
   sql:string,
-  dataSourceId:string,
+  dataSourceId:number|string,
   databaseName:string,
   consoleId: string,
 }
@@ -22,19 +23,45 @@ export interface IExecuteSqlResponse {
   dataList: any[];
 }
 export interface IConnectConsoleParams {
-  consoleId: string,	
-  dataSourceId: string,
+  consoleId: string | number,	
+  dataSourceId: string | number,
   databaseName: string,
 }
 
-const getList = createRequest<IGetListParams, IPageResponse<ITable>>('/api/rdb/table/list',{});
+const getList = createRequest<IGetListParams, IPageResponse<ITable>>('/api/rdb/ddl/list',{});
 
-const executeSql = createRequest<IExecuteSqlParams, IExecuteSqlResponse>('/api/rdb/data/manage',{method: 'put'});
+const executeSql = createRequest<IExecuteSqlParams, IExecuteSqlResponse>('/api/rdb/dml/execute',{method: 'put'});
 
 const connectConsole = createRequest<IConnectConsoleParams, void>('/api/connection/console/connect',{method: 'get'});
+
+//表操作
+export interface IDeleteTableParams {
+  tableName:string;
+  dataSourceId:number;	
+  databaseName:string;
+}
+
+export interface IExecuteTableParams {
+  sql: string;
+  consoleId?: string| number;	
+  dataSourceId: number;
+  databaseName: string;
+}
+
+const deleteTable = createRequest<IDeleteTableParams, void>('/api/rdb/ddl/delete',{method: 'post'});
+const createTableExample = createRequest<{dbType:DatabaseTypeCode}, string>('/api/rdb/ddl/create/example',{method: 'get'});
+const updateTableExample = createRequest<{dbType:DatabaseTypeCode}, string>('/api/rdb/ddl/update/example',{method: 'get'});
+const exportCreateTableSql = createRequest<IDeleteTableParams, string>('/api/rdb/ddl/export',{method: 'get'});
+const executeTable = createRequest<IExecuteTableParams, string>('/api/rdb/ddl/execute',{method: 'put'});
+
 
 export default {
   getList,
   executeSql,
-  connectConsole
+  connectConsole,
+  deleteTable,
+  createTableExample,
+  updateTableExample,
+  exportCreateTableSql,
+  executeTable
 }

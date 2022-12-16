@@ -4,6 +4,7 @@ import { formatNaturalDate } from '@/utils/index';
 import Iconfont from '@/components/Iconfont';
 import ScrollLoading from '@/components/ScrollLoading';
 import StateIndicator from '@/components/StateIndicator';
+import LoadingContent from '@/components/Loading/LoadingContent';
 import i18n from '@/i18n';
 import { history } from 'umi';
 import connectionServer from '@/service/connection'
@@ -25,7 +26,7 @@ import {
 
 import styles from './index.less';
 import globalStyle from '@/global.less';
-import Menu, { IMenu, MenuItem } from '@/components/Menu';
+import Menu, { MenuItem } from '@/components/Menu';
 
 const { Option } = Select;
 
@@ -68,7 +69,7 @@ export default memo<IProps>(function ConnectionPage(props) {
 
   const { className, onlyList } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [connectionList, setConnectionList] = useState<IConnectionBase[]>();
+  const [connectionList, setConnectionList] = useState<IConnectionBase[] | null>(null);
   const [finished, setFinished] = useState(false);
   const [rowData, setRowData] = useState<IConnectionBase | null>();
   const [form] = Form.useForm();
@@ -130,6 +131,9 @@ export default memo<IProps>(function ConnectionPage(props) {
   // 测试、保存、修改连接
   const saveConnection = (values: IConnectionBase, type: submitType) => {
     let p = values
+    if (type === submitType.UPDATE) {
+      p.id = rowData?.id
+    }
     connectionServer[type](p).then(res => {
       if (type === submitType.TEST) {
         message.success(res === false ? '测试连接失败' : '测试连接成功')
@@ -202,11 +206,12 @@ export default memo<IProps>(function ConnectionPage(props) {
             return cloneConnection();
         }
       }
+
       return <Menu>
         {
           menuList.map((item, index) => {
-            return <MenuItem key={index}>
-              <span onClick={clickMenuList.bind(null, item)}>
+            return <MenuItem key={index} onClick={clickMenuList.bind(null, item)}>
+              <span>
                 <Iconfont code={item.icon!}></Iconfont>
                 {item.title}
               </span>
@@ -229,7 +234,7 @@ export default memo<IProps>(function ConnectionPage(props) {
       {
         !onlyList &&
         <div className={styles.right}>
-          <Dropdown open={openDropdown} overlay={renderMenu(item)} trigger={['hover']}>
+          <Dropdown overlay={renderMenu(item)} trigger={['click']}>
             <a onClick={(event) => { event.stopPropagation(); setOpenDropdown(true) }}>
               <div className={styles.moreActions}>
                 <Iconfont code="&#xe601;" />
@@ -271,7 +276,7 @@ export default memo<IProps>(function ConnectionPage(props) {
             </div>
           }
         </ScrollLoading>
-        {!connectionList?.length && <StateIndicator state='empty'></StateIndicator>}
+        {!connectionList?.length && connectionList !== null && <StateIndicator state='empty'></StateIndicator>}
       </div>
       <Modal
         title="连接数据库"
@@ -314,13 +319,12 @@ export default memo<IProps>(function ConnectionPage(props) {
           >
             <Input />
           </Form.Item>
-          {/* <Form.Item
+          <Form.Item
             label="端口"
             name="linkName"
-          // rules={[{ required: true, message: '端口不可为空！' }]}
           >
             <Input />
-          </Form.Item> */}
+          </Form.Item>
           <Form.Item
             label="用户名"
             name="user"
