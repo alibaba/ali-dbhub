@@ -9,12 +9,14 @@ import javax.sql.DataSource;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
 import com.alibaba.dbhub.server.domain.support.model.support.DataDataSource;
+import com.alibaba.dbhub.server.domain.support.model.support.JdbcAccessor;
 import com.alibaba.dbhub.server.domain.support.model.support.JdbcDataTemplate;
 import com.alibaba.dbhub.server.domain.support.operations.DataSourceOperations;
 import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCloseParam;
 import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceTestParam;
 import com.alibaba.dbhub.server.domain.support.util.DataCenterUtils;
+import com.alibaba.dbhub.server.domain.support.util.SqlSessionFactoryUtils;
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.excption.SystemException;
 import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
@@ -107,20 +109,16 @@ public class DataSourceTemplate implements DataSourceOperations {
             // 参数有一次
             return dataSourceConnect;
         }
+        DataCenterUtils.JDBC_ACCESSOR_MAP.put(dataSourceId,new JdbcAccessor(dataSourceId,dataDataSource));
 
         // 放入缓存
-        DataCenterUtils.DATA_SOURCE_CACHE.put(dataSourceId, dataDataSource);
-
-        // 创建一个默认的模板来执行基础sql
-        DataCenterUtils.DEFAULT_JDBC_TEMPLATE_CACHE.put(dataSourceId, new NamedParameterJdbcTemplate(dataDataSource));
-
         return dataSourceConnect;
     }
 
     @Override
     public void close(DataSourceCloseParam param) {
-        DataDataSource dataDataSource = DataCenterUtils.DATA_SOURCE_CACHE.remove(param.getDataSourceId());
-        if (dataDataSource == null) {
+        JdbcAccessor jdbcAccessor = DataCenterUtils.JDBC_ACCESSOR_MAP.remove(param.getDataSourceId());
+        if (jdbcAccessor == null) {
             log.info("数据库连接源:{}不需要关闭", param.getDataSourceId());
             return;
         }
@@ -138,8 +136,6 @@ public class DataSourceTemplate implements DataSourceOperations {
             }
         }
 
-        // 关闭连接
-        DataCenterUtils.DEFAULT_JDBC_TEMPLATE_CACHE.remove(param.getDataSourceId());
     }
 
 }

@@ -23,6 +23,16 @@ public class TableIndexColumn {
     private String name;
 
     /**
+     * 索引名字
+     */
+    private String indexName;
+
+    /**
+     * 表名
+     */
+    private String tableName;
+
+    /**
      * 排序
      *
      * @see CollationEnum

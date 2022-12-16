@@ -6,9 +6,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.alibaba.dbhub.server.domain.support.dialect.DatabaseSpi;
+import com.alibaba.dbhub.server.domain.support.dialect.DatabaseMetaSchema;
+import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.support.DataDataSource;
+import com.alibaba.dbhub.server.domain.support.model.support.JdbcAccessor;
 import com.alibaba.dbhub.server.domain.support.model.support.JdbcDataTemplate;
 import com.alibaba.dbhub.server.domain.support.operations.ConsoleOperations;
 import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCreateParam;
@@ -20,6 +22,7 @@ import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.druid.DbType;
 
 import com.google.common.collect.Maps;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -32,21 +35,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DataCenterUtils implements InitializingBean {
-    @Autowired
-    private List<DatabaseSpi> databaseSpiList;
+
     @Resource
     private ConsoleOperations consoleOperations;
-    private static ConsoleOperations consoleOperationsStatic;
 
-    /**
-     * sql执行器的列表
-     */
-    private static final Map<DbTypeEnum, DatabaseSpi> SQL_EXECUTOR_MAP = new HashMap<>();
-    /**
-     * 数据源
-     * key: dataSourceId
-     */
-    public static final Map<Long, DataDataSource> DATA_SOURCE_CACHE = Maps.newConcurrentMap();
+    private static ConsoleOperations consoleOperationsStatic;
 
     /**
      * 数据执行模板列表
@@ -54,11 +47,11 @@ public class DataCenterUtils implements InitializingBean {
      */
     public static final Map<Long, Map<Long, JdbcDataTemplate>> JDBC_TEMPLATE_CACHE = Maps.newConcurrentMap();
 
+
     /**
-     * 默认的的数据执行模板列表
-     * key: dataSourceId
+     * mybatis模板
      */
-    public static final Map<Long, NamedParameterJdbcTemplate> DEFAULT_JDBC_TEMPLATE_CACHE = Maps.newConcurrentMap();
+    public static final Map<Long, JdbcAccessor> JDBC_ACCESSOR_MAP = Maps.newConcurrentMap();
 
     /**
      * 获取默认的JdbcDataTemplate
@@ -67,11 +60,19 @@ public class DataCenterUtils implements InitializingBean {
      * @return
      */
     public static NamedParameterJdbcTemplate getDefaultJdbcTemplate(Long dataSourceId) {
-        NamedParameterJdbcTemplate namedParameterJdbcTemplate = DEFAULT_JDBC_TEMPLATE_CACHE.get(dataSourceId);
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = JDBC_ACCESSOR_MAP.get(dataSourceId).getJdbcTemplate();
         if (namedParameterJdbcTemplate == null) {
             throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
         }
         return namedParameterJdbcTemplate;
+    }
+
+    public static JdbcAccessor getJdbcAccessor(Long dataSourceId) {
+        JdbcAccessor jdbcAccessor = JDBC_ACCESSOR_MAP.get(dataSourceId);
+        if (jdbcAccessor == null) {
+            throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
+        }
+        return jdbcAccessor;
     }
 
     /**
@@ -108,7 +109,7 @@ public class DataCenterUtils implements InitializingBean {
      * @return
      */
     public static DbTypeEnum getDbTypeByDataSourceId(Long dataSourceId) {
-        DataDataSource dataDataSource = DATA_SOURCE_CACHE.get(dataSourceId);
+        DataDataSource dataDataSource = JDBC_ACCESSOR_MAP.get(dataSourceId).getDataDataSource();
         if (dataDataSource == null) {
             throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
         }
@@ -131,27 +132,16 @@ public class DataCenterUtils implements InitializingBean {
      * @param dataSourceId
      * @return
      */
-    public static DatabaseSpi getDatabaseSpiByDataSourceId(Long dataSourceId) {
-        return getDatabaseSpi(getDbTypeByDataSourceId(dataSourceId));
+
+    public static MetaSchema getMetaSchema(Long dataSourceId) {
+        return JDBC_ACCESSOR_MAP.get(dataSourceId).getService();
     }
 
-    /**
-     * 根据dataSourceId 获取Dialect方言类型
-     *
-     * @param dbType
-     * @return
-     */
-    public static DatabaseSpi getDatabaseSpi(DbTypeEnum dbType) {
-        DatabaseSpi databaseSpi = SQL_EXECUTOR_MAP.get(dbType);
-        if (databaseSpi == null) {
-            throw new SystemException(CommonErrorEnum.PARAM_ERROR);
-        }
-        return databaseSpi;
-    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        SQL_EXECUTOR_MAP.putAll(EasyCollectionUtils.toIdentityMap(databaseSpiList, DatabaseSpi::supportDbType));
+        //SQL_EXECUTOR_MAP.putAll(EasyCollectionUtils.toIdentityMap(databaseMetaSchemaList, DatabaseMetaSchema::supportDbType));
+        //META_SCHEMA_SERVICE_MAP.putAll(EasyCollectionUtils.toIdentityMap(metaSchemaServiceList, MetaSchema::supportDbType));
         consoleOperationsStatic = consoleOperations;
     }
 }
