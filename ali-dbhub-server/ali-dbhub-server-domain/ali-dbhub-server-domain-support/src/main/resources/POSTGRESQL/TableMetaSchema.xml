@@ -50,21 +50,24 @@
     <update id="dropTable">
         drop table ${tableName};
     </update>
-    <select id="selectTables">
+    <select id="showDatabases" resultType="java.lang.String">
+        select datname from pg_database;
+    </select>
+    <select id="selectTables" resultType="java.lang.String">
         SELECT tablename FROM pg_tables WHERE tablename NOT LIKE 'pg%' AND tablename NOT LIKE 'sql_%'
-        <if test="schemaname != null">
-            AND schemaname=#{schemaName,jdbcType=VARCHAR}
+        <if test="tableSchema != null">
+            AND schemaname=#{tableSchema,jdbcType=VARCHAR}
         </if>
         ORDER  BY  tablename
-        limit #{pageSize,jdbcType=bigint}
-        offset #{offset,jdbcType=bigint}
+        limit #{pageSize}
+        offset #{offset}
         ;
     </select>
 
     <select id="selectTableCount">
         SELECT count(*) FROM pg_tables WHERE tablename NOT LIKE 'pg%' AND tablename NOT LIKE 'sql_%'
-        <if test="schemaname != null">
-            AND schemaname=#{schemaName,jdbcType=VARCHAR}
+        <if test="tableSchema != null">
+            AND schemaname=#{tableSchema,jdbcType=VARCHAR}
         </if>
         ;
     </select>

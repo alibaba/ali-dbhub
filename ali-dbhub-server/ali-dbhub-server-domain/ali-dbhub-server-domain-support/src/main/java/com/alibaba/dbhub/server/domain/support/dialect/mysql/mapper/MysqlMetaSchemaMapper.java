@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.dbhub.server.domain.support.model.CreateTableSql;
+import com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion;
@@ -19,6 +20,12 @@ import org.apache.ibatis.annotations.Param;
  * @version : MysqlMetaSchemaMapper.java, v 0.1 2022年12月14日 22:27 jipengfei Exp $
  */
 public interface MysqlMetaSchemaMapper {
+
+    /**
+     * 查询Database
+     * @return
+     */
+    List<ShowDatabaseResult> showDatabases();
     /**
      * 查询所有表中所有列信息
      *

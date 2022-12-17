@@ -32,6 +32,11 @@ import org.apache.ibatis.session.SqlSession;
 public class MysqlMetaSchemaSupport implements MetaSchema<Table> {
     private SqlSession sqlSession;
 
+    @Override
+    public List<String> showDatabases() {
+        return getMapper().showDatabases().stream().map(r->r.getDatabase()).collect(Collectors.toList());
+    }
+
     public MysqlMetaSchemaSupport(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
     }

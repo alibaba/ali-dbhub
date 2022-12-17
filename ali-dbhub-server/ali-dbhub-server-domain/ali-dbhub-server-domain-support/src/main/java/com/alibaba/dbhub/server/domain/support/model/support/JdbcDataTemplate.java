@@ -52,19 +52,19 @@ public class JdbcDataTemplate {
     /**
      * 数据库连接源
      */
-    private DataDataSource dataDataSource;
+    private DbhubDataSource dbhubDataSource;
 
     /**
      * 执行错误异常转换器
      */
     private SQLExceptionTranslator sqlExceptionTranslator;
 
-    public JdbcDataTemplate(Long dataSourceId, Long consoleId, Connection connection, DataDataSource dataDataSource) {
+    public JdbcDataTemplate(Long dataSourceId, Long consoleId, Connection connection, DbhubDataSource dbhubDataSource) {
         this.dataSourceId = dataSourceId;
         this.consoleId = consoleId;
         this.connection = connection;
-        this.dataDataSource = dataDataSource;
-        this.sqlExceptionTranslator = new SQLErrorCodeSQLExceptionTranslator(dataDataSource);
+        this.dbhubDataSource = dbhubDataSource;
+        this.sqlExceptionTranslator = new SQLErrorCodeSQLExceptionTranslator(dbhubDataSource);
     }
 
     /**
