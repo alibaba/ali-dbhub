@@ -21,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_ALTER_TABLE_SIMPLE;
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_CREATE_TABLE_SIMPLE;
@@ -31,7 +33,7 @@ import static com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum.POSTGRESQ
  * @version : PostgresqlDataBase.java, v 0.1 2022年12月08日 14:48 jipengfei Exp $
  */
 @Slf4j
-public class PostgresqlMetaSchemaSupport  implements MetaSchema<PostgresqlTable> {
+public class PostgresqlMetaSchemaSupport implements MetaSchema<PostgresqlTable> {
 
     private SqlSession sqlSession;
 
@@ -45,24 +47,34 @@ public class PostgresqlMetaSchemaSupport  implements MetaSchema<PostgresqlTable>
     }
 
     @Override
-    public String showCreateTable( String databaseName, String schemaName, String tableName) {
-        return  getMapper().showCreateTable(schemaName,tableName);
+    public List<String> showDatabases() {
+        return getMapper().showDatabases();
+    }
+
+    @Override
+    public String showCreateTable(String databaseName, String schemaName, String tableName) {
+        schemaName = ObjectUtils.isEmpty(schemaName) ? "public" : schemaName;
+        return getMapper().showCreateTable(schemaName, tableName);
     }
 
     @Override
     public void dropTable(String databaseName, String schemaName, String tableName) {
+        schemaName = ObjectUtils.isEmpty(schemaName) ? "public" : schemaName;
         getMapper().dropTable(tableName);
     }
 
     @Override
     public int queryTableCount(String databaseName, String schemaName) {
+        schemaName = ObjectUtils.isEmpty(schemaName) ? "public" : schemaName;
         return getMapper().selectTableCount(schemaName).intValue();
     }
 
     @Override
-    public List<PostgresqlTable> queryTableList( String databaseName, String schemaName,
+    public List<PostgresqlTable> queryTableList(String databaseName, String schemaName,
         int pageNo,
         int pageSize) {
+        schemaName = ObjectUtils.isEmpty(schemaName) ? "public" : schemaName;
+
         List<String> names = getMapper().selectTables(schemaName, pageSize,
             pageNo <= 1 ? 0 : (pageNo - 1) * pageSize);
         if (CollectionUtils.isEmpty(names)) {
@@ -74,7 +86,8 @@ public class PostgresqlMetaSchemaSupport  implements MetaSchema<PostgresqlTable>
     }
 
     @Override
-    public PostgresqlTable queryTable( String databaseName, String schemaName, String tableName) {
+    public PostgresqlTable queryTable(String databaseName, String schemaName, String tableName) {
+        schemaName = ObjectUtils.isEmpty(schemaName) ? "public" : schemaName;
         List<PostgresqlColumn> columns = getMapper().selectColumns(schemaName, tableName,
             schemaName + "." + tableName);
         return null;
@@ -83,8 +96,9 @@ public class PostgresqlMetaSchemaSupport  implements MetaSchema<PostgresqlTable>
     @Override
     public List<PostgresqlTableIndex> queryIndexList(String databaseName, String schemaName,
         List<String> tableNames) {
+        schemaName = ObjectUtils.isEmpty(schemaName) ? "public" : schemaName;
         List<PostgresqlTableIndex> tableIndices = new ArrayList<>();
-        for (String tableName:tableNames) {
+        for (String tableName : tableNames) {
             List<PostgresqlTableIndex> indexList = getMapper().selectTableIndexes(schemaName, tableName);
             tableIndices.addAll(indexList);
         }
@@ -92,8 +106,9 @@ public class PostgresqlMetaSchemaSupport  implements MetaSchema<PostgresqlTable>
     }
 
     @Override
-    public List<PostgresqlColumn> queryColumnList( String databaseName, String schemaName,
+    public List<PostgresqlColumn> queryColumnList(String databaseName, String schemaName,
         List<String> tableNames) {
+        schemaName = ObjectUtils.isEmpty(schemaName) ? "public" : schemaName;
         List<PostgresqlColumn> postgresqlColumns = Lists.newArrayList();
         for (String tableName : tableNames) {
             List<PostgresqlColumn> columns = getMapper().selectColumns(schemaName, tableName,

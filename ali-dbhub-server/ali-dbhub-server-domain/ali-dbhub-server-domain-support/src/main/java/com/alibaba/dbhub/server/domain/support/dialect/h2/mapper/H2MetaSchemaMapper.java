@@ -18,6 +18,12 @@ import org.apache.ibatis.annotations.Param;
  * @version : H2MetaSchemaMapper.java, v 0.1 2022年12月14日 22:28 jipengfei Exp $
  */
 public interface H2MetaSchemaMapper {
+
+    /**
+     * 查询Database
+     * @return
+     */
+    List<String> showDatabases();
     /**
      * 查询所有表中所有列信息
      *

@@ -26,14 +26,18 @@ public interface MetaSchema<T> {
     DbTypeEnum supportDbType();
 
     /**
+     * 查询所有的DATABASE
+     * @return
+     */
+    List<String> showDatabases();
+    /**
      * 展示建表语句
      *
      * @param databaseName
      * @param tableName
      * @return
      */
-    String showCreateTable(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName
-       );
+    String showCreateTable(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName);
 
     /**
      * 删除表结构

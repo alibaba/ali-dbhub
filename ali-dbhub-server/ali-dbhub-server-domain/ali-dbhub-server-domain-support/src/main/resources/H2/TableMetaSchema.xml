@@ -29,7 +29,9 @@
         <result property="type" jdbcType="VARCHAR" column="INDEX_TYPE_NAME"/>
     </resultMap>
 
-
+    <select id="showDatabases" resultType="java.lang.String" >
+        SHOW databases ;
+    </select>
 
     <select id="showCreateTable" resultType="java.lang.String">
         SHOW CREATE TABLE ${databaseName}.${tableName} ;

@@ -37,6 +37,10 @@ public class H2MetaSchemaSupport implements MetaSchema<Table> {
 
     private SqlSession sqlSession;
 
+    @Override
+    public List<String> showDatabases() {
+        return getMapper().showDatabases();
+    }
     public H2MetaSchemaSupport(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
     }

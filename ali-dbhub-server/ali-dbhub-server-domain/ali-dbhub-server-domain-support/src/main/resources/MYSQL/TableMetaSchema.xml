@@ -30,7 +30,13 @@
         <result property="tableName" jdbcType="CHAR" column="Table"/>
         <result property="sql" jdbcType="CHAR" column="Create Table"/>
     </resultMap>
+    <resultMap id="ShowDatabasesResultMap" type="com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult">
+        <result property="database" jdbcType="CHAR" column="Database"/>
+    </resultMap>
 
+    <select id="showDatabases" resultMap="ShowDatabasesResultMap">
+        SHOW databases ;
+    </select>
 
     <select id="showCreateTable" resultMap="CreateTableResultMap">
         SHOW CREATE TABLE ${databaseName}.${tableName} ;
