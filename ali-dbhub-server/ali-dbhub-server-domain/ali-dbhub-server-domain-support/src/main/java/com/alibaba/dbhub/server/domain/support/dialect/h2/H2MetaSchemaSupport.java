@@ -73,7 +73,7 @@ public class H2MetaSchemaSupport implements MetaSchema<Table> {
     }
 
     @Override
-    public List<Table> queryTableList(String databaseName, String schemaName, int pageNo,
+    public List<Table> queryTableList(String databaseName, String tableName, int pageNo,
         int pageSize) {
         return getMapper().selectTables(databaseName, pageSize, pageNo <= 1 ? 0 : (pageNo - 1) * pageSize);
     }

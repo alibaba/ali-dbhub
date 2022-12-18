@@ -62,9 +62,9 @@ public class MysqlMetaSchemaSupport implements MetaSchema<Table> {
     }
 
     @Override
-    public List queryTableList(String databaseName, String schemaName, int pageNo,
+    public List queryTableList(String databaseName, String tableName, int pageNo,
         int pageSize) {
-        return getMapper().selectTables(databaseName, pageSize, pageNo <= 1 ? 0 : (pageNo - 1) * pageSize);
+        return getMapper().selectTables(databaseName,tableName, pageSize, pageNo <= 1 ? 0 : (pageNo - 1) * pageSize);
     }
 
     @Override

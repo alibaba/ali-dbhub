@@ -12,17 +12,22 @@
         <result property="columnType" jdbcType="CHAR" column="COLUMN_TYPE"/>
         <result property="dataType" jdbcType="CHAR" column="DATA_TYPE"/>
         <result property="defaultValue" jdbcType="CHAR" column="COLUMN_DEFAULT"/>
-        <result property="nullable" jdbcType="CHAR" column="IS_NULLABLE" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
-        <result property="autoIncrement" jdbcType="CHAR" column="EXTRA" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlExtraTypeHandler"/>
+        <result property="nullable" jdbcType="CHAR" column="IS_NULLABLE"
+                typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
+        <result property="autoIncrement" jdbcType="CHAR" column="EXTRA"
+                typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlExtraTypeHandler"/>
 
     </resultMap>
-    <resultMap id="TableIndexColumnUnionResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">
+    <resultMap id="TableIndexColumnUnionResultMap"
+               type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">
         <result property="indexName" jdbcType="CHAR" column="INDEX_NAME"/>
         <result property="tableName" jdbcType="CHAR" column="TABLE_NAME"/>
         <result property="columnName" jdbcType="CHAR" column="COLUMN_NAME"/>
-        <result property="collation" jdbcType="CHAR" column="COLLATION" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlCollationTypeHandler"/>
+        <result property="collation" jdbcType="CHAR" column="COLLATION"
+                typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlCollationTypeHandler"/>
         <result property="ordinalPosition" jdbcType="CHAR" column="SEQ_IN_INDEX"/>
-        <result property="type" jdbcType="CHAR" column="NON_UNIQUE" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlIndexTypeHandler"/>
+        <result property="type" jdbcType="CHAR" column="NON_UNIQUE"
+                typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlIndexTypeHandler"/>
         <result property="comment" jdbcType="CHAR" column="INDEX_COMMENT"/>
     </resultMap>
 
@@ -35,23 +40,30 @@
     </resultMap>
 
     <select id="showDatabases" resultMap="ShowDatabasesResultMap">
-        SHOW databases ;
+        SHOW
+        databases ;
     </select>
 
     <select id="showCreateTable" resultMap="CreateTableResultMap">
-        SHOW CREATE TABLE ${databaseName}.${tableName} ;
+        SHOW
+        CREATE TABLE ${databaseName}.${tableName};
     </select>
     <update id="dropTable">
         drop table ${databaseName}.${tableName};
     </update>
 
     <select id="selectTableCount" resultType="java.lang.Integer">
-        SELECT count(*) FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = #{databaseName,jdbcType=VARCHAR};
+        SELECT count(*)
+        FROM INFORMATION_SCHEMA.TABLES
+        where TABLE_SCHEMA = #{databaseName,jdbcType=VARCHAR};
     </select>
 
     <select id="selectTables" resultMap="BaseTableResultMap">
         select table_name,table_comment from information_schema.tables
-        where table_schema =  #{databaseName,jdbcType=CHAR}
+        where table_schema = #{databaseName,jdbcType=CHAR}
+        <if test="tableName != null ">
+            and table_name = #{tableName}
+        </if>
         order by create_time desc
         limit #{pageIndex},#{pageSize}
         ;
@@ -59,31 +71,27 @@
 
     <select id="selectColumns" resultMap="BaseTableColumnResultMap">
         SELECT COLUMN_NAME,
-        COLUMN_TYPE,
-        TABLE_NAME,
-        DATA_TYPE,
-        IS_NULLABLE,
-        COLUMN_DEFAULT,
-        COLUMN_COMMENT,
-        EXTRA
+               COLUMN_TYPE,
+               TABLE_NAME,
+               DATA_TYPE,
+               IS_NULLABLE,
+               COLUMN_DEFAULT,
+               COLUMN_COMMENT,
+               EXTRA
         FROM INFORMATION_SCHEMA.COLUMNS
-        where table_schema =  #{databaseName,jdbcType=CHAR}
-        AND table_name =  #{tableName,jdbcType=CHAR}
+        where table_schema = #{databaseName,jdbcType=CHAR}
+          AND table_name = #{tableName,jdbcType=CHAR}
         ORDER BY ORDINAL_POSITION
     </select>
 
     <select id="selectTableIndexes" resultMap="TableIndexColumnUnionResultMap">
-        SELECT INDEX_NAME ,
-        TABLE_NAME ,
-        COLUMN_NAME ,
-        COLLATION ,
-        SEQ_IN_INDEX ,
-        NON_UNIQUE ,
-        INDEX_COMMENT
+        SELECT INDEX_NAME,
+               TABLE_NAME,
+               COLUMN_NAME, COLLATION, SEQ_IN_INDEX, NON_UNIQUE, INDEX_COMMENT
         FROM INFORMATION_SCHEMA.STATISTICS
-        WHERE TABLE_NAME =  #{tableName,jdbcType=CHAR}
-        AND INDEX_SCHEMA =  #{databaseName,jdbcType=CHAR}
-        AND TABLE_SCHEMA =  #{databaseName,jdbcType=CHAR}
+        WHERE TABLE_NAME = #{tableName,jdbcType=CHAR}
+          AND INDEX_SCHEMA = #{databaseName,jdbcType=CHAR}
+          AND TABLE_SCHEMA = #{databaseName,jdbcType=CHAR}
         order by SEQ_IN_INDEX
     </select>
 </mapper>
