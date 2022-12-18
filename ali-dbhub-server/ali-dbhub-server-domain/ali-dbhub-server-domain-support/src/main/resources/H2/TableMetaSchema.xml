@@ -26,7 +26,7 @@
         <result property="tableName" jdbcType="VARCHAR" column="TABLE_NAME"/>
         <result property="comment" jdbcType="VARCHAR" column="REMARKS"/>
         <result property="name" jdbcType="VARCHAR" column="INDEX_NAME"/>
-        <result property="type" jdbcType="VARCHAR" column="INDEX_TYPE_NAME"/>
+        <result property="type" jdbcType="VARCHAR" column="INDEX_TYPE_NAME" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.h2.handler.H2IndexTypeHandler"/>
     </resultMap>
 
     <resultMap id="ShowDatabasesResultMap" type="com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult">

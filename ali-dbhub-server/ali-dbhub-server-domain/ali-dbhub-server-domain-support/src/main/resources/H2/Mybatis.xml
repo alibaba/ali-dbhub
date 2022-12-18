@@ -10,7 +10,7 @@
     </settings>
     <!-- 配置分页插件 -->
     <typeHandlers>
-        <typeHandler jdbcType="VARCHAR" javaType="java.lang.String" handler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.IndexTypeHandler"/>
+        <typeHandler jdbcType="VARCHAR" javaType="java.lang.String" handler="com.alibaba.dbhub.server.domain.support.dialect.h2.handler.H2IndexTypeHandler"/>
         <typeHandler jdbcType="VARCHAR" javaType="java.lang.Boolean" handler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
     </typeHandlers>
 

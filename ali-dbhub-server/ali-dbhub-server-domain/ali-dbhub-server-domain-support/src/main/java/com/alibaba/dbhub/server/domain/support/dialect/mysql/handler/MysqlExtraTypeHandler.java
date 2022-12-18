@@ -2,7 +2,7 @@
  * alibaba.com Inc.
  * Copyright (c) 2004-2022 All Rights Reserved.
  */
-package com.alibaba.dbhub.server.domain.support.dialect.common.handler;
+package com.alibaba.dbhub.server.domain.support.dialect.mysql.handler;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -17,7 +17,7 @@ import org.apache.ibatis.type.TypeHandler;
  *
  * @author 是仪
  */
-public class BooleanTypeForExtraHandler implements TypeHandler<Boolean> {
+public class MysqlExtraTypeHandler implements TypeHandler<Boolean> {
 
     @Override
     public void setParameter(PreparedStatement ps, int i, Boolean parameter, JdbcType jdbcType) throws SQLException {
