@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.alibaba.dbhub.server.domain.support.dialect.h2.mapper.H2MetaSchemaMapper">
     <resultMap id="BaseTableResultMap" type="com.alibaba.dbhub.server.domain.support.model.Table">
-        <result property="name" jdbcType="VARCHAR" column="table_name"/>
+        <result property="name" jdbcType="VARCHAR" column="TABLE_NAME"/>
         <result property="comment" jdbcType="VARCHAR" column="REMARKS"/>
     </resultMap>
     <resultMap id="BaseTableColumnResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableColumn">
@@ -29,12 +29,15 @@
         <result property="type" jdbcType="VARCHAR" column="INDEX_TYPE_NAME"/>
     </resultMap>
 
-    <select id="showDatabases" resultType="java.lang.String" >
+    <resultMap id="ShowDatabasesResultMap" type="com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult">
+        <result property="database" jdbcType="VARCHAR" column="SCHEMA_NAME"/>
+    </resultMap>
+
+    <select id="showDatabases" resultMap="ShowDatabasesResultMap">
         SHOW databases ;
     </select>
 
     <select id="showCreateTable" resultType="java.lang.String">
-        SHOW CREATE TABLE ${databaseName}.${tableName} ;
         select SQL
         from INFORMATION_SCHEMA.TABLES
         where TABLE_SCHEMA = #{databaseName,jdbcType=VARCHAR}
@@ -49,11 +52,10 @@
     </select>
 
     <select id="selectTables" resultMap="BaseTableResultMap">
-        select table_name,REMARKS from INFORMATION_SCHEMA.TABLES
-        where table_schema =  #{databaseName,jdbcType=VARCHAR}
-        order by create_time desc
-        limit #{pageIndex},#{pageSize}
-        ;
+        select TABLE_NAME,REMARKS from INFORMATION_SCHEMA.TABLES
+        where table_schema =  #{databaseName}
+        order by TABLE_NAME desc
+        limit #{pageIndex},#{pageSize} ;
     </select>
 
     <select id="selectColumns" resultMap="BaseTableColumnResultMap">
