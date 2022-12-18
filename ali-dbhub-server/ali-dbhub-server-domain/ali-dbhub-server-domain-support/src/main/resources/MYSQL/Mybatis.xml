@@ -8,11 +8,6 @@
         <setting name="logImpl" value="SLF4J" />
         <!--<setting name="logImpl" value="STDOUT_LOGGING" />-->
     </settings>
-    <typeHandlers>
-        <typeHandler jdbcType="VARCHAR" javaType="java.lang.String" handler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlIndexTypeHandler"/>
-        <typeHandler jdbcType="VARCHAR" javaType="java.lang.Boolean" handler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
-        <typeHandler jdbcType="VARCHAR" javaType="java.lang.String" handler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlCollationTypeHandler"/>
-    </typeHandlers>
 
     <mappers>
         <mapper class="com.alibaba.dbhub.server.domain.support.dialect.mysql.mapper.MysqlMetaSchemaMapper"></mapper>

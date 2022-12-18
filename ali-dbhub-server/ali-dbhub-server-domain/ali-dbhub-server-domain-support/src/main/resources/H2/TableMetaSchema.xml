@@ -40,8 +40,8 @@
     <select id="showCreateTable" resultType="java.lang.String">
         select SQL
         from INFORMATION_SCHEMA.TABLES
-        where TABLE_SCHEMA = #{databaseName,jdbcType=VARCHAR}
-        AND    TABLE_NAME = #{tableName,jdbcType=VARCHAR};
+        where TABLE_SCHEMA = #{databaseName}
+        AND    TABLE_NAME = #{tableName};
     </select>
     <update id="dropTable">
         drop table ${databaseName}.${tableName};
@@ -68,8 +68,8 @@
         IS_IDENTITY,
         REMARKS
         FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE
-        AND TABLE_SCHEMA = #{databaseName,jdbcType=VARCHAR}
+        WHERE TABLE_NAME = #{tableName}
+        AND TABLE_SCHEMA = #{databaseName}
         ORDER BY ORDINAL_POSITION;
     </select>
 
@@ -79,9 +79,9 @@
         INDEX_NAME,
         REMARKS
         FROM INFORMATION_SCHEMA.INDEXES
-        WHERE TABLE_NAME = #{tableName,jdbcType=VARCHAR}
-        AND INDEX_SCHEMA =  #{databaseName,jdbcType=VARCHAR}
-        AND TABLE_SCHEMA =  #{databaseName,jdbcType=VARCHAR}
+        WHERE TABLE_NAME = #{tableName}
+        AND INDEX_SCHEMA =  #{databaseName}
+        AND TABLE_SCHEMA =  #{databaseName}
     </select>
 
     <select id="selectTableIndexColumns" resultMap="TableIndexColumnResultMap">
@@ -90,9 +90,9 @@
         COLUMN_NAME,
         ORDERING_SPECIFICATION
         FROM INFORMATION_SCHEMA.INDEX_COLUMNS
-        WHERE TABLE_NAME = #{tableName,jdbcType=VARCHAR}
-        AND INDEX_SCHEMA = #{databaseName,jdbcType=VARCHAR}
-        AND TABLE_SCHEMA = #{databaseName,jdbcType=VARCHAR}
+        WHERE TABLE_NAME = #{tableName}
+        AND INDEX_SCHEMA = #{databaseName}
+        AND TABLE_SCHEMA = #{databaseName}
         order by ORDINAL_POSITION
     </select>
 </mapper>
