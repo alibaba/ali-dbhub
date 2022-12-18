@@ -7,7 +7,6 @@
         <result property="precision" jdbcType="INTEGER" column="numeric_precision"/>
         <result property="scale" jdbcType="INTEGER" column="numeric_scale"/>
         <result property="dataType" jdbcType="CHAR" column="view_type"/>
-        <result property="primaryKey" jdbcType="BIT" column="indisprimary"/>
         <result property="comment" jdbcType="CHAR" column="column_comment"/>
         <result property="attinhcount" jdbcType="INTEGER" column="attinhcount"/>
         <result property="ordinalPosition" jdbcType="INTEGER" column="ordinal_position"/>

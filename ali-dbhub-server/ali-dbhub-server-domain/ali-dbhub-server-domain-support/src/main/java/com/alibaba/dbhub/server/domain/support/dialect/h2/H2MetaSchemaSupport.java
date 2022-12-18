@@ -102,7 +102,7 @@ public class H2MetaSchemaSupport implements MetaSchema<Table> {
                 List<TableIndexColumn> columnList = mapper.selectTableIndexColumns(databaseName, tableName);
                 Map<String, List<TableIndexColumn>> columnMap = EasyCollectionUtils.stream(columnList)
                     .collect(Collectors.groupingBy(TableIndexColumn::getIndexName));
-                for (TableIndex tableIndex : indexList) {
+                for (TableIndex tableIndex : tableIndexList) {
                     tableIndex.setColumnList(columnMap.get(tableIndex.getName()));
                 }
                 indexList.addAll(tableIndexList);
