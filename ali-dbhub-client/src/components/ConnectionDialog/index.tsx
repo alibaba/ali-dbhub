@@ -1,9 +1,9 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import connectionServer from '@/service/connection'
 import { IConnectionBase } from '@/types'
-import { databaseTypeList } from '@/utils/constants'
+import { databaseTypeList, databaseType, DatabaseTypeCode } from '@/utils/constants'
 import {
   Select,
   Button,
@@ -31,8 +31,42 @@ enum submitType {
   TEST = 'test'
 }
 
+const authenticationConfig = [
+  {
+    label: '用户与密码',
+    value: 1,
+  },
+  {
+    label: '无身份验证',
+    value: 2,
+  },
+]
+
 export default memo<IProps>(function ConnectionDialog(props) {
   const { isModalVisible, className, setIsModalVisible, rowData, getConnectionList, closeModal } = props
+  const [authentication, setAuthentication] = useState(1);
+
+  useEffect(() => {
+    if (!rowData) {
+      form.setFieldsValue({
+        type: DatabaseTypeCode.MYSQL,
+        hostComputer: 'localhost',
+        port: databaseType[DatabaseTypeCode.MYSQL].port,
+        authentication: 1,
+        url: 'jdbc:mysql://localhost:3306',
+        alias: `localhost[1]`
+      });
+    } else {
+      const arr = rowData.url.split(':')
+      const type: DatabaseTypeCode = arr[1].toUpperCase()
+      form.setFieldsValue({
+        ...rowData,
+        port: arr[3],
+        hostComputer: arr[2].split('//')[0] || arr[2].split('//')[1],
+        authentication: (rowData.user && rowData.password) ? 1 : 0,
+      });
+    }
+  }, [])
 
   const [form] = Form.useForm();
 
@@ -63,8 +97,38 @@ export default memo<IProps>(function ConnectionDialog(props) {
   const submitConnection = (type: submitType) => {
     form.validateFields().then(res => {
       saveConnection(res, type)
-    }).catch(error => {
     })
+  }
+
+  function onChangeForm(type: string) {
+    const newForm: any = form
+    const formData = newForm.getFieldValue()
+    console.log(formData)
+    if (type === 'port' || type === 'hostComputer') {
+      form.setFieldsValue({
+        ...formData,
+        hostComputer: formData.hostComputer,
+        url: `jdbc:${formData.type.toLowerCase()}://${formData.hostComputer}:${formData.port}`,
+      });
+    }
+    if (type === 'type') {
+      form.setFieldsValue({
+        ...formData,
+        port: databaseType[formData.type].port,
+        hostComputer: 'localhost',
+        url: `jdbc:${formData.type.toLowerCase()}://${formData.hostComputer}:${databaseType[formData.type].port}`,
+      });
+    }
+    if (type === 'url') {
+      const arr = formData.url.split(':')
+      const type: DatabaseTypeCode = arr[1].toUpperCase()
+      form.setFieldsValue({
+        ...formData,
+        port: arr[3],
+        hostComputer: arr[2].split('//')[0] || arr[2].split('//')[1],
+        type: DatabaseTypeCode[type]
+      });
+    }
   }
 
   return <Modal
@@ -76,17 +140,15 @@ export default memo<IProps>(function ConnectionDialog(props) {
   >
     <Form
       form={form}
-      labelCol={{ span: 5 }}
-      // wrapperCol={{ span: 16 }}
       initialValues={{ remember: true }}
       autoComplete="off"
+      className={styles.form}
     >
       <Form.Item
         label="连接类型"
         name="type"
-        rules={[{ required: true, message: '连接类型不可为空！' }]}
       >
-        <Select>
+        <Select onChange={(value) => { onChangeForm('type') }}>
           {
             databaseTypeList.map(item => {
               return <Option key={item.code} value={item.code}>{item.name}</Option>
@@ -95,46 +157,77 @@ export default memo<IProps>(function ConnectionDialog(props) {
         </Select>
       </Form.Item>
       <Form.Item
-        label="连接名"
+        label="名称"
         name="alias"
-        rules={[{ required: true, message: '连接名不可为空！' }]}
       >
         <Input />
       </Form.Item>
+      <div className={styles.moreLine}>
+        <Form.Item
+          label="主机"
+          name="hostComputer"
+          className={styles.hostComputer}
+        >
+          <Input onChange={(value) => { onChangeForm('hostComputer') }} />
+        </Form.Item>
+        <Form.Item
+          label="端口"
+          name="port"
+          className={styles.port}
+        >
+          <Input onChange={(value) => { onChangeForm('port') }} />
+        </Form.Item>
+      </div>
+      {/* <div className={styles.moreLine}>
+        <Form.Item
+          label="实例"
+          name="hostCom puter"
+          className={styles.hostComputer}
+        >
+          <Input onChange={(value) => { onChangeForm('hostComputer') }} />
+        </Form.Item>
+        <Form.Item
+          label="主机"
+          name="port"
+          className={styles.port}
+        >
+          <Input onChange={(value) => { onChangeForm('port') }} />
+        </Form.Item>
+      </div> */}
       <Form.Item
-        label="连接地址"
+        label="身份验证"
+        name="authentication"
+        className={styles.authentication}
+      >
+        <Select onChange={setAuthentication}>
+          {authenticationConfig.map(t => <Option key={t.value} value={t.value}>{t.label}</Option>)}
+        </Select>
+      </Form.Item>
+      {
+        authentication === 1 &&
+        <div>
+          <Form.Item
+            label="用户名"
+            name="user"
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="密码"
+            name="password"
+          // rules={[{ required: true, message: '密码不可为空！' }]}
+          >
+            <Input.Password />
+          </Form.Item>
+        </div>
+      }
+
+      <Form.Item
+        label="URL"
         name="url"
-        rules={[{ required: true, message: '连接地址不可为空！' }]}
       >
-        <Input />
+        <Input onChange={() => { onChangeForm('url') }} />
       </Form.Item>
-      <Form.Item
-        label="端口"
-        name="linkName"
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        label="用户名"
-        name="user"
-      // rules={[{ required: true, message: '用户名不可为空！' }]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        label="密码"
-        name="password"
-      // rules={[{ required: true, message: '密码不可为空！' }]}
-      >
-        <Input.Password />
-      </Form.Item>
-      {/* <Form.Item
-      wrapperCol={{ offset: 5 }}
-      label={false}
-      name="savePassword"
-    >
-      <Checkbox onChange={onChange}>保存密码</Checkbox>
-    </Form.Item> */}
       <Form.Item wrapperCol={{ offset: 0 }}>
         <div className={styles.formFooter}>
           <div className={styles.test}>
@@ -161,5 +254,5 @@ export default memo<IProps>(function ConnectionDialog(props) {
         </div>
       </Form.Item>
     </Form>
-  </Modal>
+  </Modal >
 })
