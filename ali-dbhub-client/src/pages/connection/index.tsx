@@ -11,6 +11,7 @@ import { history } from 'umi';
 import connectionServer from '@/service/connection'
 import { IConnectionBase } from '@/types'
 import { databaseTypeList, DatabaseTypeCode, databaseType } from '@/utils/constants'
+import moreDBLogo from '@/assets/moreDB-logo.png';
 import {
   Dropdown,
   Space,
@@ -107,8 +108,6 @@ export default memo<IProps>(function ConnectionPage(props) {
     });
   };
 
-
-
   const showLinkModal = () => {
     setIsModalVisible(true);
     setRowData(null);
@@ -122,8 +121,6 @@ export default memo<IProps>(function ConnectionPage(props) {
     form.resetFields();
     setIsModalVisible(false);
   }
-
-
 
   const RenderCard = ({ item }: { item: IConnectionBase }) => {
     const [openDropdown, setOpenDropdown] = useState(false);
@@ -192,7 +189,7 @@ export default memo<IProps>(function ConnectionPage(props) {
         <div
           className={styles.logo}
           style={{
-            backgroundImage: `url(${databaseType[item.type].img})`,
+            backgroundImage: `url(${databaseType[item.type]?.img || moreDBLogo})`,
           }}
         ></div>
         <div className={styles.name}>{item.alias}</div>
