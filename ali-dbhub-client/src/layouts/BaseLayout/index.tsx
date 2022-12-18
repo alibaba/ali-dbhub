@@ -21,12 +21,12 @@ interface INavItem {
 const LNKConfig: INavItem[] = [
   {
     title: i18n('home.nav.database'),
-    icon: '\ue759',
+    icon: '\uec57',
     path: '/connection',
   },
   {
     title: i18n('home.nav.myHistory'),
-    icon: '\ue759',
+    icon: '\ue610',
     path: '/sql-history',
   },
 ];
@@ -41,7 +41,7 @@ export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
     setActiveNav(item.path);
   }
 
-  function jumpHome(){
+  function jumpHome() {
     history.push('/')
   }
 

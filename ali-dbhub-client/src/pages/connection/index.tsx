@@ -253,7 +253,8 @@ export default memo<IProps>(function ConnectionPage(props) {
         <div className={styles.header}>
           <div className={styles.title}>{i18n('home.nav.database')}</div>
           <Button
-            className={styles.linkButton}
+            size='small'
+            className={classnames(styles.linkButton)}
             type="primary"
             onClick={showLinkModal}
           >
@@ -350,14 +351,20 @@ export default memo<IProps>(function ConnectionPage(props) {
             <div className={styles.formFooter}>
               <div className={styles.test}>
                 {
-                  !rowData && <Button onClick={submitConnection.bind(null, submitType.TEST)} className={styles.test}>测试连接</Button>
+                  !rowData &&
+                  <Button
+                    size='small'
+                    onClick={submitConnection.bind(null, submitType.TEST)}
+                    className={styles.test}>
+                    测试连接
+                  </Button>
                 }
               </div>
-              <div>
-                <Button onClick={closeModal} className={styles.cancel}>
+              <div className={styles.rightButton}>
+                <Button size='small' onClick={closeModal} className={styles.cancel}>
                   取消
                 </Button>
-                <Button type="primary" onClick={submitConnection.bind(null, rowData ? submitType.UPDATE : submitType.SAVE)}>
+                <Button className={styles.save} size='small' type="primary" onClick={submitConnection.bind(null, rowData ? submitType.UPDATE : submitType.SAVE)}>
                   {
                     rowData ? '修改' : '连接'
                   }
