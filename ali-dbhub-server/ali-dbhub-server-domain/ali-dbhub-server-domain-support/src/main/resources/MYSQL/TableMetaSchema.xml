@@ -13,7 +13,7 @@
         <result property="dataType" jdbcType="CHAR" column="DATA_TYPE"/>
         <result property="defaultValue" jdbcType="CHAR" column="COLUMN_DEFAULT"/>
         <result property="nullable" jdbcType="CHAR" column="IS_NULLABLE" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
-        <result property="autoIncrement" jdbcType="CHAR" column="EXTRA" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeForExtraHandler"/>
+        <result property="autoIncrement" jdbcType="CHAR" column="EXTRA" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlExtraTypeHandler"/>
 
     </resultMap>
     <resultMap id="TableIndexColumnUnionResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">
@@ -22,7 +22,7 @@
         <result property="columnName" jdbcType="CHAR" column="COLUMN_NAME"/>
         <result property="collation" jdbcType="CHAR" column="COLLATION" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlCollationTypeHandler"/>
         <result property="ordinalPosition" jdbcType="CHAR" column="SEQ_IN_INDEX"/>
-        <result property="type" jdbcType="CHAR" column="NON_UNIQUE" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.IndexTypeHandler"/>
+        <result property="type" jdbcType="CHAR" column="NON_UNIQUE" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlIndexTypeHandler"/>
         <result property="comment" jdbcType="CHAR" column="INDEX_COMMENT"/>
     </resultMap>
 

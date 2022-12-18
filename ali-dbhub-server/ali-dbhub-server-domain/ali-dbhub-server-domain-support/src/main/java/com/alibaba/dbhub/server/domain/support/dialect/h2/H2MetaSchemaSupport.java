@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.h2.mapper.H2MetaSchemaMapper;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
@@ -35,7 +36,7 @@ public class H2MetaSchemaSupport implements MetaSchema<Table> {
 
     @Override
     public List<String> showDatabases() {
-        return getMapper().showDatabases();
+        return EasyCollectionUtils.toList(getMapper().showDatabases(), ShowDatabaseResult::getDatabase);
     }
 
     public H2MetaSchemaSupport(SqlSession sqlSession) {
