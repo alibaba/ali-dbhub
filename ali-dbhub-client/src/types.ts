@@ -4,6 +4,7 @@ export interface IDatabase {
   name: string;
   code:DatabaseTypeCode;
   img: string;
+  port: number;
 }
 export interface IPageResponse<T> {
   data: T[];
