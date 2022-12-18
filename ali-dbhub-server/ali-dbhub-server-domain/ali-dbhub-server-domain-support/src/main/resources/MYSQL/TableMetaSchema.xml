@@ -13,7 +13,7 @@
         <result property="dataType" jdbcType="CHAR" column="DATA_TYPE"/>
         <result property="defaultValue" jdbcType="CHAR" column="COLUMN_DEFAULT"/>
         <result property="nullable" jdbcType="CHAR" column="IS_NULLABLE" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
-        <result property="autoIncrement" jdbcType="CHAR" column="EXTRA" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
+        <result property="autoIncrement" jdbcType="CHAR" column="EXTRA" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeForExtraHandler"/>
 
     </resultMap>
     <resultMap id="TableIndexColumnUnionResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">
