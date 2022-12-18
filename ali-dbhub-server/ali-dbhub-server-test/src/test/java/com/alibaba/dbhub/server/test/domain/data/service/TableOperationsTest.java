@@ -120,7 +120,6 @@ public class TableOperationsTest extends BaseTest {
             Assertions.assertEquals(dialectProperties.toCase("id"), id.getName(), "查询表结构失败");
             Assertions.assertEquals("主键自增", id.getComment(), "查询表结构失败");
             Assertions.assertTrue(id.getAutoIncrement(), "查询表结构失败");
-            Assertions.assertTrue(id.getPrimaryKey(), "查询表结构失败");
             Assertions.assertFalse(id.getNullable(), "查询表结构失败");
 
             TableColumn string = columnList.get(3);

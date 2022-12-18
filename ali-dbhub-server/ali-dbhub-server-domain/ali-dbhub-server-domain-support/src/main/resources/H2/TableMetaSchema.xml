@@ -13,8 +13,7 @@
         <result property="dataType" jdbcType="VARCHAR" column="DATA_TYPE"/>
         <result property="defaultValue" jdbcType="VARCHAR" column="COLUMN_DEFAULT"/>
         <result property="nullable" jdbcType="VARCHAR" column="IS_NULLABLE" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
-        <result property="autoIncrement" jdbcType="VARCHAR" column="EXTRA" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
-
+        <result property="autoIncrement" jdbcType="VARCHAR" column="IS_IDENTITY" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
     </resultMap>
     <resultMap id="TableIndexColumnResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumn">
         <result property="name" jdbcType="VARCHAR" column="COLUMN_NAME"/>
