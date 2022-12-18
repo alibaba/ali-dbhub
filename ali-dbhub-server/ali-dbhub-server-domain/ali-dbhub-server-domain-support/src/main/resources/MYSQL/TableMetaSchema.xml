@@ -55,12 +55,12 @@
     <select id="selectTableCount" resultType="java.lang.Integer">
         SELECT count(*)
         FROM INFORMATION_SCHEMA.TABLES
-        where TABLE_SCHEMA = #{databaseName,jdbcType=VARCHAR};
+        where TABLE_SCHEMA = #{databaseName};
     </select>
 
     <select id="selectTables" resultMap="BaseTableResultMap">
         select table_name,table_comment from information_schema.tables
-        where table_schema = #{databaseName,jdbcType=CHAR}
+        where table_schema = #{databaseName}
         <if test="tableName != null ">
             and table_name = #{tableName}
         </if>
@@ -79,8 +79,8 @@
                COLUMN_COMMENT,
                EXTRA
         FROM INFORMATION_SCHEMA.COLUMNS
-        where table_schema = #{databaseName,jdbcType=CHAR}
-          AND table_name = #{tableName,jdbcType=CHAR}
+        where table_schema = #{databaseName}
+          AND table_name = #{tableName}
         ORDER BY ORDINAL_POSITION
     </select>
 
@@ -89,9 +89,9 @@
                TABLE_NAME,
                COLUMN_NAME, COLLATION, SEQ_IN_INDEX, NON_UNIQUE, INDEX_COMMENT
         FROM INFORMATION_SCHEMA.STATISTICS
-        WHERE TABLE_NAME = #{tableName,jdbcType=CHAR}
-          AND INDEX_SCHEMA = #{databaseName,jdbcType=CHAR}
-          AND TABLE_SCHEMA = #{databaseName,jdbcType=CHAR}
+        WHERE TABLE_NAME = #{tableName}
+          AND INDEX_SCHEMA = #{databaseName}
+          AND TABLE_SCHEMA = #{databaseName}
         order by SEQ_IN_INDEX
     </select>
 </mapper>

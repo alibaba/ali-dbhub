@@ -60,5 +60,5 @@ public class TableColumn {
     /**
      * 是否主键
      */
-    private boolean primaryKey;
+    private Boolean primaryKey;
 }
