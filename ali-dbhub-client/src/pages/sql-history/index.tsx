@@ -186,7 +186,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
                 </div>
                 {
                   currentTab == TabsKey.SAVE &&
-                  < div className={styles.arrows}>
+                  <div className={styles.arrows}>
                     <Iconfont code='&#xe685;'></Iconfont>
                   </div>
                 }

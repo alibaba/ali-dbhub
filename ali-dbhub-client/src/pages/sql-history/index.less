@@ -2,7 +2,7 @@
 
 .box{
   flex: 1;
-  padding-right: 30px;
+  padding-right: 10px;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 56px);
@@ -86,8 +86,8 @@
     }
   }
   .ddlType{
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     background-size: cover;
     background-repeat: no-repeat;
     img{
@@ -101,6 +101,10 @@
     .f-single-line();
   }
   .arrows{
+    display: flex;
+    align-items: center;
+    height: 24px;
+
     transform: translateX(0);
     i{
       color: var(--custom-primary-color);

@@ -73,9 +73,11 @@ export default defineConfig({
   ],
   mfsu: {},
   fastRefresh: {},
-  dynamicImport: {
-    loading: '@/components/Loading/LazyLoading',
-  },
+  // 桌面端不需要懒加载
+  // dynamicImport: {
+  //   loading: '@/components/Loading/LazyLoading',
+  // },
+  dynamicImportSyntax:{},
   nodeModulesTransform: {
     type: 'none',
   },
