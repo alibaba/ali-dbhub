@@ -1,6 +1,7 @@
 import mysqlLogo from '@/assets/mysql-logo.png';
 import redisLogo from '@/assets/redis-logo.png';
 import h2Logo from '@/assets/h2-logo.png';
+import moreDBLogo from '@/assets/moreDB-logo.png';
 import {IDatabase} from '@/types'
 
 export enum StatusType {
@@ -14,7 +15,8 @@ export enum DatabaseTypeCode {
   DB2 = 'DB2',
   MONGODB = 'MONGODB',
   REDIS = 'REDIS',
-  H2 = 'H2'
+  H2 = 'H2',
+  POSTGRESQL = 'POSTGRESQL'
 }
 
 export const databaseType:{
@@ -23,7 +25,8 @@ export const databaseType:{
   [DatabaseTypeCode.MYSQL]:{
     name: 'MySQL',
     img: mysqlLogo,
-    code: DatabaseTypeCode.MYSQL
+    code: DatabaseTypeCode.MYSQL,
+    port: 3306
   },
   // [DatabaseTypeCode.REDIS]:{
   //   name: 'Redis',
@@ -33,7 +36,20 @@ export const databaseType:{
   [DatabaseTypeCode.H2]:{
     name: 'H2',
     img: h2Logo,
-    code: DatabaseTypeCode.H2
+    code: DatabaseTypeCode.H2,
+    port: 9092
+  },
+  [DatabaseTypeCode.ORACLE]:{
+    name: 'Oracle',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.ORACLE,
+    port: 1521
+  },
+  [DatabaseTypeCode.POSTGRESQL]:{
+    name: 'PostgreSql',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.POSTGRESQL,
+    port: 5432
   },
 }
 
