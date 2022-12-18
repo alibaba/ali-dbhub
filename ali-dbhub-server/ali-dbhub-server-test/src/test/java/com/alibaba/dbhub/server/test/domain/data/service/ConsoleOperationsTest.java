@@ -134,7 +134,7 @@ public class ConsoleOperationsTest extends BaseTest {
             DataSourceCloseParam dataSourceCloseParam = new DataSourceCloseParam();
             dataSourceCloseParam.setDataSourceId(dataSourceId);
             dataSourceOperations.close(dataSourceCloseParam);
-            Assertions.assertFalse(DataCenterUtils.DATA_SOURCE_CACHE.containsKey(dataSourceId), "关闭连接池失败");
+            Assertions.assertFalse(DataCenterUtils.JDBC_ACCESSOR_MAP.containsKey(dataSourceId), "关闭连接池失败");
         }
     }
 

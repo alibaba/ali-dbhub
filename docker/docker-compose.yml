@@ -1,34 +1,37 @@
 version: '3'
 services:
-  # 连接地址：jdbc:mysql://localhost:3306 用户名：root  密码：ali_dbhub 端口：3306
+  # 连接地址：jdbc:mysql://localhost:3306 用户名：root  密码：ali_dbhub 端口：3306 默认数据库：ali_dbhub_test
   mysql:
     image: mysql:latest
     restart: always
     container_name: mysql-latest
     environment:
-      - "MYSQL_ROOT_PASSWORD=root"
-      - "MYSQL_ROOT_PASSWORD=ali_dbhub"
-      - "MYSQL_DATABASE=ali_dbhub_test"
-      - "TZ=Asia/Shanghai"
+      MYSQL_ROOT_PASSWORD: ali_dbhub
+      MYSQL_DATABASE: ali_dbhub_test
+      TZ: Asia/Shanghai
     ports:
       - 3306:3306
-  # 连接地址：jdbc:postgresql://localhost:5432/postgres, 用户名:ali_dbhub_test, 密码:ali_dbhub
+  # 连接地址：jdbc:postgresql://localhost:5432/ali_dbhub_test, 用户名:ali_dbhub, 密码:ali_dbhub 端口：5432 默认数据库：ali_dbhub_test
   postgres:
-    image: postgres:12-alpine
-    container_name: demo_postgres
+    image: postgres:latest
     restart: always
+    container_name: postgres-latest
     environment:
-      POSTGRES_USER: ali_dbhub_test
+      POSTGRES_USER: ali_dbhub
       POSTGRES_PASSWORD: ali_dbhub
+      POSTGRES_DB: ali_dbhub_test
+      TZ: Asia/Shanghai
     ports:
-      - "5432:5432"
-  #连接地址：jdbc:oracle:thin:@localhost:1521:XE, SID:XE, username:system, password:oracle
-  oracle11:
-    image: oracleinanutshell/oracle-xe-11g
-    container_name: oracle-11
-    privileged: true
-    environment:
-      - TZ=Asia/Shanghai
+      - 5432:5432
+  # 连接地址：jdbc:oracle:thin:@//localhost:1521/XEPDB1,  用户名:system, 密码:ali_dbhub
+  # 默认数据库XEPDB1 启动会快很多
+  oracle:
+    image: gvenzl/oracle-xe:slim-faststart
     restart: always
+    container_name: oracle-latest
+    environment:
+      ORACLE_DATABASE: XEPDB1
+      ORACLE_PASSWORD: ali_dbhub
+      TZ: Asia/Shanghai
     ports:
-      - "1521:1521"
+      - 1521:1521

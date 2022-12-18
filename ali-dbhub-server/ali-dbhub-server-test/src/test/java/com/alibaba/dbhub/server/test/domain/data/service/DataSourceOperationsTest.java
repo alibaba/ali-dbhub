@@ -50,14 +50,14 @@ public class DataSourceOperationsTest extends BaseTest {
             dataSourceCreateParam.setPassword(dialectProperties.getPassword());
             DataSourceConnect dataSourceConnect = dataSourceOperations.create(dataSourceCreateParam);
             Assertions.assertTrue(dataSourceConnect.getSuccess(), "创建数据库连接池失败");
-            Assertions.assertTrue(DataCenterUtils.DATA_SOURCE_CACHE.containsKey(dataSourceId), "创建数据库连接池失败");
+            Assertions.assertTrue(DataCenterUtils.JDBC_ACCESSOR_MAP.containsKey(dataSourceId), "创建数据库连接池失败");
 
             // 关闭
             DataSourceCloseParam dataSourceCloseParam = new DataSourceCloseParam();
             dataSourceCloseParam.setDataSourceId(dataSourceId);
             dataSourceOperations.close(dataSourceCloseParam);
 
-            Assertions.assertFalse(DataCenterUtils.DATA_SOURCE_CACHE.containsKey(dataSourceId), "关闭连接池失败");
+            Assertions.assertFalse(DataCenterUtils.JDBC_ACCESSOR_MAP.containsKey(dataSourceId), "关闭连接池失败");
         }
     }
 

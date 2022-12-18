@@ -178,6 +178,22 @@ export default memo<IProps>(function ConnectionDialog(props) {
           <Input onChange={(value) => { onChangeForm('port') }} />
         </Form.Item>
       </div>
+      {/* <div className={styles.moreLine}>
+        <Form.Item
+          label="实例"
+          name="hostCom puter"
+          className={styles.hostComputer}
+        >
+          <Input onChange={(value) => { onChangeForm('hostComputer') }} />
+        </Form.Item>
+        <Form.Item
+          label="主机"
+          name="port"
+          className={styles.port}
+        >
+          <Input onChange={(value) => { onChangeForm('port') }} />
+        </Form.Item>
+      </div> */}
       <Form.Item
         label="身份验证"
         name="authentication"
