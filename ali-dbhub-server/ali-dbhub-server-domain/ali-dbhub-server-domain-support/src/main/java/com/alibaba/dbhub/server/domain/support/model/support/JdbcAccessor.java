@@ -20,6 +20,11 @@ public class JdbcAccessor {
 
     private MetaSchema service;
 
+
+    private DbhubDataSource dbhubDataSource;
+
+    private Long dataSourceId;
+
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     /**
@@ -40,9 +45,6 @@ public class JdbcAccessor {
         this.dbhubDataSource = dbhubDataSource;
     }
 
-    private DbhubDataSource dbhubDataSource;
-
-    private Long dataSourceId;
 
     public JdbcAccessor(Long dataSourceId, DbhubDataSource dbhubDataSource) {
         this.dataSourceId = dataSourceId;
