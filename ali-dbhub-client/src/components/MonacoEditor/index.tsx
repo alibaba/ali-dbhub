@@ -34,6 +34,7 @@ export default memo(function MonacoEditor(props: IProps) {
       roundedSelection: false,
       scrollBeyondLastLine: false,
       readOnly: false,
+      folding: false, // 不显示折叠
       minimap: {
         enabled: false // 是否启用预览图
       }, // 预览图设置

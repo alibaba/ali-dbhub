@@ -702,6 +702,8 @@ html {
   animation-play-state: paused;
 }
 .custom-slide-up-leave {
+  /* myCustom */
+  display: none !important; 
   animation-duration: 0.2s;
   animation-fill-mode: both;
   animation-play-state: paused;
@@ -2283,7 +2285,6 @@ li:last-child .custom-breadcrumb-separator {
   height: 32px;
   padding: 4px 15px;
   font-size: 14px;
-  border-radius: 2px;
   color: var(--color-text-85);
   border-color: var(--color-border);
   background: var(--color-bg-100) ;
