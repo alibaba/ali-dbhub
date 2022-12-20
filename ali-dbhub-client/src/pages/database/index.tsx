@@ -25,6 +25,7 @@ const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
 import { useUpdateEffect } from '@/utils/hooks';
 const { keywords } = language;
+import { format } from 'sql-formatter';
 
 interface IProps {
   className?: any;
@@ -59,7 +60,6 @@ export function DatabaseQuery(props: IDatabaseQueryProps) {
   useEffect(() => {
     const nodeData = treeNodeClickMessage
     if (nodeData && windowTab.id === activeTabKey) {
-      console.log(nodeData)
       const model = monacoEditor.current.getModel(monacoEditor.current)
       const value = model.getValue()
       if (nodeData.nodeType == TreeNodeType.TABLE) {
@@ -164,6 +164,12 @@ export function DatabaseQuery(props: IDatabaseQueryProps) {
     })
   }
 
+  function formatValue() {
+    const model = monacoEditor.current.getModel(monacoEditor.current)
+    const value = model.getValue()
+    model.setValue(format(value, {}))
+  }
+
   return <>
     <div className={classnames(styles.databaseQuery, { [styles.databaseQueryConceal]: windowTab.id !== activeTabKey })}>
       <div className={styles.operatingArea}>
@@ -171,6 +177,7 @@ export function DatabaseQuery(props: IDatabaseQueryProps) {
         <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} /> */}
         <Button type="primary" onClick={executeSql}>{i18n('common.button.execute')}</Button>
         <Button onClick={saveWindowTabTab}>{i18n('common.button.save')}</Button>
+        <Button onClick={formatValue}>格式化</Button>
       </div>
       <div ref={monacoEditorBox} className={styles.monacoEditor}>
         {
@@ -265,17 +272,17 @@ export default memo<IProps>(function DatabasePage({ className }) {
     }
   }, [DBList])
 
-  useEffect(()=>{
-    if(activeKey){
-      setPageHash(currentDB?.name!,activeKey)
+  useEffect(() => {
+    if (activeKey) {
+      setPageHash(currentDB?.name!, activeKey)
     }
-  },[activeKey])
+  }, [activeKey])
 
-  function setPageHash(databaseName:string,windowId:string|number){
+  function setPageHash(databaseName: string, windowId: string | number) {
     // TODO:这里如果用正则替换应该会优雅一些
-    if(location.hash.split('?')[1]){
+    if (location.hash.split('?')[1]) {
       location.hash = location.hash.split('?')[0] + `?databaseName=${databaseName}&id=${windowId}`
-    }else{
+    } else {
       location.hash = location.hash + `?databaseName=${databaseName}&id=${windowId}`
     }
     setCurrentPosition()
