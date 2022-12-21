@@ -18,6 +18,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
   const [serviceFail, setServiceFail] = useState(false);
 
   function hashchange() {
+    console.log(location.hash)
     setCurrentPosition()
   }
 
@@ -56,6 +57,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
   function settings() {
     const theme = localStorage.getItem('theme') || 'dark'
     document.documentElement.setAttribute('theme', theme);
+    localStorage.setItem('theme', theme);
     document.documentElement.setAttribute('primary-color', localStorage.getItem('primary-color') || 'polar-blue');
     if (!localStorage.getItem('lang')) {
       localStorage.setItem('lang', 'zh-cn');

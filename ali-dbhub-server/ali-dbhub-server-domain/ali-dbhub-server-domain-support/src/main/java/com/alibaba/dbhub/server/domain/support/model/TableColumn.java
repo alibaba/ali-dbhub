@@ -1,7 +1,5 @@
 package com.alibaba.dbhub.server.domain.support.model;
 
-import com.alibaba.dbhub.server.tools.base.enums.YesOrNoEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,8 +39,6 @@ public class TableColumn {
 
     /**
      * 是否可以为空
-     *
-     * @see YesOrNoEnum
      */
     private Boolean nullable;
 
@@ -53,8 +49,6 @@ public class TableColumn {
 
     /**
      * 是否自增
-     *
-     * @see YesOrNoEnum
      */
     private Boolean autoIncrement;
 
@@ -62,9 +56,4 @@ public class TableColumn {
      * 注释
      */
     private String comment;
-
-    /**
-     * 是否主键
-     */
-    private boolean primaryKey;
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.alibaba.dbhub.server.domain.support.dialect.h2.mapper.H2MetaSchemaMapper">
     <resultMap id="BaseTableResultMap" type="com.alibaba.dbhub.server.domain.support.model.Table">
-        <result property="name" jdbcType="VARCHAR" column="table_name"/>
+        <result property="name" jdbcType="VARCHAR" column="TABLE_NAME"/>
         <result property="comment" jdbcType="VARCHAR" column="REMARKS"/>
     </resultMap>
     <resultMap id="BaseTableColumnResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableColumn">
@@ -13,8 +13,7 @@
         <result property="dataType" jdbcType="VARCHAR" column="DATA_TYPE"/>
         <result property="defaultValue" jdbcType="VARCHAR" column="COLUMN_DEFAULT"/>
         <result property="nullable" jdbcType="VARCHAR" column="IS_NULLABLE" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
-        <result property="autoIncrement" jdbcType="VARCHAR" column="EXTRA" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
-
+        <result property="autoIncrement" jdbcType="VARCHAR" column="IS_IDENTITY" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
     </resultMap>
     <resultMap id="TableIndexColumnResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumn">
         <result property="name" jdbcType="VARCHAR" column="COLUMN_NAME"/>
@@ -26,19 +25,22 @@
         <result property="tableName" jdbcType="VARCHAR" column="TABLE_NAME"/>
         <result property="comment" jdbcType="VARCHAR" column="REMARKS"/>
         <result property="name" jdbcType="VARCHAR" column="INDEX_NAME"/>
-        <result property="type" jdbcType="VARCHAR" column="INDEX_TYPE_NAME"/>
+        <result property="type" jdbcType="VARCHAR" column="INDEX_TYPE_NAME" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.h2.handler.H2IndexTypeHandler"/>
     </resultMap>
 
-    <select id="showDatabases" resultType="java.lang.String" >
+    <resultMap id="ShowDatabasesResultMap" type="com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult">
+        <result property="database" jdbcType="VARCHAR" column="SCHEMA_NAME"/>
+    </resultMap>
+
+    <select id="showDatabases" resultMap="ShowDatabasesResultMap">
         SHOW databases ;
     </select>
 
     <select id="showCreateTable" resultType="java.lang.String">
-        SHOW CREATE TABLE ${databaseName}.${tableName} ;
         select SQL
         from INFORMATION_SCHEMA.TABLES
-        where TABLE_SCHEMA = #{databaseName,jdbcType=VARCHAR}
-        AND    TABLE_NAME = #{tableName,jdbcType=VARCHAR};
+        where TABLE_SCHEMA = #{databaseName}
+        AND    TABLE_NAME = #{tableName};
     </select>
     <update id="dropTable">
         drop table ${databaseName}.${tableName};
@@ -49,11 +51,10 @@
     </select>
 
     <select id="selectTables" resultMap="BaseTableResultMap">
-        select table_name,REMARKS from INFORMATION_SCHEMA.TABLES
-        where table_schema =  #{databaseName,jdbcType=VARCHAR}
-        order by create_time desc
-        limit #{pageIndex},#{pageSize}
-        ;
+        select TABLE_NAME,REMARKS from INFORMATION_SCHEMA.TABLES
+        where table_schema =  #{databaseName}
+        order by TABLE_NAME desc
+        limit #{pageIndex},#{pageSize} ;
     </select>
 
     <select id="selectColumns" resultMap="BaseTableColumnResultMap">
@@ -66,8 +67,8 @@
         IS_IDENTITY,
         REMARKS
         FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE
-        AND TABLE_SCHEMA = #{databaseName,jdbcType=VARCHAR}
+        WHERE TABLE_NAME = #{tableName}
+        AND TABLE_SCHEMA = #{databaseName}
         ORDER BY ORDINAL_POSITION;
     </select>
 
@@ -77,9 +78,9 @@
         INDEX_NAME,
         REMARKS
         FROM INFORMATION_SCHEMA.INDEXES
-        WHERE TABLE_NAME = #{tableName,jdbcType=VARCHAR}
-        AND INDEX_SCHEMA =  #{databaseName,jdbcType=VARCHAR}
-        AND TABLE_SCHEMA =  #{databaseName,jdbcType=VARCHAR}
+        WHERE TABLE_NAME = #{tableName}
+        AND INDEX_SCHEMA =  #{databaseName}
+        AND TABLE_SCHEMA =  #{databaseName}
     </select>
 
     <select id="selectTableIndexColumns" resultMap="TableIndexColumnResultMap">
@@ -88,9 +89,9 @@
         COLUMN_NAME,
         ORDERING_SPECIFICATION
         FROM INFORMATION_SCHEMA.INDEX_COLUMNS
-        WHERE TABLE_NAME = #{tableName,jdbcType=VARCHAR}
-        AND INDEX_SCHEMA = #{databaseName,jdbcType=VARCHAR}
-        AND TABLE_SCHEMA = #{databaseName,jdbcType=VARCHAR}
+        WHERE TABLE_NAME = #{tableName}
+        AND INDEX_SCHEMA = #{databaseName}
+        AND TABLE_SCHEMA = #{databaseName}
         order by ORDINAL_POSITION
     </select>
 </mapper>

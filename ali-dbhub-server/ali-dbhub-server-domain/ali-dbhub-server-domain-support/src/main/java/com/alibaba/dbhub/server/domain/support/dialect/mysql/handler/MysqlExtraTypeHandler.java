@@ -2,23 +2,22 @@
  * alibaba.com Inc.
  * Copyright (c) 2004-2022 All Rights Reserved.
  */
-package com.alibaba.dbhub.server.domain.support.dialect.common.handler;
+package com.alibaba.dbhub.server.domain.support.dialect.mysql.handler;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.alibaba.dbhub.server.tools.base.enums.YesOrNoEnum;
-
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
- * @author jipengfei
- * @version : NullableTypeHandler.java
+ * extra专用的转换器
+ *
+ * @author 是仪
  */
-public class BooleanTypeHandler implements TypeHandler<Boolean> {
+public class MysqlExtraTypeHandler implements TypeHandler<Boolean> {
 
     @Override
     public void setParameter(PreparedStatement ps, int i, Boolean parameter, JdbcType jdbcType) throws SQLException {
@@ -41,7 +40,7 @@ public class BooleanTypeHandler implements TypeHandler<Boolean> {
     }
 
     private Boolean parse(String result) {
-        if (YesOrNoEnum.YES.getCode().equalsIgnoreCase(result)) {
+        if ("auto_increment".equalsIgnoreCase(result)) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

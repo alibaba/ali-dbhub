@@ -1,5 +1,7 @@
 package com.alibaba.dbhub.server.domain.support.param.table;
 
+import java.io.Serial;
+
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.tools.base.wrapper.param.QueryParam;
@@ -19,6 +21,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TableQueryParam extends QueryParam {
+    @Serial
+    private static final long serialVersionUID = -8918610899872508804L;
     /**
      * 对应数据库存储的来源id
      */
