@@ -23,21 +23,27 @@ public class ColumnVO {
      *
      * @see ColumnTypeEnum
      */
-    private String type;
+    private String dataType;
+
+    /**
+     * 列的类型
+     * 比如 varchar(100) ,double(10,6)
+     */
+    private String columnType;
 
     /**
      * 是否为空
      *
      * @see YesOrNoEnum
      */
-    private String nullable;
+    private Boolean nullable;
 
     /**
      * 是否主键
      *
      * @see YesOrNoEnum
      */
-    private String primary;
+    private Boolean primary;
 
     /**
      * 默认值
@@ -49,7 +55,7 @@ public class ColumnVO {
      *
      * @see YesOrNoEnum
      */
-    private String autoIncrement;
+    private Boolean autoIncrement;
 
     /**
      * 数字精度

@@ -47,11 +47,17 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.5.1</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>oracle</groupId>-->
+<!--            <artifactId>oracle</artifactId>-->
+<!--            <version>10.2.0.3.0</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${basedir}/src/main/resources/jdbc/</systemPath>-->
+<!--        </dependency>-->
     </dependencies>
 </project>
