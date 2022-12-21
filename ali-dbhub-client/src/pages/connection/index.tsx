@@ -193,6 +193,8 @@ export default memo<IProps>(function ConnectionPage(props) {
           }}
         ></div>
         <div className={styles.name}>{item.alias}</div>
+        <div className={styles.user}>{item.user}</div>
+        <div className={styles.url}>{item.url}</div>
       </div>
       {
         !onlyList &&

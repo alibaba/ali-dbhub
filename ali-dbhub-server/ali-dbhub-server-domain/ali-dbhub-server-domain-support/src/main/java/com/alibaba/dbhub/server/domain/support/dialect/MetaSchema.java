@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 
-import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiExample;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
@@ -63,8 +62,7 @@ public interface MetaSchema<T> {
      * @param databaseName
      * @return
      */
-    List<T> queryTableList( @NotEmpty String databaseName,
-        String schemaName, int pageNo, int pageSize);
+    List<T> queryTableList( @NotEmpty String databaseName, String tableName, int pageNo, int pageSize);
 
     /**
      * @param databaseName
