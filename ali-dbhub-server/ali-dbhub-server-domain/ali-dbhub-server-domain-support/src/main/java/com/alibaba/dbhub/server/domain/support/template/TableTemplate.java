@@ -52,7 +52,7 @@ public class TableTemplate implements TableOperations {
 
         MetaSchema metaSchema = getMetaSchema(param.getDataSourceId());
         // 查询表信息
-        List<Table> list = metaSchema.queryTableList(param.getDatabaseName(), param.getTableName(), 1, 100);
+        List<Table> list = metaSchema.queryTableList(param.getDatabaseName(), param.getTableName(), param.getPageNo(), param.getPageSize());
 
         List<String> tableNameList = EasyCollectionUtils.toList(list, Table::getName);
 

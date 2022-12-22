@@ -3,7 +3,7 @@
 .box {
   max-height: 100%;
   flex: 1;
-  padding-right: 30px;
+  padding-right: 10px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -12,16 +12,20 @@
 .header {
   display: flex;
   justify-content: space-between;
-  padding: 30px 0px 0px 15px;
-  margin-bottom: 20px;
+  padding: 20px 0px 15px 15px;
+}
+
+.linkButton{
+  .f-button();
 }
 
 .linkButton i {
   margin-right: 4px;
+  font-size: 13px;
 }
 
 .title {
-  font-size: 18px;
+  font-size: 14px;
 }
 
 .scrollBox{
@@ -37,7 +41,7 @@
 .connectionItem {
   position: relative;
   display: flex;
-  padding: 10px 15px;
+  padding: 6px 15px;
   cursor: pointer;
   border-bottom: 1px solid var(--color-border);
   
@@ -51,8 +55,8 @@
 
     .logo {
       flex-shrink: 0;
-      width: 34px;
-      height: 34px;
+      width: 28px;
+      height: 28px;
       border-radius: 4px;
       margin-right: 15px;
       background-size: cover;
@@ -62,10 +66,22 @@
     .visitedTime {
       color: var(--color-text-45);
     }
-    .name{
+
+    .name,.user,.url{
       .f-lines(1);
       line-height: 100%;
+      margin-right: 20px;
     }
+    .name{
+      flex: 2;
+    }
+    .user{
+      flex: 1;
+    }
+    .url{
+      flex: 5;
+    }
+    
   }
 
   .right {
@@ -89,19 +105,11 @@
 
   &:hover {
     background-color: var(--color-bg-hover);
-    .name {
+    .name,.user,.url {
       color: var(--custom-primary-color);
     }
     .logo {
       filter: brightness(1.1);
     }
-  }
-}
-
-.formFooter {
-  display: flex;
-  justify-content: space-between;
-  .cancel {
-    margin-right: 20px;
   }
 }

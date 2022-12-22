@@ -2,7 +2,7 @@
 
 .box{
   flex: 1;
-  padding-right: 30px;
+  padding-right: 10px;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 56px);
@@ -16,7 +16,7 @@
 }
 
 .title {
-  font-size: 18px;
+  font-size: 14px;
 }
 
 .searchInputBox {
@@ -30,7 +30,6 @@
 }
 
 .searchInput {
-  width: 20%;
 }
 
 .sqlListBox{
@@ -77,7 +76,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 15px;
+  padding: 6px 15px;
   cursor: pointer;
   border-bottom: 1px solid var(--color-border);
   &:hover{
@@ -87,8 +86,8 @@
     }
   }
   .ddlType{
-    width: 34px;
-    height: 34px;
+    width: 26px;
+    height: 26px;
     background-size: cover;
     background-repeat: no-repeat;
     img{
@@ -102,6 +101,10 @@
     .f-single-line();
   }
   .arrows{
+    display: flex;
+    align-items: center;
+    height: 24px;
+
     transform: translateX(0);
     i{
       color: var(--custom-primary-color);

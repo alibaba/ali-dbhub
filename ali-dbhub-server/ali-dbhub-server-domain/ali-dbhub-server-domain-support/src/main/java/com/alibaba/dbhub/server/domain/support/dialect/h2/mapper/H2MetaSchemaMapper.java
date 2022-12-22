@@ -6,6 +6,7 @@ package com.alibaba.dbhub.server.domain.support.dialect.h2.mapper;
 
 import java.util.List;
 
+import com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
@@ -18,6 +19,12 @@ import org.apache.ibatis.annotations.Param;
  * @version : H2MetaSchemaMapper.java, v 0.1 2022年12月14日 22:28 jipengfei Exp $
  */
 public interface H2MetaSchemaMapper {
+
+    /**
+     * 查询Database
+     * @return
+     */
+    List<ShowDatabaseResult> showDatabases();
     /**
      * 查询所有表中所有列信息
      *

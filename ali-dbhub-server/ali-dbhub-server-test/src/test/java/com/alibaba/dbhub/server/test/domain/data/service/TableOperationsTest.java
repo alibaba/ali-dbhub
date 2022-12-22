@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.alibaba.dbhub.server.domain.support.dialect.postgresql.mapper.PostgresqlMetaSchemaMapper;
-import com.alibaba.dbhub.server.domain.support.dialect.postgresql.model.PostgresqlColumn;
 import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
@@ -24,12 +22,9 @@ import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
 import com.alibaba.dbhub.server.domain.support.param.template.TemplateExecuteParam;
-import com.alibaba.dbhub.server.domain.support.util.DataCenterUtils;
-import com.alibaba.dbhub.server.domain.support.util.SqlSessionFactoryUtils;
 import com.alibaba.dbhub.server.test.common.BaseTest;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dbhub.server.test.domain.data.utils.TestUtils;
-import com.alibaba.dbhub.server.tools.base.enums.YesOrNoEnum;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.fastjson2.JSON;
 
@@ -124,12 +119,12 @@ public class TableOperationsTest extends BaseTest {
             TableColumn id = columnList.get(0);
             Assertions.assertEquals(dialectProperties.toCase("id"), id.getName(), "查询表结构失败");
             Assertions.assertEquals("主键自增", id.getComment(), "查询表结构失败");
-            Assertions.assertEquals(YesOrNoEnum.YES.getCode(), id.getAutoIncrement(), "查询表结构失败");
-            Assertions.assertEquals(YesOrNoEnum.NO.getCode(), id.getNullable(), "查询表结构失败");
+            Assertions.assertTrue(id.getAutoIncrement(), "查询表结构失败");
+            Assertions.assertFalse(id.getNullable(), "查询表结构失败");
 
             TableColumn string = columnList.get(3);
             Assertions.assertEquals(dialectProperties.toCase("string"), string.getName(), "查询表结构失败");
-            Assertions.assertEquals(YesOrNoEnum.YES.getCode(), string.getNullable(), "查询表结构失败");
+            Assertions.assertTrue(string.getNullable(), "查询表结构失败");
             Assertions.assertEquals("DATA", TestUtils.unWrapperDefaultValue(string.getDefaultValue()),
                 "查询表结构失败");
 
@@ -174,9 +169,6 @@ public class TableOperationsTest extends BaseTest {
         }
 
     }
-
-
-
 
     @Test
     @Order(Integer.MAX_VALUE)

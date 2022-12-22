@@ -1,0 +1,46 @@
+@import '../../var.less';
+
+.formFooter {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  .cancel {
+    margin-right: 20px;
+    .f-button();
+  }
+
+  .rightButton{
+    display: flex
+  }
+
+  .test,.save,.cancel {
+    .f-button();
+  }
+}
+
+.authentication{
+  width: 250px;
+}
+
+.moreLine{
+  display: flex;
+  .hostComputer{
+    flex: 2;
+  }
+  .port{
+    flex: 1;
+    >div >div:nth-of-type(1){
+      text-align: right !important;
+    }
+  }
+}
+.form{
+  :global{
+    .custom-form-item{
+      >div >div:nth-of-type(1){
+        width: 70px;
+        text-align: left;
+      }
+    }
+  }
+}
