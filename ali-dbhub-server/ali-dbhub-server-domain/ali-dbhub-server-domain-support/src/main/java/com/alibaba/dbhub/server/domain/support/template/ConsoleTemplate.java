@@ -65,6 +65,22 @@ public class ConsoleTemplate implements ConsoleOperations {
                     throw new RuntimeException(e);
                 }
             }
+            case ORACLE -> {
+                // 尝试关闭
+                close(ConsoleCloseParam.builder().dataSourceId(param.getDataSourceId()).consoleId(consoleId).build());
+                Connection connection;
+                try {
+                    connection = dbhubDataSource.getConnection();
+                } catch (SQLException e) {
+                    throw new BusinessException("连接数据库异常", e);
+                }
+                // 放入连接队列
+                Map<Long, JdbcDataTemplate> jdbcDataTemplateMap = DataCenterUtils.JDBC_TEMPLATE_CACHE.computeIfAbsent(
+                    param.getDataSourceId(), key -> Maps.newConcurrentMap());
+                JdbcDataTemplate jdbcDataTemplate = new JdbcDataTemplate(param.getDataSourceId(), consoleId, connection,
+                    dbhubDataSource);
+                jdbcDataTemplateMap.put(consoleId, jdbcDataTemplate);
+            }
             case POSTGRESQL -> {
                 close(ConsoleCloseParam.builder().dataSourceId(param.getDataSourceId()).consoleId(consoleId).build());
                 if (!param.getDatabaseName().equals(dbhubDataSource.getDatabase())) {
@@ -111,6 +127,7 @@ public class ConsoleTemplate implements ConsoleOperations {
         }
 
         JdbcAccessor jdbcAccessor = DataCenterUtils.JDBC_ACCESSOR_MAP.get(param.getDataSourceId());
+       // DataCenterUtils.JDBC_ACCESSOR_MAP.remove(jdbcAccessor.getDataSourceId());
         if (jdbcAccessor == null) {
             log.info("数据库连接:{}不需要关闭", param.getDataSourceId());
         } else if (jdbcAccessor.getSqlSession() != null) {

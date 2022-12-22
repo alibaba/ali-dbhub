@@ -30,6 +30,10 @@ public class OracleMetaSchemaSupport implements MetaSchema<Table> {
 
     private SqlSession sqlSession;
 
+    public OracleMetaSchemaSupport(SqlSession sqlSession) {
+        this.sqlSession = sqlSession;
+    }
+
     private OracleMetaSchemaMapper getMapper() {
         return sqlSession.getMapper(OracleMetaSchemaMapper.class);
     }

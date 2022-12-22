@@ -42,9 +42,25 @@ const authenticationConfig = [
   },
 ]
 
+const oracelDriven = [
+  {
+    label: 'Thin',
+    value: 'Thin',
+  },
+  {
+    label: 'OCI',
+    value: 'OCI',
+  },
+  {
+    label: 'OCI8',
+    value: 'OCI8',
+  },
+]
+
 export default memo<IProps>(function ConnectionDialog(props) {
   const { isModalVisible, className, setIsModalVisible, rowData, getConnectionList, closeModal } = props
   const [authentication, setAuthentication] = useState(1);
+  const [currentDBType, setCurrentDBType] = useState(DatabaseTypeCode.MYSQL);
 
   useEffect(() => {
     if (!rowData) {
@@ -112,6 +128,7 @@ export default memo<IProps>(function ConnectionDialog(props) {
       });
     }
     if (type === 'type') {
+      setCurrentDBType(formData.type)
       form.setFieldsValue({
         ...formData,
         port: databaseType[formData.type].port,
@@ -178,22 +195,46 @@ export default memo<IProps>(function ConnectionDialog(props) {
           <Input onChange={(value) => { onChangeForm('port') }} />
         </Form.Item>
       </div>
-      {/* <div className={styles.moreLine}>
-        <Form.Item
-          label="实例"
-          name="hostCom puter"
-          className={styles.hostComputer}
-        >
-          <Input onChange={(value) => { onChangeForm('hostComputer') }} />
-        </Form.Item>
-        <Form.Item
-          label="主机"
-          name="port"
-          className={styles.port}
-        >
-          <Input onChange={(value) => { onChangeForm('port') }} />
-        </Form.Item>
-      </div> */}
+      {
+        currentDBType === DatabaseTypeCode.H2 &&
+        <div className={styles.moreLine}>
+          <Form.Item
+            label="实例"
+            name="hostCom puter"
+            className={styles.hostComputer}
+          >
+            <Input onChange={(value) => { onChangeForm('hostComputer') }} />
+          </Form.Item>
+          <Form.Item
+            label="主机"
+            name="port"
+            className={styles.port}
+          >
+            <Input onChange={(value) => { onChangeForm('port') }} />
+          </Form.Item>
+        </div>
+      }
+      {
+        currentDBType === DatabaseTypeCode.ORACLE &&
+        < div className={styles.moreLine}>
+          <Form.Item
+            label="SID"
+            name="sid"
+            className={styles.hostComputer}
+          >
+            <Input onChange={(value) => { onChangeForm('hostComputer') }} />
+          </Form.Item>
+          <Form.Item
+            label="驱动"
+            name="driven"
+            className={styles.port}
+          >
+            <Select>
+              {oracelDriven.map(t => <Option key={t.value} value={t.value}>{t.label}</Option>)}
+            </Select>
+          </Form.Item>
+        </div>
+      }
       <Form.Item
         label="身份验证"
         name="authentication"
