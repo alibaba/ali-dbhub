@@ -5,7 +5,6 @@
 package com.alibaba.dbhub.server.domain.support.model.support;
 
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
-import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.util.SqlSessionFactoryUtils;
 
 import org.apache.ibatis.session.SqlSession;
@@ -21,18 +20,38 @@ public class JdbcAccessor {
 
     private MetaSchema service;
 
-    private NamedParameterJdbcTemplate jdbcTemplate;
 
-    private DataDataSource dataDataSource;
+    private DbhubDataSource dbhubDataSource;
 
     private Long dataSourceId;
 
-    public JdbcAccessor(Long dataSourceId, DataDataSource dataDataSource) {
+    private NamedParameterJdbcTemplate jdbcTemplate;
+
+    /**
+     * Getter method for property <tt>dbhubDataSource</tt>.
+     *
+     * @return property value of dbhubDataSource
+     */
+    public DbhubDataSource getDbhubDataSource() {
+        return dbhubDataSource;
+    }
+
+    /**
+     * Setter method for property <tt>dbhubDataSource</tt>.
+     *
+     * @param dbhubDataSource value to be assigned to property dbhubDataSource
+     */
+    public void setDbhubDataSource(DbhubDataSource dbhubDataSource) {
+        this.dbhubDataSource = dbhubDataSource;
+    }
+
+
+    public JdbcAccessor(Long dataSourceId, DbhubDataSource dbhubDataSource) {
         this.dataSourceId = dataSourceId;
-        this.dataDataSource = dataDataSource;
-        this.jdbcTemplate = new NamedParameterJdbcTemplate(dataDataSource);
-        this.sqlSession = SqlSessionFactoryUtils.build(dataDataSource,dataDataSource.getDbType()).openSession();
-        this.service = dataDataSource.getDbType().metaSchema(sqlSession);
+        this.dbhubDataSource = dbhubDataSource;
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(dbhubDataSource);
+        this.sqlSession = SqlSessionFactoryUtils.build(dbhubDataSource, dbhubDataSource.getDbType()).openSession();
+        this.service = dbhubDataSource.getDbType().metaSchema(sqlSession);
     }
 
     /**
@@ -89,23 +108,7 @@ public class JdbcAccessor {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    /**
-     * Getter method for property <tt>dataDataSource</tt>.
-     *
-     * @return property value of dataDataSource
-     */
-    public DataDataSource getDataDataSource() {
-        return dataDataSource;
-    }
 
-    /**
-     * Setter method for property <tt>dataDataSource</tt>.
-     *
-     * @param dataDataSource value to be assigned to property dataDataSource
-     */
-    public void setDataDataSource(DataDataSource dataDataSource) {
-        this.dataDataSource = dataDataSource;
-    }
 
     /**
      * Getter method for property <tt>dataSourceId</tt>.

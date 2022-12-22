@@ -4,6 +4,7 @@ export interface IDatabase {
   name: string;
   code:DatabaseTypeCode;
   img: string;
+  port: number;
 }
 export interface IPageResponse<T> {
   data: T[];
@@ -59,6 +60,7 @@ export interface ITreeNode{
   isLeaf?: boolean;
   children?: ITreeNode[];
   parent?: ITreeNode;
+  columnType: string;
 }
 export interface IDB {
   name: string;

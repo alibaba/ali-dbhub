@@ -18,6 +18,11 @@ import org.apache.ibatis.annotations.Param;
 public interface PostgresqlMetaSchemaMapper {
 
     /**
+     * 查询Database
+     * @return
+     */
+    List<String> showDatabases();
+    /**
      * 查询所有表中所有列信息
      *
      * @param tableSchema

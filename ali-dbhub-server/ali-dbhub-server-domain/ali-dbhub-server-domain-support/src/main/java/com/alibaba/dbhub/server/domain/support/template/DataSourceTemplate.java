@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
-import com.alibaba.dbhub.server.domain.support.model.support.DataDataSource;
+import com.alibaba.dbhub.server.domain.support.model.support.DbhubDataSource;
 import com.alibaba.dbhub.server.domain.support.model.support.JdbcAccessor;
 import com.alibaba.dbhub.server.domain.support.model.support.JdbcDataTemplate;
 import com.alibaba.dbhub.server.domain.support.operations.DataSourceOperations;
@@ -16,7 +16,6 @@ import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCloseP
 import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceTestParam;
 import com.alibaba.dbhub.server.domain.support.util.DataCenterUtils;
-import com.alibaba.dbhub.server.domain.support.util.SqlSessionFactoryUtils;
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.excption.SystemException;
 import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
@@ -24,7 +23,6 @@ import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -39,14 +37,13 @@ public class DataSourceTemplate implements DataSourceOperations {
     @Override
     public DataSourceConnect test(DataSourceTestParam param) {
         DbTypeEnum dbType = EasyEnumUtils.getEnum(DbTypeEnum.class, param.getDbType());
-        DataDataSource dataDataSource = DataDataSource.builder()
-            .dbType(dbType)
-            .url(param.getUrl())
-            .username(param.getUsername())
-            .password(param.getPassword())
-            .build();
+        DbhubDataSource dbhubDataSource = new DbhubDataSource();
+        dbhubDataSource.setDbType(dbType);
+        dbhubDataSource.setUrl(param.getUrl());
+        dbhubDataSource.setUsername(param.getUsername());
+        dbhubDataSource .setPassword(param.getPassword());
 
-        return testConnect(dataDataSource, dbType);
+        return testConnect(dbhubDataSource, dbType);
     }
 
     private DataSourceConnect testConnect(DataSource dataSource, DbTypeEnum dbType) {
@@ -97,19 +94,18 @@ public class DataSourceTemplate implements DataSourceOperations {
         close(DataSourceCloseParam.builder().dataSourceId(dataSourceId).build());
 
         DbTypeEnum dbType = EasyEnumUtils.getEnum(DbTypeEnum.class, param.getDbType());
-        DataDataSource dataDataSource = DataDataSource.builder()
-            .dbType(dbType)
-            .url(param.getUrl())
-            .username(param.getUsername())
-            .password(param.getPassword())
-            .build();
+        DbhubDataSource dbhubDataSource = new DbhubDataSource();
+        dbhubDataSource.setDbType(dbType);
+        dbhubDataSource.setUrl(param.getUrl());
+        dbhubDataSource.setUsername(param.getUsername());
+        dbhubDataSource .setPassword(param.getPassword());
 
-        DataSourceConnect dataSourceConnect = testConnect(dataDataSource, dbType);
+        DataSourceConnect dataSourceConnect = testConnect(dbhubDataSource, dbType);
         if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
             // 参数有一次
             return dataSourceConnect;
         }
-        DataCenterUtils.JDBC_ACCESSOR_MAP.put(dataSourceId,new JdbcAccessor(dataSourceId,dataDataSource));
+        DataCenterUtils.JDBC_ACCESSOR_MAP.put(dataSourceId,new JdbcAccessor(dataSourceId, dbhubDataSource));
 
         // 放入缓存
         return dataSourceConnect;

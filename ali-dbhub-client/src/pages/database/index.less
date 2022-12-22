@@ -41,16 +41,16 @@
 }
 
 .header {
-  margin: 20px 20px 0px 20px;
+  margin: 10px 10px 0px 10px;
 }
 
 .overview{
-  margin: 0px 10px;
+  margin: 0px 5px;
   display: flex;
   align-items: center;
-  margin-top: 15px;
-  height: 30px;
-  border-radius: 6px;
+  margin-top: 8px;
+  height: 24px;
+  border-radius: 2px;
   padding: 0px 10px;
   cursor: pointer;
   i{
@@ -65,11 +65,12 @@
 }
 
 .operatingArea{
-  height: 40px;
+  height: 30px;
   background-color: var(--color-bg-200);
+  border-bottom: 1px solid var(--color-bg-100);
   display: flex;
   align-items: center;
-  padding: 0px 10px;
+  // padding: 0px 10px;
   button{
     height: 20px;
     line-height: 20px;
@@ -78,14 +79,23 @@
     padding: 0px 5px;
     margin: 0px 5px;
   }
-  .icon{
-    margin: 0px 5px;
-    font-size: 24px;
-    color: var(--custom-primary-color);
-    cursor: pointer;
+  div{
+    margin: 0px 2px;
+    padding: 0 3px;
+    height: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
     &:hover{
       filter: brightness(1.1);
+      background-color: var(--color-bg-hover);
+      cursor: pointer;
     }
+  }
+  .icon{
+    font-size: 16px;
+    color: var(--custom-primary-color);
   }
 
 }
@@ -94,7 +104,7 @@
   height: 28px;
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   cursor: pointer;
   font-weight: 500;
   &:hover{
@@ -168,8 +178,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     border-radius: 4px;
     cursor: pointer;
     flex-shrink: 0;
@@ -191,7 +201,7 @@
 
 .databaseQueryBox{
   position: relative;
-  height: calc(100vh - 56px);
+  height: calc(100vh - 43px);
 }
 
 .databaseQuery{
@@ -241,6 +251,56 @@
     .custom-tabs-top > .custom-tabs-nav::before{
 
       border-bottom: 0px !important;
+    }
+
+    .custom-tabs-nav-wrap{
+      padding: 4px 0px 0px 2px;
+      background-color:  var(--color-bg-200);
+      border-radius: 4px 4px 0px 0px;
+    }
+    .custom-tabs-card > .custom-tabs-nav .custom-tabs-tab, .custom-tabs-card > div > .custom-tabs-nav .custom-tabs-tab {
+      font-weight: 300 !important;
+      position: relative;
+      border: 0;
+      // &::after{
+      //   position: absolute;
+      //   left: 0;
+      //   top: 5px;
+      //   content: '';
+      //   height: 16px;
+      //   width: 1px;
+      //   background-color: var(--color-text-65);
+      // }
+    }
+    .custom-tabs-nav-list .custom-tabs-tab:nth-of-type(1){
+      &::after{
+        opacity: 0;
+      }
+    }
+    .custom-tabs-nav-list .custom-tabs-tab-active{
+      &::after{
+        opacity: 0;
+      }
+    }
+
+    .custom-tabs-nav-add{
+      color: var(--color-text-65);
+      border: 0 !important;
+    }
+    .custom-tabs-tab-btn:focus, .custom-tabs-tab-remove:focus, .custom-tabs-tab-btn:active, .custom-tabs-tab-remove:active{
+      color: var(--custom-primary-2);
+    }
+    .custom-tabs > .custom-tabs-nav .custom-tabs-nav-add:active, .custom-tabs > div > .custom-tabs-nav .custom-tabs-nav-add:active, .custom-tabs > .custom-tabs-nav .custom-tabs-nav-add:focus, .custom-tabs > div > .custom-tabs-nav .custom-tabs-nav-add:focus {
+      color: var(--custom-primary-2);
+    }
+    .custom-tabs > .custom-tabs-nav .custom-tabs-nav-add:hover, .custom-tabs > div > .custom-tabs-nav .custom-tabs-nav-add:hover {
+      color: var(--custom-primary-2);
+    }
+    .custom-tabs-tab:hover,.custom-tabs-tab:active,.custom-tabs-tab:focus {
+      color: var(--custom-primary-2);
+  }
+    .custom-tabs-card.custom-tabs-top > .custom-tabs-nav .custom-tabs-tab-active, .custom-tabs-card.custom-tabs-top > div > .custom-tabs-nav .custom-tabs-tab-active{
+      border-radius: 5px 5px 0px 0px;
     }
   }
 }

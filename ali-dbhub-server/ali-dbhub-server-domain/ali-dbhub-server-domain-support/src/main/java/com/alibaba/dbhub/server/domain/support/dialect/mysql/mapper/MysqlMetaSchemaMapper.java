@@ -5,9 +5,9 @@
 package com.alibaba.dbhub.server.domain.support.dialect.mysql.mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import com.alibaba.dbhub.server.domain.support.model.CreateTableSql;
+import com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion;
@@ -19,6 +19,14 @@ import org.apache.ibatis.annotations.Param;
  * @version : MysqlMetaSchemaMapper.java, v 0.1 2022年12月14日 22:27 jipengfei Exp $
  */
 public interface MysqlMetaSchemaMapper {
+
+    /**
+     * 查询Database
+     *
+     * @return
+     */
+    List<ShowDatabaseResult> showDatabases();
+
     /**
      * 查询所有表中所有列信息
      *
@@ -40,12 +48,13 @@ public interface MysqlMetaSchemaMapper {
      * 查询所有的表
      *
      * @param databaseName
+     * @param tableName
      * @param pageSize
      * @param pageSize
      * @return
      */
-    List<Table> selectTables(@Param("databaseName") String databaseName, @Param("pageSize") long pageSize,
-        @Param("pageIndex") long pageIndex);
+    List<Table> selectTables(@Param("databaseName") String databaseName, @Param("tableName") String tableName,
+        @Param("pageSize") long pageSize, @Param("pageIndex") long pageIndex);
 
     /**
      * @param databaseName
@@ -60,7 +69,7 @@ public interface MysqlMetaSchemaMapper {
      * @param tableName
      * @return
      */
-   CreateTableSql showCreateTable(@Param("databaseName") String databaseName,
+    CreateTableSql showCreateTable(@Param("databaseName") String databaseName,
         @Param("tableName") String tableName);
 
     /**

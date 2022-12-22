@@ -22,33 +22,29 @@ public class BooleanTypeHandler implements TypeHandler<Boolean> {
 
     @Override
     public void setParameter(PreparedStatement ps, int i, Boolean parameter, JdbcType jdbcType) throws SQLException {
-
     }
 
     @Override
     public Boolean getResult(ResultSet rs, String columnName) throws SQLException {
-        if (YesOrNoEnum.YES.getCode().equalsIgnoreCase(rs.getString(columnName))) {
-            return Boolean.TRUE;
-        } else {
-            return Boolean.FALSE;
-        }
+        return parse(rs.getString(columnName));
     }
 
     @Override
     public Boolean getResult(ResultSet rs, int columnIndex) throws SQLException {
-        if (YesOrNoEnum.YES.getCode().equalsIgnoreCase(rs.getString(columnIndex))) {
-            return Boolean.TRUE;
-        } else {
-            return Boolean.FALSE;
-        }
+        return parse(rs.getString(columnIndex));
+
     }
 
     @Override
     public Boolean getResult(CallableStatement cs, int columnIndex) throws SQLException {
-        if (YesOrNoEnum.YES.getCode().equalsIgnoreCase(cs.getString(columnIndex))) {
-            return Boolean.TRUE;
-        } else {
-            return Boolean.FALSE;
-        }
+        return parse(cs.getString(columnIndex));
     }
+
+    private Boolean parse(String result) {
+        if (YesOrNoEnum.YES.getCode().equalsIgnoreCase(result)) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+
 }

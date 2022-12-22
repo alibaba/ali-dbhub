@@ -1,30 +1,22 @@
 package com.alibaba.dbhub.server.domain.support.util;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.alibaba.dbhub.server.domain.support.dialect.DatabaseMetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.model.support.DataDataSource;
+import com.alibaba.dbhub.server.domain.support.model.support.DbhubDataSource;
 import com.alibaba.dbhub.server.domain.support.model.support.JdbcAccessor;
 import com.alibaba.dbhub.server.domain.support.model.support.JdbcDataTemplate;
 import com.alibaba.dbhub.server.domain.support.operations.ConsoleOperations;
 import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCreateParam;
 import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
-import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
-import com.alibaba.dbhub.server.tools.base.excption.SystemException;
 import com.alibaba.dbhub.server.tools.common.enums.ErrorEnum;
-import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.druid.DbType;
 
 import com.google.common.collect.Maps;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -109,11 +101,11 @@ public class DataCenterUtils implements InitializingBean {
      * @return
      */
     public static DbTypeEnum getDbTypeByDataSourceId(Long dataSourceId) {
-        DataDataSource dataDataSource = JDBC_ACCESSOR_MAP.get(dataSourceId).getDataDataSource();
-        if (dataDataSource == null) {
+        DbhubDataSource dbhubDataSource = JDBC_ACCESSOR_MAP.get(dataSourceId).getDbhubDataSource();
+        if (dbhubDataSource == null) {
             throw new BusinessException(ErrorEnum.DATA_SOURCE_NOT_FOUND);
         }
-        return dataDataSource.getDbType();
+        return dbhubDataSource.getDbType();
     }
 
     /**
@@ -134,7 +126,13 @@ public class DataCenterUtils implements InitializingBean {
      */
 
     public static MetaSchema getMetaSchema(Long dataSourceId) {
-        return JDBC_ACCESSOR_MAP.get(dataSourceId).getService();
+        try {
+            return JDBC_ACCESSOR_MAP.get(dataSourceId).getService();
+        }catch (Exception e){
+
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

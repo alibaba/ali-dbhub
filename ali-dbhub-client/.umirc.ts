@@ -1,7 +1,6 @@
 import { defineConfig } from 'umi';
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 // const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin');
-console.log('我是umirc')
 
 const chainWebpack = (config:any, { webpack }:any) => {
   config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
@@ -74,17 +73,13 @@ export default defineConfig({
   ],
   mfsu: {},
   fastRefresh: {},
-  dynamicImport: {
-    loading: '@/components/Loading/LazyLoading',
-  },
+  // 桌面端不需要懒加载
+  // dynamicImport: {
+  //   loading: '@/components/Loading/LazyLoading',
+  // },
+  dynamicImportSyntax:{},
   nodeModulesTransform: {
     type: 'none',
   },
   chainWebpack,
-  // proxy: {
-  //   '/api': {
-  //     'target': 'http://localhost:10824',
-  //     'changeOrigin': true
-  //   },
-  // },
 });

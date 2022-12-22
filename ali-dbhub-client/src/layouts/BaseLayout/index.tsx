@@ -13,21 +13,28 @@ interface Iprops {
 }
 
 interface INavItem {
-  title: string,
-  icon: string,
-  path: string,
+  title: string;
+  icon: string;
+  path: string;
+  openBrowser?: boolean;
 }
 
 const LNKConfig: INavItem[] = [
   {
     title: i18n('home.nav.database'),
-    icon: '\ue759',
+    icon: '\uec57',
     path: '/connection',
   },
   {
     title: i18n('home.nav.myHistory'),
-    icon: '\ue759',
+    icon: '\ue610',
     path: '/sql-history',
+  },
+  {
+    title: i18n('home.nav.github'),
+    icon: '\ue885',
+    path: 'https://github.com/alibaba/ali-dbhub',
+    openBrowser: true
   },
 ];
 
@@ -37,11 +44,15 @@ export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
   useEffect(() => { }, []);
 
   function switchingNav(item: INavItem) {
-    history.push(item.path);
-    setActiveNav(item.path);
+    if (item.openBrowser) {
+      window.open(item.path)
+    } else {
+      history.push(item.path);
+      setActiveNav(item.path);
+    }
   }
 
-  function jumpHome(){
+  function jumpHome() {
     history.push('/')
   }
 
