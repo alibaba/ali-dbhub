@@ -66,10 +66,22 @@
     .visitedTime {
       color: var(--color-text-45);
     }
-    .name{
+
+    .name,.user,.url{
       .f-lines(1);
       line-height: 100%;
+      margin-right: 20px;
     }
+    .name{
+      flex: 2;
+    }
+    .user{
+      flex: 1;
+    }
+    .url{
+      flex: 5;
+    }
+    
   }
 
   .right {
@@ -93,7 +105,7 @@
 
   &:hover {
     background-color: var(--color-bg-hover);
-    .name {
+    .name,.user,.url {
       color: var(--custom-primary-color);
     }
     .logo {

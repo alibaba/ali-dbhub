@@ -82,7 +82,7 @@ export interface IToTreeProps{
 }
 
 export function toTreeList(props:IToTreeProps){
-  const {parent,data,name='name',type = 'type',nodeType,isLeaf=true} = props
+  const {parent,data,name='name',type = 'columnType',nodeType,isLeaf=true} = props
   return data?.map((item,index)=>{
     return {
       key: `${index+1}-${index+1}`,
