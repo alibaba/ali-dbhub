@@ -7,6 +7,8 @@ import { ITreeNode, IDB, IConnectionBase } from '@/types';
 import mysqlServer from '@/service/mysql';
 import { DatabaseTypeCode, WindowTabStatus } from '@/utils/constants';
 import historyServer from '@/service/history';
+import { format } from 'sql-formatter';
+
 
 export interface IOperationData {
   type: string;
@@ -95,7 +97,9 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
 
   function setMonacoEditorValue(monacoEditor: any, value: string) {
     const model = monacoEditor.getModel(monacoEditor)
-    model.setValue(value)
+    model.setValue(
+      format(value, {})
+    )
   }
   const getMonacoEditorValue = (monacoEditor: any) => {
     const model = monacoEditor.getModel(monacoEditor)

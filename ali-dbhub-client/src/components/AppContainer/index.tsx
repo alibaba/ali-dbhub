@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { ConfigProvider } from 'antd';
 import { history } from 'umi';
 import { useLogin } from '@/utils/hooks';
-import { getLastPosition,setCurrentPosition } from '@/utils';
+import { getLastPosition, setCurrentPosition } from '@/utils';
 import miscService from '@/service/misc'
 import i18n from '@/i18n';
 
@@ -17,20 +17,21 @@ export default memo<IProps>(function AppContainer({ className, children }) {
   const [serviceStart, setServiceStart] = useState(false);
   const [serviceFail, setServiceFail] = useState(false);
 
-  function hashchange(){
+  function hashchange() {
+    console.log(location.hash)
     setCurrentPosition()
   }
 
-  useLayoutEffect(()=>{
-    window.addEventListener('hashchange',hashchange)
+  useLayoutEffect(() => {
+    window.addEventListener('hashchange', hashchange)
     const hash = getLastPosition()
-    if(hash){
+    if (hash) {
       location.hash = hash
     }
-    return ()=>{
-      window.removeEventListener('hashchange',hashchange)
+    return () => {
+      window.removeEventListener('hashchange', hashchange)
     }
-  },[])
+  }, [])
 
   useEffect(() => {
     settings();
@@ -54,8 +55,9 @@ export default memo<IProps>(function AppContainer({ className, children }) {
   }
 
   function settings() {
-    const theme = localStorage.getItem('theme') || 'default'
+    const theme = localStorage.getItem('theme') || 'dark'
     document.documentElement.setAttribute('theme', theme);
+    localStorage.setItem('theme', theme);
     document.documentElement.setAttribute('primary-color', localStorage.getItem('primary-color') || 'polar-blue');
     if (!localStorage.getItem('lang')) {
       localStorage.setItem('lang', 'zh-cn');

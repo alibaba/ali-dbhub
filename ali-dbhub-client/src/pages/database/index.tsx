@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState, useRef } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { history, useParams } from 'umi';
-import { Button, DatePicker, Input, Table, Modal, Tabs, Dropdown, message } from 'antd';
+import { Button, DatePicker, Input, Table, Modal, Tabs, Dropdown, message, Tooltip } from 'antd';
 import i18n from '@/i18n';
 import AppHeader from '@/components/AppHeader';
 import Iconfont from '@/components/Iconfont';
@@ -25,6 +25,7 @@ const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
 import { useUpdateEffect } from '@/utils/hooks';
 const { keywords } = language;
+import { format } from 'sql-formatter';
 
 interface IProps {
   className?: any;
@@ -59,7 +60,6 @@ export function DatabaseQuery(props: IDatabaseQueryProps) {
   useEffect(() => {
     const nodeData = treeNodeClickMessage
     if (nodeData && windowTab.id === activeTabKey) {
-      console.log(nodeData)
       const model = monacoEditor.current.getModel(monacoEditor.current)
       const value = model.getValue()
       if (nodeData.nodeType == TreeNodeType.TABLE) {
@@ -164,13 +164,33 @@ export function DatabaseQuery(props: IDatabaseQueryProps) {
     })
   }
 
+  function formatValue() {
+    const model = monacoEditor.current.getModel(monacoEditor.current)
+    const value = model.getValue()
+    model.setValue(format(value, {}))
+  }
+
   return <>
     <div className={classnames(styles.databaseQuery, { [styles.databaseQueryConceal]: windowTab.id !== activeTabKey })}>
       <div className={styles.operatingArea}>
-        {/* <Iconfont code="&#xe73b;" className={styles.icon} onClick={executeSql} />
-        <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} /> */}
-        <Button type="primary" onClick={executeSql}>{i18n('common.button.execute')}</Button>
+        <div>
+          <Tooltip placement="bottom" title="执行">
+            <Iconfont code="&#xe626;" className={styles.icon} onClick={executeSql} />
+          </Tooltip>
+        </div>
+        <div>
+          <Tooltip placement="bottom" title="保存">
+            <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} />
+          </Tooltip>
+        </div>
+        <div>
+          <Tooltip placement="bottom" title="格式化">
+            <Iconfont code="&#xe7f8;" className={styles.icon} onClick={formatValue} />
+          </Tooltip>
+        </div>
+        {/* <Button type="primary" onClick={executeSql}>{i18n('common.button.execute')}</Button>
         <Button onClick={saveWindowTabTab}>{i18n('common.button.save')}</Button>
+        <Button onClick={formatValue}>格式化</Button> */}
       </div>
       <div ref={monacoEditorBox} className={styles.monacoEditor}>
         {
@@ -204,6 +224,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [operationData, setOperationData] = useState<IOperationData | null>();
   const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode | null>(null);
   const monacoHint = useRef<any>(null);
+  const [avtiveWindowIndex, setAvtiveWindowIndex] = useState(0);
 
   const closeDropdownFn = () => {
     setOpenDropdown(false)
@@ -265,17 +286,17 @@ export default memo<IProps>(function DatabasePage({ className }) {
     }
   }, [DBList])
 
-  useEffect(()=>{
-    if(activeKey){
-      setPageHash(currentDB?.name!,activeKey)
+  useEffect(() => {
+    if (activeKey) {
+      setPageHash(currentDB?.name!, activeKey)
     }
-  },[activeKey])
+  }, [activeKey])
 
-  function setPageHash(databaseName:string,windowId:string|number){
+  function setPageHash(databaseName: string, windowId: string | number) {
     // TODO:这里如果用正则替换应该会优雅一些
-    if(location.hash.split('?')[1]){
+    if (location.hash.split('?')[1]) {
       location.hash = location.hash.split('?')[0] + `?databaseName=${databaseName}&id=${windowId}`
-    }else{
+    } else {
       location.hash = location.hash + `?databaseName=${databaseName}&id=${windowId}`
     }
     setCurrentPosition()
@@ -454,6 +475,14 @@ export default memo<IProps>(function DatabasePage({ className }) {
   };
 
   const onChangeTab = (newActiveKey: string) => {
+    // setTimeout(() => {
+    //   const index = windowList.findIndex(t => t.id === newActiveKey)
+    //   const conceal1 = document.getElementsByClassName('custom-tabs-nav-list')[0]?.childNodes[index - 1] as any
+    //   const conceal2 = document.getElementsByClassName('custom-tabs-nav-list')[0]?.childNodes[index] as any
+    //   conceal1?.classList.add('conceal-after')
+    //   conceal2?.classList.add('conceal-after')
+    // }, 2000);
+    // window.getComputedStyle(document.getElementsByClassName('custom-tabs-nav-list')[0].childNodes[index] as any, '::after').getPropertyValue('font-size');
     setActiveKey(newActiveKey);
   };
 
@@ -582,12 +611,14 @@ export default memo<IProps>(function DatabasePage({ className }) {
         <AppHeader className={styles.appHeader} showRight={false}>
           <div className={styles.tabsBox}>
             <Tabs
+              // style={{ '--active-tabs-after': avtiveWindowIndex, '--active-tabs-befor': avtiveWindowIndex + 1 } as any}
               type="editable-card"
               onChange={onChangeTab}
               activeKey={activeKey}
               onEdit={onEdit}
               items={windowList}
-            />
+            >
+            </Tabs>
           </div>
         </AppHeader>
         <div className={styles.databaseQueryBox}>
@@ -605,7 +636,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
           }
         </div>
       </div>
-    </div>
+    </div >
     <Modal
       title="新窗口名称"
       open={isModalVisible}
