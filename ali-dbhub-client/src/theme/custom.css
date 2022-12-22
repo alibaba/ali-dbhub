@@ -702,6 +702,8 @@ html {
   animation-play-state: paused;
 }
 .custom-slide-up-leave {
+  /* myCustom */
+  display: none !important; 
   animation-duration: 0.2s;
   animation-fill-mode: both;
   animation-play-state: paused;
@@ -2283,7 +2285,6 @@ li:last-child .custom-breadcrumb-separator {
   height: 32px;
   padding: 4px 15px;
   font-size: 14px;
-  border-radius: 2px;
   color: var(--color-text-85);
   border-color: var(--color-border);
   background: var(--color-bg-100) ;
@@ -23146,7 +23147,7 @@ span.custom-radio + * {
 .custom-table.custom-table-small .custom-table-tbody > tr > td,
 .custom-table.custom-table-small tfoot > tr > th,
 .custom-table.custom-table-small tfoot > tr > td {
-  padding: 8px 8px;
+  padding: 4px 8px;
 }
 .custom-table.custom-table-small .custom-table-filter-trigger {
   margin-right: -4px;
@@ -23660,7 +23661,8 @@ span.custom-radio + * {
 .custom-table-thead > tr > th {
   position: relative;
   color: var(--color-text-85);
-  font-weight: 500;
+  font-weight: 400;
+  font-size: 12px;
   text-align: left;
   background: var(--color-bg-200);
   border-bottom: 1px solid var(--color-bg-6);
@@ -23688,6 +23690,9 @@ span.custom-radio + * {
 .custom-table-tbody > tr > td {
   border-bottom: 1px solid var(--color-bg-6);
   transition: background 0.3s;
+  font-weight: 400px;
+  font-size: 12px;
+  
 }
 .custom-table-tbody > tr > td > .custom-table-wrapper:only-child .custom-table,
 .custom-table-tbody
@@ -25693,10 +25698,12 @@ tr.custom-table-expanded-row .custom-descriptions-view table {
 }
 .custom-tooltip-inner {
   min-width: 30px;
-  min-height: 32px;
-  padding: 6px 8px;
-  color: var(--color-bg-100) ;
-  text-align: left;
+  min-height: 20px;
+  line-height: 20px;
+  padding: 0 5px;
+  font-size: 12px;
+  color: var(--color-bg-100);
+  text-align: center;
   text-decoration: none;
   word-wrap: break-word;
   background-color: var(--color-text-75);
@@ -25741,7 +25748,7 @@ tr.custom-table-expanded-row .custom-descriptions-view table {
   left: -11.3137085px;
   width: 33.9411255px;
   height: 33.9411255px;
-  background: var(--antd-arrow-background-color);
+  background: var(--color-text-75);
   background-repeat: no-repeat;
   background-position: -10px -10px;
   content: '';

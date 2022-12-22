@@ -23,20 +23,26 @@ interface TreeNodeIProps {
   data: ITreeNode;
   level: number;
   show: boolean;
+  showAllChildrenPenetrate?: boolean;
   loadData?: Function;
   nodeDoubleClick?: Function;
   openOperationTableModal: Function;
 }
 
 export function TreeNode(props: TreeNodeIProps) {
-  const { data, level, show = false, loadData, nodeDoubleClick, openOperationTableModal } = props
+  const { data, level, show = false, loadData, nodeDoubleClick, openOperationTableModal, showAllChildrenPenetrate = false } = props
   const [showChildren, setShowChildren] = useState(false);
+  const [showAllChildren, setShowAllChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState(true);
   const indentArr = new Array(level);
   for (let i = 0; i < level; i++) {
     indentArr[i] = 'indent'
   }
+  console.log(data)
+
+  useEffect(() => {
+    setShowChildren(showAllChildrenPenetrate)
+  }, [showAllChildrenPenetrate])
 
   //展开-收起
   const handleClick = (data: ITreeNode) => {
@@ -55,6 +61,9 @@ export function TreeNode(props: TreeNodeIProps) {
         }, 0);
       })
     } else {
+      if (level === 0) {
+        setShowAllChildren(!showAllChildren)
+      }
       setShowChildren(!showChildren);
     }
   };
@@ -177,7 +186,7 @@ export function TreeNode(props: TreeNodeIProps) {
       !!data.children?.length &&
       data.children.map((item: any, i: number) => {
         return (
-          <TreeNode openOperationTableModal={openOperationTableModal} nodeDoubleClick={nodeDoubleClick} loadData={loadData} key={i} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
+          <TreeNode openOperationTableModal={openOperationTableModal} nodeDoubleClick={nodeDoubleClick} loadData={loadData} key={i} showAllChildrenPenetrate={showAllChildrenPenetrate || showAllChildren} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
         );
       })
     }
@@ -186,7 +195,6 @@ export function TreeNode(props: TreeNodeIProps) {
 
 export default function Tree(props: IProps) {
   const { className, treeData, loadData, nodeDoubleClick, openOperationTableModal } = props;
-  const [operationData, setOperationData] = useState();
 
   const treeDataEmpty = () => {
     return ''
