@@ -126,7 +126,13 @@ public class DataCenterUtils implements InitializingBean {
      */
 
     public static MetaSchema getMetaSchema(Long dataSourceId) {
-        return JDBC_ACCESSOR_MAP.get(dataSourceId).getService();
+        try {
+            return JDBC_ACCESSOR_MAP.get(dataSourceId).getService();
+        }catch (Exception e){
+
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

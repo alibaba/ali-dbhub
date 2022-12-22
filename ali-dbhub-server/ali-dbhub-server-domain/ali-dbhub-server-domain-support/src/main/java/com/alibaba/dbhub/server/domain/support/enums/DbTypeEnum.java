@@ -4,6 +4,7 @@ import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiExample;
 import com.alibaba.dbhub.server.domain.support.dialect.h2.H2MetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.mysql.MysqlMetaSchemaSupport;
+import com.alibaba.dbhub.server.domain.support.dialect.oracle.OracleMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.postgresql.PostgresqlMetaSchemaSupport;
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
 
@@ -14,6 +15,8 @@ import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.H2_CREATE_TABLE_SIMPLE;
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.MYSQL_ALTER_TABLE_SIMPLE;
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.MYSQL_CREATE_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.ORACLE_ALTER_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.ORACLE_CREATE_TABLE_SIMPLE;
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_ALTER_TABLE_SIMPLE;
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_CREATE_TABLE_SIMPLE;
 
@@ -98,6 +101,9 @@ public enum DbTypeEnum implements BaseEnum<String> {
             case POSTGRESQL:
                 metaSchema =new PostgresqlMetaSchemaSupport(sqlSession) ;
                 break;
+            case ORACLE:
+                metaSchema =new OracleMetaSchemaSupport(sqlSession) ;
+                break;
             default :
         }
         return metaSchema;
@@ -114,6 +120,9 @@ public enum DbTypeEnum implements BaseEnum<String> {
                 break;
             case POSTGRESQL:
                 SpiExample = SpiExample.builder().createTable(PG_CREATE_TABLE_SIMPLE).alterTable(PG_ALTER_TABLE_SIMPLE).build();
+                break;
+            case ORACLE:
+                SpiExample = SpiExample.builder().createTable(ORACLE_CREATE_TABLE_SIMPLE).alterTable(ORACLE_ALTER_TABLE_SIMPLE).build();
                 break;
             default :
         }
