@@ -3,6 +3,7 @@ package com.alibaba.dbhub.server.web.api.controller.rdb.request;
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
+import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceConsoleRequestInfo;
 
 import lombok.Data;
 
@@ -12,7 +13,7 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
-public class DdlRequest extends DataSourceBaseRequest {
+public class DdlRequest extends DataSourceBaseRequest implements DataSourceConsoleRequestInfo {
 
     /**
      * sql语句
