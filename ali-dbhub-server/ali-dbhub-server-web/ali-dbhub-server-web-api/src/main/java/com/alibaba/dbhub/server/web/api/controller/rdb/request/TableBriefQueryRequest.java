@@ -1,8 +1,11 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.request;
 
+import java.io.Serial;
+
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.tools.base.wrapper.request.PageQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequestInfo;
 
 import lombok.Data;
 
@@ -12,8 +15,10 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
-public class TableBriefQueryRequest extends PageQueryRequest {
+public class TableBriefQueryRequest extends PageQueryRequest implements DataSourceBaseRequestInfo {
 
+    @Serial
+    private static final long serialVersionUID = -364547173428396332L;
     /**
      * 数据源id
      */

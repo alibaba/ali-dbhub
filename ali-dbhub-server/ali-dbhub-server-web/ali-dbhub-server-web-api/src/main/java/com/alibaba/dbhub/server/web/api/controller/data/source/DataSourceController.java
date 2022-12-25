@@ -22,6 +22,7 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
+import com.alibaba.dbhub.server.web.api.aspect.ConnectionInfoAspect;
 import com.alibaba.dbhub.server.web.api.controller.data.source.converter.DataSourceWebConverter;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleCloseRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleConnectRequest;
@@ -53,6 +54,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2022/09/16
  */
 @BusinessExceptionAspect
+@ConnectionInfoAspect
 @RequestMapping("/api/connection")
 @RestController
 public class DataSourceController {

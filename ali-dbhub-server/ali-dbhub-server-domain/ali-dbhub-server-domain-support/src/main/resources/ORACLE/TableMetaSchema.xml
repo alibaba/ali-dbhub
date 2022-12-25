@@ -54,7 +54,11 @@
         from user_tab_cols t1, user_col_comments t2
         where t1.TABLE_NAME = t2.table_name
         and t1.COLUMN_NAME = t2.column_name
-        and t1.TABLE_NAME = #{tableName,jdbcType=VARCHAR} order by t1.COLUMN_ID
+        and t1.TABLE_NAME IN
+        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        order by t1.COLUMN_ID
     </select>
     <update id="dropTable">
         drop table ${tableName};
@@ -87,6 +91,9 @@
         i.INDEX_TYPE as INDEX_TYPE
         from user_ind_columns t,user_indexes i
         where t.index_name = i.index_name and t.table_name = i.table_name
-        and t.table_name =#{tableName,jdbcType=VARCHAR}
+        and t.table_name IN
+        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
     </select>
 </mapper>
