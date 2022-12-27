@@ -3,6 +3,7 @@ package com.alibaba.dbhub.server.domain.core.converter;
 import java.util.List;
 
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
+import com.alibaba.dbhub.server.domain.core.util.DesUtil;
 import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
@@ -10,6 +11,7 @@ import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.domain.repository.entity.DataSourceDO;
 
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -19,6 +21,7 @@ import org.mapstruct.Mappings;
  * @version DataSourceCoreConverter.java, v 0.1 2022年09月23日 15:53 moji Exp $
  * @date 2022/09/23
  */
+@Slf4j
 @Mapper(componentModel = "spring")
 public abstract class DataSourceConverter {
 
@@ -28,7 +31,64 @@ public abstract class DataSourceConverter {
      * @param param
      * @return
      */
+    @Mappings({
+        @Mapping(target = "password", expression = "java(encryptString(param))")
+    })
     public abstract DataSourceDO param2do(DataSourceCreateParam param);
+
+    /**
+     * encrypt
+     *
+     * @param param
+     * @return
+     */
+    protected String encryptString(DataSourceCreateParam param) {
+        String encryptStr = param.getPassword();
+        try {
+            DesUtil desUtil = new DesUtil(DesUtil.DES_KEY);
+            encryptStr = desUtil.encrypt(param.getPassword(), "CBC");
+        } catch (Exception exception) {
+            // do nothing
+            log.error("encrypt error", exception);
+        }
+        return encryptStr;
+    }
+
+    /**
+     * encrypt
+     *
+     * @param param
+     * @return
+     */
+    protected String encryptString(DataSourceUpdateParam param) {
+        String encryptStr = param.getPassword();
+        try {
+            DesUtil desUtil = new DesUtil(DesUtil.DES_KEY);
+            encryptStr = desUtil.encrypt(param.getPassword(), "CBC");
+        } catch (Exception exception) {
+            // do nothing
+            log.error("encrypt error", exception);
+        }
+        return encryptStr;
+    }
+
+    /**
+     * decrypt
+     * 
+     * @param param
+     * @return
+     */
+    protected String decryptString(DataSourceDO param) {
+        String decryptStr = param.getPassword();
+        try {
+            DesUtil desUtil = new DesUtil(DesUtil.DES_KEY);
+            decryptStr = desUtil.decrypt(param.getPassword(), "CBC");
+        } catch (Exception exception) {
+            // do nothing
+            log.error("encrypt error", exception);
+        }
+        return decryptStr;
+    }
 
     /**
      * 参数转换
@@ -36,6 +96,9 @@ public abstract class DataSourceConverter {
      * @param param
      * @return
      */
+    @Mappings({
+        @Mapping(target = "password", expression = "java(encryptString(param))")
+    })
     public abstract DataSourceDO param2do(DataSourceUpdateParam param);
 
     /**
@@ -57,9 +120,8 @@ public abstract class DataSourceConverter {
         @Mapping(source = "id", target = "dataSourceId"),
         @Mapping(source = "userName", target = "username"),
     })
-    public abstract com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam do2param(DataSourceDO dataSourceDO);
-
-
+    public abstract com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam do2param(
+        DataSourceDO dataSourceDO);
 
     /**
      * 参数转换
@@ -74,13 +136,15 @@ public abstract class DataSourceConverter {
     public abstract com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceTestParam param2param(
         DataSourcePreConnectParam dataSourcePreConnectParam);
 
-
     /**
      * 模型转换
      *
      * @param dataSourceDO
      * @return
      */
+    @Mappings({
+        @Mapping(target = "password", expression = "java(decryptString(dataSourceDO))")
+    })
     public abstract DataSource do2dto(DataSourceDO dataSourceDO);
 
     /**

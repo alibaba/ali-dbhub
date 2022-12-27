@@ -6,23 +6,40 @@
         <result property="tableName" jdbcType="CHAR" column="TABLE_NAME"/>
         <result property="dataType" jdbcType="CHAR" column="DATA_TYPE"/>
         <result property="comment" jdbcType="CHAR" column="comments"/>
-        <result property="ordinalPosition" jdbcType="INTEGER" column="COLUMN_ID"/>
+        <result property="columnType" jdbcType="CHAR" column="COLUMN_TYPE"/>
+<!--        <result property="ordinalPosition" jdbcType="INTEGER" column="COLUMN_ID"/>-->
         <result property="nullable" jdbcType="CHAR" column="NULLABLE" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
-        <result property="defaultValue" jdbcType="CHAR" column="DATA_DEFAULT"/>
+<!--        <result property="defaultValue" jdbcType="CHAR" column="DATA_DEFAULT"/>-->
     </resultMap>
 
     <resultMap id="BaseTableResultMap" type="com.alibaba.dbhub.server.domain.support.model.Table">
         <result property="name" jdbcType="CHAR" column="table_name"/>
     </resultMap>
 
-    <resultMap id="TableIndexColumnUnionResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">
+<!--    <resultMap id="TableIndexColumnUnionResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">-->
+<!--        <result property="indexName" jdbcType="CHAR" column="INDEX_NAME"/>-->
+<!--        <result property="tableName" jdbcType="CHAR" column="TABLE_NAME"/>-->
+<!--        <result property="columnName" jdbcType="CHAR" column="COLUMN_NAME"/>-->
+<!--        <result property="ordinalPosition" jdbcType="INTEGER" column="COLUMN_POSITION"/>-->
+<!--        <result property="type" jdbcType="CHAR" column="INDEX_TYPE" />-->
+<!--    </resultMap>-->
+
+    <resultMap id="TableIndexResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndex">
+        <result property="name" jdbcType="CHAR" column="INDEX_NAME"/>
+        <result property="tableName" jdbcType="CHAR" column="TABLE_NAME"/>
+<!--        <result property="tableSchemaName" jdbcType="INTEGER" column="schemaname"/>-->
+        <result property="type" jdbcType="CHAR" column="INDEX_TYPE"/>
+    </resultMap>
+
+    <resultMap id="TableIndexColumnUnionResultMap"
+               type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">
         <result property="indexName" jdbcType="CHAR" column="INDEX_NAME"/>
         <result property="tableName" jdbcType="CHAR" column="TABLE_NAME"/>
         <result property="columnName" jdbcType="CHAR" column="COLUMN_NAME"/>
-        <result property="ordinalPosition" jdbcType="INTEGER" column="COLUMN_POSITION"/>
-        <result property="type" jdbcType="CHAR" column="INDEX_TYPE" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.IndexTypeHandler"/>
+        <result property="ordinalPosition" jdbcType="CHAR" column="COLUMN_POSITION"/>
+        <result property="type" jdbcType="CHAR" column="INDEX_TYPE"/>
+        <result property="comment" jdbcType="CHAR" column="DESCEND"/>
     </resultMap>
-
 
     <select id="selectColumns" resultMap="BaseResultMap">
         select
@@ -33,34 +50,38 @@
         t1.DATA_DEFAULT,
         t1.DATA_TYPE,
         t2.comments,
-        t1.DATA_TYPE || '(' || decode(t1.DATA_TYPE, '', t1.DATA_PRECISION + t1.DATA_SCALE, t1.data_length) || ')' as
+        t1.DATA_TYPE || '(' || decode(t1.DATA_TYPE, '', t1.DATA_PRECISION + t1.DATA_SCALE, t1.data_length) || ')' as COLUMN_TYPE
         from user_tab_cols t1, user_col_comments t2
         where t1.TABLE_NAME = t2.table_name
         and t1.COLUMN_NAME = t2.column_name
-        and t1.TABLE_NAME = #{tableName,jdbcType=VARCHAR} order by t1.COLUMN_ID;
+        and t1.TABLE_NAME IN
+        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        order by t1.COLUMN_ID
     </select>
     <update id="dropTable">
         drop table ${tableName};
     </update>
     <select id="showDatabases" resultType="java.lang.String">
-        select tablespace_name from sys.dba_tablespaces  where tablespace_name not in ('SYSAUX','UNDOTBS1','TEMP','USERS','EXAMPLE');
+        select tablespace_name from sys.dba_tablespaces  where tablespace_name not in ('SYSAUX','UNDOTBS1','TEMP','USERS','EXAMPLE')
     </select>
     <select id="selectTables" resultMap="BaseTableResultMap">
         select tt.OBJECT_NAME as table_name from (select rownum rn,t.* from(
         select OBJECT_NAME  from user_objects where object_type='TABLE'
-        and OBJECT_NAME in (select TABLE_NAME from all_tables where TABLESPACE_NAME =#{tableSchema,jdbcType=VARCHAR}) order by CREATED desc) t where rownum <= #{end} ) tt where tt.rn> #{start};
+        and OBJECT_NAME in (select TABLE_NAME from all_tables where TABLESPACE_NAME =#{tableSchema,jdbcType=VARCHAR}) order by CREATED desc) t where rownum &lt;= #{end} ) tt where  tt.rn &gt; #{start}
     </select>
 
     <select id="selectTableCount">
         select count(*)  from user_objects where object_type='TABLE'
         and OBJECT_NAME in (select TABLE_NAME from all_tables where TABLESPACE_NAME =#{tableSchema,jdbcType=VARCHAR})
-        ;
+
     </select>
 
     <select id="showCreateTable" resultType="java.lang.String">
-        select dbms_metadata.get_ddl('TABLE',#{tableName,jdbcType=VARCHAR}) from dual,user_tables where table_name=#{tableName,jdbcType=VARCHAR};
+        select dbms_metadata.get_ddl('TABLE',#{tableName,jdbcType=VARCHAR}) from dual,user_tables where table_name=#{tableName,jdbcType=VARCHAR}
     </select>
-    <select id="selectTableIndexes" resultMap="TableIndexResultMap">
+    <select id="selectTableIndexes" resultMap="TableIndexColumnUnionResultMap">
         select
         t.INDEX_NAME as INDEX_NAME ,
         t.TABLE_NAME as TABLE_NAME,
@@ -70,6 +91,9 @@
         i.INDEX_TYPE as INDEX_TYPE
         from user_ind_columns t,user_indexes i
         where t.index_name = i.index_name and t.table_name = i.table_name
-        and t.table_name =#{tableName,jdbcType=VARCHAR};
+        and t.table_name IN
+        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
     </select>
 </mapper>

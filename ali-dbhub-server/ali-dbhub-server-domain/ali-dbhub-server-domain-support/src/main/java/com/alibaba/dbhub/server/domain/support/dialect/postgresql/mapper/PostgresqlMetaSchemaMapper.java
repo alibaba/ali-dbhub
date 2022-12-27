@@ -19,19 +19,17 @@ public interface PostgresqlMetaSchemaMapper {
 
     /**
      * 查询Database
-     * @return
+     * @return database
      */
     List<String> showDatabases();
     /**
      * 查询所有表中所有列信息
      *
      * @param tableSchema
-     * @param tableName
-     * @param fullName
+     * @param tableNames
      * @return
      */
-    List<PostgresqlColumn> selectColumns(@Param("tableSchema") String tableSchema, @Param("tableName") String tableName,
-        @Param("fullName") String fullName);
+    List<PostgresqlColumn> selectColumns(@Param("tableSchema") String tableSchema, @Param("tableNames") List<String> tableNames);
 
     /**
      * 删除表
@@ -70,9 +68,9 @@ public interface PostgresqlMetaSchemaMapper {
      * 查询表索引信息
      *
      * @param tableSchema
-     * @param tableName
+     * @param tableNames
      * @return
      */
     List<PostgresqlTableIndex> selectTableIndexes(@Param("tableSchema") String tableSchema,
-        @Param("tableName") String tableName);
+        @Param("tableNames") List<String> tableNames);
 }

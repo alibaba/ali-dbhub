@@ -80,7 +80,10 @@
                COLUMN_KEY
         FROM INFORMATION_SCHEMA.COLUMNS
         where table_schema = #{databaseName}
-          AND table_name = #{tableName}
+          AND table_name IN
+        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
         ORDER BY ORDINAL_POSITION
     </select>
 
@@ -89,7 +92,10 @@
                TABLE_NAME,
                COLUMN_NAME, COLLATION, SEQ_IN_INDEX, NON_UNIQUE, INDEX_COMMENT
         FROM INFORMATION_SCHEMA.STATISTICS
-        WHERE TABLE_NAME = #{tableName}
+        WHERE TABLE_NAME IN
+        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
           AND INDEX_SCHEMA = #{databaseName}
           AND TABLE_SCHEMA = #{databaseName}
         order by SEQ_IN_INDEX
