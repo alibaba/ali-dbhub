@@ -3,7 +3,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import connectionServer from '@/service/connection'
 import { IConnectionBase } from '@/types'
-import { databaseTypeList, databaseType, DatabaseTypeCode } from '@/utils/constants'
+import { databaseTypeList, databaseType, DatabaseTypeCode, envType } from '@/utils/constants'
 import {
   Select,
   Button,
@@ -11,6 +11,7 @@ import {
   Form,
   Input,
   message,
+  Radio,
   // Menu,
 } from 'antd';
 
@@ -45,17 +46,36 @@ const authenticationConfig = [
 const oracelDriven = [
   {
     label: 'Thin',
-    value: 'Thin',
+    value: 'thin',
   },
   {
     label: 'OCI',
-    value: 'OCI',
+    value: 'oci',
   },
   {
     label: 'OCI8',
-    value: 'OCI8',
+    value: 'oci8',
   },
 ]
+const h2Driven = [
+  {
+    label: 'tcp',
+    value: 'tcp',
+  },
+  {
+    label: 'mem',
+    value: 'mem',
+  },
+  {
+    label: 'file',
+    value: 'file',
+  },
+]
+
+const envOptions = [
+  { label: '日常', value: envType.DAILY },
+  { label: '线上', value: envType.PRODUCT },
+];
 
 export default memo<IProps>(function ConnectionDialog(props) {
   const { isModalVisible, className, setIsModalVisible, rowData, getConnectionList, closeModal } = props
@@ -70,11 +90,13 @@ export default memo<IProps>(function ConnectionDialog(props) {
         port: databaseType[DatabaseTypeCode.MYSQL].port,
         authentication: 1,
         url: 'jdbc:mysql://localhost:3306',
-        alias: `localhost[1]`
+        alias: `localhost[1]`,
+        envType: envType.DAILY
+
       });
     } else {
       const arr = rowData.url.split(':')
-      const type: DatabaseTypeCode = arr[1].toUpperCase()
+      const type: DatabaseTypeCode = arr[1]?.toUpperCase()
       form.setFieldsValue({
         ...rowData,
         port: arr[3],
@@ -83,6 +105,42 @@ export default memo<IProps>(function ConnectionDialog(props) {
       });
     }
   }, [])
+
+  useEffect(() => {
+    const newForm: any = form
+    const formData = newForm.getFieldValue()
+    if (currentDBType === DatabaseTypeCode.ORACLE) {
+      form.setFieldsValue({
+        ...formData,
+        sid: 'XE',
+        driven: 'thin',
+        port: databaseType[formData.type].port,
+        hostComputer: 'localhost',
+        database: '',
+        url: `jdbc:${formData.type.toLowerCase()}:thin://${formData.hostComputer}:${formData.port}:XE`,
+      });
+    }
+    if (currentDBType === DatabaseTypeCode.H2) {
+      form.setFieldsValue({
+        ...formData,
+        port: databaseType[formData.type].port,
+        hostComputer: 'localhost',
+        database: '',
+        driven: 'tcp',
+        url: `jdbc:${formData.type.toLowerCase()}:tcp://${formData.hostComputer}:${formData.port}`,
+      });
+    }
+    if (currentDBType === DatabaseTypeCode.MYSQL || currentDBType === DatabaseTypeCode.POSTGRESQL) {
+      const p = {
+        ...formData,
+        port: databaseType[formData.type].port,
+        hostComputer: 'localhost',
+        database: '',
+        url: `jdbc:${formData.type.toLowerCase()}://${formData.hostComputer}:${databaseType[formData.type].port}`,
+      }
+      form.setFieldsValue(p);
+    }
+  }, [currentDBType])
 
   const [form] = Form.useForm();
 
@@ -119,7 +177,6 @@ export default memo<IProps>(function ConnectionDialog(props) {
   function onChangeForm(type: string) {
     const newForm: any = form
     const formData = newForm.getFieldValue()
-    console.log(formData)
     if (type === 'port' || type === 'hostComputer') {
       form.setFieldsValue({
         ...formData,
@@ -127,23 +184,73 @@ export default memo<IProps>(function ConnectionDialog(props) {
         url: `jdbc:${formData.type.toLowerCase()}://${formData.hostComputer}:${formData.port}`,
       });
     }
+
+    if (type === 'database') {
+      if (formData.database) {
+        form.setFieldsValue({
+          ...formData,
+          url: `jdbc:${formData.type.toLowerCase()}://${formData.hostComputer}:${formData.port}/${formData.database}`,
+        });
+      } else {
+        form.setFieldsValue({
+          ...formData,
+          url: `jdbc:${formData.type.toLowerCase()}://${formData.hostComputer}:${formData.port}`,
+        });
+      }
+    }
+
+    if (type === 'url') {
+      try {
+        const arr = formData.url.split(':')
+        const type: DatabaseTypeCode = arr[1]?.toUpperCase()
+        if (currentDBType === DatabaseTypeCode.ORACLE) {
+          form.setFieldsValue({
+            ...formData,
+            port: arr[4],
+            hostComputer: arr[3].split('//')[0] || arr[3].split('//')[1],
+            type: DatabaseTypeCode[type],
+            sid: arr[5],
+            driven: arr[2],
+          });
+        } else if (currentDBType === DatabaseTypeCode.H2) {
+          form.setFieldsValue({
+            ...formData,
+            port: arr[4].split('/')[0],
+            hostComputer: arr[3].split('//')[0] || arr[3].split('//')[1],
+            type: DatabaseTypeCode[type],
+            driven: arr[2],
+            database: arr[4].split('/')[1],
+          });
+        } else {
+          form.setFieldsValue({
+            ...formData,
+            hostComputer: arr[2].split('//')[0] || arr[2].split('//')[1],
+            type: DatabaseTypeCode[type],
+            port: arr[3].split('/')[0],
+            database: arr[3].split('/')[1],
+          });
+        }
+      }
+      catch {
+
+      }
+    }
+
     if (type === 'type') {
       setCurrentDBType(formData.type)
+    }
+
+    if (type == 'driven') {
       form.setFieldsValue({
         ...formData,
-        port: databaseType[formData.type].port,
-        hostComputer: 'localhost',
-        url: `jdbc:${formData.type.toLowerCase()}://${formData.hostComputer}:${databaseType[formData.type].port}`,
+        url: `jdbc:${formData.type.toLowerCase()}:${formData.driven}://${formData.hostComputer}:${formData.port}` + (formData.database && `/${formData.database}`),
       });
     }
-    if (type === 'url') {
-      const arr = formData.url.split(':')
-      const type: DatabaseTypeCode = arr[1].toUpperCase()
+
+    if (currentDBType === DatabaseTypeCode.ORACLE && type !== 'url') {
       form.setFieldsValue({
         ...formData,
-        port: arr[3],
-        hostComputer: arr[2].split('//')[0] || arr[2].split('//')[1],
-        type: DatabaseTypeCode[type]
+        url: `jdbc:${formData.type.toLowerCase()}:${formData.driven}://${formData.hostComputer}:${formData.port}:${formData.sid}`,
       });
     }
   }
@@ -199,18 +306,20 @@ export default memo<IProps>(function ConnectionDialog(props) {
         currentDBType === DatabaseTypeCode.H2 &&
         <div className={styles.moreLine}>
           <Form.Item
-            label="实例"
-            name="hostCom puter"
+            label="数据库"
+            name="database"
             className={styles.hostComputer}
           >
-            <Input onChange={(value) => { onChangeForm('hostComputer') }} />
+            <Input onChange={(value) => { onChangeForm('database') }} />
           </Form.Item>
           <Form.Item
-            label="主机"
-            name="port"
+            label="连接方式"
+            name="driven"
             className={styles.port}
           >
-            <Input onChange={(value) => { onChangeForm('port') }} />
+            <Select onChange={() => { onChangeForm('driven') }}>
+              {h2Driven.map(t => <Option key={t.value} value={t.value}>{t.label}</Option>)}
+            </Select>
           </Form.Item>
         </div>
       }
@@ -222,14 +331,14 @@ export default memo<IProps>(function ConnectionDialog(props) {
             name="sid"
             className={styles.hostComputer}
           >
-            <Input onChange={(value) => { onChangeForm('hostComputer') }} />
+            <Input onChange={() => { onChangeForm('sid') }} />
           </Form.Item>
           <Form.Item
             label="驱动"
             name="driven"
             className={styles.port}
           >
-            <Select>
+            <Select onChange={() => { onChangeForm('driven') }}>
               {oracelDriven.map(t => <Option key={t.value} value={t.value}>{t.label}</Option>)}
             </Select>
           </Form.Item>
@@ -262,13 +371,28 @@ export default memo<IProps>(function ConnectionDialog(props) {
           </Form.Item>
         </div>
       }
-
+      {
+        currentDBType !== DatabaseTypeCode.ORACLE && currentDBType !== DatabaseTypeCode.H2 &&
+        < Form.Item
+          label="数据库"
+          name="database"
+        >
+          <Input onChange={() => { onChangeForm('database') }} />
+        </Form.Item>
+      }
       <Form.Item
         label="URL"
         name="url"
       >
         <Input onChange={() => { onChangeForm('url') }} />
       </Form.Item>
+      <Form.Item
+        label="环境"
+        name="envType"
+      >
+        <Radio.Group options={envOptions} />
+      </Form.Item>
+
       <Form.Item wrapperCol={{ offset: 0 }}>
         <div className={styles.formFooter}>
           <div className={styles.test}>
