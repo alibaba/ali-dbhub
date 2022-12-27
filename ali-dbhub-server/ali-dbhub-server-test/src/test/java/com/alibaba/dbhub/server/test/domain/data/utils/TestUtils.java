@@ -2,6 +2,11 @@ package com.alibaba.dbhub.server.test.domain.data.utils;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
+import com.alibaba.dbhub.server.domain.support.sql.DbhubContext.ConnectInfo;
+import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
+
 /**
  * 测试工具类
  *
@@ -41,6 +46,22 @@ public class TestUtils {
             }
         }
         return defaultValue;
+    }
 
+    public static void buildContext(DialectProperties dialectProperties,Long dataSourceId,Long consoleId){
+        ConnectInfo connectInfo = new ConnectInfo();
+        connectInfo.setUser(dialectProperties.getUsername());
+        connectInfo.setConsoleId(consoleId);
+        connectInfo.setDataSourceId(dataSourceId);
+        connectInfo.setPassword(dialectProperties.getPassword());
+        connectInfo.setDbType(dialectProperties.getDbType());
+        connectInfo.setUrl(dialectProperties.getUrl());
+        connectInfo.setDatabase(dialectProperties.getDatabaseName());
+        connectInfo.setConsoleOwn(false);
+        DbhubContext.putContext(connectInfo);
+    }
+
+    public static void remove(){
+        DbhubContext.removeContext();
     }
 }

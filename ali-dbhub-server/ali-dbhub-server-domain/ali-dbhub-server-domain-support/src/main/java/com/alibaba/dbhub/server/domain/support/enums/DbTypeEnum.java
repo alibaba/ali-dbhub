@@ -4,16 +4,18 @@ import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiExample;
 import com.alibaba.dbhub.server.domain.support.dialect.h2.H2MetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.mysql.MysqlMetaSchemaSupport;
+import com.alibaba.dbhub.server.domain.support.dialect.oracle.OracleMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.postgresql.PostgresqlMetaSchemaSupport;
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
 
 import lombok.Getter;
-import org.apache.ibatis.session.SqlSession;
 
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.H2_ALTER_TABLE_SIMPLE;
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.H2_CREATE_TABLE_SIMPLE;
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.MYSQL_ALTER_TABLE_SIMPLE;
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.MYSQL_CREATE_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.ORACLE_ALTER_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.ORACLE_CREATE_TABLE_SIMPLE;
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_ALTER_TABLE_SIMPLE;
 import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_CREATE_TABLE_SIMPLE;
 
@@ -54,7 +56,6 @@ public enum DbTypeEnum implements BaseEnum<String> {
      */
     H2("H2", "org.h2.Driver"),
 
-
     ADB_POSTGRESQL("PostgreSQL", "org.postgresql.Driver"),
     ;
 
@@ -86,36 +87,46 @@ public enum DbTypeEnum implements BaseEnum<String> {
         return this.name();
     }
 
-    public MetaSchema metaSchema(SqlSession sqlSession){
+    public MetaSchema metaSchema() {
         MetaSchema metaSchema = null;
-        switch (this){
-            case H2 :
-                metaSchema = new H2MetaSchemaSupport(sqlSession);
+        switch (this) {
+            case H2:
+                metaSchema = new H2MetaSchemaSupport();
                 break;
             case MYSQL:
-                metaSchema =new MysqlMetaSchemaSupport(sqlSession) ;
-                 break;
-            case POSTGRESQL:
-                metaSchema =new PostgresqlMetaSchemaSupport(sqlSession) ;
+                metaSchema = new MysqlMetaSchemaSupport();
                 break;
-            default :
+            case POSTGRESQL:
+                metaSchema = new PostgresqlMetaSchemaSupport();
+                break;
+            case ORACLE:
+                metaSchema = new OracleMetaSchemaSupport();
+                break;
+            default:
         }
         return metaSchema;
     }
 
-    public SpiExample example(){
+    public SpiExample example() {
         SpiExample SpiExample = null;
-        switch (this){
-            case H2 :
-                SpiExample = SpiExample.builder().createTable(H2_CREATE_TABLE_SIMPLE).alterTable(H2_ALTER_TABLE_SIMPLE).build();
+        switch (this) {
+            case H2:
+                SpiExample = SpiExample.builder().createTable(H2_CREATE_TABLE_SIMPLE).alterTable(H2_ALTER_TABLE_SIMPLE)
+                    .build();
                 break;
             case MYSQL:
-                SpiExample = SpiExample.builder().createTable(MYSQL_CREATE_TABLE_SIMPLE).alterTable(MYSQL_ALTER_TABLE_SIMPLE).build() ;
+                SpiExample = SpiExample.builder().createTable(MYSQL_CREATE_TABLE_SIMPLE).alterTable(
+                    MYSQL_ALTER_TABLE_SIMPLE).build();
                 break;
             case POSTGRESQL:
-                SpiExample = SpiExample.builder().createTable(PG_CREATE_TABLE_SIMPLE).alterTable(PG_ALTER_TABLE_SIMPLE).build();
+                SpiExample = SpiExample.builder().createTable(PG_CREATE_TABLE_SIMPLE).alterTable(PG_ALTER_TABLE_SIMPLE)
+                    .build();
                 break;
-            default :
+            case ORACLE:
+                SpiExample = SpiExample.builder().createTable(ORACLE_CREATE_TABLE_SIMPLE).alterTable(
+                    ORACLE_ALTER_TABLE_SIMPLE).build();
+                break;
+            default:
         }
         return SpiExample;
     }

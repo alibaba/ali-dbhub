@@ -122,18 +122,19 @@ public class DataSourceServiceImpl implements DataSourceService {
 
     @Override
     public ListResult<Database> connect(Long id) {
-        DataSourceDO dataSourceDO = dataSourceMapper.selectById(id);
-        com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam param = dataSourceConverter.do2param(dataSourceDO);
-        DataSourceConnect dataSourceConnect = dataSourceOperations.create(param);
-        if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
-            throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
-        }
-
+        //DataSourceDO dataSourceDO = dataSourceMapper.selectById(id);
+        //com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam param = dataSourceConverter.do2param(dataSourceDO);
+        //DataSourceConnect dataSourceConnect = dataSourceOperations.create(param);
+        //if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
+        //    throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
+        //}
         // 查询database
         DatabaseQueryAllParam queryAllParam = new DatabaseQueryAllParam();
         queryAllParam.setDataSourceId(id);
         return ListResult.of(databaseOperations.queryAll(queryAllParam));
     }
+
+
 
     @Override
     public ActionResult close(Long id) {

@@ -52,12 +52,12 @@
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>oracle</groupId>-->
-<!--            <artifactId>oracle</artifactId>-->
-<!--            <version>10.2.0.3.0</version>-->
-<!--            <scope>system</scope>-->
-<!--            <systemPath>${basedir}/src/main/resources/jdbc/</systemPath>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>oracle-jdbc</groupId>
+            <artifactId>oracle-jdbc</artifactId>
+            <version>10.2.0.3.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/resources/jdbc/ojdbc11.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

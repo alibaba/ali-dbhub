@@ -4,7 +4,6 @@
  */
 package com.alibaba.dbhub.server.domain.support.dialect.oracle;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,10 +16,10 @@ import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion;
+import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 
 import com.google.common.collect.Lists;
-import org.apache.ibatis.session.SqlSession;
 
 /**
  * @author jipengfei
@@ -28,10 +27,8 @@ import org.apache.ibatis.session.SqlSession;
  */
 public class OracleMetaSchemaSupport implements MetaSchema<Table> {
 
-    private SqlSession sqlSession;
-
     private OracleMetaSchemaMapper getMapper() {
-        return sqlSession.getMapper(OracleMetaSchemaMapper.class);
+        return DbhubDataSource.getInstance().getMapper(OracleMetaSchemaMapper.class);
     }
 
     @Override
@@ -46,7 +43,7 @@ public class OracleMetaSchemaSupport implements MetaSchema<Table> {
 
     @Override
     public String showCreateTable(String databaseName, String schemaName, String tableName) {
-        return getMapper().showCreateTable(schemaName,tableName);
+        return getMapper().showCreateTable(schemaName, tableName);
     }
 
     @Override
@@ -61,7 +58,7 @@ public class OracleMetaSchemaSupport implements MetaSchema<Table> {
 
     @Override
     public List<Table> queryTableList(String databaseName, String schemaName, int pageNo, int pageSize) {
-        return getMapper().selectTables(databaseName,pageNo<=1?0:(pageNo-1)*pageSize, pageSize*pageSize);
+        return getMapper().selectTables(databaseName, pageNo <= 1 ? 0 : (pageNo - 1) * pageSize, pageNo * pageSize);
     }
 
     @Override
@@ -72,28 +69,34 @@ public class OracleMetaSchemaSupport implements MetaSchema<Table> {
     @Override
     public List<? extends TableIndex> queryIndexList(String databaseName, String schemaName, List<String> tableNames) {
         List<TableIndex> dataList = Lists.newArrayList();
-        for (String tableName : tableNames) {
-            List<TableIndexColumnUnion> list = getMapper().selectTableIndexes(databaseName, tableName);
-            //按列分组
-            Map<String, List<TableIndexColumnUnion>> map = list.stream().collect(
+        List<TableIndexColumnUnion> list = getMapper().selectTableIndexes(databaseName, tableNames);
+        Map<String, List<TableIndexColumnUnion>> tableMap = list.stream().collect(
+            Collectors.groupingBy(TableIndexColumnUnion::getTableName));
+        for (Map.Entry<String, List<TableIndexColumnUnion>> entry : tableMap.entrySet()) {
+            String tableName = entry.getKey();
+            Map<String, List<TableIndexColumnUnion>> map = entry.getValue().stream().collect(
                 Collectors.groupingBy(TableIndexColumnUnion::getIndexName));
-
-            //组装索引
-            map.forEach((indexName, indexSubList) -> {
-                TableIndexColumnUnion indexColumnUnionFirst = indexSubList.get(0);
-                dataList.add(
-                    TableIndex.builder()
-                        .tableName(tableName)
-                        .name(indexName)
-                        .type(indexColumnUnionFirst.getType())
-                        .comment(indexColumnUnionFirst.getComment())
-                        .columnList(buildIndexColumn(indexSubList, indexName, tableName))
-                        .build());
-            });
+            for (Map.Entry<String, List<TableIndexColumnUnion>> entry1 : tableMap.entrySet()) {
+                TableIndexColumnUnion first = entry1.getValue().get(0);
+                dataList.add(buildTableIndex(tableName, entry1.getKey(), first.getType(), first.getComment(),
+                    entry1.getValue()));
+            }
         }
-
+        //按列分组
         return dataList;
     }
+
+    private TableIndex buildTableIndex(String tableName, String indexName, String type, String comment,
+        List<TableIndexColumnUnion> indexSubList) {
+        return TableIndex.builder()
+            .tableName(tableName)
+            .name(indexName)
+            .type(type)
+            .comment(comment)
+            .columnList(buildIndexColumn(indexSubList, indexName, tableName))
+            .build();
+    }
+
     private List<TableIndexColumn> buildIndexColumn(List<TableIndexColumnUnion> indexSubList, String indexName,
         String tableName) {
         return EasyCollectionUtils.toList(indexSubList, indexColumnUnion -> TableIndexColumn.builder()
@@ -106,9 +109,8 @@ public class OracleMetaSchemaSupport implements MetaSchema<Table> {
     }
 
     @Override
-    public List<? extends TableColumn> queryColumnList(String databaseName, String schemaName, List<String> tableNames) {
-        return tableNames.stream().map(tableName -> getMapper().selectColumns( tableName))
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList());
+    public List<? extends TableColumn> queryColumnList(String databaseName, String schemaName,
+        List<String> tableNames) {
+        return getMapper().selectColumns(tableNames);
     }
 }
