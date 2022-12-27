@@ -81,7 +81,7 @@ public class PostgresqlDialectProperties implements DialectProperties {
 
     @Override
     public String getInsertSql(String tableName, Date date, Long number, String string) {
-        return "INSERT INTO `" + tableName + "` (date,number,string) VALUES ('" + DateUtil.format(date,
+        return "INSERT INTO " + tableName + " (date,number,string) VALUES ('" + DateUtil.format(date,
             DatePattern.NORM_DATETIME_MS_FORMAT) + "','" + number + "','" + string + "');";
     }
 
@@ -89,7 +89,7 @@ public class PostgresqlDialectProperties implements DialectProperties {
     public String getSelectSqlById(String tableName, Long id) {
         return "select *\n"
             + "from " + tableName + "\n"
-            + "where `id` = '" + id + "';";
+            + "where id = '" + id + "';";
     }
 
     @Override
