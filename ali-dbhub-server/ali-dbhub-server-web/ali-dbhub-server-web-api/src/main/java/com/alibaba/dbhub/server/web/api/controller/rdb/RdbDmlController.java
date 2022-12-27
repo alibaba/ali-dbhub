@@ -8,6 +8,7 @@ import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
+import com.alibaba.dbhub.server.web.api.aspect.ConnectionInfoAspect;
 import com.alibaba.dbhub.server.web.api.controller.rdb.converter.RdbWebConverter;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DataExportRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DmlRequest;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2022/09/16
  */
 @BusinessExceptionAspect
+@ConnectionInfoAspect
 @RequestMapping("/api/rdb/dml")
 @RestController
 public class RdbDmlController {
