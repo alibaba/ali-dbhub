@@ -10,7 +10,7 @@ import i18n from '@/i18n';
 import { history } from 'umi';
 import connectionServer from '@/service/connection'
 import { IConnectionBase } from '@/types'
-import { databaseTypeList, DatabaseTypeCode, databaseType } from '@/utils/constants'
+import { databaseTypeList, DatabaseTypeCode, databaseType, envType } from '@/utils/constants'
 import moreDBLogo from '@/assets/moreDB-logo.png';
 import {
   Dropdown,
@@ -193,6 +193,9 @@ export default memo<IProps>(function ConnectionPage(props) {
           }}
         ></div>
         <div className={styles.name}>{item.alias}</div>
+        <div className={styles.envType}>
+          {item.envType === envType.DAILY ? "日常" : "线上"}
+        </div>
         <div className={styles.user}>{item.user}</div>
         <div className={styles.url}>{item.url}</div>
       </div>

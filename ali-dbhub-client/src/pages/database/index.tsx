@@ -356,7 +356,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
       dataSourceId: params.id,
       databaseName: currentDB?.name,
       pageNo: 1,
-      pageSize: 10,
+      pageSize: 10000,
     }
 
     return mysqlServer.getList(p).then(res => {
