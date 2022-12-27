@@ -18,11 +18,11 @@ import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
+import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.exceptions.PersistenceException;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -32,15 +32,10 @@ import org.springframework.util.CollectionUtils;
 @Slf4j
 public class H2MetaSchemaSupport implements MetaSchema<Table> {
 
-    private SqlSession sqlSession;
 
     @Override
     public List<String> showDatabases() {
         return EasyCollectionUtils.toList(getMapper().showDatabases(), ShowDatabaseResult::getDatabase);
-    }
-
-    public H2MetaSchemaSupport(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
     }
 
     @Override
@@ -112,6 +107,6 @@ public class H2MetaSchemaSupport implements MetaSchema<Table> {
     }
 
     private H2MetaSchemaMapper getMapper() {
-        return sqlSession.getMapper(H2MetaSchemaMapper.class);
+        return DbhubDataSource.getInstance().getMapper(H2MetaSchemaMapper.class);
     }
 }
