@@ -14,7 +14,7 @@ import lombok.Setter;
  * </p>
  *
  * @author ali-dbhub
- * @since 2022-12-04
+ * @since 2022-12-28
  */
 @Getter
 @Setter
@@ -68,4 +68,9 @@ public class DataSourceDO implements Serializable {
      * 环境类型
      */
     private String envType;
+
+    /**
+     * 用户id
+     */
+    private Long userId;
 }

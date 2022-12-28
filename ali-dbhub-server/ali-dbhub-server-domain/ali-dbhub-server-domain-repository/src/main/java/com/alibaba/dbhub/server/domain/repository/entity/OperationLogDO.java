@@ -14,7 +14,7 @@ import lombok.Setter;
  * </p>
  *
  * @author ali-dbhub
- * @since 2022-12-04
+ * @since 2022-12-28
  */
 @Getter
 @Setter
@@ -58,4 +58,9 @@ public class OperationLogDO implements Serializable {
      * ddl内容
      */
     private String ddl;
+
+    /**
+     * 用户id
+     */
+    private Long userId;
 }
