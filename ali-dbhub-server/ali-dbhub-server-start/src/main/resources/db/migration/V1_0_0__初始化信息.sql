@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS `data_source` (
     `password` varchar(256) DEFAULT NULL COMMENT '密码',
     `type` varchar(32) DEFAULT NULL COMMENT '数据库类型',
     `env_type` varchar(32) DEFAULT NULL COMMENT '环境类型',
+    `user_id` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '用户id',
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='数据源连接表'
 ;
@@ -20,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `operation_log` (
     `database_name` varchar(128) DEFAULT NULL COMMENT 'db名称',
     `type` varchar(32) NOT NULL COMMENT '数据库类型',
     `ddl` text DEFAULT NULL COMMENT 'ddl内容',
+    `user_id` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '用户id',
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='我的执行记录表'
 ;
@@ -35,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `operation_saved` (
     `status` varchar(32) NOT NULL COMMENT 'ddl语句状态:DRAFT/RELEASE',
     `ddl` text DEFAULT NULL COMMENT 'ddl内容',
     `tab_opened` text DEFAULT NULL COMMENT '是否在tab中被打开,y表示打开,n表示未打开',
+    `user_id` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '用户id',
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='我的保存表'
 ;
