@@ -95,4 +95,87 @@ public class SqlUtilsTest {
         log.info(x.toString());
     }
 
+    @Test
+    public void testreaname() {
+        SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
+            "rename table data_ops_table_test_1667268894825 to data_ops_table_test_166726889482511;",
+            DbType.mysql);
+        log.info("解析sql:{}", sqlStatement);
+    }
+
+    @Test
+    public void testcomment() {
+        SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
+            "\n"
+                + "alter table data_ops_table_test_166726889482511\n"
+                + "    comment '测试表33';",
+            DbType.mysql);
+        log.info("解析sql:{}", sqlStatement);
+    }
+
+
+    @Test
+    public void dropindex() {
+        SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
+            "drop index data_ops_table_test_1667268894825_idx_date on data_ops_table_test_1667268894825;",
+            DbType.mysql);
+        log.info("解析sql:{}", sqlStatement);
+    }
+
+    @Test
+    public void createindex() {
+        SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
+            "\n"
+                + "create index data_ops_table_test_1667268894825_idx_date\n"
+                + "    on data_ops_table_test_1667268894825 (date desc, id asc)\n"
+                + "    comment '日期索引';",
+            DbType.mysql);
+        log.info("解析sql:{}", sqlStatement);
+    }
+
+
+    @Test
+    public void addColumn() {
+        SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
+            "alter table data_ops_table_test_1667268894825\n"
+                + "    add column_5 int default de null;",
+            DbType.mysql);
+        log.info("解析sql:{}", sqlStatement);
+    }
+    @Test
+    public void change() {
+        SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
+            "alter table data_ops_table_test_1667268894825\n"
+                + "    change number number1 bigint null comment '长整型';",
+            DbType.mysql);
+        log.info("解析sql:{}", sqlStatement);
+    }
+
+    @Test
+    public void modify() {
+        SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
+            "alter table data_ops_table_test_1667268894825\n"
+                + "    modify number1 bigint null comment '长整型';",
+            DbType.mysql);
+        log.info("解析sql:{}", sqlStatement);
+    }
+
+    @Test
+    public void dropColumn() {
+        SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
+            "alter table data_ops_table_test_1667268894825\n"
+                + "    drop column string;",
+            DbType.mysql);
+        log.info("解析sql:{}", sqlStatement);
+    }
+
+    @Test
+    public void dropPrimaryKey() {
+        SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
+            "ALTER TABLE `ali_dbhub_test`.`data_ops_table_test_1671368857363` \n"
+                + "DROP PRIMARY KEY,\n"
+                + "ADD PRIMARY KEY (`date`) USING BTREE;",
+            DbType.mysql);
+        log.info("解析sql:{}", sqlStatement);
+    }
 }
