@@ -56,4 +56,9 @@ public class TableColumn {
      * 注释
      */
     private String comment;
+
+    /**
+     * 是否主键
+     */
+    private Boolean primaryKey;
 }
