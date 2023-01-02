@@ -31,6 +31,9 @@ You can change default JDK version by replacing directory `jre` in AliDBHub inst
 * <a href="https://github.com/alibaba/ali-dbhub/wiki">WIKI</a>
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
 
+## Contact us
+DingTalk：9135032392
+
 ## Contributors
 
 <a href="https://github.com/alibaba/ali-dbhub/graphs/contributors">
