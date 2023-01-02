@@ -4,28 +4,22 @@
  */
 package com.alibaba.dbhub.server.domain.support.dialect.postgresql;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
-import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiExample;
 import com.alibaba.dbhub.server.domain.support.dialect.postgresql.mapper.PostgresqlMetaSchemaMapper;
 import com.alibaba.dbhub.server.domain.support.dialect.postgresql.model.PostgresqlColumn;
 import com.alibaba.dbhub.server.domain.support.dialect.postgresql.model.PostgresqlTable;
 import com.alibaba.dbhub.server.domain.support.dialect.postgresql.model.PostgresqlTableIndex;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
 
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_ALTER_TABLE_SIMPLE;
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_CREATE_TABLE_SIMPLE;
 import static com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum.POSTGRESQL;
 
 /**
@@ -34,12 +28,6 @@ import static com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum.POSTGRESQ
  */
 @Slf4j
 public class PostgresqlMetaSchemaSupport implements MetaSchema<PostgresqlTable> {
-
-    private SqlSession sqlSession;
-
-    public PostgresqlMetaSchemaSupport(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
 
     @Override
     public DbTypeEnum supportDbType() {
@@ -87,9 +75,8 @@ public class PostgresqlMetaSchemaSupport implements MetaSchema<PostgresqlTable> 
 
     @Override
     public PostgresqlTable queryTable(String databaseName, String schemaName, String tableName) {
-        schemaName = ObjectUtils.isEmpty(schemaName) ? "public" : schemaName;
-        List<PostgresqlColumn> columns = getMapper().selectColumns(schemaName, tableName,
-            schemaName + "." + tableName);
+        //List<PostgresqlColumn> columns = getMapper().selectColumns(schemaName, tableName,
+        //    schemaName + "." + tableName);
         return null;
     }
 
@@ -97,29 +84,18 @@ public class PostgresqlMetaSchemaSupport implements MetaSchema<PostgresqlTable> 
     public List<PostgresqlTableIndex> queryIndexList(String databaseName, String schemaName,
         List<String> tableNames) {
         schemaName = ObjectUtils.isEmpty(schemaName) ? "public" : schemaName;
-        List<PostgresqlTableIndex> tableIndices = new ArrayList<>();
-        for (String tableName : tableNames) {
-            List<PostgresqlTableIndex> indexList = getMapper().selectTableIndexes(schemaName, tableName);
-            tableIndices.addAll(indexList);
-        }
-        return tableIndices;
+        return getMapper().selectTableIndexes(schemaName, tableNames);
     }
 
     @Override
     public List<PostgresqlColumn> queryColumnList(String databaseName, String schemaName,
         List<String> tableNames) {
         schemaName = ObjectUtils.isEmpty(schemaName) ? "public" : schemaName;
-        List<PostgresqlColumn> postgresqlColumns = Lists.newArrayList();
-        for (String tableName : tableNames) {
-            List<PostgresqlColumn> columns = getMapper().selectColumns(schemaName, tableName,
-                schemaName + "." + tableName);
-            postgresqlColumns.addAll(columns);
-        }
-        return postgresqlColumns;
+        return getMapper().selectColumns(schemaName, tableNames);
     }
 
     private PostgresqlMetaSchemaMapper getMapper() {
-        return sqlSession.getMapper(PostgresqlMetaSchemaMapper.class);
+        return DbhubDataSource.getInstance().getMapper(PostgresqlMetaSchemaMapper.class);
     }
 
 }

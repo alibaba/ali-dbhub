@@ -38,6 +38,11 @@ public class TableIndex {
     private String type;
 
     /**
+     * 是否唯一
+     */
+    private Boolean unique;
+
+    /**
      * 注释
      */
     private String comment;

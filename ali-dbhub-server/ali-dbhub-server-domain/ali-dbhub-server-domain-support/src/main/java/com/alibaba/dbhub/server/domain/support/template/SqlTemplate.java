@@ -5,7 +5,8 @@ import java.util.List;
 import com.alibaba.dbhub.server.domain.support.model.Sql;
 import com.alibaba.dbhub.server.domain.support.operations.SqlOperations;
 import com.alibaba.dbhub.server.domain.support.param.sql.SqlAnalyseParam;
-import com.alibaba.dbhub.server.domain.support.util.DataCenterUtils;
+import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
+import com.alibaba.dbhub.server.domain.support.util.JdbcUtils;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
@@ -25,7 +26,7 @@ public class SqlTemplate implements SqlOperations {
     @Override
     public List<Sql> analyse(SqlAnalyseParam param) {
         List<SQLStatement> sqlStatementList = SQLUtils.parseStatements(param.getSql(),
-            DataCenterUtils.getDruidDbTypeByDataSourceId(param.getDataSourceId()));
+            JdbcUtils.parse2DruidDbType(DbhubContext.getConnectInfo().getDbType()));
         return EasyCollectionUtils.toList(sqlStatementList,
             sqlStatement -> Sql.builder().sql(sqlStatement.toString()).build());
     }

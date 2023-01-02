@@ -11,7 +11,7 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
-public class DataSourceAttachRequest {
+public class DataSourceAttachRequest implements DataSourceBaseRequestInfo{
 
     /**
      * 主键id
@@ -19,4 +19,13 @@ public class DataSourceAttachRequest {
     @NotNull
     private Long id;
 
+    @Override
+    public Long getDataSourceId() {
+        return id;
+    }
+
+    @Override
+    public String getDatabaseName() {
+        return null;
+    }
 }
