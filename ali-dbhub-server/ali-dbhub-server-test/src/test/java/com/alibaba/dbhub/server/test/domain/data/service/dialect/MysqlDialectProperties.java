@@ -24,7 +24,7 @@ public class MysqlDialectProperties implements DialectProperties {
 
     @Override
     public String getUrl() {
-        return "jdbc:mysql://127.0.0.1:3306";
+        return "jdbc:mysql://localhost:3306";
     }
 
     @Override
@@ -49,15 +49,15 @@ public class MysqlDialectProperties implements DialectProperties {
 
     @Override
     public String getCrateTableSql(String tableName) {
-        return "CREATE TABLE `" + tableName + "`\n"
-            + "(\n"
-            + "    `id`     bigint PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT '主键自增',\n"
-            + "    `date`   datetime(3)                          not null COMMENT '日期',\n"
-            + "    `number` bigint COMMENT '长整型',\n"
-            + "    `string` VARCHAR(100) default 'DATA' COMMENT '名字',\n"
-            + "    index " + tableName + "_idx_date (date desc) comment '日期索引',\n"
-            + "    unique " + tableName + "_uk_number (number) comment '唯一索引',\n"
-            + "    index " + tableName + "_idx_number_string (number, date) comment '联合索引'\n"
+        return "CREATE TABLE `" + tableName + "`\n\t"
+            + "(\n\t"
+            + "    `id`     bigint PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT '主键自增',\n\t"
+            + "    `date`   datetime(3)                          not null COMMENT '日期',\n\t"
+            + "    `number` bigint COMMENT '长整型',\n\t"
+            + "    `string` VARCHAR(100) default 'DATA' COMMENT '名字',\n\t"
+            + "    index " + tableName + "_idx_date (date desc) comment '日期索引',\n\t"
+            + "    unique " + tableName + "_uk_number (number) comment '唯一索引',\n\t"
+            + "    index " + tableName + "_idx_number_string (number, date) comment '联合索引'\n\t"
             + ") COMMENT ='测试表';";
     }
 
@@ -74,8 +74,8 @@ public class MysqlDialectProperties implements DialectProperties {
 
     @Override
     public String getSelectSqlById(String tableName, Long id) {
-        return "select *\n"
-            + "from " + tableName + "\n"
+        return "select *\n\t"
+            + "from " + tableName + "\n\t"
             + "where `id` = '" + id + "';";
     }
 

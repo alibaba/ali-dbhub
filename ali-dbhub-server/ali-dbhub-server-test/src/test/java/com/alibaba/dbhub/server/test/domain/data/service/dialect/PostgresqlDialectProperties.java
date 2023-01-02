@@ -68,9 +68,9 @@ public class PostgresqlDialectProperties implements DialectProperties {
         sql += "create index " + tableName + "idx_date on " + tableName + " (date desc);";
         sql += "create unique index " + tableName + "_uk_number on " + tableName + " (number);";
         sql += "create index " + tableName + "_idx_number_string on " + tableName + " (number, date);";
-        sql += "comment on index " + tableName + "_uk_number is '日期索引';";
-        sql += "comment on index " + tableName + "_uk_number is '唯一索引';";
-        sql += "comment on index " + tableName + "_idx_number_string is '联合索引';";
+        //sql += "comment on index " + tableName + "_uk_number is '日期索引';";
+        //sql += "comment on index " + tableName + "_uk_number is '唯一索引';";
+        //sql += "comment on index " + tableName + "_idx_number_string is '联合索引';";
         return sql;
     }
 

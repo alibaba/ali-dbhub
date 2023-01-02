@@ -169,6 +169,7 @@
                 <version>1.2.15</version>
             </dependency>
 
+
             <!-- 数据库版本管理 -->
             <dependency>
                 <groupId>org.flywaydb</groupId>
