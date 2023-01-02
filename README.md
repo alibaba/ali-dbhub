@@ -35,8 +35,13 @@ Mac、Windows客户端应用下载地址 <a href="https://github.com/alibaba/ali
 * <a href="https://github.com/alibaba/ali-dbhub/wiki">WIKI</a>
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
 
+## 联系我们
+钉钉群：9135032392
+
 ## 贡献者
 
 <a href="https://github.com/alibaba/ali-dbhub/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=alibaba/ali-dbhub" />
 </a>
+
+
