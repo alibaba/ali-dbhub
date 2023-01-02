@@ -52,6 +52,7 @@ public class OperationLogServiceImpl implements OperationLogService {
         Integer start = param.getPageNo();
         Integer offset = param.getPageSize();
         Page<OperationLogDO> page = new Page<>(start, offset);
+        page.setOptimizeCountSql(false);
         IPage<OperationLogDO> executedDdlDOIPage = operationLogMapper.selectPage(page, queryWrapper);
         List<OperationLog> executedDdlDTOS = operationLogConverter.do2dto(executedDdlDOIPage.getRecords());
         return PageResult.of(executedDdlDTOS, executedDdlDOIPage.getTotal(), param);

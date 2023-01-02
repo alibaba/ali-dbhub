@@ -10,7 +10,7 @@ import lombok.Data;
  * @date 2022/09/18
  */
 @Data
-public class DataSourceBaseRequest {
+public class DataSourceBaseRequest implements DataSourceBaseRequestInfo{
 
     /**
      * 数据源id

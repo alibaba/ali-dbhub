@@ -89,3 +89,8 @@ export enum TableDataTypeCorresValue {
   BIG_DECIMAL = 'bigDecimalValue'
 }
 
+export enum envType {
+  DAILY = 'DAILY',
+  PRODUCT = 'PRODUCT'
+}
+

@@ -31,10 +31,10 @@ public interface MysqlMetaSchemaMapper {
      * 查询所有表中所有列信息
      *
      * @param databaseName
-     * @param tableName
+     * @param tableNames
      * @return
      */
-    List<TableColumn> selectColumns(@Param("databaseName") String databaseName, @Param("tableName") String tableName);
+    List<TableColumn> selectColumns(@Param("databaseName") String databaseName, @Param("tableNames") List<String> tableNames);
 
     /**
      * 删除表
@@ -76,9 +76,9 @@ public interface MysqlMetaSchemaMapper {
      * 查询表索引信息
      *
      * @param databaseName
-     * @param tableName
+     * @param tableNames
      * @return
      */
     List<TableIndexColumnUnion> selectTableIndexes(@Param("databaseName") String databaseName,
-        @Param("tableName") String tableName);
+        @Param("tableNames") List<String> tableNames);
 }

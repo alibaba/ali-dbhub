@@ -81,6 +81,7 @@ public class OperationServiceImpl implements OperationService {
         Integer start = param.getPageNo();
         Integer offset = param.getPageSize();
         Page<OperationSavedDO> page = new Page<>(start, offset);
+        page.setOptimizeCountSql(false);
         IPage<OperationSavedDO> iPage = operationSavedMapper.selectPage(page, queryWrapper);
         List<Operation> userSavedDdlDOS = operationConverter.do2dto(iPage.getRecords());
         return PageResult.of(userSavedDdlDOS, iPage.getTotal(), param);

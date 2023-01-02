@@ -7,10 +7,13 @@
 # AliDBHub
 
 ##### 语言： 中文 | [English](README_EN.md)
-DataOps 是面向开发人员的免费多平台数据库工具。多种数据库一个工具。它用于查询、创建和管理数据库，数据库可以在本地、服务器或云端。支持 MySQL、PostgreSQL、Microsoft SQL Server、Oracle、H2等，未来我们会不断完善其他非关系型数据的支持，如Redis。
+AliDBHub 是面向开发人员的免费多平台数据库工具。多种数据库一个工具。它用于查询、创建和管理数据库，数据库可以在本地、服务器或云端。支持 MySQL、PostgreSQL、Microsoft SQL Server、Oracle、H2等，未来我们会不断完善其他非关系型数据的支持，如Redis。
 
 ## Demo演示
-
+<a href="document/img1.png"><img src="document/img1.png" width="400"/></a>
+<a href="document/img2.png"><img src="document/img2.png" width="400"/></a>
+<a href="document/img3.png"><img src="document/img3.png" width="400"/></a>
+<a href="document/img4.png"><img src="document/img4.png" width="400"/></a>
 
 
 ## 下载安装
@@ -32,8 +35,13 @@ Mac、Windows客户端应用下载地址 <a href="https://github.com/alibaba/ali
 * <a href="https://github.com/alibaba/ali-dbhub/wiki">WIKI</a>
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
 
+## 联系我们
+钉钉群：9135032392
+
 ## 贡献者
 
 <a href="https://github.com/alibaba/ali-dbhub/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=alibaba/ali-dbhub" />
 </a>
+
+
