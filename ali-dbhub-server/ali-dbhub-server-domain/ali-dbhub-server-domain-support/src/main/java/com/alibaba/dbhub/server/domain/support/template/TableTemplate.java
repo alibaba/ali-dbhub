@@ -214,9 +214,9 @@ public class TableTemplate implements TableOperations {
             // 代表可能修改字段 或者没变
             boolean hasChange = !StringUtils.equals(oldTableColumn.getName(), newTableColumn.getName())
                 || !StringUtils.equals(oldTableColumn.getColumnType(), newTableColumn.getColumnType())
-                || !Objects.equals(newTableColumn.getNullable(), newTableColumn.getNullable())
+                || !Objects.equals(oldTableColumn.getNullable(), newTableColumn.getNullable())
                 || !StringUtils.equals(oldTableColumn.getDefaultValue(), newTableColumn.getDefaultValue())
-                || !Objects.equals(newTableColumn.getAutoIncrement(), newTableColumn.getAutoIncrement())
+                || !Objects.equals(oldTableColumn.getAutoIncrement(), newTableColumn.getAutoIncrement())
                 || !StringUtils.equals(oldTableColumn.getComment(), newTableColumn.getComment());
 
             // 没有修改字段

@@ -178,4 +178,12 @@ public class SqlUtilsTest {
             DbType.mysql);
         log.info("解析sql:{}", sqlStatement);
     }
+
+    @Test
+    public void coment() {
+        SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
+            "comment on index myindex is '日期xxx';\n",
+            DbType.h2);
+        log.info("解析sql:{}", sqlStatement);
+    }
 }
