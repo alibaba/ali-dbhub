@@ -16,6 +16,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class TableColumn {
     /**
+     * 旧的列名，在修改列的时候需要这个参数
+     * 在返回的时候oldName=name
+     */
+    private String oldName;
+
+    /**
      * 列名
      */
     private String name;
@@ -56,4 +62,9 @@ public class TableColumn {
      * 注释
      */
     private String comment;
+
+    /**
+     * 是否主键
+     */
+    private Boolean primaryKey;
 }

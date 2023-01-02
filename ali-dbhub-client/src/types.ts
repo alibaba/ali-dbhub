@@ -1,4 +1,4 @@
-import { DatabaseTypeCode, TreeNodeType, WindowTabStatus,TableDataType} from '@/utils/constants'
+import {envType, DatabaseTypeCode, TreeNodeType, WindowTabStatus,TableDataType} from '@/utils/constants'
 
 export interface IDatabase {
   name: string;
@@ -27,7 +27,7 @@ export interface IConnectionBase{
   password: string;
   type: DatabaseTypeCode;
   tabOpened: 'y' | 'n';
-  envType: string;
+  envType: envType;
 }
 export interface IHistoryRecord{
   id?: string | number;

@@ -1,5 +1,8 @@
 package com.alibaba.dbhub.server.domain.support.operations;
 
+import java.util.List;
+
+import com.alibaba.dbhub.server.domain.support.model.Sql;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
 import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
@@ -39,6 +42,17 @@ public interface TableOperations {
      * @return
      */
     Table query(TableQueryParam param, TableSelector selector);
+
+    /**
+     * 根据结构构件sql
+     * 构建sql语句
+     * 创建表则 oldTable传空
+     *
+     * @param oldTable
+     * @param newTable
+     * @return
+     */
+    List<Sql> buildSql(Table oldTable, Table newTable);
 
     /**
      * 分页查询表信息
