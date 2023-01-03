@@ -12,13 +12,14 @@ import { useTheme } from '@/utils/hooks';
 
 interface IProps {
   id: string;
+  onChange: Function;
   className?: string;
   height?: number;
   getEditor: any;
 }
 
 export default memo(function MonacoEditor(props: IProps) {
-  const { className, getEditor, id = 0 } = props;
+  const { className, getEditor, id = 0, onChange } = props;
   const [editor, setEditor] = useState<any>();
   const themeColor = useTheme();
 
@@ -56,9 +57,13 @@ export default memo(function MonacoEditor(props: IProps) {
     // 自定义命令
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
       const value = editor.getValue();
-      console.log(value);
     });
-    // 自定义菜单
+
+    editor.onDidChangeModelContent(() => {
+      onChange()
+    })
+
+    // 自定义菜单 TODO:
 
     window.onresize = function () {
       editor.layout()
@@ -76,6 +81,7 @@ export default memo(function MonacoEditor(props: IProps) {
         'editor.inactiveSelectionBackground': '#ff0000'
       }
     });
+
     monaco.editor.defineTheme('Default1', {
       base: 'vs',
       inherit: true,
@@ -102,7 +108,6 @@ export default memo(function MonacoEditor(props: IProps) {
     if (editor?.getModel) {
       const model = editor.getModel(editor)
       const value = model.getValue()
-      console.log(value)
       return value
     }
   }
@@ -155,7 +160,6 @@ export function setEditorHint(hintData: IHintData) {
   const editorHintExamples = monaco.languages.registerCompletionItemProvider('sql', {
     triggerCharacters: ['.', ' ', ...keywords],
     provideCompletionItems: (model: any, position: any) => {
-      console.log(monaco.languages.CompletionItemKind)
       let suggestions: any = []
       const { lineNumber, column } = position
       const textBeforePointer = model.getValueInRange({
@@ -169,7 +173,6 @@ export function setEditorHint(hintData: IHintData) {
       const lastToken = tokens[tokens.length - 1] // 获取最后一段非空字符串
 
       if (lastToken.endsWith('.')) {
-        console.log(lastToken)
         const tokenNoDot = lastToken.slice(0, lastToken.length - 1)
         suggestions = [...getSecondSuggest(tokenNoDot)]
       } else if (lastToken === '.') {
@@ -177,7 +180,6 @@ export function setEditorHint(hintData: IHintData) {
       } else {
         suggestions = [...getFirstSuggest(), ...getSQLSuggest()]
       }
-      console.log(suggestions)
       return {
         suggestions
       }
