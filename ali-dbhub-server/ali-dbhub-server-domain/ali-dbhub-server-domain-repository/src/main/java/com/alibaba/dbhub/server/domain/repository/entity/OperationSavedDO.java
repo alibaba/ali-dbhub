@@ -14,7 +14,7 @@ import lombok.Setter;
  * </p>
  *
  * @author ali-dbhub
- * @since 2022-12-04
+ * @since 2022-12-28
  */
 @Getter
 @Setter
@@ -73,4 +73,9 @@ public class OperationSavedDO implements Serializable {
      * 是否在tab中被打开,y表示打开,n表示未打开
      */
     private String tabOpened;
+
+    /**
+     * 用户id
+     */
+    private Long userId;
 }

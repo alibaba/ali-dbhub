@@ -25,6 +25,7 @@ public class SqlTemplate implements SqlOperations {
 
     @Override
     public List<Sql> analyse(SqlAnalyseParam param) {
+        log.info("解析sql:{}", param.getSql());
         List<SQLStatement> sqlStatementList = SQLUtils.parseStatements(param.getSql(),
             JdbcUtils.parse2DruidDbType(DbhubContext.getConnectInfo().getDbType()));
         return EasyCollectionUtils.toList(sqlStatementList,
