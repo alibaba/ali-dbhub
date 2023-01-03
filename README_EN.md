@@ -9,7 +9,10 @@
 AliDBHub is a free multi-platform database tool for developers.Many databases one tool. It is designed to query, create, and manage databases. Databases can work locally, on a server, or in the cloud. Supports MySQL, PostgreSQL, Microsoft SQL Server, Oracle, and more. 
 
 ## Demo
-
+<a href="document/img1.png"><img src="document/img1.png" width="400"/></a>
+<a href="document/img2.png"><img src="document/img2.png" width="400"/></a>
+<a href="document/img3.png"><img src="document/img3.png" width="400"/></a>
+<a href="document/img4.png"><img src="document/img4.png" width="400"/></a>
 
 
 ## Download
@@ -27,6 +30,9 @@ You can change default JDK version by replacing directory `jre` in AliDBHub inst
 
 * <a href="https://github.com/alibaba/ali-dbhub/wiki">WIKI</a>
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
+
+## Contact us
+DingTalk：9135032392
 
 ## Contributors
 

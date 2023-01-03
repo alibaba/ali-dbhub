@@ -319,13 +319,13 @@ public class DbhubContext {
             if (this == o) {return true;}
             if (!(o instanceof ConnectInfo)) {return false;}
             ConnectInfo that = (ConnectInfo)o;
-            return Objects.equals(dataSourceId, that.dataSourceId) && Objects.equals(databaseName,
-                that.databaseName);
+            return Objects.equals(dataSourceId, that.dataSourceId) && Objects.equals(consoleId, that.consoleId) && Objects.equals(databaseName,
+                that.databaseName) ;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(dataSourceId, databaseName);
+            return Objects.hash(dataSourceId,consoleId, databaseName);
         }
     }
 }

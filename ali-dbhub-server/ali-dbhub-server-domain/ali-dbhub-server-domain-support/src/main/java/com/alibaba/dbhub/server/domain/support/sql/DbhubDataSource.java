@@ -11,8 +11,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Cell;
@@ -22,6 +21,9 @@ import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.excption.SystemException;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
@@ -48,17 +50,46 @@ public class DbhubDataSource extends DynamicDataSource {
     /**
      * 存储每个数据源对应的连接信息
      */
-    private static Map<ConnectInfo, Connection> DATASOURCE_CONNECTION_MAP = new ConcurrentHashMap<>();
+    //private static Map<ConnectInfo, Connection> DATASOURCE_CONNECTION_MAP = Collections.synchronizedMap(
+    //    new
+    //        LRUCache<>(100, entry -> {
+    //        try {
+    //            Connection connection = entry.getValue();
+    //            if (connection != null && !connection.isClosed()) {
+    //                connection.close();
+    //            }
+    //        } catch (SQLException e) {
+    //            throw new RuntimeException(e);
+    //        }
+    //    })
+    //);
+
+    private static Cache<ConnectInfo, Connection> DATASOURCE_CONNECTION_MAP = CacheBuilder.newBuilder()
+        // 最大3个 //Cache中存储的对象,写入3秒后过期
+        .maximumSize(100)
+        .expireAfterWrite(30, TimeUnit.SECONDS)
+        .recordStats()
+        .removalListener(
+            (RemovalListener<ConnectInfo, Connection>)notification -> {
+                Connection connection = notification.getValue();
+                try {
+                    if (connection != null && !connection.isClosed()) {
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        ).build();
 
     /**
      * 存储每个数据源对应的 mybatis SqlSessionFactoryBean
      */
-    private static Map<ConnectInfo, SqlSessionFactoryBean> SQL_SESSION_FACTORY_MAP = new ConcurrentHashMap<>();
-
-    /**
-     * 部分console中如果有开启事务的操作用单独连接管理
-     */
-    private static Map<Long, Connection> CONSOLE_CONNECTION_MAP = new ConcurrentHashMap<>();
+    private static Cache<ConnectInfo, SqlSessionFactoryBean> SQL_SESSION_FACTORY_MAP = CacheBuilder.newBuilder()
+        // 最大3个 //Cache中存储的对象,写入3秒后过期
+        .maximumSize(100)
+        .expireAfterWrite(30, TimeUnit.SECONDS)
+        .recordStats().build();
 
     private DbhubDataSource() {}
 
@@ -72,29 +103,14 @@ public class DbhubDataSource extends DynamicDataSource {
         if (info == null || info.getDataSourceId() == null) {
             throw new UnsupportedOperationException();
         }
-        Connection connection;
-        if (info.getConsoleOwn() && info.getConsoleId() != null) {
-            connection = CONSOLE_CONNECTION_MAP.get(info.getConsoleId());
-            if (connection == null || connection.isClosed()) {
-                synchronized (this) {
-                    connection = CONSOLE_CONNECTION_MAP.get(info.getConsoleId());
-                    if (connection == null) {
-                        connection = DriverManager.getConnection(info.getUrl().trim(), info.getUser(),
-                            info.getPassword());
-                        CONSOLE_CONNECTION_MAP.put(info.getConsoleId(), connection);
-                    }
-                }
-            }
-        } else {
-            connection = DATASOURCE_CONNECTION_MAP.get(info);
-            if (connection == null || connection.isClosed()) {
-                synchronized (this) {
-                    connection = DATASOURCE_CONNECTION_MAP.get(info);
-                    if (connection == null) {
-                        connection = DriverManager.getConnection(info.getUrl().trim(), info.getUser(),
-                            info.getPassword());
-                        DATASOURCE_CONNECTION_MAP.put(info, connection);
-                    }
+        Connection connection = DATASOURCE_CONNECTION_MAP.getIfPresent(info);
+        if (connection == null || connection.isClosed()) {
+            synchronized (info) {
+                connection = DATASOURCE_CONNECTION_MAP.getIfPresent(info);
+                if (connection == null) {
+                    connection = DriverManager.getConnection(info.getUrl().trim(), info.getUser(),
+                        info.getPassword());
+                    DATASOURCE_CONNECTION_MAP.put(info, connection);
                 }
             }
         }
@@ -107,7 +123,7 @@ public class DbhubDataSource extends DynamicDataSource {
         if (info == null || info.getDataSourceId() == null) {
             throw new UnsupportedOperationException();
         }
-        SqlSessionFactoryBean factoryBean = SQL_SESSION_FACTORY_MAP.get(info);
+        SqlSessionFactoryBean factoryBean = SQL_SESSION_FACTORY_MAP.getIfPresent(info);
         try {
             if (factoryBean != null) {
                 SqlSession session = factoryBean.getObject().openSession();
@@ -128,15 +144,10 @@ public class DbhubDataSource extends DynamicDataSource {
     @Override
     public void close() {
         ConnectInfo info = DbhubContext.getConnectInfo();
-        Connection connection = CONSOLE_CONNECTION_MAP.get(info.getConsoleId());
+        Connection connection = DATASOURCE_CONNECTION_MAP.getIfPresent(info);
         if (connection != null) {
             closeConnection(connection);
-            CONSOLE_CONNECTION_MAP.remove(info.getConsoleId());
-        }
-        connection = DATASOURCE_CONNECTION_MAP.get(info);
-        if (connection != null) {
-            closeConnection(connection);
-            DATASOURCE_CONNECTION_MAP.remove(info);
+            DATASOURCE_CONNECTION_MAP.invalidate(info);
         }
     }
 
@@ -149,8 +160,8 @@ public class DbhubDataSource extends DynamicDataSource {
     }
 
     private SqlSessionFactoryBean createSqlSessionMapper(ConnectInfo info) {
-        synchronized (this) {
-            SqlSessionFactoryBean bean = SQL_SESSION_FACTORY_MAP.get(info);
+        synchronized (info) {
+            SqlSessionFactoryBean bean = SQL_SESSION_FACTORY_MAP.getIfPresent(info);
             if (bean == null) {
                 bean = new SqlSessionFactoryBean();
                 bean.setDataSource(this);
