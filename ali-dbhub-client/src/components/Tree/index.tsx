@@ -38,7 +38,6 @@ export function TreeNode(props: TreeNodeIProps) {
   for (let i = 0; i < level; i++) {
     indentArr[i] = 'indent'
   }
-  console.log(data)
 
   useEffect(() => {
     setShowChildren(showAllChildrenPenetrate)
