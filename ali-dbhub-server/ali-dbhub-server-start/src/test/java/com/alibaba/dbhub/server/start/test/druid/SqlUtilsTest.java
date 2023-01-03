@@ -12,6 +12,9 @@ import com.alibaba.druid.sql.ast.statement.SQLNotNullConstraint;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.expr.MySqlCharExpr;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
+import com.alibaba.druid.sql.parser.MysqlUtils;
+import com.alibaba.druid.sql.parser.SQLParserFeature;
+import com.alibaba.fastjson2.JSON;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -71,7 +74,8 @@ public class SqlUtilsTest {
     @Test
     public void test56() {
         SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
-            "create table test(id int  ,name varchar(32) not null default 'xx' comment 'name',nu int auto_increment,index ds(id) ,primary key (id,nu)) "
+            "create table test(id int  ,name varchar(32) not null default 'xx' comment 'name',nu int auto_increment,"
+                + "index ds(id) ,primary key (id,nu)) "
                 + "comment 'xx';",
             DbType.mysql);
         log.info("解析sql:{}", sqlStatement);
@@ -86,7 +90,7 @@ public class SqlUtilsTest {
         x.addColumn(c);
 
         c.setName("name");
-        SQLDataTypeImpl sqlDataType=new SQLDataTypeImpl();
+        SQLDataTypeImpl sqlDataType = new SQLDataTypeImpl();
         sqlDataType.setName("varchar(32)");
         c.setDataType(sqlDataType);
         c.addConstraint(new SQLNotNullConstraint());
@@ -113,7 +117,6 @@ public class SqlUtilsTest {
         log.info("解析sql:{}", sqlStatement);
     }
 
-
     @Test
     public void dropindex() {
         SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
@@ -133,7 +136,6 @@ public class SqlUtilsTest {
         log.info("解析sql:{}", sqlStatement);
     }
 
-
     @Test
     public void addColumn() {
         SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
@@ -142,6 +144,7 @@ public class SqlUtilsTest {
             DbType.mysql);
         log.info("解析sql:{}", sqlStatement);
     }
+
     @Test
     public void change() {
         SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
@@ -181,9 +184,32 @@ public class SqlUtilsTest {
 
     @Test
     public void coment() {
-        SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
-            "comment on index myindex is '日期xxx';\n",
-            DbType.h2);
-        log.info("解析sql:{}", sqlStatement);
+        try {
+
+            SQLStatement sqlStatement = SQLUtils.parseSingleStatement(
+                "comment on index DATA_OPS_TEMPLATE_TEST_1672663574919_idx_date is '日期索引xx';\n",
+                DbType.h2, SQLParserFeature.PrintSQLWhileParsingFailed);
+            log.info("解析sql:{}", sqlStatement);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    @Test
+    public void errro() {
+        List<SQLStatement> sqlStatementList = SQLUtils.parseStatements(
+            "alter table data_ops_table_test_1667268894825  drop column string;comment on index "
+                + "DATA_OPS_TEMPLATE_TEST_1672663574919_idx_date is '日期索引xx';\n",
+            DbType.h2, SQLParserFeature.PrintSQLWhileParsingFailed);
+        log.info("解析sql:{}", sqlStatementList);
+    }
+
+    @Test
+    public void spilt() {
+        List<String> list = MysqlUtils.splitAndRemoveComment(
+            "alter table data_ops_table_test_1667268894825  drop column string;comment on index "
+                + "DATA_OPS_TEMPLATE_TEST_1672663574919_idx_date is '日期索引xx;;;';\n", DbType.h2);
+        log.info("解析sql:{}", JSON.toJSONString(list));
+    }
+
 }

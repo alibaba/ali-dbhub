@@ -59,11 +59,11 @@ public class H2DialectProperties implements DialectProperties {
             + ");\n\t";
         sql += "comment on table " + tableName + " is '测试表';\n\t";
         sql += "create index " + tableName + "_idx_date on " + tableName + "(DATE desc);\n\t";
-        //sql += "comment on index " + tableName + "_idx_date is '日期索引';\n\t";
+        sql += "comment on index " + tableName + "_idx_date is '日期索引';\n\t";
         sql += "create unique index " + tableName + "_uk_number   on " + tableName + "(NUMBER);\n\t";
-        //sql += "comment on index " + tableName + "_uk_number is '唯一索引';\n\t";
+        sql += "comment on index " + tableName + "_uk_number is '唯一索引';\n\t";
         sql += "create index " + tableName + "_idx_number_string   on " + tableName + "(NUMBER, DATE);\n\t";
-        //sql += "comment on index " + tableName + "_idx_number_string is '联合索引';\n\t";
+        sql += "comment on index " + tableName + "_idx_number_string is '联合索引';\n\t";
         return sql;
     }
 
