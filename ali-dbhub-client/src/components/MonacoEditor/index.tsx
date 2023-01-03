@@ -12,18 +12,14 @@ import { useTheme } from '@/utils/hooks';
 
 interface IProps {
   id: string;
+  onChange: Function;
   className?: string;
   height?: number;
   getEditor: any;
 }
 
-// export const hintData: any = {
-//   // adbs: ['dim_realtime_recharge_paycfg_range', 'dim_realtime_recharge_range'],
-//   dimi: ['ads_adid', 'ads_spec_adid_category'],
-// }
-
 export default memo(function MonacoEditor(props: IProps) {
-  const { className, getEditor, id = 0 } = props;
+  const { className, getEditor, id = 0, onChange } = props;
   const [editor, setEditor] = useState<any>();
   const themeColor = useTheme();
 
@@ -38,8 +34,37 @@ export default memo(function MonacoEditor(props: IProps) {
       minimap: {
         enabled: false // 是否启用预览图
       }, // 预览图设置
-      theme: localStorage.getItem('theme') == 'default' ? 'default' : 'vs-dark'
+      theme: localStorage.getItem('theme') == 'default' ? 'default' : 'vs-dark',
+      tabSize: 2,
+      insertSpaces: true,
+      autoClosingQuotes: "always",
+      detectIndentation: false,
+      automaticLayout: true,
+      wordWrap: "on",
+      fixedOverflowWidgets: true,
+      fontSize: 12,
+      lineHeight: 18,
+      padding: {
+        top: 2,
+        bottom: 2,
+      },
+      renderLineHighlight: "none",
+      codeLens: false,
+      scrollbar: {
+        alwaysConsumeMouseWheel: false,
+      },
     });
+    // 自定义命令
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+      const value = editor.getValue();
+    });
+
+    editor.onDidChangeModelContent(() => {
+      onChange()
+    })
+
+    // 自定义菜单 TODO:
+
     window.onresize = function () {
       editor.layout()
     };
@@ -51,28 +76,19 @@ export default memo(function MonacoEditor(props: IProps) {
       rules: [{ background: '#15161a' }],
       colors: {
         // 相关颜色属性配置
-        // 'editor.foreground': '#000000',
+        'editor.foreground': '#ffffff',
         'editor.background': '#15161a',     //背景色
-        // 'editorCursor.foreground': '#8B0000',
-        // 'editor.lineHighlightBackground': '#0000FF20',
-        // 'editorLineNumber.foreground': '#008800',
-        // 'editor.selectionBackground': '#88000030',
-        // 'editor.inactiveSelectionBackground': '#88000015'
+        'editor.inactiveSelectionBackground': '#ff0000'
       }
     });
+
     monaco.editor.defineTheme('Default1', {
       base: 'vs',
       inherit: true,
       rules: [{ background: '#15161a' }],
       colors: {
-        // 相关颜色属性配置
-        // 'editor.foreground': '#000000',
+        'editor.foreground': '#000000',
         'editor.background': '#f8f8fa',     //背景色
-        // 'editorCursor.foreground': '#8B0000',
-        // 'editor.lineHighlightBackground': '#0000FF20',
-        // 'editorLineNumber.foreground': '#008800',
-        // 'editor.selectionBackground': '#88000030',
-        // 'editor.inactiveSelectionBackground': '#88000015'
       }
     });
   }, [])
@@ -92,7 +108,6 @@ export default memo(function MonacoEditor(props: IProps) {
     if (editor?.getModel) {
       const model = editor.getModel(editor)
       const value = model.getValue()
-      console.log(value)
       return value
     }
   }
@@ -111,8 +126,9 @@ export function setEditorHint(hintData: IHintData) {
   const getSQLSuggest = () => {
     return keywords.map((key: any) => ({
       label: key,
-      kind: monaco.languages.CompletionItemKind.Enum,
+      kind: monaco.languages.CompletionItemKind.Keyword,
       insertText: key,
+      detail: '<keywords>'
     }))
   }
 
@@ -120,8 +136,9 @@ export function setEditorHint(hintData: IHintData) {
   const getFirstSuggest = () => {
     return Object.keys(hintData).map((key) => ({
       label: key,
-      kind: monaco.languages.CompletionItemKind.Constant,
+      kind: monaco.languages.CompletionItemKind.Method,
       insertText: key,
+      detail: '<Database>'
     }))
   }
 
@@ -133,14 +150,15 @@ export function setEditorHint(hintData: IHintData) {
     }
     return secondNames?.map((name: any) => ({
       label: name,
-      kind: monaco.languages.CompletionItemKind.Constant,
+      kind: monaco.languages.CompletionItemKind.片段,
       insertText: name,
+      detail: '<Table>'
     }))
   }
 
   // 编辑器提示的提示实力
   const editorHintExamples = monaco.languages.registerCompletionItemProvider('sql', {
-    triggerCharacters: ['.', ...keywords],
+    triggerCharacters: ['.', ' ', ...keywords],
     provideCompletionItems: (model: any, position: any) => {
       let suggestions: any = []
       const { lineNumber, column } = position
@@ -151,20 +169,12 @@ export function setEditorHint(hintData: IHintData) {
         endColumn: column,
       })
 
-
       const tokens = textBeforePointer.trim().split(/\s+/)
       const lastToken = tokens[tokens.length - 1] // 获取最后一段非空字符串
 
       if (lastToken.endsWith('.')) {
         const tokenNoDot = lastToken.slice(0, lastToken.length - 1)
-        try {
-          if (Object?.keys(hintData?.current)?.includes(tokenNoDot)) {
-            suggestions = [...getSecondSuggest(tokenNoDot)]
-          }
-        }
-        catch {
-
-        }
+        suggestions = [...getSecondSuggest(tokenNoDot)]
       } else if (lastToken === '.') {
         suggestions = []
       } else {

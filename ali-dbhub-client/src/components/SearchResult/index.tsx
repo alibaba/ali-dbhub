@@ -83,7 +83,11 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
       <LoadingContent data={manageResultDataList} handleEmpty>
         {
           manageResultDataList.map((item, index) => {
-            return <TableBox key={index} className={classnames({ [styles.cursorTableBox]: (index + '') == currentTab })} data={item} headerList={item.headerList} dataList={item.dataList}></TableBox>
+            if (item.success) {
+              return <TableBox key={index} className={classnames({ [styles.cursorTableBox]: (index + '') == currentTab })} data={item} headerList={item.headerList} dataList={item.dataList}></TableBox>
+            } else {
+              return <StateIndicator state='error' text={item.message}></StateIndicator>
+            }
           })
         }
       </LoadingContent>
