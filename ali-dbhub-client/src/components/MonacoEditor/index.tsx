@@ -12,7 +12,7 @@ import { useTheme } from '@/utils/hooks';
 
 interface IProps {
   id: string;
-  onChange: Function;
+  onChange?: Function;
   className?: string;
   height?: number;
   getEditor: any;
@@ -60,7 +60,7 @@ export default memo(function MonacoEditor(props: IProps) {
     });
 
     editor.onDidChangeModelContent(() => {
-      onChange()
+      onChange && onChange()
     })
 
     // 自定义菜单 TODO:
