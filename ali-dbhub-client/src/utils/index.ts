@@ -147,3 +147,10 @@ export function setCurrentPosition(){
 export function getLastPosition(){
   return localStorage.getItem('lastPosition')
 }
+
+// 获取
+export const callVar = (css: string) => {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(css)
+    .trim();
+};
