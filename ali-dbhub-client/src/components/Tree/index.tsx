@@ -3,8 +3,9 @@ import globalStyle from '@/global.less';
 import styles from './index.less';
 import classnames from 'classnames';
 import Iconfont from '../Iconfont';
-import { Dropdown, Modal } from 'antd';
+import { Dropdown, Modal, Tooltip } from 'antd';
 import { ITreeNode } from '@/types';
+import { callVar } from '@/utils';
 import { TreeNodeType } from '@/utils/constants'
 import Menu, { IMenu, MenuItem } from '@/components/Menu'
 import StateIndicator from '@/components/StateIndicator'
@@ -136,50 +137,62 @@ export function TreeNode(props: TreeNodeIProps) {
 
   const treeNodeClick = useCanDoubleClick();
 
+  function renderTitle(data: ITreeNode) {
+    return <>
+      <span>{data.name}</span>
+      {
+        data.dataType &&
+        <span style={{ color: callVar('--custom-primary-color') }}>（{data.dataType}）</span>
+      }
+    </>
+  }
+
   return <>
     <Dropdown overlay={renderMenu()} trigger={['contextMenu']}>
-      <div
-        onClick={
-          (e) => {
-            console.log(e)
-            treeNodeClick({
-              onClick: handleClick.bind(null, data),
-              onDoubleClick: () => { nodeDoubleClick && nodeDoubleClick(data) }
-            })
+      <Tooltip placement="right" title={renderTitle(data)}>
+        <div
+          onClick={
+            (e) => {
+              console.log(e)
+              treeNodeClick({
+                onClick: handleClick.bind(null, data),
+                onDoubleClick: () => { nodeDoubleClick && nodeDoubleClick(data) }
+              })
+            }
           }
-        }
-        className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
-        <div className={styles.left}>
-          {
-            indentArr.map((item, i) => {
-              return <div key={i} className={styles.indent}></div>
-            })
-          }
-        </div>
-        <div className={styles.right}>
-          {
-            !data.isLeaf &&
-            <div className={styles.arrows}>
-              {
-                isLoading
-                  ?
-                  <div className={styles.loadingIcon}>
-                    <Iconfont code='&#xe6cd;' />
-                  </div>
-                  :
-                  <Iconfont code={showChildren ? "\ue61e" : "\ue65f"} />
-              }
+          className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
+          <div className={styles.left}>
+            {
+              indentArr.map((item, i) => {
+                return <div key={i} className={styles.indent}></div>
+              })
+            }
+          </div>
+          <div className={styles.right}>
+            {
+              !data.isLeaf &&
+              <div className={styles.arrows}>
+                {
+                  isLoading
+                    ?
+                    <div className={styles.loadingIcon}>
+                      <Iconfont code='&#xe6cd;' />
+                    </div>
+                    :
+                    <Iconfont code={showChildren ? "\ue61e" : "\ue65f"} />
+                }
+              </div>
+            }
+            <div className={styles.typeIcon}>
+              <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
             </div>
-          }
-          <div className={styles.typeIcon}>
-            <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
-          </div>
-          <div className={styles.contentText} >
-            <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
-            <div className={styles.type}>{data.dataType}</div>
+            <div className={styles.contentText} >
+              <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
+              <div className={styles.type}>{data.dataType}</div>
+            </div>
           </div>
         </div>
-      </div>
+      </Tooltip>
     </Dropdown>
     {
       !!data.children?.length &&
