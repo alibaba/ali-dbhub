@@ -39,7 +39,6 @@
     ],
     "mac": {
       "icon": "logo/dbhub.icns",
-      "publisherName": "AliDBHub",
       "target": [
         {
           "target": "dmg",
