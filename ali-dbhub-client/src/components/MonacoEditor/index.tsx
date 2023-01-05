@@ -15,11 +15,12 @@ interface IProps {
   onChange?: Function;
   className?: string;
   height?: number;
-  getEditor: any;
+  getEditor?: any;
+  [key: string]: any;
 }
 
 export default memo(function MonacoEditor(props: IProps) {
-  const { className, getEditor, id = 0, onChange } = props;
+  const { className, getEditor, id = 0, onChange, value, ...option } = props;
   const [editor, setEditor] = useState<any>();
   const themeColor = useTheme();
 
@@ -53,7 +54,10 @@ export default memo(function MonacoEditor(props: IProps) {
       scrollbar: {
         alwaysConsumeMouseWheel: false,
       },
+      ...option
     });
+    setValue(editor, value)
+
     // 自定义命令
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
       const value = editor.getValue();
@@ -64,11 +68,11 @@ export default memo(function MonacoEditor(props: IProps) {
     })
 
     // 自定义菜单 TODO:
-
     window.onresize = function () {
       editor.layout()
     };
-    getEditor(editor)
+
+    getEditor && getEditor(editor)
     setEditor(editor)
     monaco.editor.defineTheme('BlackTheme', {
       base: 'vs-dark',
@@ -94,13 +98,24 @@ export default memo(function MonacoEditor(props: IProps) {
   }, [])
 
   useEffect(() => {
+    setValue(editor, value)
+  }, [value])
+
+  useEffect(() => {
     monaco.editor.setTheme(themeColor == 'dark' ? 'BlackTheme' : 'Default');
   }, [themeColor])
 
   // 设置编辑器的值
-  const setValue = (editor: any, value: string) => {
-    const model = editor.getModel(editor)
-    model.setValue(value)
+  const setValue = (editor: any, value: any) => {
+    if (value !== undefined && value !== null) {
+      if (value.constructor === Number) {
+        value = value.toString()
+      }
+    } else {
+      value = ''
+    }
+    const model = editor?.getModel && editor.getModel(editor)
+    model?.setValue && model.setValue(value)
   }
 
   // 获取编辑器的值

@@ -54,8 +54,7 @@
 }
 
 .footer{
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   padding: 0px 10px;
@@ -103,11 +102,46 @@
   z-index: 0;
   opacity: 0;
   overflow: scroll;
+  background-color: var(--color-bg-100);
 }
 
 .cursorTableBox{
   z-index: 1;
   opacity: 1;
+}
+
+.tableIndex{
+  width: 50px;
+}
+
+.tableHoverBox{
+  display: none;
+  align-items: center;
+  position: absolute;
+  background-color: var(--color-bg-200);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  i{
+    font-size: 15px;
+    margin: 0px 2px;
+  }
+  i:hover{
+    color: var(--custom-primary-color);
+  }
+}
+
+.monacoEditor{
+  height: 300px;
+}
+
+.tableItem{
+  width: 100px;
+  .f-lines(1);
+  cursor: pointer;
+  &:hover .tableHoverBox{
+    display: flex;
+  }
 }
 
 

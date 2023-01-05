@@ -23,7 +23,7 @@ export default memo<IProps>(function StateIndicator({ className, state, text }) 
         return <Loading></Loading>;
       case 'error':
         return <div className={styles.errorBox}>
-          <div className={classnames(className, styles[state])}></div >
+          <div className={classnames(className, styles[state])}></div>
           <div className={styles.errorText}>{text}</div>
         </div>
       default:
