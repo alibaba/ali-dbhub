@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
@@ -39,6 +39,7 @@
     ],
     "mac": {
       "icon": "logo/dbhub.icns",
+      "publisherName": "AliDBHub",
       "target": [
         {
           "target": "dmg",
