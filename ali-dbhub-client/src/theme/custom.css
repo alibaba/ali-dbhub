@@ -23147,7 +23147,7 @@ span.custom-radio + * {
 .custom-table.custom-table-small .custom-table-tbody > tr > td,
 .custom-table.custom-table-small tfoot > tr > th,
 .custom-table.custom-table-small tfoot > tr > td {
-  padding: 4px 8px;
+  padding: 4px;
 }
 .custom-table.custom-table-small .custom-table-filter-trigger {
   margin-right: -4px;
@@ -24973,7 +24973,7 @@ tr.custom-table-expanded-row .custom-descriptions-view table {
 .custom-tabs > .custom-tabs-nav .custom-tabs-nav-more,
 .custom-tabs > div > .custom-tabs-nav .custom-tabs-nav-more {
   position: relative;
-  padding: 8px 16px;
+  padding: 2px 8px;
   background: transparent;
   border: 0;
 }
