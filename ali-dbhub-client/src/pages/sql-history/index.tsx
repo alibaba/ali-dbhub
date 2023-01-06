@@ -104,7 +104,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
     listParams.current.searchKey = value;
     getList();
   }
-  const searchChange = useDebounce(searchInputChange, 500)
+  const searchChange = useDebounce(searchInputChange, 250)
 
   const jumpToDatabasePage = (item: IHistoryRecord) => {
     if (currentTab == TabsKey.SAVE) {

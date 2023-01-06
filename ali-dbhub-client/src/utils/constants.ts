@@ -94,3 +94,10 @@ export enum envType {
   PRODUCT = 'PRODUCT'
 }
 
+export enum OSType {
+  WIN = 'Win',
+  MAC = 'Mac',
+  RESTS = 'rests',
+}
+
+
