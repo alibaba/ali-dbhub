@@ -100,3 +100,10 @@ jobs:
           name: ali-dbhub-window
           path: ali-dbhub-client/electron-build/*Setup*.exe
           if-no-files-found: ignore
+
+      - name: upload artifacts web
+        uses: actions/upload-artifact@main
+        with:
+          name: ali-dbhub-web
+          path: ali-dbhub-client/dist
+          if-no-files-found: ignore

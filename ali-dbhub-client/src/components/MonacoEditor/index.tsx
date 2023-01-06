@@ -16,11 +16,12 @@ interface IProps {
   className?: string;
   height?: number;
   getEditor?: any;
+  onSave?: Function;
   [key: string]: any;
 }
 
 export default memo(function MonacoEditor(props: IProps) {
-  const { className, getEditor, id = 0, onChange, value, ...option } = props;
+  const { className, getEditor, id = 0, onChange, onSave, value, ...option } = props;
   const [editor, setEditor] = useState<any>();
   const themeColor = useTheme();
 
@@ -58,16 +59,20 @@ export default memo(function MonacoEditor(props: IProps) {
     });
     setValue(editor, value)
 
-    // 自定义命令
+    // 自定义快捷键
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
       const value = editor.getValue();
+      onSave && onSave(value)
     });
 
+    // Editor onChange
     editor.onDidChangeModelContent(() => {
       onChange && onChange()
     })
 
     // 自定义菜单 TODO:
+
+    // resize
     window.onresize = function () {
       editor.layout()
     };

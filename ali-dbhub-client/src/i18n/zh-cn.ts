@@ -12,7 +12,7 @@ export default {
   'common.text.search': '搜索',
   'common.placeholder.select': '请选择{1}',
   'common.text.serviceStarting': '服务启动中...',
-  'common.text.serviceFail': '服务启动失败，请尝试刷新页面...',
+  'common.text.serviceFail': '服务启动失败',
   'common.text.column': '列',
   'common.text.indexes': '索引',
   'common.button.save': '保存',
