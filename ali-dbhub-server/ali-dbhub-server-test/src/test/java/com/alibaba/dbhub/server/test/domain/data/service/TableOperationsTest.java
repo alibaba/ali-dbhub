@@ -8,15 +8,18 @@ import javax.annotation.Resource;
 import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
+import com.alibaba.dbhub.server.domain.support.model.Sql;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.operations.ConsoleOperations;
 import com.alibaba.dbhub.server.domain.support.operations.DataSourceOperations;
 import com.alibaba.dbhub.server.domain.support.operations.JdbcOperations;
+import com.alibaba.dbhub.server.domain.support.operations.SqlOperations;
 import com.alibaba.dbhub.server.domain.support.operations.TableOperations;
 import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCreateParam;
 import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam;
+import com.alibaba.dbhub.server.domain.support.param.sql.SqlAnalyseParam;
 import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
 import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
@@ -56,6 +59,8 @@ public class TableOperationsTest extends BaseTest {
     private JdbcOperations jdbcOperations;
     @Resource
     private TableOperations tableOperations;
+    @Resource
+    private SqlOperations sqlOperations;
 
     @Test
     @Order(1)
@@ -64,6 +69,10 @@ public class TableOperationsTest extends BaseTest {
             DbTypeEnum dbTypeEnum = dialectProperties.getDbType();
             Long dataSourceId = TestUtils.nextLong();
             Long consoleId = TestUtils.nextLong();
+
+            // 准备上下文
+            putConnect(dialectProperties.getUrl(), dialectProperties.getUsername(), dialectProperties.getPassword(),
+                dialectProperties.getDbType(), dialectProperties.getDatabaseName(), dataSourceId, consoleId);
 
             DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
             dataSourceCreateParam.setDataSourceId(dataSourceId);
@@ -81,11 +90,16 @@ public class TableOperationsTest extends BaseTest {
             consoleOperations.create(consoleCreateParam);
 
             // 创建表结构
-            TemplateExecuteParam templateQueryParam = new TemplateExecuteParam();
-            templateQueryParam.setConsoleId(consoleId);
-            templateQueryParam.setDataSourceId(dataSourceId);
-            templateQueryParam.setSql(dialectProperties.getCrateTableSql(TABLE_NAME));
-            jdbcOperations.execute(templateQueryParam);
+            // 创建表结构
+            List<Sql> sqlList = sqlOperations.analyse(SqlAnalyseParam.builder().dataSourceId(dataSourceId)
+                .sql(dialectProperties.getCrateTableSql(TABLE_NAME)).build());
+            for (Sql sql : sqlList) {
+                TemplateExecuteParam templateQueryParam = new TemplateExecuteParam();
+                templateQueryParam.setConsoleId(consoleId);
+                templateQueryParam.setDataSourceId(dataSourceId);
+                templateQueryParam.setSql(sql.getSql());
+                jdbcOperations.execute(templateQueryParam);
+            }
 
             // 查询建表语句
             ShowCreateTableParam showCreateTableParam = ShowCreateTableParam.builder()
@@ -166,6 +180,8 @@ public class TableOperationsTest extends BaseTest {
                 .build()).getData();
             log.info("删除表后数据返回{}", JSON.toJSONString(tableList));
             Assertions.assertEquals(0L, tableList.size(), "查询表结构失败");
+
+            removeConnect();
         }
 
     }

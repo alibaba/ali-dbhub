@@ -118,6 +118,7 @@ public class JdbcOperationsTest extends BaseTest {
             Assertions.assertEquals(1L, dataList.size(), "查询数据失败");
             List<Cell> data1 = dataList.get(0);
             Assertions.assertEquals(BigDecimal.ONE, data1.get(0).getBigDecimalValue(), "查询数据失败");
+            log.info("date:{},{}",DATE, new Date(data1.get(1).getDateValue()));
             Assertions.assertEquals(DATE.getTime(), data1.get(1).getDateValue(), "查询数据失败");
             Assertions.assertEquals(NUMBER, data1.get(2).getBigDecimalValue().longValue(), "查询数据失败");
             Assertions.assertEquals(STRING, data1.get(3).getStringValue(), "查询数据失败");

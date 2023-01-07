@@ -42,6 +42,10 @@ public class DatabaseOperationsTest extends BaseTest {
             DbTypeEnum dbTypeEnum = dialectProperties.getDbType();
             Long dataSourceId = TestUtils.nextLong();
 
+            // 准备上下文
+            putConnect(dialectProperties.getUrl(), dialectProperties.getUsername(), dialectProperties.getPassword(),
+                dialectProperties.getDbType(), dialectProperties.getDatabaseName(), dataSourceId, null);
+
             DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
             dataSourceCreateParam.setDataSourceId(dataSourceId);
             dataSourceCreateParam.setDbType(dbTypeEnum.getCode());
@@ -60,6 +64,8 @@ public class DatabaseOperationsTest extends BaseTest {
                 .findFirst()
                 .orElse(null);
             Assertions.assertNotNull(Database, "查询数据库失败");
+
+            removeConnect();
         }
     }
 
