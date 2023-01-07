@@ -24,7 +24,7 @@ public enum CellTypeEnum implements BaseEnum<String> {
     /**
      * 日期
      */
-    DATA("日期"),
+    DATE("日期"),
 
     /**
      * 二进制流
