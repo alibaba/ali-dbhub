@@ -7,14 +7,13 @@ import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 
 /**
  * h2
  *
  * @author Jiaju Zhuang
  */
-@Component
+//@Component
 public class H2DialectProperties implements DialectProperties {
 
     @Override

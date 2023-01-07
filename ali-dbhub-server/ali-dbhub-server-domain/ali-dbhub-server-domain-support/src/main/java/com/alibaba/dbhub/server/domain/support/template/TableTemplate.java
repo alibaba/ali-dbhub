@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
+import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Sql;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
@@ -35,12 +36,15 @@ import com.alibaba.druid.sql.ast.statement.SQLAlterTableDropPrimaryKey;
 import com.alibaba.druid.sql.ast.statement.SQLAlterTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
+import com.alibaba.druid.sql.ast.statement.SQLColumnPrimaryKey;
 import com.alibaba.druid.sql.ast.statement.SQLCreateIndexStatement;
 import com.alibaba.druid.sql.ast.statement.SQLDropIndexStatement;
 import com.alibaba.druid.sql.ast.statement.SQLExprTableSource;
 import com.alibaba.druid.sql.ast.statement.SQLNotNullConstraint;
+import com.alibaba.druid.sql.ast.statement.SQLNullConstraint;
 import com.alibaba.druid.sql.ast.statement.SQLSelectOrderByItem;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
+import com.alibaba.druid.sql.dialect.mysql.ast.MySqlUnique;
 import com.alibaba.druid.sql.dialect.mysql.ast.expr.MySqlCharExpr;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableChangeColumn;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableModifyColumn;
@@ -99,8 +103,12 @@ public class TableTemplate implements TableOperations {
                     mySqlCreateTableStatement.addColumn(sqlColumnDefinition);
                     sqlColumnDefinition.setName(tableColumn.getName());
                     sqlColumnDefinition.setDataType(new SQLDataTypeImpl(tableColumn.getColumnType()));
-                    if (BooleanUtils.isNotTrue(tableColumn.getNullable())) {
-                        sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
+                    if (!Objects.isNull(tableColumn.getNullable())) {
+                        if (tableColumn.getNullable()) {
+                            sqlColumnDefinition.addConstraint(new SQLNullConstraint());
+                        } else {
+                            sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
+                        }
                     }
                     if (!Objects.isNull(tableColumn.getDefaultValue())) {
                         sqlColumnDefinition.setDefaultExpr(new MySqlCharExpr(tableColumn.getDefaultValue()));
@@ -109,37 +117,61 @@ public class TableTemplate implements TableOperations {
                     if (!Objects.isNull(tableColumn.getComment())) {
                         sqlColumnDefinition.setComment(tableColumn.getComment());
                     }
-                }
-                // 主键
-                List<TableColumn> primaryKeycolumnList = EasyCollectionUtils.stream(columnList)
-                    .filter(tableColumn -> BooleanUtils.isTrue(tableColumn.getPrimaryKey()))
-                    .collect(Collectors.toList());
-                if (!CollectionUtils.isEmpty(primaryKeycolumnList)) {
-                    MySqlPrimaryKey mySqlPrimaryKey = new MySqlPrimaryKey();
-                    mySqlCreateTableStatement.getTableElementList().add(mySqlPrimaryKey);
-                    for (TableColumn tableColumn : primaryKeycolumnList) {
-                        mySqlPrimaryKey.addColumn(new SQLIdentifierExpr(tableColumn.getName()));
+                    if (BooleanUtils.isTrue(tableColumn.getPrimaryKey())) {
+                        sqlColumnDefinition.addConstraint(new SQLColumnPrimaryKey());
                     }
                 }
+                //// 主键
+                //List<TableColumn> primaryKeyColumnList = EasyCollectionUtils.stream(columnList)
+                //    .filter(tableColumn -> BooleanUtils.isTrue(tableColumn.getPrimaryKey()))
+                //    .collect(Collectors.toList());
+                //if (!CollectionUtils.isEmpty(primaryKeyColumnList)) {
+                //    MySqlPrimaryKey mySqlPrimaryKey = new MySqlPrimaryKey();
+                //    mySqlCreateTableStatement.getTableElementList().add(mySqlPrimaryKey);
+                //    for (TableColumn tableColumn : primaryKeyColumnList) {
+                //        mySqlPrimaryKey.addColumn(new SQLIdentifierExpr(tableColumn.getName()));
+                //    }
+                //}
             }
 
             // 索引
             List<TableIndex> indexList = newTable.getIndexList();
             if (!CollectionUtils.isEmpty(indexList)) {
                 for (TableIndex tableIndex : indexList) {
-                    MySqlTableIndex mySqlTableIndex = new MySqlTableIndex();
-                    mySqlCreateTableStatement.getTableElementList().add(mySqlTableIndex);
-                    mySqlTableIndex.setName(tableIndex.getName());
-                    if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
-                        for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
-                            SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                            sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
-                            CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
-                                tableIndexColumn.getCollation());
-                            if (collation != null) {
-                                sqlSelectOrderByItem.setType(collation.getSqlOrderingSpecification());
+                    if (IndexTypeEnum.UNIQUE.getCode().equals(tableIndex.getType())){
+                        MySqlUnique mySqlUnique = new MySqlUnique();
+                        mySqlCreateTableStatement.getTableElementList().add(mySqlUnique);
+                        mySqlUnique.setName(tableIndex.getName());
+                        mySqlUnique.setComment(new SQLCharExpr(tableIndex.getComment()));
+                        mySqlUnique.getIndexDefinition().setType("unique");
+                        if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
+                            for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
+                                SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
+                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                                CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
+                                    tableIndexColumn.getCollation());
+                                if (collation != null) {
+                                    sqlSelectOrderByItem.setType(collation.getSqlOrderingSpecification());
+                                }
+                                mySqlUnique.addColumn(sqlSelectOrderByItem);
                             }
-                            mySqlTableIndex.addColumn(sqlSelectOrderByItem);
+                        }
+                    } else{
+                        MySqlTableIndex mySqlTableIndex = new MySqlTableIndex();
+                        mySqlCreateTableStatement.getTableElementList().add(mySqlTableIndex);
+                        mySqlTableIndex.setName(tableIndex.getName());
+                        mySqlTableIndex.setComment(new SQLCharExpr(tableIndex.getComment()));
+                        if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
+                            for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
+                                SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
+                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                                CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
+                                    tableIndexColumn.getCollation());
+                                if (collation != null) {
+                                    sqlSelectOrderByItem.setType(collation.getSqlOrderingSpecification());
+                                }
+                                mySqlTableIndex.addColumn(sqlSelectOrderByItem);
+                            }
                         }
                     }
                 }
