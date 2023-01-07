@@ -1,23 +1,25 @@
-package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
+package com.alibaba.dbhub.server.web.api.controller.rdb.request;
 
 import java.util.List;
 
 import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
+import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ColumnVO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
- * @author moji
- * @version IndexVO.java, v 0.1 2022年09月16日 17:47 moji Exp $
- * @date 2022/09/16
+ * 索引
+ *
+ * @author 是仪
  */
 @Data
-public class IndexVO {
-
-    /**
-     * 包含列
-     */
-    private String columns;
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+public class IndexRequest {
 
     /**
      * 索引名称
