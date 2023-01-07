@@ -467,9 +467,6 @@ public class TableTemplate implements TableOperations {
         }
         List<String> tableNameList = EasyCollectionUtils.toList(list, Table::getName);
         List<TableColumn> tableColumnList = metaSchema.queryColumnList(param.getDatabaseName(), null, tableNameList);
-        // 补充下oldName字段 ，用于修改字段名字的时候用
-        EasyCollectionUtils.stream(tableColumnList)
-            .forEach(tableColumn -> tableColumn.setOldName(tableColumn.getName()));
 
         List<TableIndex> tableIndexList = metaSchema.queryIndexList(param.getDatabaseName(), null, tableNameList);
 

@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
 
 import com.alibaba.dbhub.server.domain.support.enums.ColumnTypeEnum;
-import com.alibaba.dbhub.server.tools.base.enums.YesOrNoEnum;
 
 import lombok.Data;
 
@@ -12,7 +11,6 @@ import lombok.Data;
  */
 @Data
 public class ColumnVO {
-
     /**
      * 名称
      */
@@ -33,17 +31,13 @@ public class ColumnVO {
 
     /**
      * 是否为空
-     *
-     * @see YesOrNoEnum
      */
     private Boolean nullable;
 
     /**
      * 是否主键
-     *
-     * @see YesOrNoEnum
      */
-    private Boolean primary;
+    private Boolean primaryKey;
 
     /**
      * 默认值
@@ -52,8 +46,6 @@ public class ColumnVO {
 
     /**
      * 是否自增
-     *
-     * @see YesOrNoEnum
      */
     private Boolean autoIncrement;
 

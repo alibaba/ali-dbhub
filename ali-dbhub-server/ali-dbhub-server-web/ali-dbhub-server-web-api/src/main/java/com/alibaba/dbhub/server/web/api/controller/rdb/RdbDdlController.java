@@ -5,7 +5,6 @@ import java.util.List;
 import com.alibaba.dbhub.server.domain.api.param.DlExecuteParam;
 import com.alibaba.dbhub.server.domain.api.service.DlTemplateService;
 import com.alibaba.dbhub.server.domain.api.service.TableService;
-import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
 import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
@@ -26,8 +25,10 @@ import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableBriefQueryRe
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableCreateDdlQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDeleteRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableModifySqlRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableUpdateDdlQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
+import com.alibaba.dbhub.server.web.api.controller.rdb.vo.SqlVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.TableVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +132,20 @@ public class RdbDdlController {
     }
 
     /**
+     * 获取修改表的sql语句
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/modify/sql")
+    public ListResult<SqlVO> modifySql(TableModifySqlRequest request) {
+        return tableService.buildSql(
+                rdbWebConverter.tableRequest2param(request.getOldTable()),
+                rdbWebConverter.tableRequest2param(request.getNewTable()))
+            .map(rdbWebConverter::dto2vo);
+    }
+
+    /**
      * 增删改等表运维
      *
      * @param request
@@ -139,9 +154,7 @@ public class RdbDdlController {
     @PutMapping("/execute")
     public ListResult<ExecuteResultVO> manage(@RequestBody DdlRequest request) {
         DlExecuteParam param = rdbWebConverter.tableManageRequest2param(request);
-        ListResult<ExecuteResult> resultDTOListResult = dlTemplateService.execute(param);
-        List<ExecuteResultVO> resultVOS = rdbWebConverter.dto2vo(resultDTOListResult.getData());
-        return ListResult.of(resultVOS);
+        return dlTemplateService.execute(param).map(rdbWebConverter::dto2vo);
     }
 
     /**
