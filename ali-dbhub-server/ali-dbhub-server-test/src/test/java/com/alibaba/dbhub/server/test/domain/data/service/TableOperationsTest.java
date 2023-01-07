@@ -145,7 +145,7 @@ public class TableOperationsTest extends BaseTest {
                 "查询表结构失败");
 
             List<TableIndex> tableIndexList = table.getIndexList();
-            Assertions.assertEquals(4L, tableIndexList.size(), "查询表结构失败");
+            Assertions.assertEquals(3L, tableIndexList.size(), "查询表结构失败");
             Map<String, TableIndex> tableIndexMap = EasyCollectionUtils.toIdentityMap(tableIndexList,
                 TableIndex::getName);
             TableIndex idxDate = tableIndexMap.get(dialectProperties.toCase(TABLE_NAME + "_idx_date"));
@@ -308,9 +308,70 @@ public class TableOperationsTest extends BaseTest {
         // 校验表结构
         checkTable(tableName, dialectProperties, dataSourceId);
 
+        //  去数据库查询表结构
+        TablePageQueryParam tablePageQueryParam = new TablePageQueryParam();
+        tablePageQueryParam.setDataSourceId(dataSourceId);
+        tablePageQueryParam.setDatabaseName(dialectProperties.getDatabaseName());
+        tablePageQueryParam.setTableName(dialectProperties.toCase(tableName));
+        List<Table> tableList = tableOperations.pageQuery(tablePageQueryParam, TableSelector.builder()
+            .columnList(Boolean.TRUE)
+            .indexList(Boolean.TRUE)
+            .build()).getData();
+        log.info("分析数据返回{}", JSON.toJSONString(tableList));
+        Assertions.assertEquals(1L, tableList.size(), "查询表结构失败");
+        Table oldTable = tableList.get(0);
+        Assertions.assertEquals(dialectProperties.toCase(tableName), oldTable.getName(), "查询表结构失败");
+        Assertions.assertEquals("测试表", oldTable.getComment(), "查询表结构失败");
+
         // 修改表结构
+        // 构建sql
+        log.info("oldTable：{}", JSON.toJSONString(oldTable));
+        log.info("newTable：{}", JSON.toJSONString(newTable));
+        buildTableSqlList = tableOperations.buildSql(oldTable, newTable);
+        log.info("修改表结构是:{}", JSON.toJSONString(buildTableSqlList));
+        Assertions.assertTrue(buildTableSqlList.isEmpty(), "构建sql失败");
+        //  重新去查询下 这样有2个对象
+        tablePageQueryParam = new TablePageQueryParam();
+        tablePageQueryParam.setDataSourceId(dataSourceId);
+        tablePageQueryParam.setDatabaseName(dialectProperties.getDatabaseName());
+        tablePageQueryParam.setTableName(dialectProperties.toCase(tableName));
+        tableList = tableOperations.pageQuery(tablePageQueryParam, TableSelector.builder()
+            .columnList(Boolean.TRUE)
+            .indexList(Boolean.TRUE)
+            .build()).getData();
+        newTable = tableList.get(0);
 
+        // 修改字段
 
+        // 新增一个字段
+        newTable.getColumnList().add(TableColumn.builder()
+            .name("add_string")
+            .columnType("varchar(20)")
+            .comment("新增的字符串")
+            .build());
+
+        // 新增一个索引
+        newTable.getIndexList().add(TableIndex.builder()
+            .name(tableName + "_idx_string_new")
+            .type(IndexTypeEnum.NORMAL.getCode())
+            .comment("新的字符串索引")
+            .columnList(Lists.newArrayList(TableIndexColumn.builder()
+                .name("add_string")
+                .collation(CollationEnum.DESC.getCode())
+                .build()))
+            .build());
+
+        // 查询表结构变更
+        log.info("oldTable：{}", JSON.toJSONString(oldTable));
+        log.info("newTable：{}", JSON.toJSONString(newTable));
+        buildTableSqlList = tableOperations.buildSql(oldTable, newTable);
+        log.info("修改表结构是:{}", JSON.toJSONString(buildTableSqlList));
+
+        // 删除表结构
+        dropTable(tableName, dialectProperties, dataSourceId);
+    }
+
+    private void dropTable(String tableName, DialectProperties dialectProperties, Long dataSourceId) {
         // 删除表结构
         DropParam dropParam = DropParam.builder()
             .dataSourceId(dataSourceId)
@@ -354,6 +415,7 @@ public class TableOperationsTest extends BaseTest {
         Assertions.assertEquals("主键自增", id.getComment(), "查询表结构失败");
         Assertions.assertTrue(id.getAutoIncrement(), "查询表结构失败");
         Assertions.assertFalse(id.getNullable(), "查询表结构失败");
+        Assertions.assertTrue(id.getPrimaryKey(), "查询表结构失败");
 
         TableColumn string = columnList.get(3);
         Assertions.assertEquals(dialectProperties.toCase("string"), string.getName(), "查询表结构失败");
@@ -362,7 +424,7 @@ public class TableOperationsTest extends BaseTest {
             "查询表结构失败");
 
         List<TableIndex> tableIndexList = table.getIndexList();
-        Assertions.assertEquals(4L, tableIndexList.size(), "查询表结构失败");
+        Assertions.assertEquals(3L, tableIndexList.size(), "查询表结构失败");
         Map<String, TableIndex> tableIndexMap = EasyCollectionUtils.toIdentityMap(tableIndexList,
             TableIndex::getName);
         TableIndex idxDate = tableIndexMap.get(dialectProperties.toCase(tableName + "_idx_date"));
