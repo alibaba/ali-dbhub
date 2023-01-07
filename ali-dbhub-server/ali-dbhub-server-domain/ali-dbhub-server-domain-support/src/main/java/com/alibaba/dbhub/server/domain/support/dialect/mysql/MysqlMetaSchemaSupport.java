@@ -4,7 +4,6 @@
  */
 package com.alibaba.dbhub.server.domain.support.dialect.mysql;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -79,7 +78,7 @@ public class MysqlMetaSchemaSupport implements MetaSchema<Table> {
             String tableName = entry.getKey();
             Map<String, List<TableIndexColumnUnion>> map = entry.getValue().stream().collect(
                 Collectors.groupingBy(TableIndexColumnUnion::getIndexName));
-            for (Map.Entry<String, List<TableIndexColumnUnion>> entry1 : tableMap.entrySet()) {
+            for (Map.Entry<String, List<TableIndexColumnUnion>> entry1 : map.entrySet()) {
                 TableIndexColumnUnion first = entry1.getValue().get(0);
                 dataList.add(buildTableIndex(tableName, entry1.getKey(), first.getType(), first.getComment(),
                     entry1.getValue()));

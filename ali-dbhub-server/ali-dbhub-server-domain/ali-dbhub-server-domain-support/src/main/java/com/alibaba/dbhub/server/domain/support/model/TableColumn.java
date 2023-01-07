@@ -45,6 +45,7 @@ public class TableColumn {
 
     /**
      * 是否可以为空
+     * 为空 代表没有值
      */
     private Boolean nullable;
 

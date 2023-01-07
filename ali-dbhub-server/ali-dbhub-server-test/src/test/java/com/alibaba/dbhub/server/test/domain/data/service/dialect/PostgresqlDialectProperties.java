@@ -11,13 +11,12 @@ import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 
 /**
  * @author jipengfei
  * @version : PgDialectProperties.java, v 0.1 2022年12月13日 21:48 jipengfei Exp $
  */
-@Component
+//@Component
 public class PostgresqlDialectProperties implements DialectProperties {
 
     @Override
