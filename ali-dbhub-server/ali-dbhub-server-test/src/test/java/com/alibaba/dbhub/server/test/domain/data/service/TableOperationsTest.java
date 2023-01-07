@@ -308,6 +308,9 @@ public class TableOperationsTest extends BaseTest {
         // 校验表结构
         checkTable(tableName, dialectProperties, dataSourceId);
 
+        // 修改表结构
+
+
         // 删除表结构
         DropParam dropParam = DropParam.builder()
             .dataSourceId(dataSourceId)
