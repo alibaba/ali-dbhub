@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState, useRef } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import Tabs from '@/components/Tabs';
@@ -6,11 +6,13 @@ import type { ColumnsType } from 'antd/es/table';
 import Iconfont from '@/components/Iconfont';
 import StateIndicator from '@/components/StateIndicator';
 import LoadingContent from '@/components/Loading/LoadingContent';
-import { Button, DatePicker, Input, Table, Modal } from 'antd';
+import MonacoEditor from '@/components/MonacoEditor';
+import { Button, DatePicker, Input, Table, Modal, message } from 'antd';
 import { StatusType, TableDataType, TableDataTypeCorresValue } from '@/utils/constants';
 import { formatDate } from '@/utils';
 import { IManageResultData, ITableHeaderItem, ITableCellItem } from '@/types';
 import Item from 'antd/lib/list/Item';
+
 
 
 interface IProps {
@@ -83,7 +85,11 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
       <LoadingContent data={manageResultDataList} handleEmpty>
         {
           manageResultDataList.map((item, index) => {
-            return <TableBox key={index} className={classnames({ [styles.cursorTableBox]: (index + '') == currentTab })} data={item} headerList={item.headerList} dataList={item.dataList}></TableBox>
+            if (item.success) {
+              return <TableBox key={index} className={classnames({ [styles.cursorTableBox]: (index + '') == currentTab })} data={item} headerList={item.headerList} dataList={item.dataList}></TableBox>
+            } else {
+              return <StateIndicator key={index} state='error' text={item.message}></StateIndicator>
+            }
           })
         }
       </LoadingContent>
@@ -105,34 +111,98 @@ interface ITableProps {
   data: IManageResultData;
 }
 
+interface IViewTableCellData {
+  name: string;
+  value: any;
+}
+
 export function TableBox(props: ITableProps) {
   const { headerList, dataList, className, data, ...rest } = props
   const [columns, setColumns] = useState<any>();
   const [tableData, setTableData] = useState<any>();
+  const monacoEditor = useRef();
+  const [viewTableCellData, setViewTableCellData] = useState<IViewTableCellData | null>(null);
+
+  function viewTableCell(data: IViewTableCellData) {
+    setViewTableCellData(data)
+  }
+
+  function copyTableCell(data: IViewTableCellData) {
+    navigator.clipboard.writeText(data?.value || viewTableCellData?.value);
+    message.success('复制成功');
+  }
+
+  function handleCancel() {
+    setViewTableCellData(null)
+  }
+
   useEffect(() => {
-    const columns = headerList?.map((item, index) => {
-      return {
+    const columns: any = headerList?.map((item: any, index) => {
+      const data = {
         title: item.stringValue,
-        dataIndex: dataList.length && TableDataTypeCorresValue[dataList[0][index].type],
-        key: dataList.length && TableDataTypeCorresValue[dataList[0][index].type],
+        dataIndex: item.stringValue,
+        key: item.stringValue,
+        sorter: (a: any, b: any) => a[item.stringValue] - b[item.stringValue],
+        render: (value: any) => (
+          <div className={styles.tableItem}>
+            <div className={styles.tableHoverBox}>
+              <Iconfont code="&#xe606;" onClick={viewTableCell.bind(null, { name: item.stringValue, value })} />
+              <Iconfont code="&#xeb4e;" onClick={copyTableCell.bind(null, { name: item.stringValue, value })} />
+            </div>
+            {value}
+          </div>
+        ),
       }
+      return data
+    })
+    columns.unshift({
+      title: '序号',
+      dataIndex: 'aliDBHub_table_index',
+      key: 'aliDBHub_table_index',
+      fixed: 'left',
+      render: (text: any) => (
+        <div className={styles.tableIndex}>
+          {text}
+        </div>
+      ),
     })
     setColumns(columns)
   }, [headerList])
 
   useEffect(() => {
+    if (!columns?.length) return
     const tableData = dataList?.map((item: ITableCellItem[], index) => {
       const rowData: any = {}
-      item.map((i: ITableCellItem) => {
-        rowData[TableDataTypeCorresValue[i.type]] = i[TableDataTypeCorresValue[i.type]]
+      item.map((i: ITableCellItem, index: number) => {
+        rowData[columns[index].title] = i[TableDataTypeCorresValue[i.type]]
       })
+      rowData.aliDBHub_table_index = index + 1
       rowData.key = index
       return rowData
     })
     setTableData(tableData)
-  }, [dataList])
+  }, [columns])
 
   return <div {...rest} className={classnames(className, styles.tableBox)}>
     <Table bordered pagination={false} columns={columns} dataSource={tableData} size="small" />
+    <Modal
+      title={viewTableCellData?.name}
+      open={!!viewTableCellData?.name}
+      onCancel={handleCancel}
+      width='60vw'
+      footer={
+        <>
+          {
+            <Button onClick={copyTableCell.bind(null, viewTableCellData!)} className={styles.cancel}>
+              复制
+            </Button>
+          }
+        </>
+      }
+    >
+      <div className={styles.monacoEditor}>
+        <MonacoEditor value={viewTableCellData?.value} readOnly={true} id='view_table-Cell_data'></MonacoEditor>
+      </div>
+    </Modal>
   </div>
 }

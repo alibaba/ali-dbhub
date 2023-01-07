@@ -3,7 +3,6 @@ package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
 import java.util.List;
 
 import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
-import com.alibaba.dbhub.server.tools.base.enums.YesOrNoEnum;
 
 import lombok.Data;
 
@@ -24,13 +23,6 @@ public class IndexVO {
      * 索引名称
      */
     private String name;
-
-    /**
-     * 是否主键
-     *
-     * @see YesOrNoEnum
-     */
-    private String primary;
 
     /**
      * 所以类型

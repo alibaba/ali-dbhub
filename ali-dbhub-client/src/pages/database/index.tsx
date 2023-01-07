@@ -19,8 +19,8 @@ import historyServer from '@/service/history';
 import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
 import { IConnectionBase, ITreeNode, IWindowTab, IDB } from '@/types'
-import { toTreeList, createRandom, approximateTreeNode, getLocationHash, setCurrentPosition } from '@/utils/index'
-import { databaseType, DatabaseTypeCode, TreeNodeType, WindowTabStatus } from '@/utils/constants'
+import { toTreeList, createRandom, approximateTreeNode, getLocationHash, setCurrentPosition, OSnow } from '@/utils'
+import { databaseType, DatabaseTypeCode, TreeNodeType, WindowTabStatus, OSType } from '@/utils/constants'
 const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
 import { useUpdateEffect } from '@/utils/hooks';
@@ -92,7 +92,8 @@ export function DatabaseQuery(props: IDatabaseQueryProps) {
     monacoEditor.current = editor
     monacoEditorExternalList[activeTabKey] = editor
     const model = editor.getModel(editor)
-    model.setValue(windowTab.sql || windowTab.ddl || '')
+    // model.setValue(windowTab.sql || windowTab.ddl || '')
+    model.setValue(localStorage.getItem(`window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.id}`) || windowTab.sql || windowTab.ddl || '')
   }
 
   const callback = () => {
@@ -170,6 +171,10 @@ export function DatabaseQuery(props: IDatabaseQueryProps) {
     model.setValue(format(value, {}))
   }
 
+  function monacoEditorChange() {
+    localStorage.setItem(`window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.id}`, getMonacoEditorValue())
+  }
+
   return <>
     <div className={classnames(styles.databaseQuery, { [styles.databaseQueryConceal]: windowTab.id !== activeTabKey })}>
       <div className={styles.operatingArea}>
@@ -179,7 +184,7 @@ export function DatabaseQuery(props: IDatabaseQueryProps) {
           </Tooltip>
         </div>
         <div>
-          <Tooltip placement="bottom" title="保存">
+          <Tooltip placement="bottom" title={OSnow() === OSType.WIN ? "保存 Ctrl + S" : "保存 CMD + S"} >
             <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} />
           </Tooltip>
         </div>
@@ -188,13 +193,10 @@ export function DatabaseQuery(props: IDatabaseQueryProps) {
             <Iconfont code="&#xe7f8;" className={styles.icon} onClick={formatValue} />
           </Tooltip>
         </div>
-        {/* <Button type="primary" onClick={executeSql}>{i18n('common.button.execute')}</Button>
-        <Button onClick={saveWindowTabTab}>{i18n('common.button.save')}</Button>
-        <Button onClick={formatValue}>格式化</Button> */}
       </div>
       <div ref={monacoEditorBox} className={styles.monacoEditor}>
         {
-          <MonacoEditor id={windowTab.id!} getEditor={getEditor}></MonacoEditor>
+          <MonacoEditor onSave={saveWindowTabTab} onChange={monacoEditorChange} id={windowTab.id!} getEditor={getEditor}></MonacoEditor>
         }
       </div>
       <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
@@ -475,14 +477,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
   };
 
   const onChangeTab = (newActiveKey: string) => {
-    // setTimeout(() => {
-    //   const index = windowList.findIndex(t => t.id === newActiveKey)
-    //   const conceal1 = document.getElementsByClassName('custom-tabs-nav-list')[0]?.childNodes[index - 1] as any
-    //   const conceal2 = document.getElementsByClassName('custom-tabs-nav-list')[0]?.childNodes[index] as any
-    //   conceal1?.classList.add('conceal-after')
-    //   conceal2?.classList.add('conceal-after')
-    // }, 2000);
-    // window.getComputedStyle(document.getElementsByClassName('custom-tabs-nav-list')[0].childNodes[index] as any, '::after').getPropertyValue('font-size');
     setActiveKey(newActiveKey);
   };
 
@@ -611,7 +605,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
         <AppHeader className={styles.appHeader} showRight={false}>
           <div className={styles.tabsBox}>
             <Tabs
-              // style={{ '--active-tabs-after': avtiveWindowIndex, '--active-tabs-befor': avtiveWindowIndex + 1 } as any}
               type="editable-card"
               onChange={onChangeTab}
               activeKey={activeKey}

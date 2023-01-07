@@ -2,6 +2,7 @@ package com.alibaba.dbhub.server.domain.core.impl;
 
 import com.alibaba.dbhub.server.domain.api.service.TableService;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.model.Sql;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.operations.ExampleOperations;
 import com.alibaba.dbhub.server.domain.support.operations.TableOperations;
@@ -12,6 +13,7 @@ import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
 
@@ -58,6 +60,11 @@ public class TableServiceImpl implements TableService {
     @Override
     public DataResult<Table> query(TableQueryParam param, TableSelector selector) {
         return DataResult.of(tableOperations.query(param, selector));
+    }
+
+    @Override
+    public ListResult<Sql> buildSql(Table oldTable, Table newTable) {
+        return ListResult.of(tableOperations.buildSql(oldTable, newTable));
     }
 
     @Override
