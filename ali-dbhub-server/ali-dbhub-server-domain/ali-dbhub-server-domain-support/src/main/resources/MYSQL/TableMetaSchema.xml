@@ -16,6 +16,8 @@
                 typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
         <result property="autoIncrement" jdbcType="CHAR" column="EXTRA"
                 typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlExtraTypeHandler"/>
+        <result property="primaryKey" jdbcType="CHAR" column="COLUMN_KEY"
+                typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlColumnKeyHandler"/>
     </resultMap>
     <resultMap id="TableIndexColumnUnionResultMap"
                type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">

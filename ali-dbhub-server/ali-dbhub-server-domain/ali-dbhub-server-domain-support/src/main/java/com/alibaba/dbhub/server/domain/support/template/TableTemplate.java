@@ -23,6 +23,7 @@ import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
+import com.alibaba.dbhub.server.tools.common.util.EasyBooleanUtils;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
 import com.alibaba.druid.DbType;
@@ -103,12 +104,10 @@ public class TableTemplate implements TableOperations {
                     mySqlCreateTableStatement.addColumn(sqlColumnDefinition);
                     sqlColumnDefinition.setName(tableColumn.getName());
                     sqlColumnDefinition.setDataType(new SQLDataTypeImpl(tableColumn.getColumnType()));
-                    if (!Objects.isNull(tableColumn.getNullable())) {
-                        if (tableColumn.getNullable()) {
-                            sqlColumnDefinition.addConstraint(new SQLNullConstraint());
-                        } else {
-                            sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
-                        }
+                    if (BooleanUtils.isNotFalse(tableColumn.getNullable())) {
+                        sqlColumnDefinition.addConstraint(new SQLNullConstraint());
+                    } else {
+                        sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
                     }
                     if (!Objects.isNull(tableColumn.getDefaultValue())) {
                         sqlColumnDefinition.setDefaultExpr(new MySqlCharExpr(tableColumn.getDefaultValue()));
@@ -138,7 +137,7 @@ public class TableTemplate implements TableOperations {
             List<TableIndex> indexList = newTable.getIndexList();
             if (!CollectionUtils.isEmpty(indexList)) {
                 for (TableIndex tableIndex : indexList) {
-                    if (IndexTypeEnum.UNIQUE.getCode().equals(tableIndex.getType())){
+                    if (IndexTypeEnum.UNIQUE.getCode().equals(tableIndex.getType())) {
                         MySqlUnique mySqlUnique = new MySqlUnique();
                         mySqlCreateTableStatement.getTableElementList().add(mySqlUnique);
                         mySqlUnique.setName(tableIndex.getName());
@@ -156,7 +155,7 @@ public class TableTemplate implements TableOperations {
                                 mySqlUnique.addColumn(sqlSelectOrderByItem);
                             }
                         }
-                    } else{
+                    } else {
                         MySqlTableIndex mySqlTableIndex = new MySqlTableIndex();
                         mySqlCreateTableStatement.getTableElementList().add(mySqlTableIndex);
                         mySqlTableIndex.setName(tableIndex.getName());
@@ -212,9 +211,19 @@ public class TableTemplate implements TableOperations {
 
     private void modifyColumn(List<Sql> sqlList, Table oldTable, Table newTable) {
         Map<String, TableColumn> oldColumnMap = EasyCollectionUtils.toIdentityMap(oldTable.getColumnList(),
-            TableColumn::getOldName);
+            tableColumn -> {
+                if (tableColumn.getOldName() != null) {
+                    return tableColumn.getOldName();
+                }
+                return tableColumn.getName();
+            });
         Map<String, TableColumn> newColumnMap = EasyCollectionUtils.toIdentityMap(newTable.getColumnList(),
-            TableColumn::getOldName);
+            tableColumn -> {
+                if (tableColumn.getOldName() != null) {
+                    return tableColumn.getOldName();
+                }
+                return tableColumn.getName();
+            });
 
         SQLAlterTableStatement sqlAlterTableStatement = new SQLAlterTableStatement();
         sqlAlterTableStatement.setDbType(DbType.mysql);
@@ -246,9 +255,10 @@ public class TableTemplate implements TableOperations {
             // 代表可能修改字段 或者没变
             boolean hasChange = !StringUtils.equals(oldTableColumn.getName(), newTableColumn.getName())
                 || !StringUtils.equals(oldTableColumn.getColumnType(), newTableColumn.getColumnType())
-                || !Objects.equals(oldTableColumn.getNullable(), newTableColumn.getNullable())
+                || !EasyBooleanUtils.equals(oldTableColumn.getNullable(), newTableColumn.getNullable(), Boolean.TRUE)
                 || !StringUtils.equals(oldTableColumn.getDefaultValue(), newTableColumn.getDefaultValue())
-                || !Objects.equals(oldTableColumn.getAutoIncrement(), newTableColumn.getAutoIncrement())
+                || !EasyBooleanUtils.equals(oldTableColumn.getAutoIncrement(), newTableColumn.getAutoIncrement(),
+                Boolean.FALSE)
                 || !StringUtils.equals(oldTableColumn.getComment(), newTableColumn.getComment());
 
             // 没有修改字段
@@ -335,7 +345,7 @@ public class TableTemplate implements TableOperations {
                     new SQLSelectOrderByItem(new SQLIdentifierExpr(tableColumnName))));
         }
 
-        if (!CollectionUtils.isNotEmpty(sqlAlterTableStatement.getItems())) {
+        if (CollectionUtils.isNotEmpty(sqlAlterTableStatement.getItems())) {
             sqlList.add(Sql.builder().sql(sqlAlterTableStatement + ";").build());
         }
     }
@@ -389,7 +399,8 @@ public class TableTemplate implements TableOperations {
                         }
                         TableIndexColumn oldTableIndexColumn = oldTableIndexColumnEntry.getValue();
                         return !StringUtils.equals(oldTableIndexColumn.getName(), newTableIndexColumn.getName())
-                            || !Objects.equals(oldTableIndexColumn.getCollation(), newTableIndexColumn.getCollation());
+                            || !CollationEnum.equals(oldTableIndexColumn.getCollation(),
+                            newTableIndexColumn.getCollation());
                     })
                     || newTableIndexColumnMap.entrySet()
                     .stream()
@@ -400,7 +411,7 @@ public class TableTemplate implements TableOperations {
                     });
             }
 
-            // 没有修改表结构
+            // 没有修改索引
             if (!hasChange) {
                 return;
             }
@@ -456,10 +467,16 @@ public class TableTemplate implements TableOperations {
         }
         List<String> tableNameList = EasyCollectionUtils.toList(list, Table::getName);
         List<TableColumn> tableColumnList = metaSchema.queryColumnList(param.getDatabaseName(), null, tableNameList);
+        // 补充下oldName字段 ，用于修改字段名字的时候用
+        EasyCollectionUtils.stream(tableColumnList)
+            .forEach(tableColumn -> tableColumn.setOldName(tableColumn.getName()));
+
         List<TableIndex> tableIndexList = metaSchema.queryIndexList(param.getDatabaseName(), null, tableNameList);
 
-        Map<String, List<TableIndex>> tableIndexMap = EasyCollectionUtils.stream(tableIndexList).collect(
-            Collectors.groupingBy(TableIndex::getTableName));
+        Map<String, List<TableIndex>> tableIndexMap = EasyCollectionUtils.stream(tableIndexList)
+            // 排除主键
+            .filter(tableIndex -> !IndexTypeEnum.PRIMARY_KEY.getCode().equals(tableIndex.getType()))
+            .collect(Collectors.groupingBy(TableIndex::getTableName));
         Map<String, List<TableColumn>> tableColumnMap = EasyCollectionUtils.stream(tableColumnList).collect(
             Collectors.groupingBy(TableColumn::getTableName));
 
