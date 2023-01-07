@@ -80,20 +80,20 @@ public class JdbcUtils {
         }
         if (obj instanceof Timestamp) {
             Timestamp timestamp = (Timestamp)obj;
-            cell.setType(CellTypeEnum.DATA.getCode());
+            cell.setType(CellTypeEnum.DATE.getCode());
             cell.setDateValue(EasyOptionalUtils.mapTo(timestamp, Timestamp::getTime));
             return cell;
         }
 
         String className = obj.getClass().getName();
         if ("oracle.sql.TIMESTAMP".equals(className) || "oracle.sql.TIMESTAMPTZ".equals(className)) {
-            cell.setType(CellTypeEnum.DATA.getCode());
+            cell.setType(CellTypeEnum.DATE.getCode());
             cell.setDateValue(EasyOptionalUtils.mapTo(rs.getTimestamp(index), Timestamp::getTime));
             return cell;
         }
         if (className.startsWith("oracle.sql.DATE")) {
             String metaDataClassName = rs.getMetaData().getColumnClassName(index);
-            cell.setType(CellTypeEnum.DATA.getCode());
+            cell.setType(CellTypeEnum.DATE.getCode());
             if ("java.sql.Timestamp".equals(metaDataClassName) || "oracle.sql.TIMESTAMP".equals(metaDataClassName)) {
                 cell.setDateValue(EasyOptionalUtils.mapTo(rs.getTimestamp(index), Timestamp::getTime));
             } else {
@@ -103,20 +103,24 @@ public class JdbcUtils {
         }
         if (obj instanceof java.sql.Date) {
             if ("java.sql.Timestamp".equals(rs.getMetaData().getColumnClassName(index))) {
-                cell.setType(CellTypeEnum.DATA.getCode());
+                cell.setType(CellTypeEnum.DATE.getCode());
                 cell.setDateValue(EasyOptionalUtils.mapTo(rs.getDate(index), Date::getTime));
                 return cell;
             }
+            Date date = (Date)obj;
+            cell.setType(CellTypeEnum.DATE.getCode());
+            cell.setDateValue(date.getTime());
+            return cell;
         }
         if (obj instanceof LocalDateTime) {
             LocalDateTime localDateTime = (LocalDateTime)obj;
-            cell.setType(CellTypeEnum.DATA.getCode());
+            cell.setType(CellTypeEnum.DATE.getCode());
             cell.setDateValue(localDateTime.toInstant(ZoneOffset.ofHours(+8)).toEpochMilli());
             return cell;
         }
         if (obj instanceof LocalDate) {
             LocalDate localDate = (LocalDate)obj;
-            cell.setType(CellTypeEnum.DATA.getCode());
+            cell.setType(CellTypeEnum.DATE.getCode());
             cell.setDateValue(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
             return cell;
         }

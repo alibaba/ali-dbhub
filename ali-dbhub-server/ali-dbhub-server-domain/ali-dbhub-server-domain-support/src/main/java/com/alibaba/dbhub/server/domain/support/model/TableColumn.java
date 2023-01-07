@@ -45,6 +45,7 @@ public class TableColumn {
 
     /**
      * 是否可以为空
+     * 为空 代表没有值 数据库的实际语义是 true
      */
     private Boolean nullable;
 
@@ -55,6 +56,7 @@ public class TableColumn {
 
     /**
      * 是否自增
+     * 为空 代表没有值 数据库的实际语义是 false
      */
     private Boolean autoIncrement;
 

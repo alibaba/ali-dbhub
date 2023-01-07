@@ -1,5 +1,5 @@
 import i18n, { isEN } from "@/i18n";
-import { TreeNodeType } from '@/utils/constants'
+import { TreeNodeType, OSType } from '@/utils/constants'
 import { ITreeNode } from '@/types'
 
 export function formatDate(date:any, fmt = 'yyyy-MM-dd') {
@@ -146,4 +146,24 @@ export function setCurrentPosition(){
 // 获取上一次页面的hash
 export function getLastPosition(){
   return localStorage.getItem('lastPosition')
+}
+
+// 获取
+export const callVar = (css: string) => {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(css)
+    .trim();
+};
+
+// os is mac or windows
+export function OSnow():OSType{
+  var agent = navigator.userAgent.toLowerCase();
+  var isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+  if (agent.indexOf("win32") >= 0 || agent.indexOf("wow32") >= 0 || agent.indexOf("win64") >= 0 || agent.indexOf("wow64") >= 0) {
+      return OSType.WIN
+  } else if(isMac){
+    return OSType.MAC
+  }else{
+    return OSType.RESTS
+  }
 }

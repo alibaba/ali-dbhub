@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "0.0.15",
+  "version": "0.0.18",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
@@ -18,7 +18,7 @@
     "electron:build": "electron-builder"
   },
   "devDependencies": {
-    "electron": "^20.1.4",
+    "electron": "20.1.4",
     "electron-builder": "^23.3.3",
     "electron-is-dev": "^2.0.0"
   },

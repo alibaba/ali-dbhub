@@ -6,6 +6,7 @@ import { history } from 'umi';
 import { useLogin } from '@/utils/hooks';
 import { getLastPosition, setCurrentPosition } from '@/utils';
 import miscService from '@/service/misc'
+import LoadindLiquid from '@/components/Loading/LoadingLiquid';
 import i18n from '@/i18n';
 
 interface IProps {
@@ -39,6 +40,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
   }, [])
 
   function detectionService() {
+    setServiceFail(false)
     let flag = 1
     const time = setInterval(() => {
       flag++
@@ -46,7 +48,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         clearInterval(time)
         setServiceStart(true)
       })
-      if (flag > 20) {
+      if (flag > 30) {
         setServiceFail(true)
         clearInterval(time)
         // setServiceStart(true)
@@ -76,7 +78,21 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         </div>
         :
         <div className={styles.starting}>
-          {serviceFail ? i18n('common.text.serviceFail') : i18n('common.text.serviceStarting')}
+          <div>
+            {
+              !serviceFail && <LoadindLiquid></LoadindLiquid>
+            }
+            <div className={styles.hint} >
+              {serviceFail ? i18n('common.text.serviceFail') : i18n('common.text.serviceStarting')}
+            </div>
+            {
+              serviceFail && <div className={styles.restart}>联系我们-钉钉群：9135032392</div>
+            }
+            {
+              serviceFail && <div className={styles.restart} onClick={detectionService}>尝试重新启动</div>
+            }
+
+          </div>
         </div>
     }
   </ConfigProvider>

@@ -23147,7 +23147,7 @@ span.custom-radio + * {
 .custom-table.custom-table-small .custom-table-tbody > tr > td,
 .custom-table.custom-table-small tfoot > tr > th,
 .custom-table.custom-table-small tfoot > tr > td {
-  padding: 4px 8px;
+  padding: 4px;
 }
 .custom-table.custom-table-small .custom-table-filter-trigger {
   margin-right: -4px;
@@ -24973,7 +24973,7 @@ tr.custom-table-expanded-row .custom-descriptions-view table {
 .custom-tabs > .custom-tabs-nav .custom-tabs-nav-more,
 .custom-tabs > div > .custom-tabs-nav .custom-tabs-nav-more {
   position: relative;
-  padding: 8px 16px;
+  padding: 2px 8px;
   background: transparent;
   border: 0;
 }
@@ -25667,7 +25667,7 @@ tr.custom-table-expanded-row .custom-descriptions-view table {
   display: block;
   width: max-content;
   width: intrinsic;
-  max-width: 250px;
+  max-width: 750px;
   visibility: visible;
 }
 .custom-tooltip-content {
@@ -25702,14 +25702,13 @@ tr.custom-table-expanded-row .custom-descriptions-view table {
   line-height: 20px;
   padding: 0 5px;
   font-size: 12px;
-  color: var(--color-bg-100);
+  color: var(--color-text-75);
   text-align: center;
   text-decoration: none;
   word-wrap: break-word;
-  background-color: var(--color-text-75);
+  background-color: var(--color-bg-300);
   border-radius: 2px;
-  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--color-box-shadow);
 }
 .custom-tooltip-arrow {
   position: absolute;
@@ -25748,7 +25747,7 @@ tr.custom-table-expanded-row .custom-descriptions-view table {
   left: -11.3137085px;
   width: 33.9411255px;
   height: 33.9411255px;
-  background: var(--color-text-75);
+  background: var(--color-bg-300);
   background-repeat: no-repeat;
   background-position: -10px -10px;
   content: '';

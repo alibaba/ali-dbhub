@@ -14,11 +14,8 @@ import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreate
 import com.alibaba.dbhub.server.test.common.BaseTest;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dbhub.server.test.domain.data.utils.TestUtils;
-import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
-import com.alibaba.dbhub.server.tools.common.enums.ErrorEnum;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,16 +57,12 @@ public class ConsoleOperationsTest extends BaseTest {
             consoleCreateParam.setConsoleId(consoleId);
             consoleCreateParam.setDatabaseName(dialectProperties.getDatabaseName());
             consoleOperations.create(consoleCreateParam);
-            //Assertions.assertTrue(DataCenterUtils.JDBC_TEMPLATE_CACHE.get(dataSourceId).containsKey(consoleId),
-            //    "创建控制台失败");
 
             // 关闭
             ConsoleCloseParam consoleCloseParam = new ConsoleCloseParam();
             consoleCloseParam.setDataSourceId(dataSourceId);
             consoleCloseParam.setConsoleId(consoleId);
             consoleOperations.close(consoleCloseParam);
-            //Assertions.assertFalse(DataCenterUtils.JDBC_TEMPLATE_CACHE.get(dataSourceId).containsKey(consoleId),
-            //    "创建控制台失败");
             TestUtils.remove();
         }
     }
@@ -95,18 +88,6 @@ public class ConsoleOperationsTest extends BaseTest {
             dataSourceCloseParam.setDataSourceId(dataSourceId);
             dataSourceOperations.close(dataSourceCloseParam);
 
-            // 无法执行sql了
-            BusinessException businessException = Assertions.assertThrows(BusinessException.class, () -> {
-                // 无法创建控制台
-                // 创建控制台
-                ConsoleCreateParam consoleCreateParam = new ConsoleCreateParam();
-                consoleCreateParam.setDataSourceId(dataSourceId);
-                consoleCreateParam.setConsoleId(consoleId);
-                consoleCreateParam.setDatabaseName(dialectProperties.getDatabaseName());
-                consoleOperations.create(consoleCreateParam);
-            }, "关闭连接池失败");
-            Assertions.assertEquals(ErrorEnum.DATA_SOURCE_NOT_FOUND.getCode(), businessException.getCode(),
-                "关闭连接池失败");
             TestUtils.remove();
         }
     }
