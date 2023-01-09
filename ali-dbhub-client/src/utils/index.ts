@@ -72,6 +72,10 @@ export function formatNaturalDate(date: any) {
   return formatDate(d);
 }
 
+export function safeAccess<T = any>(obj: any, str: string) {
+  return str.split('.').reduce((o, k) => (o ? o[k] : undefined), obj) as T;
+};
+
 export interface IToTreeProps{
   parent?: any;
   data: any[];
