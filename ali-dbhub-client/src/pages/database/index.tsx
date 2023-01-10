@@ -13,6 +13,7 @@ import DraggableDivider from '@/components/DraggableDivider';
 import SearchResult from '@/components/SearchResult';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import OperationTableModal, { IOperationData } from '@/components/OperationTableModal';
+import ModifyTable from '@/pages/modify-table';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import connectionServer from '@/service/connection';
 import historyServer from '@/service/history';
@@ -30,9 +31,12 @@ import { format } from 'sql-formatter';
 interface IProps {
   className?: any;
 }
+type ITabType = 'sql' | 'editTable'
+
 interface ITabItem extends IWindowTab {
   label: string;
   key: string;
+  tabType?: ITabType;
 }
 
 const basicsTree: ITreeNode[] = []
@@ -176,7 +180,7 @@ export function DatabaseQuery(props: IDatabaseQueryProps) {
   }
 
   return <>
-    <div className={classnames(styles.databaseQuery, { [styles.databaseQueryConceal]: windowTab.id !== activeTabKey })}>
+    <div className={classnames(styles.databaseQuery)}>
       <div className={styles.operatingArea}>
         <div>
           <Tooltip placement="bottom" title="执行">
@@ -226,7 +230,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [operationData, setOperationData] = useState<IOperationData | null>();
   const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode | null>(null);
   const monacoHint = useRef<any>(null);
-  const [avtiveWindowIndex, setAvtiveWindowIndex] = useState(0);
 
   const closeDropdownFn = () => {
     setOpenDropdown(false)
@@ -520,8 +523,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
     setTreeNodeClickMessage(data)
   }
 
-
-
   function openOperationTableModal(value: IOperationData) {
     let data = {
       ...value,
@@ -529,7 +530,13 @@ export default memo<IProps>(function DatabasePage({ className }) {
       connectionDetaile: connectionDetaile
     }
     if (value.type === 'edit') {
-      data.callback = getTableList
+      setWindowList([...windowList, {
+        label: '新建表',
+        key: 'editTable',
+        tabType: 'editTable',
+        id: 'editTable'
+      } as any])
+      setActiveKey('editTable')
     }
     setOperationData(data)
     if (value.type === 'delete') {
@@ -559,6 +566,20 @@ export default memo<IProps>(function DatabasePage({ className }) {
       connectionDetaile: connectionDetaile,
       callback: getTableList
     })
+  }
+
+  function renderCurrentTab(i: ITabItem) {
+    if (i.tabType === 'editTable') {
+      return <ModifyTable></ModifyTable>
+    } else {
+      return <DatabaseQuery
+        treeNodeClickMessage={treeNodeClickMessage}
+        setTreeNodeClickMessage={setTreeNodeClickMessage}
+        windowTab={i}
+        key={i.databaseName + i.id}
+        activeTabKey={activeKey!}
+      />
+    }
   }
 
   return <>
@@ -617,14 +638,10 @@ export default memo<IProps>(function DatabasePage({ className }) {
         <div className={styles.databaseQueryBox}>
           {
             currentDB &&
-            windowList?.map((i: IWindowTab, index: number) => {
-              return <DatabaseQuery
-                treeNodeClickMessage={treeNodeClickMessage}
-                setTreeNodeClickMessage={setTreeNodeClickMessage}
-                windowTab={i}
-                key={i.databaseName + i.id}
-                activeTabKey={activeKey!}
-              />
+            windowList?.map((i: ITabItem, index: number) => {
+              return <div className={classnames({ [styles.concealTab]: activeKey !== i.id })}>
+                {renderCurrentTab(i)}
+              </div>
             })
           }
         </div>
@@ -649,7 +666,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
       <Input value={windowName} onChange={(e) => { setWindowName(e.target.value) }} />
     </Modal>
     {
-      (operationData?.type === 'edit' || operationData?.type === 'new' || operationData?.type === 'export') &&
+      (operationData?.type === 'new' || operationData?.type === 'export') &&
       <OperationTableModal
         setOperationData={setOperationData}
         operationData={operationData!}

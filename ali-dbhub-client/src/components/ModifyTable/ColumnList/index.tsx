@@ -168,6 +168,8 @@ export default memo<IProps>(function ColumnList({ className }) {
       return { transform: `translateY(-${CategoryLineHeight}px)`, }
     } else if ((index < dragIndex!) && (dragedIndex! <= index)) {
       return { transform: `translateY(${CategoryLineHeight}px)` }
+    } else {
+      return { transform: `translateY(0px)` }
     }
   }
 

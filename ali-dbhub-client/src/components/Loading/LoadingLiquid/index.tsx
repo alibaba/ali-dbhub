@@ -10,7 +10,7 @@ interface IProps {
 
 export default memo(function LoadingLiquid(props: IProps) {
   const { className } = props;
-  return <>
+  return <div className={styles.box}>
     <div className={styles.loading}>
       <span style={{ '--i': 1 } as any} ></span>
       <span style={{ '--i': 2 } as any} ></span>
@@ -31,6 +31,6 @@ export default memo(function LoadingLiquid(props: IProps) {
             " />
       </filter>
     </svg>
-  </>
+  </div>
 
 });
