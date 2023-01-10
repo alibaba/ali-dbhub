@@ -48,12 +48,12 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         clearInterval(time)
         setServiceStart(true)
       })
-      if (flag > 30) {
+      if (flag > 100) {
         setServiceFail(true)
         clearInterval(time)
         // setServiceStart(true)
       }
-    }, 300)
+    }, 500)
   }
 
   function settings() {
