@@ -1,5 +1,25 @@
 @import '../../../var.less';
 
-.box{
-  
+.tableMain{
+  // .tableRow:nth-last-of-type(2n){
+  //   background-color: var(--color-bg-hover);
+  // }
+}
+
+.tableRow{
+  transform: translateY(0px);
+  transition: transform .5s;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  &:hover{
+    background-color: var(--custom-primary-1) !important;
+  }
+}
+
+.draggingRow{
+  transition: none;
+  position: relative;
+  z-index: 2;
+  background-color: var(--color-bg-300) !important;
+  box-shadow: var(--color-box-shadow);
 }

@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { memo, PropsWithChildren } from 'react';
+import React, { HtmlHTMLAttributes, memo, PropsWithChildren } from 'react';
 
 import { safeAccess } from '@/utils';
 import styles from './index.less';
@@ -8,16 +8,17 @@ export interface IHeaderProps<T> {
   className?: string;
 }
 
-export interface IRowProps<T> {
+export interface IRowProps<T> extends React.DetailedHTMLProps<React.HtmlHTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   className?: string;
   data: T;
+  index: number;
 }
 
 export interface IColumn<T> {
   dataKey?: keyof T;
   name?: React.ReactNode;
   renderHeader?: () => React.ReactNode;
-  renderCell?: (data: T) => React.ReactNode;
+  renderCell?: (data: T, i: number) => React.ReactNode;
   baseWidth?: number;
   maxWidth?: number;
   flex?: number;
@@ -40,9 +41,9 @@ export function createTableRows<T = {}>(columns: IColumn<T>[]) {
     </div>
   });
 
-  const Row = memo<IRowProps<T>>(function RowColumns({ className, data }) {
-    return <div className={classnames(styles.box, className)}>
-      {columns.map((t, i) => renderCell(t, t.renderCell ? t.renderCell(data) : (t.dataKey ?? (data[t.dataKey as any] ?? safeAccess(data, t.dataKey as any))), i))}
+  const Row = memo<IRowProps<T>>(function RowColumns({ className, data, index, ...res }) {
+    return <div {...res} className={classnames(styles.box, className)}>
+      {columns.map((t, i) => renderCell(t, t.renderCell ? t.renderCell(data, index) : (t.dataKey ?? (data[t.dataKey as any] ?? safeAccess(data, t.dataKey as any))), i))}
     </div>
   });
 
