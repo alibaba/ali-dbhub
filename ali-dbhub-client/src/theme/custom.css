@@ -14013,7 +14013,7 @@ _:-ms-fullscreen
   display: inline-block;
   width: 100%;
   min-width: 0;
-  padding: 1px 11px;
+  padding: 2px 11px;
   color: var(--color-text-85);
   font-size: 12px;
   line-height: 1.5715;
@@ -14287,7 +14287,8 @@ textarea.custom-input-affix-wrapper {
   display: inline-block;
   width: 100%;
   min-width: 0;
-  padding: 1px 11px;
+  padding: 2px 11px;
+  height: 24px;
   color: var(--color-text-85);
   font-size: 12px;
   line-height: 1.5715;

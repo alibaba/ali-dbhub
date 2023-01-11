@@ -25,6 +25,7 @@ export interface IColumn<T> {
 }
 
 export function createTableRows<T = {}>(columns: IColumn<T>[]) {
+
   function renderCell(c: IColumn<T>, content: React.ReactNode, key: number | string) {
     return <div key={key} className={styles.cell} style={{
       width: c.baseWidth,

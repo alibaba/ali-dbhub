@@ -26,7 +26,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
   useLayoutEffect(() => {
     window.addEventListener('hashchange', hashchange)
     const hash = getLastPosition()
-    if (hash) {
+    if (hash && !location.hash) {
       location.hash = hash
     }
     return () => {

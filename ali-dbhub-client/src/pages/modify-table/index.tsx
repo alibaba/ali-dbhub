@@ -36,7 +36,6 @@ export default function ModifyTablePage() {
   function changeTab(item: ITabItem) {
     setCurrentTab(item)
   }
-
   function renderTabList() {
     return <div className={styles.tabList}>
       {
@@ -54,9 +53,9 @@ export default function ModifyTablePage() {
   }
 
   return <div className={styles.page}>
-    <div className={styles.leftTabs}>
+    {/* <div className={styles.leftTabs}>
       {renderTabList()}
-    </div>
+    </div> */}
     <div className={styles.main}>
       {currentTab.component}
     </div>

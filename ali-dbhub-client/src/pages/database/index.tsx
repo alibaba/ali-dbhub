@@ -324,6 +324,12 @@ export default memo<IProps>(function DatabasePage({ className }) {
             key: item.id!
           }
         })
+        list.push({
+          label: 'bianjibiao',
+          key: 'editTable',
+          tabType: 'editTable',
+          id: 'editTable'
+        } as any)
         const locationHash: any = getLocationHash()
         let flag = false;
         list?.map(item => {
@@ -639,7 +645,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
           {
             currentDB &&
             windowList?.map((i: ITabItem, index: number) => {
-              return <div className={classnames({ [styles.concealTab]: activeKey !== i.id })}>
+              return <div key={index} className={classnames({ [styles.concealTab]: activeKey !== i.id })}>
                 {renderCurrentTab(i)}
               </div>
             })

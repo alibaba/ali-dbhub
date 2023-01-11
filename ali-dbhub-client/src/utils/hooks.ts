@@ -57,3 +57,16 @@ export function useCanDoubleClick() {
     }
   }
 }
+
+export function useOnlyOnceTask(fn: Function){
+  const [isFirst,setIsFirst] = useState(true);
+  const [lastData,setLastData] = useState<any>();
+  if(isFirst){
+    setIsFirst(false);
+    const lastData = fn()
+    setLastData(lastData)
+    return lastData
+  }else{
+    return lastData
+  }
+}
