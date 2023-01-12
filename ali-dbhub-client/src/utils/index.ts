@@ -171,3 +171,29 @@ export function OSnow():OSType{
     return OSType.RESTS
   }
 }
+
+export const rootScrollingElement = document.scrollingElement as HTMLElement || document.documentElement || document.body;
+
+export function scrollPage(position: number, element?: HTMLElement, timeScale = 0) {
+  return new Promise(r => {
+    const scrollingElement = element || rootScrollingElement;
+    position = Math.max(0, Math.min(position, scrollingElement.scrollHeight - scrollingElement.clientHeight));
+    const start = scrollingElement.scrollTop;
+    const duration = Math.abs(position - start) ** .3 * 50 * timeScale;
+    const startTime = +new Date();
+    (function animate() {
+      let t = duration ? (+new Date() - startTime) / duration : 1;
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        t = 1;
+      }
+      const newPosition = (Math.sin(Math.PI * (t - .5)) / 2 + .5) * (position - start) + start;
+      scrollingElement.scrollTop = newPosition;
+      if (t == 1) {
+        scrollingElement.scrollTop = position;
+        r(undefined);
+      }
+    })();
+  });
+}

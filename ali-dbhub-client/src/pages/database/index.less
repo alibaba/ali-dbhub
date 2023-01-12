@@ -32,12 +32,13 @@
     overflow: scroll;
     ::-webkit-scrollbar{display:none}
   }
-
 }
 
 .main {
   flex: 1;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
@@ -201,17 +202,12 @@
 
 .databaseQueryBox{
   position: relative;
-  height: calc(100vh - 43px);
+  flex: 1;
 }
 
 .databaseQuery{
   opacity: 1;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  z-index: 2;
   height: 100%;
-  width: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -219,6 +215,15 @@
 .concealTab{
   opacity: 0;
   z-index: 1;
+}
+
+.windowContent{
+  z-index: 2;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
 }
 
 .monacoEditor{
@@ -235,6 +240,29 @@
 
 .appHeader{
   // border: 0;
+}
+
+.footer{
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0px 10px;
+  border-top: 1px solid var(--color-border);
+  height: 50px;
+  background-color: var(--color-bg-200);
+}
+
+.reversalIconBox{
+  transform: rotate(180deg);
+}
+
+.iconBox{
+  padding: 4px 10px;
+  border-radius: 3px;
+  &:hover{
+    cursor: pointer;
+    background-color: var(--color-bg-hover);
+  }
 }
 
 .tabsBox{
@@ -259,7 +287,7 @@
       border-radius: 4px 4px 0px 0px;
     }
     .custom-tabs-card > .custom-tabs-nav .custom-tabs-tab, .custom-tabs-card > div > .custom-tabs-nav .custom-tabs-tab {
-      font-weight: 300 !important;
+      font-weight: 400 !important;
       position: relative;
       border: 0;
       // &::after{

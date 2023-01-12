@@ -1,18 +1,25 @@
 import React, { memo, useCallback, useDebugValue, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import { Button, DatePicker, Input, Table, Modal, message, Checkbox, Select } from 'antd';
+import { Button, DatePicker, Input, Form, Modal, message, Checkbox, Select } from 'antd';
 import { createTableRows } from '@/components/TableColumns'
 import Iconfont from '@/components/Iconfont';
 import DraggingRow from '@/components/DraggingRow';
 import { useOnlyOnceTask } from '@/utils/hooks';
+import { mysqlDataType } from '@/data/dataType';
+import { IOptions } from '@/types';
+import { scrollPage } from '@/utils';
 
 interface IProps {
   className?: string;
 }
+export enum IRowState {
+  NEW = 'new',
+  OLD = 'old'
+}
 interface IRow {
   index: number;
-  state: string;
+  state: IRowState;
   columnName: string;
   type: string;
   length: string;
@@ -21,87 +28,46 @@ interface IRow {
   isEdit: boolean;
 }
 
-const dataSourceMock = [
-  {
-    index: 1,
-    state: '新增1',
-    columnName: 'SERVER_VERSION',
-    type: 'bigint unsigned',
-    length: '100',
-    unNull: true,
-    comment: '我是注释',
-    isEdit: true,
-  },
-  {
-    index: 2,
-    state: '新增2',
-    columnName: 'SERVER_VERSION',
-    type: 'bigint unsigned',
-    length: '100',
-    unNull: true,
-    comment: '我是注释',
-    isEdit: false,
-  },
-  {
-    index: 3,
-    state: '新增3',
-    columnName: 'SERVER_VERSION',
-    type: 'bigint unsigned',
-    length: '100',
-    unNull: true,
-    comment: '我是注释',
-    isEdit: false,
-  },
-  {
-    index: 4,
-    state: '新增4',
-    columnName: 'SERVER_VERSION',
-    type: 'bigint unsigned',
-    length: '100',
-    unNull: true,
-    comment: '我是注释',
-    isEdit: false,
-  },
-  {
-    index: 5,
-    state: '新增5',
-    columnName: 'SERVER_VERSION',
-    type: 'bigint unsigned',
-    length: '100',
-    unNull: true,
-    comment: '我是注释',
-    isEdit: false,
-  },
-  {
-    index: 6,
-    state: '新增6',
-    columnName: 'SERVER_VERSION',
-    type: 'bigint unsigned',
-    length: '100',
-    unNull: true,
-    comment: '我是注释',
-    isEdit: false,
-  },
-  {
-    index: 7,
-    state: '新增7',
-    columnName: 'SERVER_VERSION',
-    type: 'bigint unsigned',
-    length: '100',
-    unNull: true,
-    comment: '我是注释',
-    isEdit: false,
-  },
-]
-
 const CategoryLineHeight = 46;
 
 export default memo<IProps>(function ColumnList({ className }) {
-  const dataSourceRef = useRef<IRow[]>(dataSourceMock);
+  const scrollBoxRef = useRef<any>();
+  const dataSourceRef = useRef<IRow[]>([createDefaultColumn()]);
+  const mysqlDataTypeOptionsRef = useRef<IOptions[]>();
   const [, setRefresh] = useState(0);
   const [dragIndex, setDragIndex] = useState<number>();
   const [currentDragMovePx, setCurrentDragMovePx] = useState<string>();
   const [dragedIndex, setDragedIndex] = useState<number>();
+
+  useEffect(() => {
+
+  }, [])
+
+
+  useLayoutEffect(() => {
+    const newList = mysqlDataType.map(item => {
+      return {
+        value: item.name,
+        label: item.name,
+        type: item.type
+      }
+    })
+    mysqlDataTypeOptionsRef.current = newList
+    setRefresh(new Date().getTime())
+  }, [])
+
+  function createDefaultColumn(): IRow {
+    return {
+      index: dataSourceRef?.current?.length + 1 || 1,
+      state: IRowState.NEW,
+      columnName: '',
+      type: '',
+      length: '',
+      unNull: false,
+      comment: '',
+      isEdit: true
+    }
+  }
 
   function renderDrag(t: IRow, i: number) {
     return <div onMouseDown={(e) => { onMouseDown(e, t, i) }}>{
@@ -124,7 +90,7 @@ export default memo<IProps>(function ColumnList({ className }) {
       const px = start - clientY;
       // 移动边界判断
       if (i === 0 && (start - clientY) > 0) return false
-      if (i === dataSourceRef.current.length && (start - clientY) < 0) return false
+      if (i === dataSourceRef.current?.length && (start - clientY) < 0) return false
       setCurrentDragMovePx(`${-(px)}`);
       const absoluteValue = px > 0 ? px : -px
       if (absoluteValue / CategoryLineHeight > 0.5) {
@@ -161,23 +127,26 @@ export default memo<IProps>(function ColumnList({ className }) {
   function onChangeIsNull() {
 
   }
-  console.log('dataSourceRef.current-变了', dataSourceRef.current)
 
-  function enterEdit(t: IRow) {
-    const newList = [...dataSourceRef.current]
+  function changeCurrentEdit(data: IRow, list?: IRow[]) {
+    const newList = list ? list : [...dataSourceRef.current!]
     newList.map(item => {
-      if (item.index === t.index) {
+      if (item.index === data.index) {
         item.isEdit = true
       } else {
         item.isEdit = false
       }
     })
-    dataSourceRef.current = [...newList]
+    return newList
+  }
+
+  function enterEdit(t: IRow) {
+    dataSourceRef.current = changeCurrentEdit(t)
     setRefresh(new Date().getTime())
   }
 
   function onChangeDataSource<Key extends keyof IRow>(type: Key, value: IRow[Key], rowData: IRow) {
-    const newList = [...dataSourceRef.current]
+    const newList = [...dataSourceRef.current!]
     newList.map((t: IRow, i) => {
       if (t.index === rowData.index) {
         t[type] = value
@@ -190,33 +159,57 @@ export default memo<IProps>(function ColumnList({ className }) {
   function renderSelete(rowData: IRow) {
 
     const onChange = (value: string) => {
-      console.log(`selected ${value}`);
+      onChangeDataSource('type', value, rowData)
     };
 
     const onSearch = (value: string) => {
-      console.log('search:', value);
+      if (!value) return
+      const newList = [...mysqlDataTypeOptionsRef.current!]
+      if (newList[newList.length - 1].type === 'custom') {
+        newList[newList.length - 1] = {
+          label: value,
+          value: value,
+          type: 'custom'
+        }
+      } else {
+        newList.push({
+          label: value,
+          value: value,
+          type: 'custom'
+        })
+      }
+      mysqlDataTypeOptionsRef.current = newList
+      setRefresh(new Date().getTime())
     };
+
+    function onFocus() {
+      let flag = false
+      mysqlDataTypeOptionsRef.current?.map(item => {
+        if (rowData.type === item.value) {
+          flag = true
+        }
+      })
+      if (!flag) {
+        const newList = [...mysqlDataTypeOptionsRef.current!]
+        newList[newList.length - 1] = {
+          label: rowData.type,
+          value: rowData.type,
+          type: 'custom'
+        }
+        mysqlDataTypeOptionsRef.current = newList
+        setRefresh(new Date().getTime())
+      }
+    }
 
     return <Select
       className={styles.select}
       showSearch
       placeholder="请选择"
+      onFocus={onFocus}
       onChange={onChange}
       onSearch={onSearch}
-      options={[
-        {
-          value: 'jack',
-          label: 'Jack',
-        },
-        {
-          value: 'lucy',
-          label: 'Lucy',
-        },
-        {
-          value: 'tom',
-          label: 'Tom',
-        },
-      ]}
+      value={rowData.type}
+      options={mysqlDataTypeOptionsRef.current}
     />
   }
 
@@ -281,20 +274,74 @@ export default memo<IProps>(function ColumnList({ className }) {
     }
   }
 
+  function addData() {
+    const newList = [...dataSourceRef.current!]
+    let newRow = createDefaultColumn()
+    newList.push(newRow)
+    dataSourceRef.current = changeCurrentEdit(newRow, newList)
+    setRefresh(new Date().getTime())
+    setTimeout(() => {
+      scrollPage(999999999, scrollBoxRef.current)
+    }, 0);
+  }
+
   return <div className={classnames(className, styles.box)}>
-    <TableHeader></TableHeader>
-    <div className={classnames(styles.tableMain, { [styles.dragging]: dragIndex !== undefined })}>
-      {
-        dataSourceRef.current.map((t, index) => {
-          return <TableRow
-            className={classnames(styles.tableRow, { [styles.draggingRow]: index === dragIndex })}
-            style={moveStyle(index)}
-            index={index}
-            key={t.index}
-            data={t}
-          ></TableRow>
-        })
-      }
+    <TableHeader className={styles.tableHeader}></TableHeader>
+    <div className={styles.scrollBox} ref={scrollBoxRef}>
+      <div className={classnames(styles.tableMain, { [styles.dragging]: dragIndex !== undefined })}>
+        {
+          dataSourceRef.current?.map((t, index) => {
+            return <TableRow
+              className={classnames(styles.tableRow, { [styles.draggingRow]: index === dragIndex })}
+              style={moveStyle(index)}
+              index={index}
+              key={t.index}
+              data={t}
+            ></TableRow>
+          })
+        }
+      </div>
+      <Button className={styles.addDataButton} onClick={addData}>
+        <Iconfont code="&#xe631;" />
+        新增
+      </Button>
     </div>
+    <Expand></Expand>
   </div >
 })
+
+const basicInfo = {
+  data: {}
+}
+
+export function Expand() {
+  const [form] = Form.useForm();
+
+  function onChangeForm() {
+    basicInfo.data = {
+      ...form.getFieldsValue()
+    }
+  }
+  return <div className={styles.expandBox}>
+    <div className={styles.title}>扩展属性</div>
+    <Form
+      form={form}
+      initialValues={{ remember: true }}
+      autoComplete="off"
+      className={styles.form}
+    >
+      <Form.Item
+        label="默认值"
+        name="name"
+      >
+        <Input onChange={() => { onChangeForm() }} />
+      </Form.Item>
+      <Form.Item
+        label="自动增长"
+        name="comment"
+      >
+        <Checkbox onChange={() => { onChangeForm() }}></Checkbox>
+      </Form.Item>
+    </Form>
+  </div>
+}

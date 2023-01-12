@@ -230,6 +230,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [operationData, setOperationData] = useState<IOperationData | null>();
   const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode | null>(null);
   const monacoHint = useRef<any>(null);
+  const [isUnfold, setIsUnfold] = useState(true);
 
   const closeDropdownFn = () => {
     setOpenDropdown(false)
@@ -297,6 +298,19 @@ export default memo<IProps>(function DatabasePage({ className }) {
     }
   }, [activeKey])
 
+  const moveLeftAside = () => {
+    const databaseLeftAside = document.getElementById('database-left-aside');
+    if (databaseLeftAside) {
+      if (databaseLeftAside.offsetWidth === 0) {
+        databaseLeftAside.style.width = '250px'
+        setIsUnfold(true)
+      } else {
+        databaseLeftAside.style.width = '0px'
+        setIsUnfold(false)
+      }
+    }
+  }
+
   function setPageHash(databaseName: string, windowId: string | number) {
     // TODO:这里如果用正则替换应该会优雅一些
     if (location.hash.split('?')[1]) {
@@ -324,12 +338,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
             key: item.id!
           }
         })
-        list.push({
-          label: 'bianjibiao',
-          key: 'editTable',
-          tabType: 'editTable',
-          id: 'editTable'
-        } as any)
         const locationHash: any = getLocationHash()
         let flag = false;
         list?.map(item => {
@@ -535,15 +543,17 @@ export default memo<IProps>(function DatabasePage({ className }) {
       database: currentDB,
       connectionDetaile: connectionDetaile
     }
+
     if (value.type === 'edit') {
       setWindowList([...windowList, {
-        label: '新建表',
-        key: 'editTable',
+        label: `编辑表-${value.nodeData?.name}`,
+        key: `editTable-${value.nodeData?.name}`,
         tabType: 'editTable',
-        id: 'editTable'
+        id: `editTable-${value.nodeData?.name}`
       } as any])
-      setActiveKey('editTable')
+      setActiveKey(`editTable-${value.nodeData?.name}`)
     }
+
     setOperationData(data)
     if (value.type === 'delete') {
       Modal.confirm({
@@ -566,12 +576,19 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   function createTable() {
-    setOperationData({
-      type: 'new',
-      database: currentDB,
-      connectionDetaile: connectionDetaile,
-      callback: getTableList
-    })
+    setWindowList([...windowList, {
+      label: `新建表-${currentDB?.name}`,
+      key: `newTable-${currentDB?.name}`,
+      tabType: 'editTable',
+      id: `newTable-${currentDB?.name}`,
+    } as any])
+    setActiveKey(`newTable-${currentDB?.name}`)
+    // setOperationData({
+    //   type: 'new',
+    //   database: currentDB,
+    //   connectionDetaile: connectionDetaile,
+    //   callback: getTableList
+    // })
   }
 
   function renderCurrentTab(i: ITabItem) {
@@ -645,13 +662,20 @@ export default memo<IProps>(function DatabasePage({ className }) {
           {
             currentDB &&
             windowList?.map((i: ITabItem, index: number) => {
-              return <div key={index} className={classnames({ [styles.concealTab]: activeKey !== i.id })}>
+              return <div key={index} className={classnames(styles.windowContent, { [styles.concealTab]: activeKey !== i.id })}>
                 {renderCurrentTab(i)}
               </div>
             })
           }
         </div>
+        <div className={styles.footer}>
+          <div className={classnames({ [styles.reversalIconBox]: !isUnfold }, styles.iconBox)} onClick={moveLeftAside}>
+            <Iconfont code='&#xeb93;'></Iconfont>
+          </div>
+          <div></div>
+        </div>
       </div>
+
     </div >
     <Modal
       title="新窗口名称"
