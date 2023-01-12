@@ -156,6 +156,17 @@ export default memo<IProps>(function ColumnList({ className }) {
     setRefresh(new Date().getTime())
   }
 
+  function deleteRow(data: IRow) {
+    const newList = [...dataSourceRef.current!]
+    newList.map((t: IRow, i) => {
+      if (t.index === data.index) {
+        newList.splice(i, 1)
+      }
+    })
+    dataSourceRef.current = newList
+    setRefresh(new Date().getTime())
+  }
+
   function renderSelete(rowData: IRow) {
 
     const onChange = (value: string) => {
@@ -219,7 +230,7 @@ export default memo<IProps>(function ColumnList({ className }) {
         name: '拖动', baseWidth: 50, renderCell: (t: IRow, i) => renderDrag(t, i)
       },
       {
-        name: '序号', baseWidth: 50, renderCell: t => <div>{t.index}</div>
+        name: '序号', baseWidth: 50, renderCell: (t, i) => <div>{i + 1}</div>
       },
       {
         name: '状态', baseWidth: 50, renderCell: t => <div>{t.state}</div>
@@ -258,6 +269,11 @@ export default memo<IProps>(function ColumnList({ className }) {
             :
             <div onClick={enterEdit.bind(null, t)} className={styles.cellContent}>{t.comment}</div>
         }
+      },
+      {
+        name: '操作', baseWidth: 80, renderCell: t => <div>
+          <div onClick={deleteRow.bind(null, t)} className={styles.deleteButton}>删除</div>
+        </div>
       },
     ])
   });

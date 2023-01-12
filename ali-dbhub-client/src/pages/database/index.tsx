@@ -545,13 +545,23 @@ export default memo<IProps>(function DatabasePage({ className }) {
     }
 
     if (value.type === 'edit') {
-      setWindowList([...windowList, {
-        label: `编辑表-${value.nodeData?.name}`,
-        key: `editTable-${value.nodeData?.name}`,
-        tabType: 'editTable',
-        id: `editTable-${value.nodeData?.name}`
-      } as any])
-      setActiveKey(`editTable-${value.nodeData?.name}`)
+      let flag = false
+      windowList?.map(item => {
+        if (item.id === `editTable-${value.nodeData?.name}`) {
+          flag = true
+        }
+      })
+      if (!flag) {
+        setWindowList([...windowList, {
+          label: `编辑表-${value.nodeData?.name}`,
+          key: `editTable-${value.nodeData?.name}`,
+          tabType: 'editTable',
+          id: `editTable-${value.nodeData?.name}`
+        } as any])
+        setActiveKey(`editTable-${value.nodeData?.name}`)
+      } else {
+        setActiveKey(`editTable-${value.nodeData?.name}`)
+      }
     }
 
     setOperationData(data)
@@ -576,13 +586,23 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   function createTable() {
-    setWindowList([...windowList, {
-      label: `新建表-${currentDB?.name}`,
-      key: `newTable-${currentDB?.name}`,
-      tabType: 'editTable',
-      id: `newTable-${currentDB?.name}`,
-    } as any])
-    setActiveKey(`newTable-${currentDB?.name}`)
+    let flag = false
+    windowList?.map(item => {
+      if (item.id === `newTable-${currentDB?.name}`) {
+        flag = true
+      }
+    })
+    if (!flag) {
+      setWindowList([...windowList, {
+        label: `新建表-${currentDB?.name}`,
+        key: `newTable-${currentDB?.name}`,
+        tabType: 'editTable',
+        id: `newTable-${currentDB?.name}`,
+      } as any])
+      setActiveKey(`newTable-${currentDB?.name}`)
+    } else {
+      setActiveKey(`newTable-${currentDB?.name}`)
+    }
     // setOperationData({
     //   type: 'new',
     //   database: currentDB,
