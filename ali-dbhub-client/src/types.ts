@@ -101,5 +101,9 @@ export interface IManageResultData {
   message: string;
   sql: string;
   success: boolean;
-
+}
+export interface IOptions {
+  value: string | number;
+  label: string;
+  [key:string]: any;
 }

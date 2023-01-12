@@ -1,30 +1,27 @@
 
 @import '../../var.less';
 .page{
-  display: flex;
   height: 100%;
   padding: 20px;
-}
-
-.leftTabs{
-  flex-shrink: 0;
-  width: 150px;
+  display: flex;
+  flex-direction: column;
 }
 
 .tabList{
-  border-top: 1px solid var(--color-border);
+  display: flex;
   border-bottom: 0;
   margin-right: 20px;
   font-size: 14px;
+  margin-bottom: 20px;
 }
 
 .tabItem{
   position: relative;
   height: 38px;
   line-height: 38px;
-  padding-left: 18px;
+  padding:0px 18px;
   border: 1px solid var(--color-border);
-  border-top: 0;
+  margin-right: 1px;
   cursor: pointer;
 }
 
@@ -35,14 +32,15 @@
   &::before{
     content: '';
     position: absolute;
-    top: 0;
-    left: -1px;
-    bottom: 0px;
-    width: 2px;
+    left: 0;
+    bottom: -1px;
+    right: 0px;
+    height: 2px;
     background-color: var(--custom-primary-color);
   }
 }
 
 .main{
   flex: 1;
+  overflow: hidden;
 }

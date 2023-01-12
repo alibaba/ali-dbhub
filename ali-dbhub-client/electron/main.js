@@ -1,5 +1,5 @@
 // 引入electron并创建一个Browserwindow
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, shell } = require('electron');
 const path = require('path');
 const url = require('url');
 // const isDev = require('electron-is-dev');
