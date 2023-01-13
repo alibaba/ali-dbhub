@@ -73,6 +73,11 @@ export enum WindowTabStatus {
   RELEASE = 'RELEASE',
 }
 
+export enum ConsoleStatus {
+  DRAFT = 'DRAFT',
+  RELEASE = 'RELEASE',
+}
+
 export enum TableDataType {
   STRING = 'STRING',
   DATA = 'DATA',
@@ -89,7 +94,7 @@ export enum TableDataTypeCorresValue {
   BIG_DECIMAL = 'bigDecimalValue'
 }
 
-export enum envType {
+export enum EnvType {
   DAILY = 'DAILY',
   PRODUCT = 'PRODUCT'
 }
@@ -98,6 +103,10 @@ export enum OSType {
   WIN = 'Win',
   MAC = 'Mac',
   RESTS = 'rests',
+}
+export enum ConsoleType {
+  SQLQ = 'SQLQ',
+  EDITTABLE = 'editTable'
 }
 
 

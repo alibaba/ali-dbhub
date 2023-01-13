@@ -10,18 +10,19 @@ import Tree from '@/components/Tree';
 import Loading from '@/components/Loading/Loading';
 import MonacoEditor, { setEditorHint, IHintData } from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
+import DatabaseQuery from '@/components/DatabaseQuery';
 import SearchResult from '@/components/SearchResult';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import OperationTableModal, { IOperationData } from '@/components/OperationTableModal';
-import ModifyTable from '@/pages/modify-table';
+import ModifyTable from '@/components/ModifyTable/ModifyTable';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import connectionServer from '@/service/connection';
 import historyServer from '@/service/history';
 import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
-import { IConnectionBase, ITreeNode, IWindowTab, IDB } from '@/types'
-import { toTreeList, createRandom, approximateTreeNode, getLocationHash, setCurrentPosition, OSnow } from '@/utils'
-import { databaseType, DatabaseTypeCode, TreeNodeType, WindowTabStatus, OSType } from '@/utils/constants'
+import { IConnectionBase, ITreeNode, IWindowTab, IDB, IConsole, ISQLQueryConsole } from '@/types'
+import { toTreeList, createRandom, approximateTreeNode, setCurrentPosition, OSnow } from '@/utils'
+import { databaseType, DatabaseTypeCode, TreeNodeType, ConsoleStatus, OSType, ConsoleType } from '@/utils/constants'
 const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
 import { useUpdateEffect } from '@/utils/hooks';
@@ -33,184 +34,33 @@ interface IProps {
 }
 type ITabType = 'sql' | 'editTable'
 
-interface ITabItem extends IWindowTab {
+interface IEditTableConslo {
   label: string;
   key: string;
-  tabType?: ITabType;
+  tabType: ITabType;
+  id: number;
+  operationData: any;
 }
 
 const basicsTree: ITreeNode[] = []
 let monacoEditorExternalList: any = {}
 
-export interface IDatabaseQueryProps {
-  activeTabKey: string;
-  windowTab: IWindowTab;
-  treeNodeClickMessage: ITreeNode | null;
-  setTreeNodeClickMessage: Function;
+type IParams = {
+  DBName: string;
+  consolekey: string;
 }
 
-export function DatabaseQuery(props: IDatabaseQueryProps) {
-  const { activeTabKey, windowTab, treeNodeClickMessage, setTreeNodeClickMessage } = props
-  const params: { id: string, type: string } = useParams();
-  const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode;
-  const [manageResultDataList, setManageResultDataList] = useState<any>([]);
-  const monacoEditorBox = useRef<HTMLDivElement | null>(null);
-  const monacoEditor = useRef<any>(null);
-
-  useEffect(() => {
-    connectConsole();
-  }, [])
-
-  useEffect(() => {
-    const nodeData = treeNodeClickMessage
-    if (nodeData && windowTab.id === activeTabKey) {
-      const model = monacoEditor.current.getModel(monacoEditor.current)
-      const value = model.getValue()
-      if (nodeData.nodeType == TreeNodeType.TABLE) {
-        if (value == 'SELECT * FROM') {
-          model.setValue(`SELECT * FROM ${nodeData.name};`)
-        } else {
-          model.setValue(`${value}\nSELECT * FROM ${nodeData.name};`)
-        }
-      } else if (nodeData.nodeType == TreeNodeType.LINE) {
-        if (value == 'SELECT * FROM') {
-          model.setValue(`SELECT * FROM ${nodeData?.parent?.name} WHERE ${nodeData.name} = ''`)
-        } else {
-          model.setValue(`${value}\nSELECT * FROM ${nodeData?.parent?.name} WHERE ${nodeData.name} = ''`)
-        }
-      }
-      setTreeNodeClickMessage(null)
-    }
-  }, [treeNodeClickMessage])
-
-  const connectConsole = () => {
-    let p = {
-      consoleId: windowTab.id!,
-      dataSourceId: windowTab.dataSourceId,
-      databaseName: windowTab.databaseName,
-    }
-    mysqlServer.connectConsole(p)
-  }
-
-  const getEditor = (editor: any) => {
-    monacoEditor.current = editor
-    monacoEditorExternalList[activeTabKey] = editor
-    const model = editor.getModel(editor)
-    // model.setValue(windowTab.sql || windowTab.ddl || '')
-    model.setValue(localStorage.getItem(`window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.id}`) || windowTab.sql || windowTab.ddl || '')
-  }
-
-  const callback = () => {
-    monacoEditor.current && monacoEditor.current.layout()
-  }
-
-  const getMonacoEditorValue = () => {
-    if (monacoEditor?.current?.getModel) {
-      const model = monacoEditor?.current.getModel(monacoEditor?.current)
-      const value = model.getValue()
-      return value
-    }
-  }
-
-  // 获取选中区域的值
-  const getSelectionVal = () => {
-    const selection = monacoEditor.current.getSelection() // 获取光标选中的值
-    const { startLineNumber, endLineNumber, startColumn, endColumn } = selection
-    const model = monacoEditor.current.getModel(monacoEditor.current)
-    const value = model.getValueInRange({
-      startLineNumber,
-      startColumn,
-      endLineNumber,
-      endColumn,
-    })
-    return value
-  }
-
-  const executeSql = () => {
-    const sql = getSelectionVal() || getMonacoEditorValue()
-    if (!sql) {
-      message.warning('请输入sql');
-      return
-    }
-    let p = {
-      sql,
-      consoleId: windowTab?.id!,
-      dataSourceId: windowTab?.dataSourceId,
-      databaseName: windowTab?.databaseName
-    }
-    setManageResultDataList(null);
-    mysqlServer.executeSql(p).then(res => {
-      let p = {
-        dataSourceId: windowTab?.dataSourceId,
-        databaseName: windowTab?.databaseName,
-        name: windowTab?.name,
-        ddl: sql,
-        type: dataBaseType
-      }
-      historyServer.createHistory(p)
-      setManageResultDataList(res)
-    }).catch(error => {
-      setManageResultDataList([])
+function getCurrentPageInfo(): IParams {
+  const rightHash = location.hash.split('?')[1]
+  const params: any = {}
+  if (rightHash) {
+    const arr = rightHash.split('&')
+    arr.map(item => {
+      const splitRes = item.split('=')
+      params[splitRes[0]] = splitRes[1]
     })
   }
-
-  const saveWindowTabTab = () => {
-    let p = {
-      id: windowTab?.id,
-      name: windowTab?.name,
-      type: dataBaseType,
-      dataSourceId: params.id,
-      databaseName: windowTab?.databaseName,
-      status: WindowTabStatus.RELEASE,
-      ddl: getMonacoEditorValue()
-    }
-    historyServer.updateWindowTab(p).then(res => {
-      message.success('保存成功');
-    })
-  }
-
-  function formatValue() {
-    const model = monacoEditor.current.getModel(monacoEditor.current)
-    const value = model.getValue()
-    model.setValue(format(value, {}))
-  }
-
-  function monacoEditorChange() {
-    localStorage.setItem(`window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.id}`, getMonacoEditorValue())
-  }
-
-  return <>
-    <div className={classnames(styles.databaseQuery)}>
-      <div className={styles.operatingArea}>
-        <div>
-          <Tooltip placement="bottom" title="执行">
-            <Iconfont code="&#xe626;" className={styles.icon} onClick={executeSql} />
-          </Tooltip>
-        </div>
-        <div>
-          <Tooltip placement="bottom" title={OSnow() === OSType.WIN ? "保存 Ctrl + S" : "保存 CMD + S"} >
-            <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} />
-          </Tooltip>
-        </div>
-        <div>
-          <Tooltip placement="bottom" title="格式化">
-            <Iconfont code="&#xe7f8;" className={styles.icon} onClick={formatValue} />
-          </Tooltip>
-        </div>
-      </div>
-      <div ref={monacoEditorBox} className={styles.monacoEditor}>
-        {
-          <MonacoEditor onSave={saveWindowTabTab} onChange={monacoEditorChange} id={windowTab.id!} getEditor={getEditor}></MonacoEditor>
-        }
-      </div>
-      <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
-      <div className={styles.searchResult}>
-        <LoadingContent data={manageResultDataList} handleEmpty>
-          <SearchResult manageResultDataList={manageResultDataList}></SearchResult>
-        </LoadingContent>
-      </div>
-    </div>
-  </>
+  return params as IParams
 }
 
 export default memo<IProps>(function DatabasePage({ className }) {
@@ -220,7 +70,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [connectionDetaile, setConnectionDetaile] = useState<IConnectionBase>()
   const [currentDB, setCurrentDB] = useState<IDB>()
   const [activeKey, setActiveKey] = useState<string>();
-  const [windowList, setWindowList] = useState<ITabItem[]>([]);
+  const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [treeData, setTreeData] = useState<ITreeNode[]>();
   const fixedTreeData = useRef<ITreeNode[]>();
   const [DBList, setDBList] = useState<IDB[]>();
@@ -279,10 +129,10 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   useEffect(() => {
     if (!DBList?.length) return
-    const locationHash: any = getLocationHash()
+    const locationHash = getCurrentPageInfo()
     let flag = false;
     DBList.map(item => {
-      if (locationHash?.databaseName && item.name == locationHash?.databaseName) {
+      if (locationHash.DBName && item.name == locationHash.DBName) {
         flag = true
         setCurrentDB(item)
       }
@@ -324,30 +174,35 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const getWindowList = () => {
     let p = {
       pageNo: 1,
-      pageSize: 20,
+      pageSize: 999, // TODO: 查全部保存
       dataSourceId: params.id,
-      databaseName: currentDB?.name,
+      databaseName: currentDB!.name,
       tabOpened: 'y',
     }
     historyServer.getSaveList(p).then(res => {
+      const locationHash = getCurrentPageInfo();
       if (res?.data?.length) {
-        const list = res.data.map(item => {
+        const list: IConsole[] = res.data.map(item => {
           return {
-            ...item,
+            dataSourceId: +params.id,
             label: item.name,
-            key: item.id!
+            key: item.id.toString(),
+            consoleId: item.id,
+            DBType: item.type,
+            ddl: item.ddl,
+            type: ConsoleType.SQLQ,
+            databaseName: currentDB!.name,
           }
         })
-        const locationHash: any = getLocationHash()
         let flag = false;
         list?.map(item => {
-          if (locationHash?.id && item.id == locationHash?.id) {
-            setActiveKey(item?.id)
+          if (locationHash.consolekey && item.key == locationHash.consolekey) {
+            setActiveKey(item.key)
             flag = true
           }
         })
         if (!flag) {
-          setActiveKey(list?.[0]?.id)
+          setActiveKey(list?.[0]?.key)
         }
         setWindowList(list)
       } else {
@@ -418,7 +273,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
       disposalEditorHintData(tableList)
       return tableList
     })
-
   }
 
   const getDetaile = () => {
@@ -434,27 +288,32 @@ export default memo<IProps>(function DatabasePage({ className }) {
     monacoEditorExternalList[activeKey!] && monacoEditorExternalList[activeKey!].layout()
   }
 
-  const addWindowTab = (windowList: ITabItem[]) => {
+  const addWindowTab = (windowList: IConsole[]) => {
     let p = {
-      name: windowName || 'Default Tab',
+      name: windowName,
       type: dataBaseType,
-      dataSourceId: params.id,
+      dataSourceId: +params.id,
       databaseName: currentDB?.name!,
-      status: WindowTabStatus.DRAFT,
+      status: ConsoleStatus.DRAFT,
       ddl: 'SELECT * FROM',
-      tabOpened: 'y'
+      tabOpened: 'y' as 'y' | 'n'
     }
     historyServer.saveWindowTab(p).then(res => {
+      const newWindow: IConsole = {
+        label: windowName,
+        key: res.toString(),
+        type: ConsoleType.EDITTABLE,
+        DBType: dataBaseType,
+        databaseName: currentDB?.name!,
+        dataSourceId: +params.id,
+        consoleId: res,
+        ddl: 'SELECT * FROM',
+      }
       setWindowList([
         ...windowList,
-        {
-          ...p,
-          id: res,
-          label: p.name,
-          key: res
-        }
+        newWindow
       ])
-      setActiveKey(res);
+      setActiveKey(res.toString());
       setIsModalVisible(false);
     })
   };
@@ -547,7 +406,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
     if (value.type === 'edit') {
       let flag = false
       windowList?.map(item => {
-        if (item.id === `editTable-${value.nodeData?.name}`) {
+        if (item.key === `editTable-${value.nodeData?.name}`) {
           flag = true
         }
       })
@@ -556,7 +415,9 @@ export default memo<IProps>(function DatabasePage({ className }) {
           label: `编辑表-${value.nodeData?.name}`,
           key: `editTable-${value.nodeData?.name}`,
           tabType: 'editTable',
-          id: `editTable-${value.nodeData?.name}`
+          id: `editTable-${value.nodeData?.name}`,
+          operationData: data
+
         } as any])
         setActiveKey(`editTable-${value.nodeData?.name}`)
       } else {
@@ -588,7 +449,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   function createTable() {
     let flag = false
     windowList?.map(item => {
-      if (item.id === `newTable-${currentDB?.name}`) {
+      if (item.key === `newTable-${currentDB?.name}`) {
         flag = true
       }
     })
@@ -611,15 +472,15 @@ export default memo<IProps>(function DatabasePage({ className }) {
     // })
   }
 
-  function renderCurrentTab(i: ITabItem) {
-    if (i.tabType === 'editTable') {
-      return <ModifyTable></ModifyTable>
+  function renderCurrentTab(i: IConsole) {
+    if (i.type === 'editTable') {
+      return <ModifyTable data={i}></ModifyTable>
     } else {
       return <DatabaseQuery
         treeNodeClickMessage={treeNodeClickMessage}
         setTreeNodeClickMessage={setTreeNodeClickMessage}
-        windowTab={i}
-        key={i.databaseName + i.id}
+        windowTab={i as ISQLQueryConsole}
+        key={i.key}
         activeTabKey={activeKey!}
       />
     }
@@ -681,8 +542,8 @@ export default memo<IProps>(function DatabasePage({ className }) {
         <div className={styles.databaseQueryBox}>
           {
             currentDB &&
-            windowList?.map((i: ITabItem, index: number) => {
-              return <div key={index} className={classnames(styles.windowContent, { [styles.concealTab]: activeKey !== i.id })}>
+            windowList?.map((i: IConsole, index: number) => {
+              return <div key={index} className={classnames(styles.windowContent, { [styles.concealTab]: activeKey !== i.key })}>
                 {renderCurrentTab(i)}
               </div>
             })

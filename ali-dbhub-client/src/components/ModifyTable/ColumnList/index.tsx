@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useDebugValue, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useContext, useDebugValue, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { Button, DatePicker, Input, Form, Modal, message, Checkbox, Select } from 'antd';
@@ -9,6 +9,7 @@ import { useOnlyOnceTask } from '@/utils/hooks';
 import { mysqlDataType } from '@/data/dataType';
 import { IOptions } from '@/types';
 import { scrollPage } from '@/utils';
+import { Context } from '@/components/ModifyTable/ModifyTable'
 
 interface IProps {
   className?: string;
@@ -38,9 +39,10 @@ export default memo<IProps>(function ColumnList({ className }) {
   const [dragIndex, setDragIndex] = useState<number>();
   const [currentDragMovePx, setCurrentDragMovePx] = useState<string>();
   const [dragedIndex, setDragedIndex] = useState<number>();
+  const tableData = useContext(Context)
 
   useEffect(() => {
-
+    console.log('tableData', tableData)
   }, [])
 
 
@@ -58,7 +60,7 @@ export default memo<IProps>(function ColumnList({ className }) {
 
   function createDefaultColumn(): IRow {
     return {
-      index: dataSourceRef?.current?.length + 1 || 1,
+      index: new Date().getTime(),
       state: IRowState.NEW,
       columnName: '',
       type: '',
@@ -70,9 +72,11 @@ export default memo<IProps>(function ColumnList({ className }) {
   }
 
   function renderDrag(t: IRow, i: number) {
-    return <div onMouseDown={(e) => { onMouseDown(e, t, i) }}>{
-      <Iconfont code="&#xe611;" />
-    }</div>
+    if (t.state === 'new') {
+      return <div className={styles.cellMoveBox} onMouseDown={(e) => { onMouseDown(e, t, i) }}>{
+        <Iconfont code="&#xe611;" />
+      }</div>
+    }
   }
 
   function onMouseDown(e: React.MouseEvent, t: IRow, i: number) {
@@ -236,7 +240,7 @@ export default memo<IProps>(function ColumnList({ className }) {
         name: '状态', baseWidth: 50, renderCell: t => <div>{t.state}</div>
       },
       {
-        name: '列名', baseWidth: 180, renderCell: t => {
+        name: '列名', flex: 1, renderCell: t => {
           return t.isEdit ?
             <Input onChange={(value) => { onChangeDataSource('columnName', value.target.value, t) }} value={t.columnName}></Input>
             :
@@ -244,7 +248,7 @@ export default memo<IProps>(function ColumnList({ className }) {
         }
       },
       {
-        name: '类型', baseWidth: 180, renderCell: t => {
+        name: '类型', flex: 1, renderCell: t => {
           return t.isEdit ?
             renderSelete(t)
             :
@@ -252,7 +256,7 @@ export default memo<IProps>(function ColumnList({ className }) {
         }
       },
       {
-        name: '长度', baseWidth: 80, renderCell: t => {
+        name: '长度', baseWidth: 100, renderCell: t => {
           return t.isEdit ?
             <Input onChange={(value) => { onChangeDataSource('length', value.target.value, t) }} value={t.length}></Input>
             :
@@ -262,14 +266,14 @@ export default memo<IProps>(function ColumnList({ className }) {
       {
         name: '可空', baseWidth: 50, renderCell: t => <div><Checkbox value={t.unNull} onChange={(value) => { onChangeDataSource('unNull', value.target.value, t) }}></Checkbox></div>
       },
-      {
-        name: '注释', flex: 1, renderCell: t => {
-          return t.isEdit ?
-            <Input onChange={(value) => { onChangeDataSource('comment', value.target.value, t) }} value={t.comment}></Input>
-            :
-            <div onClick={enterEdit.bind(null, t)} className={styles.cellContent}>{t.comment}</div>
-        }
-      },
+      // {
+      //   name: '注释', flex: 1, renderCell: t => {
+      //     return t.isEdit ?
+      //       <Input onChange={(value) => { onChangeDataSource('comment', value.target.value, t) }} value={t.comment}></Input>
+      //       :
+      //       <div onClick={enterEdit.bind(null, t)} className={styles.cellContent}>{t.comment}</div>
+      //   }
+      // },
       {
         name: '操作', baseWidth: 80, renderCell: t => <div>
           <div onClick={deleteRow.bind(null, t)} className={styles.deleteButton}>删除</div>
@@ -349,6 +353,12 @@ export function Expand() {
       <Form.Item
         label="默认值"
         name="name"
+      >
+        <Input onChange={() => { onChangeForm() }} />
+      </Form.Item>
+      <Form.Item
+        label="注释"
+        name="comment"
       >
         <Input onChange={() => { onChangeForm() }} />
       </Form.Item>

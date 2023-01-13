@@ -1,4 +1,4 @@
-import {envType, DatabaseTypeCode, TreeNodeType, WindowTabStatus,TableDataType} from '@/utils/constants'
+import {EnvType, DatabaseTypeCode, TreeNodeType, WindowTabStatus,TableDataType, ConsoleType} from '@/utils/constants'
 
 export interface IDatabase {
   name: string;
@@ -27,7 +27,7 @@ export interface IConnectionBase{
   password: string;
   type: DatabaseTypeCode;
   tabOpened: 'y' | 'n';
-  envType: envType;
+  EnvType: EnvType;
 }
 export interface IHistoryRecord{
   id?: string | number;
@@ -60,7 +60,7 @@ export interface ITreeNode{
   isLeaf?: boolean;
   children?: ITreeNode[];
   parent?: ITreeNode;
-  columnType: string;
+  // columnType: string;
 }
 export interface IDB {
   name: string;
@@ -71,7 +71,7 @@ export interface IDB {
 export interface IWindowTab {
   id?:string;
   name: string;
-  type: DatabaseTypeCode;
+  DBType: DatabaseTypeCode;
   dataSourceId: string|number;
   databaseName: string;
   consoleId?: string;
@@ -107,3 +107,26 @@ export interface IOptions {
   label: string;
   [key:string]: any;
 }
+
+export interface IConsoleBasic {
+  label: string; // 名称
+  key: string; // key 唯一
+  type: ConsoleType; // 类型
+  DBType: DatabaseTypeCode; // 数据库类型
+  databaseName: string; // 数据库名称
+  dataSourceId: number; // 数据源id
+}
+
+// 查询sql的控制台
+export interface ISQLQueryConsole extends IConsoleBasic {
+  consoleId: number; // 与后端建立连接的控制台id
+  status?: WindowTabStatus;
+  ddl: string;
+}
+
+//编辑表结构的控制台
+export interface IEditTableConsole extends IConsoleBasic  {
+  operationData: any
+}
+
+export type IConsole = IEditTableConsole | ISQLQueryConsole 

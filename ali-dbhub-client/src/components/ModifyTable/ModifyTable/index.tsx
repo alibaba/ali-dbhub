@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, createContext } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import IndexList from '@/components/ModifyTable/IndexList';
@@ -11,7 +11,15 @@ interface ITabItem {
   component: any; // TODO: 组件的Ts是什么
 }
 
-export default function ModifyTablePage() {
+interface IProps {
+  data: any;
+}
+
+export const Context = createContext(null)
+
+
+export default memo<IProps>(function ModifyTablePage(props) {
+  const { data } = props
 
   const tabList: ITabItem[] = [
     {
@@ -55,8 +63,16 @@ export default function ModifyTablePage() {
 
   return <div className={styles.page}>
     {renderTabList()}
-    <div className={styles.main}>
-      {currentTab.component}
-    </div>
-  </div>
-}
+    <Context.Provider value={data} >
+      <div className={styles.main}>
+        {
+          tabList.map(t => {
+            return <div key={t.key} className={classnames(styles.tab, { [styles.hidden]: currentTab.key !== t.key })}>
+              {t.component}
+            </div>
+          })
+        }
+      </div>
+    </Context.Provider>
+  </div >
+})

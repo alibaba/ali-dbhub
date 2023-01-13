@@ -128,19 +128,6 @@ export function approximateTreeNode(treeData: ITreeNode[], target: string, isDel
   }
 }
 
-export function getLocationHash(){
-    const rightHash = location.hash.split('?')[1]
-    const params:any = {}
-    if (rightHash) {
-      const arr = rightHash.split('&')
-      arr.map(item => {
-        const splitRes = item.split('=')
-        params[splitRes[0]] = splitRes[1]
-      })
-    }
-    return params
-}
-
 // 储存当前页面的hash
 export function setCurrentPosition(){
   const hash = location.hash

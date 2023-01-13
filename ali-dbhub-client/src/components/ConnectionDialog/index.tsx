@@ -3,7 +3,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import connectionServer from '@/service/connection'
 import { IConnectionBase } from '@/types'
-import { databaseTypeList, databaseType, DatabaseTypeCode, envType } from '@/utils/constants'
+import { databaseTypeList, databaseType, DatabaseTypeCode, EnvType } from '@/utils/constants'
 import {
   Select,
   Button,
@@ -73,8 +73,8 @@ const h2Driven = [
 ]
 
 const envOptions = [
-  { label: '日常', value: envType.DAILY },
-  { label: '线上', value: envType.PRODUCT },
+  { label: '日常', value: EnvType.DAILY },
+  { label: '线上', value: EnvType.PRODUCT },
 ];
 
 export default memo<IProps>(function ConnectionDialog(props) {
@@ -91,7 +91,7 @@ export default memo<IProps>(function ConnectionDialog(props) {
         authentication: 1,
         url: 'jdbc:mysql://localhost:3306',
         alias: `localhost[1]`,
-        envType: envType.DAILY
+        EnvType: EnvType.DAILY
 
       });
     } else {
@@ -388,7 +388,7 @@ export default memo<IProps>(function ConnectionDialog(props) {
       </Form.Item>
       <Form.Item
         label="环境"
-        name="envType"
+        name="EnvType"
       >
         <Radio.Group options={envOptions} />
       </Form.Item>

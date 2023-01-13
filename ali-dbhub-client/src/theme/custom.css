@@ -14013,7 +14013,7 @@ _:-ms-fullscreen
   display: inline-block;
   width: 100%;
   min-width: 0;
-  padding: 2px 11px;
+  padding: 2px 6px;
   color: var(--color-text-85);
   font-size: 12px;
   line-height: 1.5715;
@@ -14287,7 +14287,7 @@ textarea.custom-input-affix-wrapper {
   display: inline-block;
   width: 100%;
   min-width: 0;
-  padding: 2px 11px;
+  padding: 2px 6px;
   height: 24px;
   color: var(--color-text-85);
   font-size: 12px;
@@ -14446,7 +14446,7 @@ textarea.custom-input {
 }
 .custom-input-group-addon {
   position: relative;
-  padding: 0 11px;
+  padding: 0 6px;
   color: var(--color-text-85);
   font-weight: normal;
   font-size: 14px;
@@ -14532,10 +14532,10 @@ textarea.custom-input {
 .custom-input-group-sm > .custom-input-group-addon {
   padding: 0px 7px;
 }
-.custom-input-group-lg .custom-select-single .custom-select-selector {
+.custom-input-group-lg elector {
   height: 40px;
 }
-.custom-input-group-sm .custom-select-single .custom-select-selector {
+.custom-input-group-sm elector {
   height: 24px;
 }
 .custom-input-group .custom-input-affix-wrapper:not(:last-child) {
@@ -15384,7 +15384,7 @@ textarea.custom-input-number {
 }
 .custom-input-number-group-addon {
   position: relative;
-  padding: 0 11px;
+  padding: 0 6px;
   color: var(--color-text-85);
   font-weight: normal;
   font-size: 14px;
@@ -15478,7 +15478,7 @@ textarea.custom-input-number {
 .custom-input-number-group-sm > .custom-input-number-group-addon {
   padding: 0px 7px;
 }
-.custom-input-number-group-lg .custom-select-single .custom-select-selector {
+.custom-input-number-group-lg elector {
   height: 40px;
 }
 .custom-input-number-group-sm .custom-select-single .custom-select-selector {
@@ -15854,7 +15854,7 @@ textarea.custom-input-number {
 .custom-input-number-input {
   width: 100%;
   height: 30px;
-  padding: 0 11px;
+  padding: 0 6px;
   text-align: left;
   background-color: transparent;
   border: 0;
@@ -20347,7 +20347,7 @@ span.custom-radio + * {
 }
 .custom-segmented-item-label {
   min-height: 28px;
-  padding: 0 11px;
+  padding: 0 6px;
   line-height: 28px;
   overflow: hidden;
   white-space: nowrap;
@@ -20368,7 +20368,7 @@ span.custom-radio + * {
 }
 .custom-segmented.custom-segmented-lg .custom-segmented-item-label {
   min-height: 36px;
-  padding: 0 11px;
+  padding: 0 6px;
   font-size: 16px;
   line-height: 36px;
 }
@@ -20415,7 +20415,7 @@ span.custom-radio + * {
   top: 0;
   right: 11px;
   bottom: 0;
-  left: 11px;
+  left: 6px;
 }
 .custom-select-single
   .custom-select-selector
@@ -20476,7 +20476,7 @@ span.custom-radio + * {
   .custom-select-selector {
   width: 100%;
   height: 24px;
-  padding: 0 11px;
+  padding: 0 6px;
 }
 .custom-select-single:not(.custom-select-customize-input)
   .custom-select-selector
@@ -20503,7 +20503,7 @@ span.custom-radio + * {
   position: absolute;
   right: 0;
   left: 0;
-  padding: 0 11px;
+  padding: 0 6px;
 }
 .custom-select-single.custom-select-customize-input
   .custom-select-selector
@@ -20567,7 +20567,7 @@ span.custom-radio + * {
 }
 .custom-select-single.custom-select-lg:not(.custom-select-customize-input)
   .custom-select-selector {
-  padding: 0 11px;
+  padding: 0 6px;
 }
 /**
  * Do not merge `height` & `line-height` under style with `selection` & `search`,
@@ -20715,7 +20715,7 @@ span.custom-radio + * {
   position: absolute;
   top: 50%;
   right: 11px;
-  left: 11px;
+  left: 6px;
   transform: translateY(-50%);
   transition: all 0.3s;
 }
