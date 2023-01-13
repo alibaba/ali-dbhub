@@ -8,10 +8,10 @@ export interface IGetListParams extends IPageParams  {
 }
 
 export interface IExecuteSqlParams {
-  sql:string,
-  dataSourceId:number|string,
-  databaseName:string,
-  consoleId: string,
+  sql: string,
+  dataSourceId: number,
+  databaseName: string,
+  consoleId: number,
 }
 
 export interface IExecuteSqlResponse {
@@ -23,8 +23,8 @@ export interface IExecuteSqlResponse {
   dataList: any[];
 }
 export interface IConnectConsoleParams {
-  consoleId: string | number,	
-  dataSourceId: string | number,
+  consoleId: number,	
+  dataSourceId: number,
   databaseName: string,
 }
 
@@ -43,7 +43,7 @@ export interface IDeleteTableParams {
 
 export interface IExecuteTableParams {
   sql: string;
-  consoleId?: string| number;	
+  consoleId: number;	
   dataSourceId: number;
   databaseName: string;
 }
