@@ -10,6 +10,7 @@ import { mysqlDataType } from '@/data/dataType';
 import { IOptions } from '@/types';
 import { scrollPage } from '@/utils';
 import { Context } from '@/components/ModifyTable/ModifyTable'
+import { IEditTableConsole } from '@/types'
 
 interface IProps {
   className?: string;
@@ -39,14 +40,28 @@ export default memo<IProps>(function ColumnList({ className }) {
   const [dragIndex, setDragIndex] = useState<number>();
   const [currentDragMovePx, setCurrentDragMovePx] = useState<string>();
   const [dragedIndex, setDragedIndex] = useState<number>();
-  const tableData = useContext(Context)
+  const data: IEditTableConsole | null = useContext(Context)
 
   useEffect(() => {
-    console.log('tableData', tableData)
+    if (data?.tableData?.children?.[0].children) {
+      dataSourceRef.current = data.tableData.children[0].children.map((t, i) => {
+        return {
+          index: new Date().getTime() + i,
+          state: IRowState.OLD,
+          columnName: t.name,
+          type: t.dataType!,
+          length: '',
+          unNull: false,
+          comment: '',
+          isEdit: false
+        }
+      })
+      setRefresh(new Date().getTime())
+    }
   }, [])
 
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const newList = mysqlDataType.map(item => {
       return {
         value: item.name,
@@ -237,7 +252,7 @@ export default memo<IProps>(function ColumnList({ className }) {
         name: '序号', baseWidth: 50, renderCell: (t, i) => <div>{i + 1}</div>
       },
       {
-        name: '状态', baseWidth: 50, renderCell: t => <div>{t.state}</div>
+        name: '状态', baseWidth: 80, renderCell: t => <div>{t.state}</div>
       },
       {
         name: '列名', flex: 1, renderCell: t => {
@@ -264,7 +279,7 @@ export default memo<IProps>(function ColumnList({ className }) {
         }
       },
       {
-        name: '可空', baseWidth: 50, renderCell: t => <div><Checkbox value={t.unNull} onChange={(value) => { onChangeDataSource('unNull', value.target.value, t) }}></Checkbox></div>
+        name: '可空', baseWidth: 80, renderCell: t => <div><Checkbox value={t.unNull} onChange={(value) => { onChangeDataSource('unNull', value.target.value, t) }}></Checkbox></div>
       },
       // {
       //   name: '注释', flex: 1, renderCell: t => {
@@ -275,7 +290,7 @@ export default memo<IProps>(function ColumnList({ className }) {
       //   }
       // },
       {
-        name: '操作', baseWidth: 80, renderCell: t => <div>
+        name: '操作', baseWidth: 60, renderCell: t => <div>
           <div onClick={deleteRow.bind(null, t)} className={styles.deleteButton}>删除</div>
         </div>
       },

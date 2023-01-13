@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import IndexList from '@/components/ModifyTable/IndexList';
 import ColumnList from '@/components/ModifyTable/ColumnList';
 import BaseInfo from '@/components/ModifyTable/BaseInfo';
+import { IEditTableConsole } from '@/types'
 
 interface ITabItem {
   title: string;
@@ -12,14 +13,13 @@ interface ITabItem {
 }
 
 interface IProps {
-  data: any;
+  data: IEditTableConsole;
 }
 
-export const Context = createContext(null)
-
+export const Context = createContext<IEditTableConsole | null>(null)
 
 export default memo<IProps>(function ModifyTablePage(props) {
-  const { data } = props
+  const { data } = props;
 
   const tabList: ITabItem[] = [
     {
@@ -39,7 +39,7 @@ export default memo<IProps>(function ModifyTablePage(props) {
     },
   ]
 
-  const [currentTab, setCurrentTab] = useState<ITabItem>(tabList[1])
+  const [currentTab, setCurrentTab] = useState<ITabItem>(tabList[1]);
 
   function changeTab(item: ITabItem) {
     setCurrentTab(item)

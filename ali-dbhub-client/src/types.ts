@@ -1,5 +1,6 @@
 import {EnvType, DatabaseTypeCode, TreeNodeType, WindowTabStatus,TableDataType, ConsoleType} from '@/utils/constants'
 
+
 export interface IDatabase {
   name: string;
   code:DatabaseTypeCode;
@@ -126,7 +127,7 @@ export interface ISQLQueryConsole extends IConsoleBasic {
 
 //编辑表结构的控制台
 export interface IEditTableConsole extends IConsoleBasic  {
-  operationData: any
+  tableData?: ITreeNode;
 }
 
 export type IConsole = IEditTableConsole | ISQLQueryConsole 
