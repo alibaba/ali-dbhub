@@ -7,7 +7,6 @@ import i18n from '@/i18n';
 import AppHeader from '@/components/AppHeader';
 import Iconfont from '@/components/Iconfont';
 import Tree from '@/components/Tree';
-import Loading from '@/components/Loading/Loading';
 import MonacoEditor, { setEditorHint, IHintData } from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
 import DatabaseQuery from '@/components/DatabaseQuery';
@@ -20,14 +19,12 @@ import connectionServer from '@/service/connection';
 import historyServer from '@/service/history';
 import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
-import { IConnectionBase, ITreeNode, IWindowTab, IDB, IConsole, ISQLQueryConsole } from '@/types'
+import { IConnectionBase, ITreeNode, IWindowTab, IDB, IConsole, ISQLQueryConsole, IEditTableConsole } from '@/types'
 import { toTreeList, createRandom, approximateTreeNode, setCurrentPosition, OSnow } from '@/utils'
 import { databaseType, DatabaseTypeCode, TreeNodeType, ConsoleStatus, OSType, ConsoleType } from '@/utils/constants'
 const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
-import { useUpdateEffect } from '@/utils/hooks';
 const { keywords } = language;
-import { format } from 'sql-formatter';
 
 interface IProps {
   className?: any;
@@ -46,8 +43,8 @@ const basicsTree: ITreeNode[] = []
 let monacoEditorExternalList: any = {}
 
 type IParams = {
-  DBName: string;
-  consolekey: string;
+  databaseName: string;
+  id: string;
 }
 
 function getCurrentPageInfo(): IParams {
@@ -132,7 +129,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
     const locationHash = getCurrentPageInfo()
     let flag = false;
     DBList.map(item => {
-      if (locationHash.DBName && item.name == locationHash.DBName) {
+      if (locationHash.databaseName && item.name == locationHash.databaseName) {
         flag = true
         setCurrentDB(item)
       }
@@ -196,7 +193,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
         })
         let flag = false;
         list?.map(item => {
-          if (locationHash.consolekey && item.key == locationHash.consolekey) {
+          if (locationHash.id && item.key == locationHash.id) {
             setActiveKey(item.key)
             flag = true
           }
@@ -402,7 +399,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
       database: currentDB,
       connectionDetaile: connectionDetaile
     }
-
+    setOperationData(data)
     if (value.type === 'edit') {
       let flag = false
       windowList?.map(item => {
@@ -410,22 +407,23 @@ export default memo<IProps>(function DatabasePage({ className }) {
           flag = true
         }
       })
+      const { databaseName, id } = getCurrentPageInfo();
       if (!flag) {
-        setWindowList([...windowList, {
+        const newData: IEditTableConsole = {
           label: `编辑表-${value.nodeData?.name}`,
           key: `editTable-${value.nodeData?.name}`,
-          tabType: 'editTable',
-          id: `editTable-${value.nodeData?.name}`,
-          operationData: data
-
-        } as any])
+          type: ConsoleType.EDITTABLE,
+          DBType: params.type,
+          databaseName: databaseName,
+          dataSourceId: +params.id,
+          tableData: value.nodeData!,
+        }
+        setWindowList([...windowList, newData])
         setActiveKey(`editTable-${value.nodeData?.name}`)
       } else {
         setActiveKey(`editTable-${value.nodeData?.name}`)
       }
     }
-
-    setOperationData(data)
     if (value.type === 'delete') {
       Modal.confirm({
         title: '你确定要删除该表吗',
@@ -474,7 +472,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   function renderCurrentTab(i: IConsole) {
     if (i.type === 'editTable') {
-      return <ModifyTable data={i}></ModifyTable>
+      return <ModifyTable data={i as IEditTableConsole}></ModifyTable>
     } else {
       return <DatabaseQuery
         treeNodeClickMessage={treeNodeClickMessage}

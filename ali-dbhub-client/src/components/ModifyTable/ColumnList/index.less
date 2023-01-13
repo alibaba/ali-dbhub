@@ -7,6 +7,8 @@
 }
 
 .tableHeader{
+  height: 28px;
+  min-height: 28px;
   background-color: var(--color-bg-300);
   >div:nth-of-type(4),>div:nth-of-type(5),>div:nth-of-type(6){
     padding: 0px 24px;
@@ -29,6 +31,14 @@
   .form{
     padding: 0px 20px;
     width: 350px;
+    :global{
+      .custom-form-item{
+        >div >div:nth-of-type(1){
+          width: 70px;
+          text-align: left;
+        }
+      }
+    }
   }
 }
 
@@ -85,7 +95,7 @@
 
 .addDataButton{
   width: 100%;
-  margin-bottom: 10px;
+  margin: 10px 0px;
   i{
     margin-right: 8px;
   }
