@@ -10,6 +10,7 @@ import { mysqlDataType } from '@/data/dataType';
 import { IOptions } from '@/types';
 import { scrollPage } from '@/utils';
 import { Context } from '@/components/ModifyTable/ModifyTable'
+import Table from '@/components/Table'
 import { IEditTableConsole } from '@/types'
 
 interface IProps {
@@ -87,33 +88,29 @@ export default memo<IProps>(function ColumnList({ className }) {
   }
 
   function renderDrag(t: IRow, i: number) {
-    if (t.state === 'new') {
-      return <div className={styles.cellMoveBox} onMouseDown={(e) => { onMouseDown(e, t, i) }}>{
-        <Iconfont code="&#xe611;" />
-      }</div>
-    }
+    // if (t.state === 'new') {
+    // }
+    return <div className={styles.cellMoveBox} onMouseDown={(e) => { onMouseDown(e, t, i) }}>{
+      <Iconfont code="&#xe611;" />
+    }</div>
   }
 
   function onMouseDown(e: React.MouseEvent, t: IRow, i: number) {
     setDragIndex(i);
     const start = e.clientY;
-    const mask = document.createElement('div');
-    const { style } = mask;
-    style.position = 'fixed';
-    style.left = style.right = style.top = style.bottom = '0';
-    style.zIndex = '9999999';
-    style.cursor = 'move';
+    const mask = scrollBoxRef.current!;
 
-    function check(e: MouseEvent) {
+    function check(e: MouseEvent): number {
       const { clientY } = e;
-      const px = start - clientY;
-      // 移动边界判断
-      if (i === 0 && (start - clientY) > 0) return false
-      if (i === dataSourceRef.current?.length && (start - clientY) < 0) return false
-      setCurrentDragMovePx(`${-(px)}`);
-      const absoluteValue = px > 0 ? px : -px
+      const extent = start - clientY;
+      setCurrentDragMovePx(`${-(extent)}`);
+      const absoluteValue = extent > 0 ? extent : -extent
       if (absoluteValue / CategoryLineHeight > 0.5) {
-        const target = px > 0 ? i - Math.round(absoluteValue / CategoryLineHeight) : i + Math.round(absoluteValue / CategoryLineHeight)
+        const target = extent > 0
+          ?
+          i - Math.round(absoluteValue / CategoryLineHeight)
+          :
+          i + Math.round(absoluteValue / CategoryLineHeight)
         setDragedIndex(target)
         return target
       } else {
@@ -122,25 +119,23 @@ export default memo<IProps>(function ColumnList({ className }) {
       }
     }
 
-    mask.addEventListener('mousemove', e => {
-      check(e);
-    });
-
-    mask.addEventListener('mouseup', e => {
+    function mouseup(e: MouseEvent) {
       const target = check(e);
-      if (target !== false) {
+      if (target || target === 0) {
         const newList = [...dataSourceRef.current!];
         const item = newList.splice(i, 1)[0];
         newList.splice(target, 0, item);
         dataSourceRef.current = newList
       }
-      document.body.removeChild(mask);
       setCurrentDragMovePx('0px')
       setDragIndex(undefined)
       setDragedIndex(undefined)
-    });
+      mask.removeEventListener('mouseup', mouseup)
+      mask.removeEventListener('mousemove', check)
+    }
 
-    document.body.appendChild(mask);
+    mask.addEventListener('mousemove', check);
+    mask.addEventListener('mouseup', mouseup);
   }
 
   function onChangeIsNull() {
@@ -316,7 +311,7 @@ export default memo<IProps>(function ColumnList({ className }) {
     dataSourceRef.current = changeCurrentEdit(newRow, newList)
     setRefresh(new Date().getTime())
     setTimeout(() => {
-      scrollPage(999999999, scrollBoxRef.current)
+      scrollPage(999999999, scrollBoxRef.current) //TODO:
     }, 0);
   }
 
@@ -341,6 +336,57 @@ export default memo<IProps>(function ColumnList({ className }) {
         新增
       </Button>
     </div>
+    {/* <Table columns={[
+      {
+        name: '拖动', baseWidth: 50, drag: true, renderCell: (t: IRow, i) => renderDrag(t, i)
+      },
+      {
+        name: '序号', baseWidth: 50, renderCell: (t, i) => <div>{i + 1}</div>
+      },
+      {
+        name: '状态', baseWidth: 80, renderCell: t => <div>{t.state}</div>
+      },
+      {
+        name: '列名', flex: 1, renderCell: t => {
+          return t.isEdit ?
+            <Input onChange={(value) => { onChangeDataSource('columnName', value.target.value, t) }} value={t.columnName}></Input>
+            :
+            <div onClick={enterEdit.bind(null, t)} className={styles.cellContent}>{t.columnName}</div>
+        }
+      },
+      {
+        name: '类型', flex: 1, renderCell: t => {
+          return t.isEdit ?
+            renderSelete(t)
+            :
+            <div onClick={enterEdit.bind(null, t)} className={styles.cellContent}>{t.type}</div>
+        }
+      },
+      {
+        name: '长度', baseWidth: 100, renderCell: t => {
+          return t.isEdit ?
+            <Input onChange={(value) => { onChangeDataSource('length', value.target.value, t) }} value={t.length}></Input>
+            :
+            <div onClick={enterEdit.bind(null, t)} className={styles.cellContent}>{t.length}</div>
+        }
+      },
+      {
+        name: '可空', baseWidth: 80, renderCell: t => <div><Checkbox value={t.unNull} onChange={(value) => { onChangeDataSource('unNull', value.target.value, t) }}></Checkbox></div>
+      },
+      // {
+      //   name: '注释', flex: 1, renderCell: t => {
+      //     return t.isEdit ?
+      //       <Input onChange={(value) => { onChangeDataSource('comment', value.target.value, t) }} value={t.comment}></Input>
+      //       :
+      //       <div onClick={enterEdit.bind(null, t)} className={styles.cellContent}>{t.comment}</div>
+      //   }
+      // },
+      {
+        name: '操作', baseWidth: 60, renderCell: t => <div>
+          <div onClick={deleteRow.bind(null, t)} className={styles.deleteButton}>删除</div>
+        </div>
+      },
+    ]} data={dataSourceRef.current}></Table> */}
     <Expand></Expand>
   </div >
 })

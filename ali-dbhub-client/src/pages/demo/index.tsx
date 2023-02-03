@@ -2,7 +2,6 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import styles from './index.less'
 import Iconfont from '@/components/Iconfont'
 import Tabs from '@/components/Tabs';
-import ModifyTablePage from '@/pages/modify-table';
 
 function DemoPage() {
   const list = new Array(10).fill('123');
