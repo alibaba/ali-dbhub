@@ -3,8 +3,6 @@ package com.alibaba.dbhub.server.start.test.sql;
 import java.sql.Connection;
 import java.sql.Statement;
 
-import com.alibaba.druid.pool.DruidDataSource;
-
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
@@ -23,13 +21,6 @@ public class DbhubJdbcTemplateTest {
 
     @BeforeAll
     public static void prepare() throws Exception {
-        DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        druidDataSource.setUrl("jdbc:mysql://rm-8vb099vo8309mcngk.mysql.zhangbei.rds.aliyuncs.com:3306");
-        druidDataSource.setUsername("grow");
-        druidDataSource.setPassword("v5EdRurYac");
-
-        jdbcTemplate = new JdbcTemplate(druidDataSource);
         log.info("连接mysql");
     }
 
