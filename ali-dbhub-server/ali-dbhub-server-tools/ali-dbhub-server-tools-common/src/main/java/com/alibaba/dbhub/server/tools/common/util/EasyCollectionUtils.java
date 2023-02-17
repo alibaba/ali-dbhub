@@ -5,11 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import cn.hutool.db.meta.Table;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 
 /**
  * 集合工具类
@@ -140,4 +144,29 @@ public class EasyCollectionUtils {
         }
         return false;
     }
+
+    public static <T> void add(Collection<T> collection,
+                               T o) {
+        collection.add(o);
+    }
+
+    /**
+     * 根据指定字段 集合去重
+     * @param collection 原始的集合
+     * @param keyFunction keyFunction
+     * @param <E>
+     * @param <R>
+     * @return 去重后的集合
+     */
+    public static <E,R> List<E> distinctByKey(Collection<E> collection, Function<E, R> keyFunction){
+        return stream(collection).filter(distinctByKey(keyFunction)).collect(Collectors.toList());
+    }
+
+
+    static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        Predicate<T> tPredicate = t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
 }
