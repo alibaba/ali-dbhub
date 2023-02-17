@@ -148,14 +148,14 @@ public class EasyCollectionUtils {
     /**
      * 将一个对象加入集合
      * @param collection 原始集合
-     * @param eADD 需要加入的对象
+     * @param objectAdd 需要加入的对象
      * @param <T>
      */
-    public static <T> void add(Collection<T> collection, T eADD) {
-        if(Objects.isNull(eADD)){
+    public static <T> void add(Collection<T> collection, T objectAdd) {
+        if(Objects.isNull(objectAdd)){
             return;
         }
-        collection.add(eADD);
+        collection.add(objectAdd);
     }
 
     /**
@@ -173,7 +173,6 @@ public class EasyCollectionUtils {
 
     static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();
-        Predicate<T> tPredicate = t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
