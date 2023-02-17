@@ -145,9 +145,17 @@ public class EasyCollectionUtils {
         return false;
     }
 
-    public static <T> void add(Collection<T> collection,
-                               T o) {
-        collection.add(o);
+    /**
+     * 将一个对象加入集合
+     * @param collection 原始集合
+     * @param eADD 需要加入的对象
+     * @param <T>
+     */
+    public static <T> void add(Collection<T> collection, T eADD) {
+        if(Objects.isNull(eADD)){
+            return;
+        }
+        collection.add(eADD);
     }
 
     /**
