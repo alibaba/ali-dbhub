@@ -516,11 +516,13 @@ export default memo<IProps>(function DatabasePage({ className }) {
             <Iconfont code="&#xe63d;"></Iconfont>
             <span>{i18n('connection.button.overview')}</span>
           </div>
-          <Tree
+          {/* <Tree
             openOperationTableModal={openOperationTableModal}
             nodeDoubleClick={nodeDoubleClick}
             className={styles.tree}
-            treeData={treeData}></Tree>
+            treeData={treeData}
+          /> */}
+          <Tree></Tree>
         </div>
       </div>
       <DraggableDivider callback={callback} volatileRef={letfRef} />

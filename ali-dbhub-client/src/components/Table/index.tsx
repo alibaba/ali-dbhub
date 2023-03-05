@@ -3,13 +3,13 @@ import styles from './index.less';
 import classnames from 'classnames';
 import { useOnlyOnceTask } from '@/utils/hooks';
 import Iconfont from '@/components/Iconfont';
-import { createTableRows } from '@/components/TableColumns';
+import { createTableRows, IColumn } from '@/components/TableColumns';
 import { IOptions } from '@/types';
 
 interface IProps {
   className?: string;
-  columns: any;
-  data: any;
+  columns: IColumn[];
+  dataSource: T[];
   changeData?: Function
 }
 
@@ -31,19 +31,19 @@ interface IRow {
 
 const CategoryLineHeight = 46;
 
-export default memo<IProps>(function Table({ className, columns, data, changeData }) {
-  const [newData, setNewData] = useState(data)
+export default memo<IProps>(function Table({ className, columns, dataSource, changeData }) {
+  const [newData, setNewData] = useState(dataSource)
   const scrollBoxRef = useRef<any>();
   // const dataSourceRef = useRef<IRow[]>([createDefaultColumn()]);
   const mysqlDataTypeOptionsRef = useRef<IOptions[]>();
   const [, setRefresh] = useState(0);
   const [dragIndex, setDragIndex] = useState<number>();
   const [currentDragMovePx, setCurrentDragMovePx] = useState<string>();
-  const [dragedIndex, setDragedIndex] = useState<number>();
+  const [draggedIndex, setDraggedIndex] = useState<number>();
 
   useEffect(() => {
-    setNewData(data)
-  }, [data])
+    setNewData(dataSource)
+  }, [dataSource])
 
   function renderDrag(t: IRow, i: number) {
     // if (t.state === 'new') {
@@ -56,9 +56,9 @@ export default memo<IProps>(function Table({ className, columns, data, changeDat
   function moveStyle(index: number) {
     if (index === dragIndex) {
       return { transform: `translateY(${currentDragMovePx}px)` }
-    } else if ((index > dragIndex!) && (dragedIndex! >= index)) {
+    } else if ((index > dragIndex!) && (draggedIndex! >= index)) {
       return { transform: `translateY(-${CategoryLineHeight}px)`, }
-    } else if ((index < dragIndex!) && (dragedIndex! <= index)) {
+    } else if ((index < dragIndex!) && (draggedIndex! <= index)) {
       return { transform: `translateY(${CategoryLineHeight}px)` }
     } else {
       return { transform: `translateY(0px)` }
@@ -81,10 +81,10 @@ export default memo<IProps>(function Table({ className, columns, data, changeDat
           i - Math.round(absoluteValue / CategoryLineHeight)
           :
           i + Math.round(absoluteValue / CategoryLineHeight)
-        setDragedIndex(target)
+        setDraggedIndex(target)
         return target
       } else {
-        setDragedIndex(dragIndex)
+        setDraggedIndex(dragIndex)
         return dragIndex!
       }
     }
@@ -92,7 +92,7 @@ export default memo<IProps>(function Table({ className, columns, data, changeDat
     function mouseup(e: MouseEvent) {
       const target = check(e);
       if (target || target === 0) {
-        const newList = [...data!];
+        const newList = [...dataSource!];
         const item = newList.splice(i, 1)[0];
         newList.splice(target, 0, item);
         setNewData(newList)
@@ -101,7 +101,7 @@ export default memo<IProps>(function Table({ className, columns, data, changeDat
       }
       setCurrentDragMovePx('0px')
       setDragIndex(undefined)
-      setDragedIndex(undefined)
+      setDraggedIndex(undefined)
       mask.removeEventListener('mouseup', mouseup)
       mask.removeEventListener('mousemove', check)
     }
