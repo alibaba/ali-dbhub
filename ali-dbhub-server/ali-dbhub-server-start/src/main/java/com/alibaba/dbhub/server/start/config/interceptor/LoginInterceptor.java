@@ -18,20 +18,20 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
         throws Exception {
-
-        String requestURL = request.getRequestURI();
-        if ("OPTIONS".equals(request.getMethod().toString())) {
-            return true;
-        }
-        String token = request.getHeader("token");
-        Integer code;
-        if (StringUtils.isNotBlank(token)) {
-
-            return true;
-        } else {
-            response.sendRedirect("/login.html");
-            return false;
-        }
+        //
+        //String requestURL = request.getRequestURI();
+        //if ("OPTIONS".equals(request.getMethod().toString())) {
+        //    return true;
+        //}
+        //String token = request.getHeader("token");
+        //Integer code;
+        //if (StringUtils.isNotBlank(token)) {
+        //    return true;
+        //} else {
+        //    response.sendRedirect("/login.html");
+        //    return false;
+        //}
+        return true;
     }
 
 }
