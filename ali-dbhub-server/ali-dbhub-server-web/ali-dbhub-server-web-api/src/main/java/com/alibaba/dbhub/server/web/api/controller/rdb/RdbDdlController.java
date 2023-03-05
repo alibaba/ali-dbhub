@@ -6,6 +6,7 @@ import com.alibaba.dbhub.server.domain.api.param.DlExecuteParam;
 import com.alibaba.dbhub.server.domain.api.service.DlTemplateService;
 import com.alibaba.dbhub.server.domain.api.service.TableService;
 import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
 import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
@@ -26,7 +27,9 @@ import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableCreateDdlQue
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDeleteRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableModifySqlRequest;
+import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableUpdateDdlQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ColumnVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.SqlVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.TableVO;
@@ -78,6 +81,21 @@ public class RdbDdlController {
         List<TableVO> tableVOS = rdbWebConverter.tableDto2vo(tableDTOPageResult.getData());
         return WebPageResult.of(tableVOS, tableDTOPageResult.getTotal(), request.getPageNo(),
             request.getPageSize());
+    }
+
+
+    /**
+     * 查询当前DB下的表列表
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/column_list")
+    public ListResult<ColumnVO> list(TableDetailQueryRequest request) {
+        TableQueryParam queryParam = rdbWebConverter.tableRequest2param(request);
+        List<TableColumn> tableColumns = tableService.queryColumns(queryParam);
+        List<ColumnVO> tableVOS = rdbWebConverter.columnDto2vo(tableColumns);
+        return ListResult.of(tableVOS);
     }
 
     /**

@@ -35,3 +35,17 @@ services:
       TZ: Asia/Shanghai
     ports:
       - 1521:1521
+  redis:
+    image: redis:7
+    container_name: redis7
+    restart: always
+    # 挂载映射，可以让数据或配置持久化
+    volumes:
+      #＜本地配置文件＞：
+      - $PWD/redis/redis.conf:/etc/redis/redis. conf:ro
+      - $PWD/redis/data:/data
+      - $PWD/redis/logs:/logs
+   # command: redis-server/etc/redis/redis.conf
+    ports:
+      - 6379:6379
+

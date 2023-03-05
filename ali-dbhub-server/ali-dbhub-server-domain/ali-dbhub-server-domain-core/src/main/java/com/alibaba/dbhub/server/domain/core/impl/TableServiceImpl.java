@@ -1,9 +1,13 @@
 package com.alibaba.dbhub.server.domain.core.impl;
 
+import java.util.List;
+
 import com.alibaba.dbhub.server.domain.api.service.TableService;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Sql;
 import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.model.TableColumn;
+import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.operations.ExampleOperations;
 import com.alibaba.dbhub.server.domain.support.operations.TableOperations;
 import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
@@ -70,5 +74,15 @@ public class TableServiceImpl implements TableService {
     @Override
     public PageResult<Table> pageQuery(TablePageQueryParam param, TableSelector selector) {
         return tableOperations.pageQuery(param, selector);
+    }
+
+    @Override
+    public List<TableColumn> queryColumns(TableQueryParam param) {
+        return tableOperations.queryColumns(param);
+    }
+
+    @Override
+    public List<TableIndex> queryIndexes(TableQueryParam param) {
+        return tableOperations.queryIndexes(param);
     }
 }

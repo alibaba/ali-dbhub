@@ -54,6 +54,7 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlRenameTableStateme
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlRenameTableStatement.Item;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlTableIndex;
 
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -466,10 +467,15 @@ public class TableTemplate implements TableOperations {
             return PageResult.of(list, 0L, param);
         }
         List<String> tableNameList = EasyCollectionUtils.toList(list, Table::getName);
-        List<TableColumn> tableColumnList = metaSchema.queryColumnList(param.getDatabaseName(), null, tableNameList);
-
-        List<TableIndex> tableIndexList = metaSchema.queryIndexList(param.getDatabaseName(), null, tableNameList);
-
+        List<TableColumn> tableColumnList = new ArrayList<>();
+        List<TableIndex> tableIndexList = new ArrayList<>();
+        if(selector.getColumnList()) {
+            tableColumnList = metaSchema.queryColumnList(param.getDatabaseName(), null,
+                tableNameList);
+        }
+        if(selector.getIndexList()) {
+            tableIndexList = metaSchema.queryIndexList(param.getDatabaseName(), null, tableNameList);
+        }
         Map<String, List<TableIndex>> tableIndexMap = EasyCollectionUtils.stream(tableIndexList)
             // 排除主键
             .filter(tableIndex -> !IndexTypeEnum.PRIMARY_KEY.getCode().equals(tableIndex.getType()))
@@ -483,6 +489,19 @@ public class TableTemplate implements TableOperations {
         });
 
         return PageResult.of(list, 100L, param);
+    }
+
+    @Override
+    public List<TableColumn> queryColumns(TableQueryParam param) {
+        MetaSchema metaSchema = DbhubContext.getMetaSchema();
+        return metaSchema.queryColumnList(param.getDatabaseName(), null, Lists.newArrayList(param.getTableName()));
+    }
+
+    @Override
+    public List<TableIndex> queryIndexes(TableQueryParam param) {
+        MetaSchema metaSchema = DbhubContext.getMetaSchema();
+         return metaSchema.queryIndexList(param.getDatabaseName(), null, Lists.newArrayList(param.getTableName()));
+
     }
 
 }
