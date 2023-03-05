@@ -30,9 +30,10 @@ public class MybatisGeneratorTest extends BaseTest {
 
     @Test
     public void coreGenerator() {
-        doGenerator(Lists.newArrayList("data_source"));
-        doGenerator(Lists.newArrayList("operation_log"));
-        doGenerator(Lists.newArrayList("operation_saved"));
+        //doGenerator(Lists.newArrayList("data_source"));
+        //doGenerator(Lists.newArrayList("operation_log"));
+        //doGenerator(Lists.newArrayList("operation_saved"));
+        doGenerator(Lists.newArrayList("dbhub_user"));
     }
 
     private void doGenerator(List<String> tableList) {
