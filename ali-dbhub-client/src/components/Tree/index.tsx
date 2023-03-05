@@ -11,14 +11,15 @@ import Menu, { IMenu, MenuItem } from '@/components/Menu'
 import StateIndicator from '@/components/StateIndicator'
 import LoadingContent from '../Loading/LoadingContent';
 import { useCanDoubleClick } from '@/utils/hooks';
-import { IOperationData } from '@/components/OperationTableModal'
+import { IOperationData } from '@/components/OperationTableModal';
+import connectionService from '@/service/connection';
 
 interface IProps {
   className?: any;
-  treeData: ITreeNode[] | undefined;
+  // treeData: ITreeNode[] | undefined;
   loadData?: Function;
   nodeDoubleClick?: Function;
-  openOperationTableModal: Function;
+  openOperationTableModal?: Function;
 }
 interface TreeNodeIProps {
   data: ITreeNode;
@@ -27,7 +28,7 @@ interface TreeNodeIProps {
   showAllChildrenPenetrate?: boolean;
   loadData?: Function;
   nodeDoubleClick?: Function;
-  openOperationTableModal: Function;
+  openOperationTableModal?: Function;
 }
 
 export function TreeNode(props: TreeNodeIProps) {
@@ -89,7 +90,7 @@ export function TreeNode(props: TreeNodeIProps) {
         type: item.key,
         nodeData: data
       }
-      openOperationTableModal(operationData)
+      openOperationTableModal?.(operationData)
       // TODO: 关闭下拉弹窗 有木有更好的方法
       const customDropdown: any = document.getElementsByClassName('custom-dropdown');
       for (let i = 0; i < customDropdown.length; i++) {
@@ -206,11 +207,33 @@ export function TreeNode(props: TreeNodeIProps) {
 }
 
 export default function Tree(props: IProps) {
-  const { className, treeData, loadData, nodeDoubleClick, openOperationTableModal } = props;
+  const { className, loadData, nodeDoubleClick, openOperationTableModal } = props;
+  const [treeData, setTreeData] = useState<ITreeNode[] | undefined>();
+
+
+  useEffect(() => {
+    let p = {
+      pageNo: 1,
+      pageSize: 100
+    }
+
+    connectionService.getList(p).then(res => {
+      const treeData = res.data.map(t => {
+        return {
+          name: t.alias,
+          key: t.alias,
+          nodeType: TreeNodeType.DATABASE,
+        }
+      })
+      setTreeData(treeData)
+    })
+  }, [])
+
 
   const treeDataEmpty = () => {
     return ''
   }
+
   return (
     <>
       <div className={classnames(className, styles.box)}>
@@ -218,7 +241,7 @@ export default function Tree(props: IProps) {
           {
             treeData?.map((item) => {
               return <TreeNode
-                openOperationTableModal={openOperationTableModal}
+                // openOperationTableModal={openOperationTableModal}
                 nodeDoubleClick={nodeDoubleClick}
                 loadData={loadData}
                 key={item.name}

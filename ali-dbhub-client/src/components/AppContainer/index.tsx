@@ -15,7 +15,7 @@ interface IProps {
 
 
 export default memo<IProps>(function AppContainer({ className, children }) {
-  const [serviceStart, setServiceStart] = useState(false);
+  const [startSchedule, setStartSchedule] = useState(0); // 0 初始状态 1 服务启动报错 2 启动成
   const [serviceFail, setServiceFail] = useState(false);
 
   function hashchange() {
@@ -41,17 +41,19 @@ export default memo<IProps>(function AppContainer({ className, children }) {
 
   function detectionService() {
     setServiceFail(false)
-    let flag = 1
+    let flag = 0
     const time = setInterval(() => {
       flag++
       miscService.testService().then(() => {
         clearInterval(time)
-        setServiceStart(true)
+        setStartSchedule(2)
+      }).catch(error => {
+        setStartSchedule(1)
       })
       if (flag > 100) {
         setServiceFail(true)
         clearInterval(time)
-        // setServiceStart(true)
+        // setStartSchedule(true)
       }
     }, 500)
   }
@@ -65,36 +67,41 @@ export default memo<IProps>(function AppContainer({ className, children }) {
       localStorage.setItem('lang', 'zh-cn');
     }
     //禁止右键
-    document.oncontextmenu = (e) => {
-      e.preventDefault()
-    }
+    // document.oncontextmenu = (e) => {
+    //   e.preventDefault()
+    // }
   }
 
   return <ConfigProvider prefixCls='custom'>
     {
-      serviceStart ?
-        <div className={classnames(className, styles.app)}>
-          {children}
-        </div>
-        :
-        <div className={styles.starting}>
-          <div>
-            {
-              !serviceFail && <LoadindLiquid></LoadindLiquid>
-            }
-            <div className={styles.hint} >
-              {serviceFail ? i18n('common.text.serviceFail') : i18n('common.text.serviceStarting')}
-            </div>
-            {
-              serviceFail && <div className={styles.restart}>联系我们-钉钉群：9135032392</div>
-            }
-            {
-              serviceFail && <div className={styles.restart} onClick={detectionService}>尝试重新启动</div>
-            }
-
-          </div>
-        </div>
+      startSchedule === 2 &&
+      <div className={classnames(className, styles.app)}>
+        {children}
+      </div>
     }
+    {
+      startSchedule === 1 &&
+      <div className={styles.starting}>
+        {
+          !serviceFail ?
+            <div>
+              <LoadindLiquid></LoadindLiquid>
+              <div className={styles.hint} >
+                {i18n('common.text.serviceStarting')}
+              </div>
+            </div>
+            :
+            <div>
+              <div className={styles.hint} >
+                {i18n('common.text.serviceFail')}
+              </div>
+              <div className={styles.dingGroup}>联系我们-钉钉群：9135032392</div>
+              <div className={styles.restart} onClick={detectionService}>尝试重新启动</div>
+            </div>
+        }
+      </div>
+    }
+
   </ConfigProvider>
 });
 

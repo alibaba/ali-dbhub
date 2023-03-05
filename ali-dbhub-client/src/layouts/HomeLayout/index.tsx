@@ -54,7 +54,7 @@ export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
   return (
     <div className={styles.page}>
       <div className={styles.layoutLeft}>
-        <BrandLogo size={70} className={styles.brandLogo} />
+        {/* <BrandLogo size={70} className={styles.brandLogo} /> */}
         <ul className={styles.navList}>
           {navConfig.map((item) => {
             return (
