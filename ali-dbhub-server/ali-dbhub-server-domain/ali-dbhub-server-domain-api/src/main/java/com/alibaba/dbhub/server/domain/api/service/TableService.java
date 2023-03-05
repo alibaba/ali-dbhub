@@ -1,7 +1,11 @@
 package com.alibaba.dbhub.server.domain.api.service;
 
+import java.util.List;
+
 import com.alibaba.dbhub.server.domain.support.model.Sql;
 import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.model.TableColumn;
+import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
 import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
@@ -77,4 +81,18 @@ public interface TableService {
      * @return
      */
     PageResult<Table> pageQuery(TablePageQueryParam param, TableSelector selector);
+
+    /**
+     * 查询表包含的字段
+     * @param param
+     * @return
+     */
+    List<TableColumn> queryColumns(TableQueryParam param);
+
+    /**
+     * 查询表索引
+     * @param param
+     * @return
+     */
+    List<TableIndex> queryIndexes(TableQueryParam param);
 }
