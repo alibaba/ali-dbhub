@@ -61,6 +61,8 @@ export interface ITreeNode{
   isLeaf?: boolean;
   children?: ITreeNode[];
   parent?: ITreeNode;
+  dataSourceId?: number;
+  dataBaseName?: string;
   // columnType: string;
 }
 export interface IDB {

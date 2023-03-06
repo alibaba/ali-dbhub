@@ -15,7 +15,7 @@ interface IProps {
 
 
 export default memo<IProps>(function AppContainer({ className, children }) {
-  const [startSchedule, setStartSchedule] = useState(0); // 0 初始状态 1 服务启动报错 2 启动成
+  const [startSchedule, setStartSchedule] = useState(0); // 0 初始状态 1 服务启动报错 2 启动成功
   const [serviceFail, setServiceFail] = useState(false);
 
   function hashchange() {
@@ -25,12 +25,12 @@ export default memo<IProps>(function AppContainer({ className, children }) {
 
   useLayoutEffect(() => {
     window.addEventListener('hashchange', hashchange)
-    const hash = getLastPosition()
+    const hash = getLastPosition();
     if (hash && !location.hash) {
       location.hash = hash
     }
     return () => {
-      window.removeEventListener('hashchange', hashchange)
+      window.removeEventListener('hashchange', hashchange);
     }
   }, [])
 
@@ -53,7 +53,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
       if (flag > 100) {
         setServiceFail(true)
         clearInterval(time)
-        // setStartSchedule(true)
+        // setStartSchedule(true) 
       }
     }, 500)
   }

@@ -3,7 +3,7 @@ import { IPageResponse, ITable,IPageParams } from '@/types';
 import { DatabaseTypeCode } from '@/utils/constants';
 
 export interface IGetListParams extends IPageParams  {
-  dataSourceId: string;
+  dataSourceId: number;
   databaseName: string;
 }
 
