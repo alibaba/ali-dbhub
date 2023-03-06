@@ -14,7 +14,6 @@ import { useCanDoubleClick } from '@/utils/hooks';
 import { IOperationData } from '@/components/OperationTableModal';
 import connectionService from '@/service/connection';
 import mysqlServer from '@/service/mysql';
-import { Printer } from 'prettier';
 
 interface IProps {
   className?: any;
@@ -51,7 +50,7 @@ export function TreeNode(props: TreeNodeIProps) {
       setIsLoading(true);
     }
 
-    if (loadDataObj[data.nodeType]) {
+    if (loadDataObj[data.nodeType] && !data.children) {
       loadData(data)?.then((res: ITreeNode[]) => {
         if (res?.length) {
           data.children = res;
@@ -124,7 +123,16 @@ export function TreeNode(props: TreeNodeIProps) {
       icon: '\ue63e'
     },
     [TreeNodeType.TABLES]: {
-      icon: '\ue63e'
+      icon: '\ueac5'
+    },
+    [TreeNodeType.COLUMNS]: {
+      icon: '\ueac5'
+    },
+    [TreeNodeType.KEYS]: {
+      icon: '\ueac5'
+    },
+    [TreeNodeType.INDEXES]: {
+      icon: '\ueac5'
     },
     [TreeNodeType.SEARCH]: {
       icon: '\uec4c'
@@ -138,9 +146,7 @@ export function TreeNode(props: TreeNodeIProps) {
     [TreeNodeType.SAVE]: {
       icon: '\ue936'
     },
-    [TreeNodeType.INDEXES]: {
-      icon: '\ue648'
-    },
+
     [TreeNodeType.INDEXESTOTAL]: {
       icon: '\ue648'
     }
@@ -294,14 +300,7 @@ const loadDataObj: Partial<{ [key in TreeNodeType]: ILoadDataObjItem }> = {
                   dataSourceId: parentData.dataSourceId,
                   dataBaseName: t.name,
 
-                },
-                {
-                  key: t.name + 'indexs',
-                  name: 'indexs',
-                  nodeType: TreeNodeType.INDEXES,
-                  dataSourceId: parentData.dataSourceId,
-                  dataBaseName: t.name,
-                },
+                }
               ]
             }
           })
@@ -314,8 +313,8 @@ const loadDataObj: Partial<{ [key in TreeNodeType]: ILoadDataObjItem }> = {
     getNodeData: (parentData: ITreeNode) => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let p = {
-          dataSourceId: parentData.dataSourceId,
-          databaseName: parentData.dataBaseName,
+          dataSourceId: parentData.dataSourceId!,
+          databaseName: parentData.dataBaseName!,
           pageNo: 1,
           pageSize: 100,
         }
@@ -325,6 +324,53 @@ const loadDataObj: Partial<{ [key in TreeNodeType]: ILoadDataObjItem }> = {
             return {
               name: item.name,
               nodeType: TreeNodeType.TABLE,
+              key: item.name,
+              dataSourceId: parentData.dataSourceId!,
+              databaseName: parentData.dataBaseName!,
+              children: [
+                {
+                  name: 'columns',
+                  nodeType: TreeNodeType.COLUMNS,
+                  key: 'columns',
+                  dataSourceId: parentData.dataSourceId!,
+                  databaseName: parentData.dataBaseName!,
+                },
+                {
+                  name: 'keys',
+                  nodeType: TreeNodeType.KEYS,
+                  key: 'keys',
+                  dataSourceId: parentData.dataSourceId!,
+                  databaseName: parentData.dataBaseName!,
+                },
+                {
+                  name: 'indexs',
+                  nodeType: TreeNodeType.INDEXES,
+                  key: 'indexs',
+                  dataSourceId: parentData.dataSourceId!,
+                  databaseName: parentData.dataBaseName!,
+                },
+              ]
+            }
+          })
+          r(tableList);
+        })
+      })
+    }
+  },
+  [TreeNodeType.COLUMNS]: {
+    getNodeData: (parentData: ITreeNode) => {
+      return new Promise((r: (value: ITreeNode[]) => void, j) => {
+        let p = {
+          dataSourceId: parentData.dataSourceId!,
+          databaseName: parentData.dataBaseName!,
+          tableName: parentData.name,
+        }
+
+        mysqlServer.getColumnList(p).then(res => {
+          const tableList: ITreeNode[] = res?.map(item => {
+            return {
+              name: item.name,
+              nodeType: TreeNodeType.COLUMNS,
               key: item.name,
             }
           })

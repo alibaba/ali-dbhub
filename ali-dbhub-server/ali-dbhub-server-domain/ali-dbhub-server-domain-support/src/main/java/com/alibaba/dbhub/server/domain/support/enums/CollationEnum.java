@@ -1,6 +1,7 @@
 package com.alibaba.dbhub.server.domain.support.enums;
 
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
+import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
 import com.alibaba.druid.sql.ast.SQLOrderingSpecification;
 
 import lombok.Getter;
@@ -36,5 +37,19 @@ public enum CollationEnum implements BaseEnum<String> {
     @Override
     public String getCode() {
         return this.name();
+    }
+
+    public static boolean equals(String collation1, String collation2) {
+        return equals(EasyEnumUtils.getEnum(CollationEnum.class, collation1),
+            EasyEnumUtils.getEnum(CollationEnum.class, collation2));
+    }
+
+    public static boolean equals(CollationEnum collation1, CollationEnum collation2) {
+        // 想同直接返回
+        if (collation1 == collation2) {
+            return true;
+        }
+        // 有一个是倒序 就是不相同 ，其他都是相同
+        return !(collation1 == CollationEnum.DESC || collation2 == CollationEnum.DESC);
     }
 }

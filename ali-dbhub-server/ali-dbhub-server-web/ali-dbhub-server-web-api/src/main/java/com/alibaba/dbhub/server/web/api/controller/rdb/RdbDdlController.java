@@ -5,8 +5,9 @@ import java.util.List;
 import com.alibaba.dbhub.server.domain.api.param.DlExecuteParam;
 import com.alibaba.dbhub.server.domain.api.service.DlTemplateService;
 import com.alibaba.dbhub.server.domain.api.service.TableService;
-import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
 import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.model.TableColumn;
+import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
 import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
@@ -26,10 +27,17 @@ import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableBriefQueryRe
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableCreateDdlQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDeleteRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableModifySqlRequest;
+import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableUpdateDdlQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ColumnVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
+import com.alibaba.dbhub.server.web.api.controller.rdb.vo.IndexVO;
+import com.alibaba.dbhub.server.web.api.controller.rdb.vo.KeyVO;
+import com.alibaba.dbhub.server.web.api.controller.rdb.vo.SqlVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.TableVO;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,14 +78,56 @@ public class RdbDdlController {
     public WebPageResult<TableVO> list(TableBriefQueryRequest request) {
         TablePageQueryParam queryParam = rdbWebConverter.tablePageRequest2param(request);
         TableSelector tableSelector = new TableSelector();
-        tableSelector.setColumnList(true);
-        tableSelector.setIndexList(true);
+        tableSelector.setColumnList(false);
+        tableSelector.setIndexList(false);
 
         PageResult<Table> tableDTOPageResult = tableService.pageQuery(queryParam, tableSelector);
         List<TableVO> tableVOS = rdbWebConverter.tableDto2vo(tableDTOPageResult.getData());
         return WebPageResult.of(tableVOS, tableDTOPageResult.getTotal(), request.getPageNo(),
             request.getPageSize());
     }
+
+
+    /**
+     * 查询当前DB下的表columns
+     *d
+     * @param request
+     * @return
+     */
+    @GetMapping("/column_list")
+    public ListResult<ColumnVO> columnList(TableDetailQueryRequest request) {
+        TableQueryParam queryParam = rdbWebConverter.tableRequest2param(request);
+        List<TableColumn> tableColumns = tableService.queryColumns(queryParam);
+        List<ColumnVO> tableVOS = rdbWebConverter.columnDto2vo(tableColumns);
+        return ListResult.of(tableVOS);
+    }
+
+    /**
+     * 查询当前DB下的表index
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/index_list")
+    public ListResult<IndexVO> indexList(TableDetailQueryRequest request) {
+        TableQueryParam queryParam = rdbWebConverter.tableRequest2param(request);
+        List<TableIndex> tableIndices = tableService.queryIndexes(queryParam);
+        List<IndexVO> indexVOS = rdbWebConverter.indexDto2vo(tableIndices);
+        return ListResult.of(indexVOS);
+    }
+
+    /**
+     * 查询当前DB下的表key
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/key_list")
+    public ListResult<IndexVO> keyList(TableDetailQueryRequest request) {
+        // TODO 增加查询key实现
+        return ListResult.of(Lists.newArrayList());
+    }
+
 
     /**
      * 导出建表语句
@@ -131,6 +181,20 @@ public class RdbDdlController {
     }
 
     /**
+     * 获取修改表的sql语句
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/modify/sql")
+    public ListResult<SqlVO> modifySql(TableModifySqlRequest request) {
+        return tableService.buildSql(
+                rdbWebConverter.tableRequest2param(request.getOldTable()),
+                rdbWebConverter.tableRequest2param(request.getNewTable()))
+            .map(rdbWebConverter::dto2vo);
+    }
+
+    /**
      * 增删改等表运维
      *
      * @param request
@@ -139,9 +203,7 @@ public class RdbDdlController {
     @PutMapping("/execute")
     public ListResult<ExecuteResultVO> manage(@RequestBody DdlRequest request) {
         DlExecuteParam param = rdbWebConverter.tableManageRequest2param(request);
-        ListResult<ExecuteResult> resultDTOListResult = dlTemplateService.execute(param);
-        List<ExecuteResultVO> resultVOS = rdbWebConverter.dto2vo(resultDTOListResult.getData());
-        return ListResult.of(resultVOS);
+        return dlTemplateService.execute(param).map(rdbWebConverter::dto2vo);
     }
 
     /**

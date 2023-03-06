@@ -4,6 +4,7 @@
  */
 package com.alibaba.dbhub.server.web.api.controller;
 
+import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.common.config.AliDbhubProperties;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +37,8 @@ public class SystemController {
      * @return
      */
     @GetMapping
-    public String get() {
-        return "success";
+    public DataResult<String> get() {
+        return DataResult.of("success");
     }
 
     /**
@@ -46,16 +47,16 @@ public class SystemController {
      * @return
      */
     @GetMapping("/get_version")
-    public String getVersion() {
-        return aliDbhubProperties.getVersion();
+    public DataResult<String> getVersion() {
+        return DataResult.of(aliDbhubProperties.getVersion());
     }
 
     /**
      * 退出服务
      */
     @PostMapping("/stop")
-    public String stop() {
+    public DataResult<String> stop() {
         SpringApplication.exit(applicationContext);
-        return "ok";
+        return DataResult.of("ok");
     }
 }
