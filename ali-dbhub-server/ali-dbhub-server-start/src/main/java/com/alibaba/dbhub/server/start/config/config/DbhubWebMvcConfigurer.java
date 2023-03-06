@@ -107,7 +107,7 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                 }
             })
             .order(2)
-            .addPathPatterns("/**")
+            .addPathPatterns("/xx/**")
             // _a结尾的统一放行
             .excludePathPatterns("/**/*_a");
     }
