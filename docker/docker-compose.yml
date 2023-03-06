@@ -13,7 +13,7 @@ services:
       - 3306:3306
   # 连接地址：jdbc:postgresql://localhost:5432/ali_dbhub_test, 用户名:ali_dbhub, 密码:ali_dbhub 端口：5432 默认数据库：ali_dbhub_test
   postgres:
-    image: postgres:14
+    image: postgres:latest
     restart: always
     container_name: postgres-latest
     environment:
@@ -35,3 +35,17 @@ services:
       TZ: Asia/Shanghai
     ports:
       - 1521:1521
+  redis:
+    image: redis:7
+    container_name: redis7
+    restart: always
+    # 挂载映射，可以让数据或配置持久化
+    volumes:
+      #＜本地配置文件＞：
+      - $PWD/redis/redis.conf:/etc/redis/redis. conf:ro
+      - $PWD/redis/data:/data
+      - $PWD/redis/logs:/logs
+   # command: redis-server/etc/redis/redis.conf
+    ports:
+      - 6379:6379
+

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
+import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Sql;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
@@ -22,6 +23,7 @@ import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
+import com.alibaba.dbhub.server.tools.common.util.EasyBooleanUtils;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
 import com.alibaba.druid.DbType;
@@ -35,12 +37,15 @@ import com.alibaba.druid.sql.ast.statement.SQLAlterTableDropPrimaryKey;
 import com.alibaba.druid.sql.ast.statement.SQLAlterTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
+import com.alibaba.druid.sql.ast.statement.SQLColumnPrimaryKey;
 import com.alibaba.druid.sql.ast.statement.SQLCreateIndexStatement;
 import com.alibaba.druid.sql.ast.statement.SQLDropIndexStatement;
 import com.alibaba.druid.sql.ast.statement.SQLExprTableSource;
 import com.alibaba.druid.sql.ast.statement.SQLNotNullConstraint;
+import com.alibaba.druid.sql.ast.statement.SQLNullConstraint;
 import com.alibaba.druid.sql.ast.statement.SQLSelectOrderByItem;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
+import com.alibaba.druid.sql.dialect.mysql.ast.MySqlUnique;
 import com.alibaba.druid.sql.dialect.mysql.ast.expr.MySqlCharExpr;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableChangeColumn;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableModifyColumn;
@@ -49,6 +54,7 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlRenameTableStateme
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlRenameTableStatement.Item;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlTableIndex;
 
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -99,7 +105,9 @@ public class TableTemplate implements TableOperations {
                     mySqlCreateTableStatement.addColumn(sqlColumnDefinition);
                     sqlColumnDefinition.setName(tableColumn.getName());
                     sqlColumnDefinition.setDataType(new SQLDataTypeImpl(tableColumn.getColumnType()));
-                    if (BooleanUtils.isNotTrue(tableColumn.getNullable())) {
+                    if (BooleanUtils.isNotFalse(tableColumn.getNullable())) {
+                        sqlColumnDefinition.addConstraint(new SQLNullConstraint());
+                    } else {
                         sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
                     }
                     if (!Objects.isNull(tableColumn.getDefaultValue())) {
@@ -109,37 +117,61 @@ public class TableTemplate implements TableOperations {
                     if (!Objects.isNull(tableColumn.getComment())) {
                         sqlColumnDefinition.setComment(tableColumn.getComment());
                     }
-                }
-                // 主键
-                List<TableColumn> primaryKeycolumnList = EasyCollectionUtils.stream(columnList)
-                    .filter(tableColumn -> BooleanUtils.isTrue(tableColumn.getPrimaryKey()))
-                    .collect(Collectors.toList());
-                if (!CollectionUtils.isEmpty(primaryKeycolumnList)) {
-                    MySqlPrimaryKey mySqlPrimaryKey = new MySqlPrimaryKey();
-                    mySqlCreateTableStatement.getTableElementList().add(mySqlPrimaryKey);
-                    for (TableColumn tableColumn : primaryKeycolumnList) {
-                        mySqlPrimaryKey.addColumn(new SQLIdentifierExpr(tableColumn.getName()));
+                    if (BooleanUtils.isTrue(tableColumn.getPrimaryKey())) {
+                        sqlColumnDefinition.addConstraint(new SQLColumnPrimaryKey());
                     }
                 }
+                //// 主键
+                //List<TableColumn> primaryKeyColumnList = EasyCollectionUtils.stream(columnList)
+                //    .filter(tableColumn -> BooleanUtils.isTrue(tableColumn.getPrimaryKey()))
+                //    .collect(Collectors.toList());
+                //if (!CollectionUtils.isEmpty(primaryKeyColumnList)) {
+                //    MySqlPrimaryKey mySqlPrimaryKey = new MySqlPrimaryKey();
+                //    mySqlCreateTableStatement.getTableElementList().add(mySqlPrimaryKey);
+                //    for (TableColumn tableColumn : primaryKeyColumnList) {
+                //        mySqlPrimaryKey.addColumn(new SQLIdentifierExpr(tableColumn.getName()));
+                //    }
+                //}
             }
 
             // 索引
             List<TableIndex> indexList = newTable.getIndexList();
             if (!CollectionUtils.isEmpty(indexList)) {
                 for (TableIndex tableIndex : indexList) {
-                    MySqlTableIndex mySqlTableIndex = new MySqlTableIndex();
-                    mySqlCreateTableStatement.getTableElementList().add(mySqlTableIndex);
-                    mySqlTableIndex.setName(tableIndex.getName());
-                    if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
-                        for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
-                            SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                            sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
-                            CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
-                                tableIndexColumn.getCollation());
-                            if (collation != null) {
-                                sqlSelectOrderByItem.setType(collation.getSqlOrderingSpecification());
+                    if (IndexTypeEnum.UNIQUE.getCode().equals(tableIndex.getType())) {
+                        MySqlUnique mySqlUnique = new MySqlUnique();
+                        mySqlCreateTableStatement.getTableElementList().add(mySqlUnique);
+                        mySqlUnique.setName(tableIndex.getName());
+                        mySqlUnique.setComment(new SQLCharExpr(tableIndex.getComment()));
+                        mySqlUnique.getIndexDefinition().setType("unique");
+                        if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
+                            for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
+                                SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
+                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                                CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
+                                    tableIndexColumn.getCollation());
+                                if (collation != null) {
+                                    sqlSelectOrderByItem.setType(collation.getSqlOrderingSpecification());
+                                }
+                                mySqlUnique.addColumn(sqlSelectOrderByItem);
                             }
-                            mySqlTableIndex.addColumn(sqlSelectOrderByItem);
+                        }
+                    } else {
+                        MySqlTableIndex mySqlTableIndex = new MySqlTableIndex();
+                        mySqlCreateTableStatement.getTableElementList().add(mySqlTableIndex);
+                        mySqlTableIndex.setName(tableIndex.getName());
+                        mySqlTableIndex.setComment(new SQLCharExpr(tableIndex.getComment()));
+                        if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
+                            for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
+                                SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
+                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                                CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
+                                    tableIndexColumn.getCollation());
+                                if (collation != null) {
+                                    sqlSelectOrderByItem.setType(collation.getSqlOrderingSpecification());
+                                }
+                                mySqlTableIndex.addColumn(sqlSelectOrderByItem);
+                            }
                         }
                     }
                 }
@@ -180,9 +212,19 @@ public class TableTemplate implements TableOperations {
 
     private void modifyColumn(List<Sql> sqlList, Table oldTable, Table newTable) {
         Map<String, TableColumn> oldColumnMap = EasyCollectionUtils.toIdentityMap(oldTable.getColumnList(),
-            TableColumn::getOldName);
+            tableColumn -> {
+                if (tableColumn.getOldName() != null) {
+                    return tableColumn.getOldName();
+                }
+                return tableColumn.getName();
+            });
         Map<String, TableColumn> newColumnMap = EasyCollectionUtils.toIdentityMap(newTable.getColumnList(),
-            TableColumn::getOldName);
+            tableColumn -> {
+                if (tableColumn.getOldName() != null) {
+                    return tableColumn.getOldName();
+                }
+                return tableColumn.getName();
+            });
 
         SQLAlterTableStatement sqlAlterTableStatement = new SQLAlterTableStatement();
         sqlAlterTableStatement.setDbType(DbType.mysql);
@@ -214,9 +256,10 @@ public class TableTemplate implements TableOperations {
             // 代表可能修改字段 或者没变
             boolean hasChange = !StringUtils.equals(oldTableColumn.getName(), newTableColumn.getName())
                 || !StringUtils.equals(oldTableColumn.getColumnType(), newTableColumn.getColumnType())
-                || !Objects.equals(oldTableColumn.getNullable(), newTableColumn.getNullable())
+                || !EasyBooleanUtils.equals(oldTableColumn.getNullable(), newTableColumn.getNullable(), Boolean.TRUE)
                 || !StringUtils.equals(oldTableColumn.getDefaultValue(), newTableColumn.getDefaultValue())
-                || !Objects.equals(oldTableColumn.getAutoIncrement(), newTableColumn.getAutoIncrement())
+                || !EasyBooleanUtils.equals(oldTableColumn.getAutoIncrement(), newTableColumn.getAutoIncrement(),
+                Boolean.FALSE)
                 || !StringUtils.equals(oldTableColumn.getComment(), newTableColumn.getComment());
 
             // 没有修改字段
@@ -303,7 +346,7 @@ public class TableTemplate implements TableOperations {
                     new SQLSelectOrderByItem(new SQLIdentifierExpr(tableColumnName))));
         }
 
-        if (!CollectionUtils.isNotEmpty(sqlAlterTableStatement.getItems())) {
+        if (CollectionUtils.isNotEmpty(sqlAlterTableStatement.getItems())) {
             sqlList.add(Sql.builder().sql(sqlAlterTableStatement + ";").build());
         }
     }
@@ -357,7 +400,8 @@ public class TableTemplate implements TableOperations {
                         }
                         TableIndexColumn oldTableIndexColumn = oldTableIndexColumnEntry.getValue();
                         return !StringUtils.equals(oldTableIndexColumn.getName(), newTableIndexColumn.getName())
-                            || !Objects.equals(oldTableIndexColumn.getCollation(), newTableIndexColumn.getCollation());
+                            || !CollationEnum.equals(oldTableIndexColumn.getCollation(),
+                            newTableIndexColumn.getCollation());
                     })
                     || newTableIndexColumnMap.entrySet()
                     .stream()
@@ -368,7 +412,7 @@ public class TableTemplate implements TableOperations {
                     });
             }
 
-            // 没有修改表结构
+            // 没有修改索引
             if (!hasChange) {
                 return;
             }
@@ -423,11 +467,19 @@ public class TableTemplate implements TableOperations {
             return PageResult.of(list, 0L, param);
         }
         List<String> tableNameList = EasyCollectionUtils.toList(list, Table::getName);
-        List<TableColumn> tableColumnList = metaSchema.queryColumnList(param.getDatabaseName(), null, tableNameList);
-        List<TableIndex> tableIndexList = metaSchema.queryIndexList(param.getDatabaseName(), null, tableNameList);
-
-        Map<String, List<TableIndex>> tableIndexMap = EasyCollectionUtils.stream(tableIndexList).collect(
-            Collectors.groupingBy(TableIndex::getTableName));
+        List<TableColumn> tableColumnList = new ArrayList<>();
+        List<TableIndex> tableIndexList = new ArrayList<>();
+        if(selector.getColumnList()) {
+            tableColumnList = metaSchema.queryColumnList(param.getDatabaseName(), null,
+                tableNameList);
+        }
+        if(selector.getIndexList()) {
+            tableIndexList = metaSchema.queryIndexList(param.getDatabaseName(), null, tableNameList);
+        }
+        Map<String, List<TableIndex>> tableIndexMap = EasyCollectionUtils.stream(tableIndexList)
+            // 排除主键
+            .filter(tableIndex -> !IndexTypeEnum.PRIMARY_KEY.getCode().equals(tableIndex.getType()))
+            .collect(Collectors.groupingBy(TableIndex::getTableName));
         Map<String, List<TableColumn>> tableColumnMap = EasyCollectionUtils.stream(tableColumnList).collect(
             Collectors.groupingBy(TableColumn::getTableName));
 
@@ -437,6 +489,19 @@ public class TableTemplate implements TableOperations {
         });
 
         return PageResult.of(list, 100L, param);
+    }
+
+    @Override
+    public List<TableColumn> queryColumns(TableQueryParam param) {
+        MetaSchema metaSchema = DbhubContext.getMetaSchema();
+        return metaSchema.queryColumnList(param.getDatabaseName(), null, Lists.newArrayList(param.getTableName()));
+    }
+
+    @Override
+    public List<TableIndex> queryIndexes(TableQueryParam param) {
+        MetaSchema metaSchema = DbhubContext.getMetaSchema();
+         return metaSchema.queryIndexList(param.getDatabaseName(), null, Lists.newArrayList(param.getTableName()));
+
     }
 
 }

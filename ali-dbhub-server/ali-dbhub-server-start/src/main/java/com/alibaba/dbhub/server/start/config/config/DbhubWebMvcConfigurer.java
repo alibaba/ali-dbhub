@@ -1,0 +1,114 @@
+package com.alibaba.dbhub.server.start.config.config;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.dbhub.server.domain.api.model.User;
+import com.alibaba.dbhub.server.domain.api.service.UserService;
+import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBizException;
+import com.alibaba.dbhub.server.tools.common.model.Context;
+import com.alibaba.dbhub.server.tools.common.model.LoginUser;
+import com.alibaba.dbhub.server.tools.common.util.ContextUtils;
+
+import cn.dev33.satoken.context.SaHolder;
+import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.http.Header;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+/**
+ * web项目配置
+ *
+ * @author 是仪
+ */
+@Configuration
+@Slf4j
+public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
+    @Resource
+    private UserService userService;
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")//项目中的所有接口都支持跨域
+            .allowedOriginPatterns("*")//所有地址都可以访问，也可以配置具体地址
+            .allowCredentials(true)
+            .allowedMethods("*")//"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"
+            .maxAge(3600);// 跨域允许时间
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+
+        // 所有请求尝试加入用户信息
+        registry.addInterceptor(new AsyncHandlerInterceptor() {
+                @Override
+                public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response,
+                    @NotNull Object handler) {
+                    String userIdString = (String)StpUtil.getLoginIdDefaultNull();
+                    // 未登录
+                    if (!StringUtils.isNumeric(userIdString)) {
+                        return true;
+                    }
+                    // 已经登录 查询用户信息
+                    Long userId = Long.parseLong(userIdString);
+                    User user = userService.query(userId).getData();
+                    if (user == null) {
+                        // 代表用户可能被删除了
+                        return true;
+                    }
+
+                    ContextUtils.setContext(Context.builder()
+                        .loginUser(LoginUser.builder()
+                            .id(user.getId()).nickName(user.getNickName())
+                            .build())
+                        .build());
+                    return true;
+                }
+
+                @Override
+                public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
+                    Exception ex) throws Exception {
+                    // 移除登录信息
+                    ContextUtils.removeContext();
+                }
+            })
+            .order(1)
+            .addPathPatterns("/**");
+
+        // 校验登录信息
+        registry.addInterceptor(new AsyncHandlerInterceptor() {
+                @Override
+                public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response,
+                    @NotNull Object handler) {
+                    Context context = ContextUtils.queryContext();
+                    // 校验登录信息
+                    if (context == null) {
+                        log.info("访问{}需要登录", SaHolder.getRequest().getUrl());
+                        String accept = request.getHeader(Header.ACCEPT.getValue());
+                        // 前端传了 需要json,则认为是异步请求
+                        if (StringUtils.containsIgnoreCase(accept, MediaType.APPLICATION_JSON_VALUE)) {
+                            throw new NeedLoggedInBizException();
+                        } else {
+                            throw new NeedLoggedInBizException();
+                            //throw new RedirectBizException(
+                            //    OauthConstants.LOGIN_URL + "?redirect=" + SaFoxUtil.joinParam(
+                            //        SaHolder.getRequest().getUrl(), SpringMVCUtil.getRequest().getQueryString()));
+                        }
+                    }
+                    return true;
+                }
+            })
+            .order(2)
+            .addPathPatterns("/**")
+            // _a结尾的统一放行
+            .excludePathPatterns("/**/*_a");
+    }
+}

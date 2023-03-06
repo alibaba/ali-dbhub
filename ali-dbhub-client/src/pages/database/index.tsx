@@ -224,7 +224,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const getTableList = (currentDB: IDB) => {
     setTreeData(undefined)
     let p = {
-      dataSourceId: params.id,
+      dataSourceId: +params.id,
       databaseName: currentDB?.name,
       pageNo: 1,
       pageSize: 10000,
@@ -519,10 +519,9 @@ export default memo<IProps>(function DatabasePage({ className }) {
           {/* <Tree
             openOperationTableModal={openOperationTableModal}
             nodeDoubleClick={nodeDoubleClick}
-            className={styles.tree}
             treeData={treeData}
           /> */}
-          <Tree></Tree>
+          <Tree className={styles.tree}></Tree>
         </div>
       </div>
       <DraggableDivider callback={callback} volatileRef={letfRef} />

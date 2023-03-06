@@ -56,10 +56,10 @@ public class PostgresqlDialectProperties implements DialectProperties {
             + "(\n"
             + "    id     serial\n"
             + "        constraint " + tableName + "_pk primary key,\n"
-            + "    date   date,\n"
+            + "    date   timestamp,\n"
             + "    number int,\n"
             + "    string varchar(100) default 'DATA'\n"
-            + ");;\n";
+            + ");\n";
         sql += "comment on table " + tableName + " is '测试表';\n";
         sql += "comment on column " + tableName + ".id is '主键自增';\n";
         sql += "comment on column " + tableName + ".date is '日期';\n";

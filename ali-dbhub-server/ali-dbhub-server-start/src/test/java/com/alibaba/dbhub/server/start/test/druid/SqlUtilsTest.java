@@ -212,4 +212,21 @@ public class SqlUtilsTest {
         log.info("解析sql:{}", JSON.toJSONString(list));
     }
 
+
+    @Test
+    public void creattable() {
+        List<SQLStatement> sqlStatementList = SQLUtils.parseStatements(
+            "CREATE TABLE `data_ops_table_test_1673096155228`\n"
+                + "\t(\n"
+                + "\t    `id`     bigint PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT '主键自增',\n"
+                + "\t    `date`   datetime(3)                          not null COMMENT '日期',\n"
+                + "\t    `number` bigint COMMENT '长整型',\n"
+                + "\t    `string` VARCHAR(100) default 'DATA' COMMENT '名字',\n"
+                + "\t    index data_ops_table_test_1673096155228_idx_date (date desc) comment '日期索引',\n"
+                + "\t    unique data_ops_table_test_1673096155228_uk_number (number) comment '唯一索引',\n"
+                + "\t    index data_ops_table_test_1673096155228_idx_number_string (number, date) comment '联合索引'\n"
+                + "\t) COMMENT ='测试表';", DbType.mysql);
+        log.info("解析sql:{}", sqlStatementList);
+    }
+
 }

@@ -35,7 +35,7 @@ const executeSql = createRequest<IExecuteSqlParams, IExecuteSqlResponse>('/api/r
 const connectConsole = createRequest<IConnectConsoleParams, void>('/api/connection/console/connect',{method: 'get'});
 
 //表操作
-export interface IDeleteTableParams {
+export interface ITableParams {
   tableName:string;
   dataSourceId:number;	
   databaseName:string;
@@ -48,11 +48,26 @@ export interface IExecuteTableParams {
   databaseName: string;
 }
 
-const deleteTable = createRequest<IDeleteTableParams, void>('/api/rdb/ddl/delete',{method: 'post'});
+export interface IColumn {
+  name: string;
+  dataType: string;
+  columnType: string; // 列的类型 比如 varchar(100) ,double(10,6)
+  nullable: boolean;
+  primaryKey: boolean;
+  defaultValue: string;
+  autoIncrement: boolean;
+  numericPrecision: number;
+  numericScale: number;
+  characterMaximumLength: number;
+}
+
+const deleteTable = createRequest<ITableParams, void>('/api/rdb/ddl/delete',{method: 'post'});
 const createTableExample = createRequest<{dbType:DatabaseTypeCode}, string>('/api/rdb/ddl/create/example',{method: 'get'});
 const updateTableExample = createRequest<{dbType:DatabaseTypeCode}, string>('/api/rdb/ddl/update/example',{method: 'get'});
-const exportCreateTableSql = createRequest<IDeleteTableParams, string>('/api/rdb/ddl/export',{method: 'get'});
+const exportCreateTableSql = createRequest<ITableParams, string>('/api/rdb/ddl/export',{method: 'get'});
 const executeTable = createRequest<IExecuteTableParams, string>('/api/rdb/ddl/execute',{method: 'put'});
+
+const getColumnList = createRequest<ITableParams, IColumn[]>('/api/rdb/ddl/column_list',{method: 'get'});
 
 
 export default {
@@ -63,5 +78,6 @@ export default {
   createTableExample,
   updateTableExample,
   exportCreateTableSql,
-  executeTable
+  executeTable,
+  getColumnList
 }
