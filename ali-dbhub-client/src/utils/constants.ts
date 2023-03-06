@@ -58,8 +58,10 @@ export const databaseTypeList = Object.keys(databaseType).map(keys=>{
 })
 
 export enum TreeNodeType {
-  TABLE = 'table',
+  DATASOURCE = 'dataSource',
   DATABASE = 'database',
+  TABLE = 'table',
+  TABLES = 'tables',
   SEARCH = 'search',
   LINE = 'line',
   LINETOTAL = 'lineTotal',

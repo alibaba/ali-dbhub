@@ -13,11 +13,12 @@ import LoadingContent from '../Loading/LoadingContent';
 import { useCanDoubleClick } from '@/utils/hooks';
 import { IOperationData } from '@/components/OperationTableModal';
 import connectionService from '@/service/connection';
+import mysqlServer from '@/service/mysql';
+import { Printer } from 'prettier';
 
 interface IProps {
   className?: any;
   // treeData: ITreeNode[] | undefined;
-  loadData?: Function;
   nodeDoubleClick?: Function;
   openOperationTableModal?: Function;
 }
@@ -26,44 +27,43 @@ interface TreeNodeIProps {
   level: number;
   show: boolean;
   showAllChildrenPenetrate?: boolean;
-  loadData?: Function;
   nodeDoubleClick?: Function;
   openOperationTableModal?: Function;
 }
 
 export function TreeNode(props: TreeNodeIProps) {
-  const { data, level, show = false, loadData, nodeDoubleClick, openOperationTableModal, showAllChildrenPenetrate = false } = props
+  const { data, level, show = false, nodeDoubleClick, openOperationTableModal, showAllChildrenPenetrate = false } = props;
   const [showChildren, setShowChildren] = useState(false);
   const [showAllChildren, setShowAllChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const indentArr = new Array(level);
   for (let i = 0; i < level; i++) {
-    indentArr[i] = 'indent'
+    indentArr[i] = 'indent';
   }
 
   useEffect(() => {
-    setShowChildren(showAllChildrenPenetrate)
+    setShowChildren(showAllChildrenPenetrate);
   }, [showAllChildrenPenetrate])
 
   //展开-收起
   const handleClick = (data: ITreeNode) => {
-    if (!showChildren && !data.children && loadData) {
-      setIsLoading(true)
+    if (!showChildren && !data.children) {
+      setIsLoading(true);
     }
 
-    if (loadData) {
-      loadData(data).then((res: ITreeNode[]) => {
+    if (loadDataObj[data.nodeType]) {
+      loadData(data)?.then((res: ITreeNode[]) => {
         if (res?.length) {
-          data.children = res
+          data.children = res;
         }
-        setIsLoading(false)
+        setIsLoading(false);
         setTimeout(() => {
           setShowChildren(!showChildren);
         }, 0);
       })
     } else {
       if (level === 0) {
-        setShowAllChildren(!showAllChildren)
+        setShowAllChildren(!showAllChildren);
       }
       setShowChildren(!showChildren);
     }
@@ -113,27 +113,41 @@ export function TreeNode(props: TreeNodeIProps) {
     }
   }
 
-  const recognizeIcon = (nodeType: TreeNodeType) => {
-    switch (nodeType) {
-      case TreeNodeType.TABLE:
-        return '\ue63e';
-      case TreeNodeType.DATABASE:
-        return '\ue62c';
-      case TreeNodeType.SEARCH:
-        return '\uec4c';
-      case TreeNodeType.LINE:
-        return '\ue611';
-      case TreeNodeType.LINETOTAL:
-        return '\ue611';
-      case TreeNodeType.SAVE:
-        return '\ue936';
-      case TreeNodeType.INDEXES:
-        return '\ue648';
-      case TreeNodeType.INDEXESTOTAL:
-        return '\ue648';
-      default:
-        return '\ue936';
+  const switchIcon: { [key in TreeNodeType]: { icon: string } } = {
+    [TreeNodeType.DATASOURCE]: {
+      icon: '\ue62c'
+    },
+    [TreeNodeType.DATABASE]: {
+      icon: '\ue62c'
+    },
+    [TreeNodeType.TABLE]: {
+      icon: '\ue63e'
+    },
+    [TreeNodeType.TABLES]: {
+      icon: '\ue63e'
+    },
+    [TreeNodeType.SEARCH]: {
+      icon: '\uec4c'
+    },
+    [TreeNodeType.LINE]: {
+      icon: '\ue611'
+    },
+    [TreeNodeType.LINETOTAL]: {
+      icon: '\ue611'
+    },
+    [TreeNodeType.SAVE]: {
+      icon: '\ue936'
+    },
+    [TreeNodeType.INDEXES]: {
+      icon: '\ue648'
+    },
+    [TreeNodeType.INDEXESTOTAL]: {
+      icon: '\ue648'
     }
+  }
+
+  const recognizeIcon = (nodeType: TreeNodeType) => {
+    return switchIcon[nodeType].icon
   }
 
   const treeNodeClick = useCanDoubleClick();
@@ -154,7 +168,6 @@ export function TreeNode(props: TreeNodeIProps) {
         <div
           onClick={
             (e) => {
-              console.log(e)
               treeNodeClick({
                 onClick: handleClick.bind(null, data),
                 onDoubleClick: () => { nodeDoubleClick && nodeDoubleClick(data) }
@@ -180,7 +193,7 @@ export function TreeNode(props: TreeNodeIProps) {
                       <Iconfont code='&#xe6cd;' />
                     </div>
                     :
-                    <Iconfont code={showChildren ? "\ue61e" : "\ue65f"} />
+                    <Iconfont className={classnames(styles.arrowsIcon, { [styles.rotateArrowsIcon]: showChildren })} code='&#xe608;' />
                 }
               </div>
             }
@@ -199,7 +212,7 @@ export function TreeNode(props: TreeNodeIProps) {
       !!data.children?.length &&
       data.children.map((item: any, i: number) => {
         return (
-          <TreeNode openOperationTableModal={openOperationTableModal} nodeDoubleClick={nodeDoubleClick} loadData={loadData} key={i} showAllChildrenPenetrate={showAllChildrenPenetrate || showAllChildren} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
+          <TreeNode openOperationTableModal={openOperationTableModal} nodeDoubleClick={nodeDoubleClick} key={i} showAllChildrenPenetrate={showAllChildrenPenetrate || showAllChildren} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
         );
       })
     }
@@ -207,9 +220,8 @@ export function TreeNode(props: TreeNodeIProps) {
 }
 
 export default function Tree(props: IProps) {
-  const { className, loadData, nodeDoubleClick, openOperationTableModal } = props;
+  const { className, nodeDoubleClick, openOperationTableModal } = props;
   const [treeData, setTreeData] = useState<ITreeNode[] | undefined>();
-
 
   useEffect(() => {
     let p = {
@@ -221,14 +233,14 @@ export default function Tree(props: IProps) {
       const treeData = res.data.map(t => {
         return {
           name: t.alias,
-          key: t.alias,
-          nodeType: TreeNodeType.DATABASE,
+          key: t.id!.toString(),
+          nodeType: TreeNodeType.DATASOURCE,
+          dataSourceId: t.id,
         }
       })
-      setTreeData(treeData)
+      setTreeData(treeData);
     })
   }, [])
-
 
   const treeDataEmpty = () => {
     return ''
@@ -243,7 +255,6 @@ export default function Tree(props: IProps) {
               return <TreeNode
                 // openOperationTableModal={openOperationTableModal}
                 nodeDoubleClick={nodeDoubleClick}
-                loadData={loadData}
                 key={item.name}
                 show={true}
                 level={0}
@@ -256,3 +267,74 @@ export default function Tree(props: IProps) {
     </>
   );
 };
+
+interface ILoadDataObjItem {
+  getNodeData: (data: ITreeNode) => Promise<ITreeNode[]>;
+}
+
+const loadDataObj: Partial<{ [key in TreeNodeType]: ILoadDataObjItem }> = {
+  [TreeNodeType.DATASOURCE]: {
+    getNodeData: (parentData: ITreeNode) => {
+      return new Promise((r: (value: ITreeNode[]) => void, j) => {
+        let p = {
+          id: parentData.key
+        }
+
+        connectionService.getDBList(p).then(res => {
+          const data: ITreeNode[] = res.map(t => {
+            return {
+              key: t.name,
+              name: t.name,
+              nodeType: TreeNodeType.DATABASE,
+              children: [
+                {
+                  key: t.name + 'tables',
+                  name: 'tables',
+                  nodeType: TreeNodeType.TABLES,
+                  dataSourceId: parentData.dataSourceId,
+                  dataBaseName: t.name,
+
+                },
+                {
+                  key: t.name + 'indexs',
+                  name: 'indexs',
+                  nodeType: TreeNodeType.INDEXES,
+                  dataSourceId: parentData.dataSourceId,
+                  dataBaseName: t.name,
+                },
+              ]
+            }
+          })
+          r(data);
+        })
+      })
+    }
+  },
+  [TreeNodeType.TABLES]: {
+    getNodeData: (parentData: ITreeNode) => {
+      return new Promise((r: (value: ITreeNode[]) => void, j) => {
+        let p = {
+          dataSourceId: parentData.dataSourceId,
+          databaseName: parentData.dataBaseName,
+          pageNo: 1,
+          pageSize: 100,
+        }
+
+        mysqlServer.getList(p).then(res => {
+          const tableList: ITreeNode[] = res.data?.map(item => {
+            return {
+              name: item.name,
+              nodeType: TreeNodeType.TABLE,
+              key: item.name,
+            }
+          })
+          r(tableList);
+        })
+      })
+    }
+  }
+}
+
+function loadData(data: ITreeNode) {
+  return loadDataObj[data.nodeType]?.getNodeData(data);
+}
