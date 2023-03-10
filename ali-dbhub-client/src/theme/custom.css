@@ -18081,7 +18081,7 @@ textarea.custom-mentions {
 .custom-modal-content {
   overflow: hidden;
   position: relative;
-  background-color: var(--color-bg-100) ;
+  background-color: var(--color-bg-100) !important ;
   background-clip: padding-box;
   border: 0;
   border-radius: 8px;

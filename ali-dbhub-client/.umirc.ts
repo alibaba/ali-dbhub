@@ -2,12 +2,12 @@ import { defineConfig } from 'umi';
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 // const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin');
 
-const chainWebpack = (config:any, { webpack }:any) => {
+const chainWebpack = (config: any, { webpack }: any) => {
   config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
     {
-      languages: [ 'mysql', 'pgsql', 'sql']
-    }
-  ])
+      languages: ['mysql', 'pgsql', 'sql'],
+    },
+  ]);
 
   // TODO: Monaco汉化
   // config.module.rules()
@@ -20,11 +20,11 @@ const chainWebpack = (config:any, { webpack }:any) => {
 export default defineConfig({
   title: 'dataOps',
   history: {
-    type: 'hash'
+    type: 'hash',
   },
   base: '/',
   publicPath: './',
-  hash:true,
+  hash: true,
   routes: [
     {
       path: '/',
@@ -44,10 +44,10 @@ export default defineConfig({
             },
           ],
         },
-        { 
-          path: '/', 
+        {
+          path: '/',
           component: '@/layouts/HomeLayout',
-          routes:[
+          routes: [
             {
               path: '/',
               exact: true,
@@ -64,10 +64,15 @@ export default defineConfig({
               component: '@/pages/sql-history',
             },
             {
+              path: '/manage',
+              exact: true,
+              component: '@/pages/manage',
+            },
+            {
               redirect: '/error',
             },
-          ]
-        }
+          ],
+        },
       ],
     },
   ],
