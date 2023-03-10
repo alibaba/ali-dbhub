@@ -124,6 +124,10 @@ export function approximateTreeNode(treeData: ITreeNode[], target: string, isDel
   }
 }
 
+/**
+ * 获取参数 
+ * @returns 
+ */
 export function getLocationHash(){
     const rightHash = location.hash.split('?')[1]
     const params:any = {}
