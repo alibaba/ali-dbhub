@@ -15,6 +15,7 @@ import LoadingContent from '@/components/Loading/LoadingContent';
 import OperationTableModal, { IOperationData } from '@/components/OperationTableModal';
 import ModifyTable from '@/components/ModifyTable/ModifyTable';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
+import GlobalAddMenu from '@/components/GlobalAddMenu';
 import connectionServer from '@/service/connection';
 import historyServer from '@/service/history';
 import mysqlServer from '@/service/mysql';
@@ -78,10 +79,11 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode | null>(null);
   const monacoHint = useRef<any>(null);
   const [isUnfold, setIsUnfold] = useState(true);
-
+  const treeRef = useRef<any>();
   const closeDropdownFn = () => {
     setOpenDropdown(false)
   }
+
 
   const disposalEditorHintData = (tableList: any) => {
     try {
@@ -462,12 +464,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
     } else {
       setActiveKey(`newTable-${currentDB?.name}`)
     }
-    // setOperationData({
-    //   type: 'new',
-    //   database: currentDB,
-    //   connectionDetaile: connectionDetaile,
-    //   callback: getTableList
-    // })
   }
 
   function renderCurrentTab(i: IConsole) {
@@ -484,12 +480,16 @@ export default memo<IProps>(function DatabasePage({ className }) {
     }
   }
 
+  function refresh() {
+    treeRef.current?.getDataSource();
+  }
+
   return <>
     <div className={classnames(className, styles.box)}>
       <div ref={letfRef} className={styles.asideBox} id="database-left-aside">
         <div className={styles.aside}>
           <div className={styles.header}>
-            <Dropdown open={openDropdown} overlay={DBListMenu} trigger={['click']}>
+            {/* <Dropdown open={openDropdown} overlay={DBListMenu} trigger={['click']}>
               <div className={styles.currentNameBox} onClick={(event) => { event.stopPropagation(); setOpenDropdown(true) }}>
                 {
                   currentDB &&
@@ -500,28 +500,30 @@ export default memo<IProps>(function DatabasePage({ className }) {
                 </div>
                 {(DBList?.length || 0) > 1 && <Iconfont code="&#xe7b1;"></Iconfont>}
               </div>
-            </Dropdown>
+            </Dropdown> */}
 
             <div className={styles.searchBox}>
               <SearchInput onChange={searchTable} placeholder={i18n('common.text.search')}></SearchInput>
-              <div className={classnames(styles.refresh, styles.button)} onClick={() => { currentDB && getTableList(currentDB) }}>
+              <div className={classnames(styles.refresh, styles.button)} onClick={refresh}>
                 <Iconfont code="&#xec08;"></Iconfont>
               </div>
-              <div onClick={createTable} className={classnames(styles.create, styles.button)}>
-                <Iconfont code="&#xe631;"></Iconfont>
-              </div>
+              <Dropdown overlay={<GlobalAddMenu></GlobalAddMenu>} trigger={['click']}>
+                <div onClick={() => { setOpenDropdown(true) }} className={classnames(styles.create, styles.button)}>
+                  <Iconfont code="&#xe631;"></Iconfont>
+                </div>
+              </Dropdown>
             </div>
           </div>
           <div className={styles.overview}>
             <Iconfont code="&#xe63d;"></Iconfont>
             <span>{i18n('connection.button.overview')}</span>
           </div>
-          {/* <Tree
+          <Tree
             openOperationTableModal={openOperationTableModal}
             nodeDoubleClick={nodeDoubleClick}
-            treeData={treeData}
-          /> */}
-          <Tree className={styles.tree}></Tree>
+            cRef={treeRef}
+            className={styles.tree}
+          />
         </div>
       </div>
       <DraggableDivider callback={callback} volatileRef={letfRef} />
