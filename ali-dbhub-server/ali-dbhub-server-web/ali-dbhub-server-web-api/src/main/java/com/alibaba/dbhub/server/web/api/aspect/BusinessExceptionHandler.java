@@ -1,12 +1,14 @@
 package com.alibaba.dbhub.server.web.api.aspect;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.Result;
+import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBizException;
 import com.alibaba.fastjson2.JSON;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,11 +36,18 @@ public class BusinessExceptionHandler {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
     private static final String LOCALE_HEADER = "Accept-Language";
 
     @Around("within(@com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect *)")
     public Object businessExceptionHandler(ProceedingJoinPoint proceedingJoinPoint) {
         try {
+            // 获取请求中保存的异常信息
+            if (Objects.nonNull(httpServletRequest.getAttribute("needLoggedInBizException"))) {
+                throw new NeedLoggedInBizException();
+            }
             String method = proceedingJoinPoint.getSignature().getDeclaringTypeName() + proceedingJoinPoint
                 .getSignature().getName();
             long s1 = System.currentTimeMillis();
@@ -95,7 +104,7 @@ public class BusinessExceptionHandler {
                 = ((ServletRequestAttributes)(RequestContextHolder.currentRequestAttributes())).getRequest();
             Locale locale = servletRequest.getHeaders(LOCALE_HEADER).hasMoreElements() ?
                 new Locale(servletRequest.getHeaders(LOCALE_HEADER).nextElement()) : Locale.CHINA;
-            return messageSource.getMessage(CommonErrorEnum.COMMON_SYSTEM_ERROR.name(),
+            return messageSource.getMessage(code,
                 null, message, locale);
         } catch (Exception exception) {
             log.error("get i18n message error", exception);
