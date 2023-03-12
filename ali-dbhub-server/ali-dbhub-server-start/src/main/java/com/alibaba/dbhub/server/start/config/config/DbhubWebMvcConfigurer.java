@@ -1,6 +1,8 @@
 package com.alibaba.dbhub.server.start.config.config;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -8,26 +10,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.dbhub.server.domain.api.model.User;
 import com.alibaba.dbhub.server.domain.api.service.UserService;
-import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
-import com.alibaba.dbhub.server.tools.common.enums.ErrorEnum;
 import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBizException;
 import com.alibaba.dbhub.server.tools.common.model.Context;
 import com.alibaba.dbhub.server.tools.common.model.LoginUser;
 import com.alibaba.dbhub.server.tools.common.util.ContextUtils;
-import com.alibaba.fastjson2.JSON;
 
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.http.Header;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -41,14 +41,34 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
     @Resource
     private UserService userService;
+    //
+    //@Override
+    //public void addCorsMappings(CorsRegistry registry) {
+    //    registry.addMapping("/**")//项目中的所有接口都支持跨域
+    //        .allowedOriginPatterns("*")//所有地址都可以访问，也可以配置具体地址
+    //        .allowCredentials(true)
+    //        .allowedMethods("*")//"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"
+    //        .maxAge(3600);// 跨域允许时间
+    //}
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")//项目中的所有接口都支持跨域
-            .allowedOriginPatterns("*")//所有地址都可以访问，也可以配置具体地址
-            .allowCredentials(true)
-            .allowedMethods("*")//"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"
-            .maxAge(3600);// 跨域允许时间
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", buildConfig()); // 对接口配置跨域设置
+        return new CorsFilter(source);
+    }
+    private CorsConfiguration buildConfig() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowCredentials(true);  //sessionid 多次访问一致
+
+        // 允许访问的客户端域名
+        List<String> allowedOriginPatterns = new ArrayList<>();
+        allowedOriginPatterns.add("*");
+        corsConfiguration.setAllowedOriginPatterns(allowedOriginPatterns);
+                corsConfiguration.addAllowedOrigin("*"); // 允许任何域名使用
+        corsConfiguration.addAllowedHeader("*"); // 允许任何头
+        corsConfiguration.addAllowedMethod("*"); // 允许任何方法（post、get等）
+        return corsConfiguration;
     }
 
     @Override
@@ -101,22 +121,22 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                         log.info("访问{}需要登录", SaHolder.getRequest().getUrl());
                         String accept = request.getHeader(Header.ACCEPT.getValue());
                         // 前端传了 需要json,则认为是异步请求
-                        //if (StringUtils.containsIgnoreCase(accept, MediaType.APPLICATION_JSON_VALUE)) {
-                        //    throw new NeedLoggedInBizException();
-                        //} else {
-                        //    throw new NeedLoggedInBizException();
-                        //    //throw new RedirectBizException(
-                        //    //    OauthConstants.LOGIN_URL + "?redirect=" + SaFoxUtil.joinParam(
-                        //    //        SaHolder.getRequest().getUrl(), SpringMVCUtil.getRequest().getQueryString()));
-                        //}
-                        ActionResult actionResult = new ActionResult();
-                        actionResult.setSuccess(false);
-                        actionResult.setErrorCode(ErrorEnum.NEED_LOGGED_IN.getCode());
-                        actionResult.setErrorMessage(ErrorEnum.NEED_LOGGED_IN.getDescription());
-                        response.setCharacterEncoding("UTF-8");
-                        response.setContentType("application/json; charset=utf-8");
-                        response.getWriter().println(JSON.toJSONString(actionResult));
-                        return false;
+                        if (StringUtils.containsIgnoreCase(accept, MediaType.APPLICATION_JSON_VALUE)) {
+                            throw new NeedLoggedInBizException();
+                        } else {
+                            throw new NeedLoggedInBizException();
+                            //throw new RedirectBizException(
+                            //    OauthConstants.LOGIN_URL + "?redirect=" + SaFoxUtil.joinParam(
+                            //        SaHolder.getRequest().getUrl(), SpringMVCUtil.getRequest().getQueryString()));
+                        }
+                        //ActionResult actionResult = new ActionResult();
+                        //actionResult.setSuccess(false);
+                        //actionResult.setErrorCode(ErrorEnum.NEED_LOGGED_IN.getCode());
+                        //actionResult.setErrorMessage(ErrorEnum.NEED_LOGGED_IN.getDescription());
+                        //response.setCharacterEncoding("UTF-8");
+                        //response.setContentType("application/json; charset=utf-8");
+                        //response.getWriter().println(JSON.toJSONString(actionResult));
+                        //return false;
                     }
                     return true;
                 }
