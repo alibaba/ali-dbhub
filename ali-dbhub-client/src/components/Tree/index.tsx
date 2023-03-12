@@ -20,6 +20,7 @@ interface IProps {
   // treeData: ITreeNode[] | undefined;
   nodeDoubleClick?: Function;
   openOperationTableModal?: Function;
+  refresh?: TreeNodeType.DATASOURCE;
 }
 
 interface TreeNodeIProps {
@@ -37,6 +38,7 @@ export function TreeNode(props: TreeNodeIProps) {
   const [showAllChildren, setShowAllChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const indentArr = new Array(level);
+
   for (let i = 0; i < level; i++) {
     indentArr[i] = 'indent';
   }
@@ -235,10 +237,12 @@ export function TreeNode(props: TreeNodeIProps) {
 }
 
 export default function Tree(props: IProps) {
-  const { className, nodeDoubleClick, openOperationTableModal } = props;
+  const { className, nodeDoubleClick, refresh, openOperationTableModal } = props;
   const [treeData, setTreeData] = useState<ITreeNode[] | undefined>();
 
-  useEffect(() => {
+  refresh
+
+  function getDataSource() {
     let p = {
       pageNo: 1,
       pageSize: 100
@@ -255,6 +259,10 @@ export default function Tree(props: IProps) {
       })
       setTreeData(treeData);
     })
+  }
+
+  useEffect(() => {
+    getDataSource()
   }, [])
 
   const treeDataEmpty = () => {
