@@ -1,25 +1,32 @@
 package com.alibaba.dbhub.server.start.config.config;
 
+import java.io.IOException;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.dbhub.server.domain.api.model.User;
 import com.alibaba.dbhub.server.domain.api.service.UserService;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
+import com.alibaba.dbhub.server.tools.common.enums.ErrorEnum;
 import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBizException;
 import com.alibaba.dbhub.server.tools.common.model.Context;
 import com.alibaba.dbhub.server.tools.common.model.LoginUser;
 import com.alibaba.dbhub.server.tools.common.util.ContextUtils;
+import com.alibaba.fastjson2.JSON;
 
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.http.Header;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -87,21 +94,29 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
         registry.addInterceptor(new AsyncHandlerInterceptor() {
                 @Override
                 public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response,
-                    @NotNull Object handler) {
+                    @NotNull Object handler) throws IOException {
                     Context context = ContextUtils.queryContext();
                     // 校验登录信息
                     if (context == null) {
                         log.info("访问{}需要登录", SaHolder.getRequest().getUrl());
                         String accept = request.getHeader(Header.ACCEPT.getValue());
                         // 前端传了 需要json,则认为是异步请求
-                        if (StringUtils.containsIgnoreCase(accept, MediaType.APPLICATION_JSON_VALUE)) {
-                            throw new NeedLoggedInBizException();
-                        } else {
-                            throw new NeedLoggedInBizException();
-                            //throw new RedirectBizException(
-                            //    OauthConstants.LOGIN_URL + "?redirect=" + SaFoxUtil.joinParam(
-                            //        SaHolder.getRequest().getUrl(), SpringMVCUtil.getRequest().getQueryString()));
-                        }
+                        //if (StringUtils.containsIgnoreCase(accept, MediaType.APPLICATION_JSON_VALUE)) {
+                        //    throw new NeedLoggedInBizException();
+                        //} else {
+                        //    throw new NeedLoggedInBizException();
+                        //    //throw new RedirectBizException(
+                        //    //    OauthConstants.LOGIN_URL + "?redirect=" + SaFoxUtil.joinParam(
+                        //    //        SaHolder.getRequest().getUrl(), SpringMVCUtil.getRequest().getQueryString()));
+                        //}
+                        ActionResult actionResult = new ActionResult();
+                        actionResult.setSuccess(false);
+                        actionResult.setErrorCode(ErrorEnum.NEED_LOGGED_IN.getCode());
+                        actionResult.setErrorMessage(ErrorEnum.NEED_LOGGED_IN.getDescription());
+                        response.setCharacterEncoding("UTF-8");
+                        response.setContentType("application/json; charset=utf-8");
+                        response.getWriter().println(JSON.toJSONString(actionResult));
+                        return false;
                     }
                     return true;
                 }
@@ -109,6 +124,6 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
             .order(2)
             .addPathPatterns("/**")
             // _a结尾的统一放行
-            .excludePathPatterns("/**/*_a");
+            .excludePathPatterns("/**/*_a","/api/system");
     }
 }
