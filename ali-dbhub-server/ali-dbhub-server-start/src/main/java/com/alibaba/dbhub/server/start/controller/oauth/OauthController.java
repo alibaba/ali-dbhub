@@ -4,7 +4,6 @@ import javax.annotation.Resource;
 
 import com.alibaba.dbhub.server.domain.api.model.User;
 import com.alibaba.dbhub.server.domain.api.service.UserService;
-import com.alibaba.dbhub.server.domain.support.param.user.UserQueryParam;
 import com.alibaba.dbhub.server.start.controller.oauth.request.LoginRequest;
 import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
@@ -44,7 +43,7 @@ public class OauthController {
     @PostMapping("login_a")
     public ActionResult login(@Validated @RequestBody LoginRequest request) {
         //   查询用户
-        User user = userService.query(UserQueryParam.builder().userName(request.getUserName()).build()).getData();
+        User user = userService.query(request.getUserName()).getData();
         if (user == null) {
             throw new BusinessException("当前用户不存在。");
         }

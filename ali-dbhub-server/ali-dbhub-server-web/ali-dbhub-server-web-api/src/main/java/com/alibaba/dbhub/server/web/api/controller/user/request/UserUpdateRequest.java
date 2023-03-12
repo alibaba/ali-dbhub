@@ -1,4 +1,8 @@
-package com.alibaba.dbhub.server.domain.api.model;
+/**
+ * alibaba.com Inc.
+ * Copyright (c) 2004-2023 All Rights Reserved.
+ */
+package com.alibaba.dbhub.server.web.api.controller.user.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,15 +10,15 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 用户信息
- *
- * @author Jiaju Zhuang
+ * @author jipengfei
+ * @version : UserUpdateRequest.java
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserUpdateRequest {
+
     /**
      * 主键
      */
