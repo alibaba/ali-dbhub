@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import globalStyle from '@/global.less';
 import styles from './index.less';
 import classnames from 'classnames';
@@ -14,13 +14,14 @@ import { useCanDoubleClick } from '@/utils/hooks';
 import { IOperationData } from '@/components/OperationTableModal';
 import connectionService from '@/service/connection';
 import mysqlServer from '@/service/mysql';
+import TreeNodeRightClick from './TreeNodeRightClick'
 
 interface IProps {
   className?: any;
   // treeData: ITreeNode[] | undefined;
   nodeDoubleClick?: Function;
   openOperationTableModal?: Function;
-  refresh?: TreeNodeType.DATASOURCE;
+  cRef: any;
 }
 
 interface TreeNodeIProps {
@@ -32,7 +33,7 @@ interface TreeNodeIProps {
   openOperationTableModal?: Function;
 }
 
-export function TreeNode(props: TreeNodeIProps) {
+function TreeNode(props: TreeNodeIProps) {
   const { data, level, show = false, nodeDoubleClick, openOperationTableModal, showAllChildrenPenetrate = false } = props;
   const [showChildren, setShowChildren] = useState(false);
   const [showAllChildren, setShowAllChildren] = useState(false);
@@ -72,47 +73,48 @@ export function TreeNode(props: TreeNodeIProps) {
   };
 
   const renderMenu = () => {
-    const tableMenu: IMenu<string>[] = [
-      {
-        title: '设计表结构',
-        key: 'edit',
-      },
-      {
-        title: '导出建表语句',
-        key: 'export',
-      },
-      {
-        title: '删除表',
-        key: 'delete',
-      }
-    ]
+    return <TreeNodeRightClick />
+    // const tableMenu: IMenu<string>[] = [
+    //   {
+    //     title: '设计表结构',
+    //     key: 'edit',
+    //   },
+    //   {
+    //     title: '导出建表语句',
+    //     key: 'export',
+    //   },
+    //   {
+    //     title: '删除表',
+    //     key: 'delete',
+    //   }
+    // ]
 
-    function tableClick(item: IMenu<string>) {
-      const operationData: IOperationData = {
-        type: item.key,
-        nodeData: data
-      }
-      openOperationTableModal?.(operationData)
-      // TODO: 关闭下拉弹窗 有木有更好的方法
-      const customDropdown: any = document.getElementsByClassName('custom-dropdown');
-      for (let i = 0; i < customDropdown.length; i++) {
-        customDropdown[i].classList.add('custom-dropdown-hidden')
-      }
-    }
+    // function tableClick(item: IMenu<string>) {
+    //   const operationData: IOperationData = {
+    //     type: item.key,
+    //     nodeData: data
+    //   }
+    //   openOperationTableModal?.(operationData)
+    //   // TODO: 关闭下拉弹窗 有木有更好的方法
+    //   const customDropdown: any = document.getElementsByClassName('custom-dropdown');
+    //   for (let i = 0; i < customDropdown.length; i++) {
+    //     customDropdown[i].classList.add('custom-dropdown-hidden')
+    //   }
+    // }
 
-    if (data.nodeType == TreeNodeType.TABLE) {
-      return <div className={styles.menuBox}>
-        <Menu>
-          {
-            tableMenu.map(item => {
-              return <MenuItem key={item.key} onClick={tableClick.bind(null, item)}>{item.title}</MenuItem>
-            })
-          }
-        </Menu>
-      </div>
-    } else {
-      return <span></span>
-    }
+    // if (data.nodeType == TreeNodeType.TABLE) {
+    //   return <div className={styles.menuBox}>
+    //     <Menu>
+    //       {
+    //         tableMenu.map(item => {
+    //           return <MenuItem key={item.key} onClick={tableClick.bind(null, item)}>{item.title}</MenuItem>
+    //         })
+    //       }
+    //     </Menu>
+    //   </div>
+    // } else {
+    //   return <span></span>
+    // }
   }
 
   const switchIcon: { [key in TreeNodeType]: { icon: string } } = {
@@ -236,13 +238,12 @@ export function TreeNode(props: TreeNodeIProps) {
   </>
 }
 
-export default function Tree(props: IProps) {
-  const { className, nodeDoubleClick, refresh, openOperationTableModal } = props;
+function Tree(props: IProps) {
+  const { className, nodeDoubleClick, cRef, openOperationTableModal } = props;
   const [treeData, setTreeData] = useState<ITreeNode[] | undefined>();
 
-  refresh
-
   function getDataSource() {
+    console.log('getDataSource')
     let p = {
       pageNo: 1,
       pageSize: 100
@@ -261,8 +262,12 @@ export default function Tree(props: IProps) {
     })
   }
 
+  useImperativeHandle(cRef, () => ({
+    getDataSource
+  }))
+
   useEffect(() => {
-    getDataSource()
+    getDataSource();
   }, [])
 
   const treeDataEmpty = () => {
@@ -290,6 +295,8 @@ export default function Tree(props: IProps) {
     </>
   );
 };
+
+export default forwardRef(Tree)
 
 interface ILoadDataObjItem {
   getNodeData: (data: ITreeNode) => Promise<ITreeNode[]>;

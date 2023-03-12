@@ -1,27 +1,35 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
 import { getLocationHash } from '@/utils';
 import './index.less';
+import { getUser, userLogin } from '@/service/user';
+
+interface IFormData {
+  userName: string;
+  password: string;
+}
 
 const App: React.FC = () => {
-  const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
-    // 1. 请求接口
-    // 2. 成功后跳转
-    const params = getLocationHash();
-    const href = '#/' + (params?.callback ?? '');
-    window.location.href = href;
-  };
+  const handleLogin = useCallback(async (values: IFormData) => {
+    let res = await userLogin(values);
+    if (res) {
+      const params = getLocationHash();
+      const href = '#/' + (params?.callback ?? '');
+      window.location.href = href;
+    }
+  }, []);
 
   return (
     <div className="login">
       <Form
+        size="large"
         name="login"
         className="login-form"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
-        onFinish={onFinish}
-        size="large"
+        onFinish={(values: IFormData) => {
+          handleLogin(values);
+        }}
       >
         <div className="logo">ALi-DBHub</div>
         <Form.Item

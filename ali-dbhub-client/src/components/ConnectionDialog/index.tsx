@@ -19,11 +19,14 @@ const { Option } = Select;
 
 interface IProps {
   className?: string;
-  isModalVisible: boolean;
-  setIsModalVisible: Function;
-  rowData: any;
-  getConnectionList: Function;
-  closeModal: Function;
+  // isModalVisible: boolean;
+  // setIsModalVisible: Function;
+  rowData?: any;
+  onOk?: () => void;
+  onCancel?: () => void;
+  entheticIsModalVisible: boolean;
+  // getConnectionList: Function;
+  // closeModal: Function;
 }
 
 enum submitType {
@@ -57,6 +60,7 @@ const oracelDriven = [
     value: 'oci8',
   },
 ]
+
 const h2Driven = [
   {
     label: 'tcp',
@@ -78,9 +82,14 @@ const envOptions = [
 ];
 
 export default memo<IProps>(function ConnectionDialog(props) {
-  const { isModalVisible, className, setIsModalVisible, rowData, getConnectionList, closeModal } = props
+  const { className, rowData, onCancel, onOk, entheticIsModalVisible } = props
   const [authentication, setAuthentication] = useState(1);
   const [currentDBType, setCurrentDBType] = useState(DatabaseTypeCode.MYSQL);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  useEffect(() => {
+    setIsModalVisible(entheticIsModalVisible)
+  }, [entheticIsModalVisible])
 
   useEffect(() => {
     if (!rowData) {
@@ -162,8 +171,9 @@ export default memo<IProps>(function ConnectionDialog(props) {
       if (type === submitType.TEST) {
         message.success(res === false ? '测试连接失败' : '测试连接成功')
       } else {
-        getConnectionList()
-        closeModal();
+        onOk?.()
+        // getConnectionList()
+        // closeModal();
       }
     })
   };
@@ -258,8 +268,8 @@ export default memo<IProps>(function ConnectionDialog(props) {
   return <Modal
     title="连接数据库"
     open={isModalVisible}
-    onOk={handleOk}
-    onCancel={handleCancel}
+    onOk={onOk}
+    onCancel={onCancel}
     footer={false}
   >
     <Form
@@ -407,7 +417,7 @@ export default memo<IProps>(function ConnectionDialog(props) {
             }
           </div>
           <div className={styles.rightButton}>
-            <Button size='small' onClick={() => { closeModal() }} className={styles.cancel}>
+            <Button size='small' onClick={onCancel} className={styles.cancel}>
               取消
             </Button>
             <Button className={styles.save} size='small' type="primary" onClick={submitConnection.bind(null, rowData ? submitType.UPDATE : submitType.SAVE)}>
