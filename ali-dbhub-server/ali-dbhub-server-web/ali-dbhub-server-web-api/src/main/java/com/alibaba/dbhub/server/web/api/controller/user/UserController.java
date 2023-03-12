@@ -5,19 +5,13 @@
 package com.alibaba.dbhub.server.web.api.controller.user;
 
 import com.alibaba.dbhub.server.domain.api.model.User;
-import com.alibaba.dbhub.server.domain.api.param.OperationUpdateParam;
 import com.alibaba.dbhub.server.domain.api.service.UserService;
 import com.alibaba.dbhub.server.domain.support.param.user.UserQueryParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
-import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
-import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.OperationUpdateRequest;
-import com.alibaba.dbhub.server.web.api.controller.redis.request.KeyCreateRequest;
-import com.alibaba.dbhub.server.web.api.controller.redis.request.KeyQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.redis.vo.KeyVO;
 import com.alibaba.dbhub.server.web.api.controller.user.converter.UserWebConverter;
 import com.alibaba.dbhub.server.web.api.controller.user.request.UserCreateRequest;
 import com.alibaba.dbhub.server.web.api.controller.user.request.UserQueryRequest;
@@ -49,7 +43,6 @@ public class UserController {
     @Autowired
     private UserWebConverter userWebConverter;
 
-
     @GetMapping("/{id}")
     public DataResult<UserVO> query(@PathVariable("id") Long id) {
         return DataResult.of(userWebConverter.dto2vo(userService.query(id).getData()));
@@ -62,7 +55,7 @@ public class UserController {
         userQueryParam.setPageNo(request.getPageNo());
         userQueryParam.setPageSize(request.getPageSize());
         PageResult<User> pageResult = userService.queryPage(userQueryParam);
-        return WebPageResult.of(userWebConverter.dto2vo(pageResult.getData()),pageResult.getTotal(),request);
+        return WebPageResult.of(userWebConverter.dto2vo(pageResult.getData()), pageResult.getTotal(), request);
     }
 
     /**
@@ -72,7 +65,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/create")
-    public  DataResult<Long> create(@RequestBody UserCreateRequest request) {
+    public DataResult<Long> create(@RequestBody UserCreateRequest request) {
         return userService.create(userWebConverter.createRequest2dto(request));
     }
 
