@@ -87,12 +87,14 @@ export default memo<IProps>(function AppContainer({ className, children }) {
                 : i18n('common.text.serviceStarting')}
             </div>
             {serviceFail && (
-              <div className={styles.restart}>联系我们-钉钉群：9135032392</div>
-            )}
-            {serviceFail && (
-              <div className={styles.restart} onClick={detectionService}>
-                尝试重新启动
-              </div>
+              <>
+                <div className={styles.restart}>
+                  联系我们-钉钉群：9135032392
+                </div>
+                <div className={styles.restart} onClick={detectionService}>
+                  尝试重新启动
+                </div>
+              </>
             )}
           </div>
         </div>

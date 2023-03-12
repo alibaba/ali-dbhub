@@ -42,6 +42,7 @@ const baseURL =
     : localServiceUrl;
 
 const errorHandler = (error: ResponseError, errorLevel: IErrorLevel) => {
+  console.log('errorHandler==>', error, errorLevel);
   const { response } = error;
   if (!response) return;
   const errorText = codeMessage[response.status] || response.statusText;
@@ -67,18 +68,16 @@ request.interceptors.request.use((url, options) => {
   };
 });
 
-// request.interceptors.response.use(async (response, options) => {
-//   // console.log('response==>', response, options);
-//   const json = await response.json();
-//   // console.log('text==>', text);
-//   const { status, message } = response;
-//   if (status !== 200) {
-//   }
-//   // if (code === ErrorCode.NEED_LOGGED_IN){
-//   //   window.location.href = '#/login?callback=' + window.location.hash.substr(1);
-//   // }
-//   return response;
-// });
+request.interceptors.response.use(async (response, options) => {
+  const res = await response.clone().json();
+
+  const { errorCode, codeMessage } = res;
+  if (errorCode === ErrorCode.NEED_LOGGED_IN) {
+    window.location.href = '#/login?callback=' + window.location.hash.substr(1);
+  }
+
+  return response;
+});
 
 export default function createRequest<P = void, R = {}>(
   url: string,
@@ -129,6 +128,7 @@ export default function createRequest<P = void, R = {}>(
           resolve(data);
         })
         .catch((error) => {
+          console.log('catch error', error)
           errorHandler(error, errorLevel);
           reject(error);
         });
