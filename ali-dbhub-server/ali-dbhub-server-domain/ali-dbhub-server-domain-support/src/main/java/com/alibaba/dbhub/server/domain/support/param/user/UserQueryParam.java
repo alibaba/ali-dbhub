@@ -1,5 +1,9 @@
 package com.alibaba.dbhub.server.domain.support.param.user;
 
+import java.io.Serial;
+
+import com.alibaba.dbhub.server.tools.base.wrapper.param.PageQueryParam;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,9 +18,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserQueryParam {
+public class UserQueryParam extends PageQueryParam {
+    @Serial
+    private static final long serialVersionUID = 7341467383637825621L;
     /**
      * 用户名
      */
-    private String userName;
+    private String keyWord;
 }
