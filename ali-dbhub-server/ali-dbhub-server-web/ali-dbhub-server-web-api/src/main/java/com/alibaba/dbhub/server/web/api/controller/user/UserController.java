@@ -12,6 +12,7 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.OperationUpdateRequest;
 import com.alibaba.dbhub.server.web.api.controller.redis.request.KeyCreateRequest;
@@ -55,13 +56,13 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    public PageResult<UserVO> list(UserQueryRequest request) {
+    public WebPageResult<UserVO> list(UserQueryRequest request) {
         UserQueryParam userQueryParam = new UserQueryParam();
         userQueryParam.setKeyWord(request.getKeyWord());
         userQueryParam.setPageNo(request.getPageNo());
         userQueryParam.setPageSize(request.getPageSize());
         PageResult<User> pageResult = userService.queryPage(userQueryParam);
-        return PageResult.of(userWebConverter.dto2vo(pageResult.getData()),pageResult.getTotal(),request);
+        return WebPageResult.of(userWebConverter.dto2vo(pageResult.getData()),pageResult.getTotal(),request);
     }
 
     /**
