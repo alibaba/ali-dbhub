@@ -18,7 +18,7 @@ const chainWebpack = (config: any, { webpack }: any) => {
 };
 
 export default defineConfig({
-  title: 'dataOps',
+  title: 'dbHub',
   history: {
     type: 'hash',
   },
