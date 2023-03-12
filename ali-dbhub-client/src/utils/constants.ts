@@ -63,12 +63,15 @@ export enum TreeNodeType {
   TABLES = 'tables',
   TABLE = 'table',
   COLUMNS = 'columns',
+  COLUMN = 'column',
   KEYS = 'keys',
+  KEY = 'key',
+  INDEXES = 'indexes',
+  INDEXE = 'indexe',
   SEARCH = 'search',
   LINE = 'line',
   LINETOTAL = 'lineTotal',
   SAVE = 'save',
-  INDEXES = 'indexes',
   INDEXESTOTAL = 'indexesTotal',
 }
 

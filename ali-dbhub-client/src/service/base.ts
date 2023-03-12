@@ -84,7 +84,8 @@ export default function createRequest<P = void, R = {}>(
   url: string,
   options: IOptions,
 ) {
-  const { method = 'get', mock = false, errorLevel = 'toast' } = options;
+  // mock 
+  const { method = 'get', mock = true, errorLevel = 'toast' } = options;
   const _baseURL = mock ? mockUrl : baseURL;
   return function (params: P) {
     const paramsInUrl: string[] = [];

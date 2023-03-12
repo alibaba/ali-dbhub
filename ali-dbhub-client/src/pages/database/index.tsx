@@ -493,7 +493,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
               <div className={styles.currentNameBox} onClick={(event) => { event.stopPropagation(); setOpenDropdown(true) }}>
                 {
                   currentDB &&
-                  <div className={styles.DBLogo} style={{ backgroundImage: `url(${databaseType[params.type.toUpperCase()].img})` }}></div>
+                  <div className={styles.DBLogo} style={{ backgroundImage: `url(${databaseType[params.type.toUpperCase()]?.img})` }}></div>
                 }
                 <div className={styles.databaseName}>
                   {currentDB?.name}

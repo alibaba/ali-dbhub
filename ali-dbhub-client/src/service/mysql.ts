@@ -68,6 +68,8 @@ const exportCreateTableSql = createRequest<ITableParams, string>('/api/rdb/ddl/e
 const executeTable = createRequest<IExecuteTableParams, string>('/api/rdb/ddl/execute',{method: 'put'});
 
 const getColumnList = createRequest<ITableParams, IColumn[]>('/api/rdb/ddl/column_list',{method: 'get'});
+const getIndexList = createRequest<ITableParams, IColumn[]>('/api/rdb/ddl/index_list',{method: 'get'});
+const getKeyList = createRequest<ITableParams, IColumn[]>('/api/rdb/ddl/key_list',{method: 'get'});
 
 
 export default {
@@ -79,5 +81,7 @@ export default {
   updateTableExample,
   exportCreateTableSql,
   executeTable,
-  getColumnList
+  getColumnList,
+  getIndexList,
+  getKeyList
 }
