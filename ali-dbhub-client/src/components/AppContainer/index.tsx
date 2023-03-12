@@ -68,9 +68,9 @@ export default memo<IProps>(function AppContainer({ className, children }) {
       localStorage.setItem('lang', 'zh-cn');
     }
     //禁止右键
-    document.oncontextmenu = (e) => {
-      e.preventDefault();
-    };
+    // document.oncontextmenu = (e) => {
+    //   e.preventDefault();
+    // };
   }
 
   return (

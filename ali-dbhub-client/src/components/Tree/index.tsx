@@ -21,6 +21,7 @@ interface IProps {
   nodeDoubleClick?: Function;
   openOperationTableModal?: Function;
 }
+
 interface TreeNodeIProps {
   data: ITreeNode;
   level: number;
@@ -128,11 +129,20 @@ export function TreeNode(props: TreeNodeIProps) {
     [TreeNodeType.COLUMNS]: {
       icon: '\ueac5'
     },
+    [TreeNodeType.COLUMN]: {
+      icon: '\ue611'
+    },
     [TreeNodeType.KEYS]: {
       icon: '\ueac5'
     },
+    [TreeNodeType.KEY]: {
+      icon: '\ue611'
+    },
     [TreeNodeType.INDEXES]: {
       icon: '\ueac5'
+    },
+    [TreeNodeType.INDEXE]: {
+      icon: '\ue611'
     },
     [TreeNodeType.SEARCH]: {
       icon: '\uec4c'
@@ -146,7 +156,6 @@ export function TreeNode(props: TreeNodeIProps) {
     [TreeNodeType.SAVE]: {
       icon: '\ue936'
     },
-
     [TreeNodeType.INDEXESTOTAL]: {
       icon: '\ue648'
     }
@@ -370,15 +379,62 @@ const loadDataObj: Partial<{ [key in TreeNodeType]: ILoadDataObjItem }> = {
           const tableList: ITreeNode[] = res?.map(item => {
             return {
               name: item.name,
-              nodeType: TreeNodeType.COLUMNS,
+              nodeType: TreeNodeType.COLUMN,
               key: item.name,
+              isLeaf: true,
             }
           })
           r(tableList);
         })
       })
     }
-  }
+  },
+  [TreeNodeType.INDEXES]: {
+    getNodeData: (parentData: ITreeNode) => {
+      return new Promise((r: (value: ITreeNode[]) => void, j) => {
+        let p = {
+          dataSourceId: parentData.dataSourceId!,
+          databaseName: parentData.dataBaseName!,
+          tableName: parentData.name,
+        }
+
+        mysqlServer.getIndexList(p).then(res => {
+          const tableList: ITreeNode[] = res?.map(item => {
+            return {
+              name: item.name,
+              nodeType: TreeNodeType.INDEXE,
+              key: item.name,
+              isLeaf: true,
+            }
+          })
+          r(tableList);
+        })
+      })
+    }
+  },
+  [TreeNodeType.KEYS]: {
+    getNodeData: (parentData: ITreeNode) => {
+      return new Promise((r: (value: ITreeNode[]) => void, j) => {
+        let p = {
+          dataSourceId: parentData.dataSourceId!,
+          databaseName: parentData.dataBaseName!,
+          tableName: parentData.name,
+        }
+
+        mysqlServer.getKeyList(p).then(res => {
+          const tableList: ITreeNode[] = res?.map(item => {
+            return {
+              name: item.name,
+              nodeType: TreeNodeType.KEY,
+              key: item.name,
+              isLeaf: true,
+            }
+          })
+          r(tableList);
+        })
+      })
+    }
+  },
 }
 
 function loadData(data: ITreeNode) {
