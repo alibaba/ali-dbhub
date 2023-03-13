@@ -5,8 +5,8 @@ import Iconfont from '../Iconfont';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { IDatabase } from '@/types'
-import { databaseType } from '@/utils/constants';
-import ConnectionDialog from '@/components/ConnectionDialog';
+import { databaseType, DatabaseTypeCode } from '@/utils/constants';
+import ConnectionDialog, { submitType } from '@/components/ConnectionDialog';
 
 interface Iprops {
   className?: string;
@@ -61,21 +61,30 @@ const globalAddMenuList: IGlobalAddMenuItem[] = [
 
 const items: MenuItem[] = globalAddMenuList.map(t => getItem(t.label, t.key, t.icon, t.children))
 
-
-
 export default memo<Iprops>(function GlobalAddMenu(props) {
   const { className } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [dataSourceType, setDataSourceType] = useState<DatabaseTypeCode>();
 
-  const onClick: MenuProps['onClick'] = (e) => {
+  const onClickMenuNode: MenuProps['onClick'] = (e) => {
     console.log(e)
     if (e.keyPath[1] === 'newDataSource') {
+      setDataSourceType(e.keyPath[0] as DatabaseTypeCode)
       setIsModalVisible(true);
     }
   };
 
+  function submitCallback(type: submitType, data: any) {
+    console.log(type, data)
+  }
+
   return <div className={classnames(styles.box, className)}>
-    <Menu onClick={onClick} mode="vertical" items={items as any} />
-    <ConnectionDialog entheticIsModalVisible={isModalVisible}></ConnectionDialog>
+    <Menu onClick={onClickMenuNode} mode="vertical" items={items as any} />
+    <ConnectionDialog
+      submitCallback={submitCallback}
+      dataSourceType={dataSourceType}
+      onCancel={() => { setIsModalVisible(false) }}
+      openModal={isModalVisible}
+    />
   </div>
 })
