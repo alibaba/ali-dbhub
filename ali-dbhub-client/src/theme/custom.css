@@ -18107,11 +18107,11 @@ textarea.custom-mentions {
 }
 .custom-modal-close-x {
   display: block;
-  width: 56px;
-  height: 56px;
+  width: 46px;
+  height: 46px;
   font-size: 16px;
   font-style: normal;
-  line-height: 56px;
+  line-height: 46px;
   text-align: center;
   text-transform: none;
   text-rendering: auto;
@@ -18122,14 +18122,14 @@ textarea.custom-mentions {
   text-decoration: none;
 }
 .custom-modal-header {
-  padding: 16px 24px;
+  padding: 13px 24px;
   color: var(--color-text-85);
   background: var(--color-bg-100) ;
   /* border-bottom: 1px solid var(--color-bg-6); */
   border-radius: 2px 2px 0 0;
 }
 .custom-modal-body {
-  padding: 24px;
+  padding: 0px 24px 24px;
   font-size: 14px;
   line-height: 1.5715;
   word-wrap: break-word;
