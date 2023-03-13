@@ -28,6 +28,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -41,34 +42,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
     @Resource
     private UserService userService;
-    //
-    //@Override
-    //public void addCorsMappings(CorsRegistry registry) {
-    //    registry.addMapping("/**")//项目中的所有接口都支持跨域
-    //        .allowedOriginPatterns("*")//所有地址都可以访问，也可以配置具体地址
-    //        .allowCredentials(true)
-    //        .allowedMethods("*")//"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"
-    //        .maxAge(3600);// 跨域允许时间
-    //}
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", buildConfig()); // 对接口配置跨域设置
-        return new CorsFilter(source);
-    }
-    private CorsConfiguration buildConfig() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowCredentials(true);  //sessionid 多次访问一致
-
-        // 允许访问的客户端域名
-        List<String> allowedOriginPatterns = new ArrayList<>();
-        allowedOriginPatterns.add("*");
-        corsConfiguration.setAllowedOriginPatterns(allowedOriginPatterns);
-                corsConfiguration.addAllowedOrigin("*"); // 允许任何域名使用
-        corsConfiguration.addAllowedHeader("*"); // 允许任何头
-        corsConfiguration.addAllowedMethod("*"); // 允许任何方法（post、get等）
-        return corsConfiguration;
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")//项目中的所有接口都支持跨域
+            .allowedOriginPatterns("*")//所有地址都可以访问，也可以配置具体地址
+            .allowCredentials(true)
+            .allowedMethods("*")//"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"
+            .maxAge(3600);// 跨域允许时间
     }
 
     @Override
@@ -124,19 +105,8 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                         if (StringUtils.containsIgnoreCase(accept, MediaType.APPLICATION_JSON_VALUE)) {
                             throw new NeedLoggedInBizException();
                         } else {
-                            throw new NeedLoggedInBizException();
-                            //throw new RedirectBizException(
-                            //    OauthConstants.LOGIN_URL + "?redirect=" + SaFoxUtil.joinParam(
-                            //        SaHolder.getRequest().getUrl(), SpringMVCUtil.getRequest().getQueryString()));
+                            request.setAttribute("needLoggedInBizException", true);
                         }
-                        //ActionResult actionResult = new ActionResult();
-                        //actionResult.setSuccess(false);
-                        //actionResult.setErrorCode(ErrorEnum.NEED_LOGGED_IN.getCode());
-                        //actionResult.setErrorMessage(ErrorEnum.NEED_LOGGED_IN.getDescription());
-                        //response.setCharacterEncoding("UTF-8");
-                        //response.setContentType("application/json; charset=utf-8");
-                        //response.getWriter().println(JSON.toJSONString(actionResult));
-                        //return false;
                     }
                     return true;
                 }
