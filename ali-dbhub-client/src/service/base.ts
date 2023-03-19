@@ -32,6 +32,8 @@ enum ErrorCode {
   NEED_LOGGED_IN = 'NEED_LOGGED_IN',
 }
 
+const noNeedToastErrorCode = [ErrorCode.NEED_LOGGED_IN];
+
 const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
 const onLineServiceUrl = 'http://127.0.0.1:10824';
 const localServiceUrl = 'http://127.0.0.1:7001';
@@ -57,7 +59,7 @@ const request = extend({
   credentials: 'include', // 默认请求是否带上cookie
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   },
 });
 
@@ -84,7 +86,7 @@ export default function createRequest<P = void, R = {}>(
   url: string,
   options: IOptions,
 ) {
-  // mock 
+  // mock
   const { method = 'get', mock = false, errorLevel = 'toast' } = options;
   const _baseURL = mock ? mockUrl : baseURL;
   return function (params: P) {
@@ -122,14 +124,18 @@ export default function createRequest<P = void, R = {}>(
         .then((res) => {
           if (!res) return;
           const { success, errorCode, errorMessage, data } = res;
-          if (!success && errorLevel === 'toast') {
+          if (
+            !success &&
+            errorLevel === 'toast' &&
+            !noNeedToastErrorCode.includes(errorCode)
+          ) {
             message.error(`${errorCode}: ${errorMessage}`);
             reject(`${errorCode}: ${errorMessage}`);
           }
           resolve(data);
         })
         .catch((error) => {
-          console.log('catch error', error)
+          console.log('catch error', error);
           errorHandler(error, errorLevel);
           reject(error);
         });
