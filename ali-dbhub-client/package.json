@@ -10,7 +10,8 @@
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
-    "electron": "electron ."
+    "electron": "electron .",
+    "build2Server": "umi build && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

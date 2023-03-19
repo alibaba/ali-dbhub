@@ -34,7 +34,7 @@ const App: React.FC = () => {
         <div className="logo">ALi-DBHub</div>
         <Form.Item
           label="用户名"
-          name="username"
+          name="userName"
           rules={[{ required: true, message: '请输入用户名' }]}
         >
           <Input placeholder="默认用户名: db_hub" />
