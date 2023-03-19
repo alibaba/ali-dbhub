@@ -5,7 +5,7 @@ spring:
     driver-class-name: org.h2.Driver
   #  用于数据库表结构版本管理
   flyway:
-    locations: classpath:db/migration
+    locations: classpath:db/migration/release
 # 端口号
 server:
   port: 10824
