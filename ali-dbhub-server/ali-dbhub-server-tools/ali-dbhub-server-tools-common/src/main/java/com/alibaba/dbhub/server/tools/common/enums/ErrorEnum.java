@@ -31,6 +31,11 @@ public enum ErrorEnum implements BaseErrorEnum {
      */
     NOT_LOGGED_IN,
 
+    /**
+     * 重定向
+     */
+    REDIRECT,
+
     ;
 
     @Override

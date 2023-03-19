@@ -15,12 +15,14 @@ import com.alibaba.dbhub.server.start.exception.convertor.ParamExceptionConverto
 import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
 import com.alibaba.dbhub.server.tools.base.excption.SystemException;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
-import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBizException;
+import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBusinessException;
+import com.alibaba.dbhub.server.tools.common.exception.RedirectBusinessException;
 import com.alibaba.fastjson2.JSON;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * 拦截Controller异常
@@ -56,7 +59,7 @@ public class EasyControllerExceptionHandler {
             new MethodArgumentNotValidExceptionConvertor());
         EXCEPTION_CONVERTOR_MAP.put(BindException.class, new BindExceptionConvertor());
         EXCEPTION_CONVERTOR_MAP.put(BusinessException.class, new BusinessExceptionConvertor());
-        EXCEPTION_CONVERTOR_MAP.put(NeedLoggedInBizException.class, new BusinessExceptionConvertor());
+        EXCEPTION_CONVERTOR_MAP.put(NeedLoggedInBusinessException.class, new BusinessExceptionConvertor());
         EXCEPTION_CONVERTOR_MAP.put(MissingServletRequestParameterException.class, new ParamExceptionConvertor());
         EXCEPTION_CONVERTOR_MAP.put(IllegalArgumentException.class, new ParamExceptionConvertor());
         EXCEPTION_CONVERTOR_MAP.put(MethodArgumentTypeMismatchException.class,
@@ -82,13 +85,50 @@ public class EasyControllerExceptionHandler {
         BusinessException.class, MaxUploadSizeExceededException.class, ClientAbortException.class,
         HttpRequestMethodNotSupportedException.class, HttpMediaTypeNotAcceptableException.class,
         MultipartException.class, MissingRequestHeaderException.class, HttpMediaTypeNotSupportedException.class,
-        NeedLoggedInBizException.class})
+        NeedLoggedInBusinessException.class})
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public ActionResult handleBusinessException(HttpServletRequest request, Exception exception) {
         ActionResult result = convert(exception);
         log.info("发生业务异常{}:{}", request.getRequestURI(), result, exception);
         return result;
+    }
+
+    /**
+     * 业务异常
+     *
+     * @param request   request
+     * @param exception exception
+     * @return return
+     */
+    @ExceptionHandler({RedirectBusinessException.class})
+    public ModelAndView handleModelAndViewBizException(HttpServletRequest request, Exception exception) {
+        ModelAndView result = translateModelAndView(exception);
+        log.info("发生ModelAndView业务异常{}:{}", request.getRequestURI(), result, exception);
+        return result;
+    }
+
+    public ModelAndView translateModelAndView(Throwable exception) {
+        // 参数异常
+        if (exception instanceof RedirectBusinessException) {
+            RedirectBusinessException e = (RedirectBusinessException)exception;
+            return dealResponseModelAndView(null, e.getMessage(), e.getRedirect(), null, null);
+        }
+        // 默认跳首页
+        return new ModelAndView("redirect:/");
+    }
+
+    private ModelAndView dealResponseModelAndView(String title, String errorMessage, String redirect, String href,
+        String buttonText) {
+        // 如果有车重定向信息 则跳转
+        if (StringUtils.isNotBlank(redirect)) {
+            return new ModelAndView("redirect:" + redirect);
+        }
+        // 默认跳首页
+        return new ModelAndView("redirect:/");
+
+        // 同步请求
+        //return ModelAndViewUtils.error(title, errorMessage,href,buttonText);
     }
 
     /**

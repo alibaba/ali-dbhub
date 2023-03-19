@@ -1,6 +1,6 @@
 package com.alibaba.dbhub.server.tools.common.util;
 
-import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBizException;
+import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBusinessException;
 import com.alibaba.dbhub.server.tools.common.model.Context;
 import com.alibaba.dbhub.server.tools.common.model.LoginUser;
 
@@ -57,7 +57,7 @@ public class ContextUtils {
             return context.getLoginUser();
         }
         // 判断用户必须登录
-        throw new NeedLoggedInBizException();
+        throw new NeedLoggedInBusinessException();
     }
 
     /**

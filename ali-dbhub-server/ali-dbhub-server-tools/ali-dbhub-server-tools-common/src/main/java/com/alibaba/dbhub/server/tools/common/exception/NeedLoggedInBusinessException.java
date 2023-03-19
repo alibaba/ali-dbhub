@@ -13,12 +13,12 @@ import lombok.Getter;
  * @author Jiaju Zhuang
  */
 @Getter
-public class NeedLoggedInBizException extends BusinessException {
+public class NeedLoggedInBusinessException extends BusinessException {
 
     @Serial
     private static final long serialVersionUID = 4481325884589199804L;
 
-    public NeedLoggedInBizException() {
+    public NeedLoggedInBusinessException() {
         super(ErrorEnum.NEED_LOGGED_IN);
     }
 }
