@@ -14,7 +14,7 @@ const App: React.FC = () => {
     let res = await userLogin(values);
 
     const params = getLocationHash();
-    const href = '' + (params?.callback ?? '');
+    const href = '#' + (params?.callback ?? '');
     window.location.href = href;
   }, []);
 
