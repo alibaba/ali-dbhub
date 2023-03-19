@@ -8,13 +8,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.dbhub.server.domain.api.model.User;
 import com.alibaba.dbhub.server.domain.api.service.UserService;
-import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBizException;
+import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBusinessException;
+import com.alibaba.dbhub.server.tools.common.exception.RedirectBusinessException;
 import com.alibaba.dbhub.server.tools.common.model.Context;
 import com.alibaba.dbhub.server.tools.common.model.LoginUser;
 import com.alibaba.dbhub.server.tools.common.util.ContextUtils;
 
 import cn.dev33.satoken.context.SaHolder;
+import cn.dev33.satoken.spring.SpringMVCUtil;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.util.SaFoxUtil;
 import cn.hutool.http.Header;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -104,9 +107,11 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                         String accept = request.getHeader(Header.ACCEPT.getValue());
                         // 前端传了 需要json,则认为是异步请求
                         if (StringUtils.containsIgnoreCase(accept, MediaType.APPLICATION_JSON_VALUE)) {
-                            throw new NeedLoggedInBizException();
+                            throw new NeedLoggedInBusinessException();
                         } else {
-                            request.setAttribute("needLoggedInBizException", true);
+                            throw new RedirectBusinessException(
+                                "/#/login?callback=" + SaFoxUtil.joinParam(SpringMVCUtil.getRequest().getRequestURI(),
+                                    SpringMVCUtil.getRequest().getQueryString()));
                         }
                     }
                     return true;
