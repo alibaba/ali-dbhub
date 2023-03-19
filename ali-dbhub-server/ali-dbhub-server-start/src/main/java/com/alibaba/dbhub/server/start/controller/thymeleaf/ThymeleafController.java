@@ -1,0 +1,27 @@
+package com.alibaba.dbhub.server.start.controller.thymeleaf;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+/**
+ * 模板引擎 配置
+ *
+ * @author Jiaju Zhuang
+ */
+@Controller
+@Slf4j
+@Order(Integer.MIN_VALUE)
+public class ThymeleafController {
+
+    /**
+     * 前端的模板设置
+     *
+     * @return
+     */
+    @GetMapping(value = {"/", "/web/", "/web/**"})
+    public String index() {
+        return "index";
+    }
+}
