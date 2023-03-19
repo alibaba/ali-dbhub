@@ -25,6 +25,7 @@ import {
   // Menu,
   Pagination
 } from 'antd';
+import { IDatabase, ITreeNode } from '@/types'
 
 import styles from './index.less';
 import globalStyle from '@/global.less';
@@ -84,7 +85,7 @@ export default memo<IProps>(function ConnectionPage(props) {
   }
 
   const getConnectionList = (params?: IParams) => {
-    const { superposition } = params || {}
+    const { superposition } = params || {};
     let p = {
       pageNo: pageNo + 1,
       pageSize: 10
@@ -110,8 +111,8 @@ export default memo<IProps>(function ConnectionPage(props) {
 
   const showLinkModal = () => {
     setIsModalVisible(true);
-    setRowData(null);
-    form.resetFields();
+    // setRowData(null);
+    // form.resetFields();
   };
 
   const onChange = () => { };
@@ -214,6 +215,10 @@ export default memo<IProps>(function ConnectionPage(props) {
     </div>
   }
 
+  function submitCallback(data: ITreeNode) {
+    getConnectionList()
+  }
+
   return (
     <div className={classnames(className, styles.box)}>
       {
@@ -227,7 +232,7 @@ export default memo<IProps>(function ConnectionPage(props) {
             onClick={showLinkModal}
           >
             <Iconfont code="&#xe631;"></Iconfont>
-            {i18n('connection.input.newLink')}
+            {i18n('connection.input.newLink')}1111
           </Button>
         </div>
       }
@@ -247,15 +252,11 @@ export default memo<IProps>(function ConnectionPage(props) {
         </ScrollLoading>
         {!connectionList?.length && connectionList !== null && <StateIndicator state='empty'></StateIndicator>}
       </div>
-      {
-        isModalVisible && <ConnectionDialog
-          getConnectionList={getConnectionList}
-          rowData={rowData}
-          setIsModalVisible={setIsModalVisible}
-          isModalVisible={isModalVisible}
-          closeModal={closeModal}
-        ></ConnectionDialog>
-      }
+      <ConnectionDialog
+        submitCallback={submitCallback}
+        onCancel={() => { setIsModalVisible(false) }}
+        openModal={isModalVisible}
+      />
     </div>
   );
 });
