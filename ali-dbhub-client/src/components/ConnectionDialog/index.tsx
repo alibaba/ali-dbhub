@@ -2,8 +2,8 @@ import React, { memo, useEffect, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import connectionServer from '@/service/connection'
-import { IConnectionBase } from '@/types'
-import { databaseTypeList, databaseType, DatabaseTypeCode, EnvType } from '@/utils/constants'
+import { IConnectionBase, ITreeNode } from '@/types'
+import { databaseTypeList, databaseType, DatabaseTypeCode, EnvType, TreeNodeType } from '@/utils/constants'
 import {
   Select,
   Button,
@@ -28,7 +28,7 @@ interface IProps {
   rowData?: any;
   openModal: boolean;
   dataSourceType?: DatabaseTypeCode;
-  submitCallback?: (type: submitType, data: any) => void;
+  submitCallback?: (data: ITreeNode) => void;
   onCancel?: () => void;
 }
 
@@ -163,7 +163,13 @@ export default memo<IProps>(function ConnectionDialog(props) {
       if (type === submitType.TEST) {
         message.success(res === false ? '测试连接失败' : '测试连接成功');
       } else {
-        submitCallback?.(type, res);
+        const dataSource: ITreeNode = {
+          name: p.alias,
+          key: p.alias.toString(),
+          nodeType: TreeNodeType.DATASOURCE,
+          dataSourceId: p.id,
+        }
+        submitCallback?.(dataSource);
       }
     })
   }

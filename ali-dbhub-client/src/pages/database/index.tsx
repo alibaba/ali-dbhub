@@ -79,6 +79,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode | null>(null);
   const monacoHint = useRef<any>(null);
   const [isUnfold, setIsUnfold] = useState(true);
+  const [addTreeNode, setAddTreeNode] = useState<ITreeNode[]>();
   const treeRef = useRef<any>();
   const closeDropdownFn = () => {
     setOpenDropdown(false)
@@ -484,6 +485,10 @@ export default memo<IProps>(function DatabasePage({ className }) {
     treeRef.current?.getDataSource();
   }
 
+  function getAddTreeNode(data: ITreeNode) {
+    setAddTreeNode([data])
+  }
+
   return <>
     <div className={classnames(className, styles.box)}>
       <div ref={letfRef} className={styles.asideBox} id="database-left-aside">
@@ -507,7 +512,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
               <div className={classnames(styles.refresh, styles.button)} onClick={refresh}>
                 <Iconfont code="&#xec08;"></Iconfont>
               </div>
-              <Dropdown overlay={<GlobalAddMenu></GlobalAddMenu>} trigger={['click']}>
+              <Dropdown overlay={<GlobalAddMenu getAddTreeNode={getAddTreeNode}></GlobalAddMenu>} trigger={['click']}>
                 <div onClick={() => { setOpenDropdown(true) }} className={classnames(styles.create, styles.button)}>
                   <Iconfont code="&#xe631;"></Iconfont>
                 </div>
@@ -523,6 +528,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
             nodeDoubleClick={nodeDoubleClick}
             cRef={treeRef}
             className={styles.tree}
+            addTreeData={addTreeNode}
           />
         </div>
       </div>
@@ -557,8 +563,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
           <div></div>
         </div>
       </div>
-
-    </div >
+    </div>
     <Modal
       title="新窗口名称"
       open={isModalVisible}
@@ -575,6 +580,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
         </>
       }
     >
+
       <Input value={windowName} onChange={(e) => { setWindowName(e.target.value) }} />
     </Modal>
     {
