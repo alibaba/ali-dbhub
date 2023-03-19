@@ -19,6 +19,12 @@ spring:
     servlet:
       content-type: text/html
     mode: HTML5
+  # 静态文件
+  mvc:
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations[0]: classpath:/static/
 ali:
   dbhub:
     version: 1.0.0
