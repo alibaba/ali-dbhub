@@ -72,9 +72,9 @@ request.interceptors.response.use(async (response, options) => {
   const res = await response.clone().json();
 
   const { errorCode, codeMessage } = res;
-  if (errorCode === ErrorCode.NEED_LOGGED_IN) {
-    window.location.href = '#/login?callback=' + window.location.hash.substr(1);
-  }
+  // if (errorCode === ErrorCode.NEED_LOGGED_IN) {
+  //   window.location.href = '#/login?callback=' + window.location.hash.substr(1);
+  // }
 
   return response;
 });

@@ -4,12 +4,13 @@ import classnames from 'classnames';
 import Iconfont from '../Iconfont';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
-import { IDatabase } from '@/types'
+import { IDatabase, ITreeNode } from '@/types'
 import { databaseType, DatabaseTypeCode } from '@/utils/constants';
 import ConnectionDialog, { submitType } from '@/components/ConnectionDialog';
 
 interface Iprops {
   className?: string;
+  getAddTreeNode: (data: ITreeNode) => void;
 }
 
 type MenuItem = {
@@ -38,31 +39,29 @@ const newDataSourceChildren = Object.keys(databaseType).map(t => {
   return getItem(source.name, source.code, <img className={styles.dataSourceTypeImg} src={source.img} alt="" />)
 })
 
-
 type IGlobalAddMenuItem = {
 
 } & MenuItem
 
 
 const globalAddMenuList: IGlobalAddMenuItem[] = [
+  // {
+  //   label: '新建控制台',
+  //   key: 'newConsole',
+  //   icon: <Iconfont code='&#xe619;' />
+  // },
   {
-    label: '新建控制台',
-    key: 'newConsole',
-    icon: <Iconfont code='&#xe619;' />
-  },
-  {
-    label: '新建链接',
+    label: '新建数据源',
     key: 'newDataSource',
     icon: <Iconfont code='&#xe631;' />,
     children: newDataSourceChildren
   },
-
 ]
 
 const items: MenuItem[] = globalAddMenuList.map(t => getItem(t.label, t.key, t.icon, t.children))
 
 export default memo<Iprops>(function GlobalAddMenu(props) {
-  const { className } = props;
+  const { className, getAddTreeNode } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [dataSourceType, setDataSourceType] = useState<DatabaseTypeCode>();
 
@@ -74,8 +73,9 @@ export default memo<Iprops>(function GlobalAddMenu(props) {
     }
   };
 
-  function submitCallback(type: submitType, data: any) {
-    console.log(type, data)
+  function submitCallback(data: ITreeNode) {
+    getAddTreeNode(data);
+    setIsModalVisible(false);
   }
 
   return <div className={classnames(styles.box, className)}>
