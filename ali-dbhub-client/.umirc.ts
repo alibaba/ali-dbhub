@@ -24,7 +24,7 @@ export default defineConfig({
   },
   base: '/',
   publicPath: './',
-  hash: true,
+  hash: false,
   routes: [
     {
       path: '/',
@@ -79,7 +79,7 @@ export default defineConfig({
   mfsu: {},
   fastRefresh: {},
   // 桌面端不需要懒加载
-  dynamicImportSyntax:{},
+  dynamicImportSyntax: {},
   dynamicImport: {
     loading: '@/components/Loading/LazyLoading',
   },
