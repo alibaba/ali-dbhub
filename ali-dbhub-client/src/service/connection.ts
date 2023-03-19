@@ -12,7 +12,7 @@ const getList = createRequest<IGetConnectionParams, IPageResponse<IConnectionBas
 
 const getDetaile = createRequest<{id:string}, IConnectionBase>('/api/connection/datasource/:id',{});
 
-const save = createRequest<IConnectionBase, void>('/api/connection/datasource/create',{method:'post'});
+const save = createRequest<IConnectionBase, string>('/api/connection/datasource/create',{method:'post'});
 
 const close = createRequest<IConnectionBase, void>('/api/connection/datasource/close',{method:'post'});
 
