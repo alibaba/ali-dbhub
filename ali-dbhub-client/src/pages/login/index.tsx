@@ -12,11 +12,10 @@ interface IFormData {
 const App: React.FC = () => {
   const handleLogin = useCallback(async (values: IFormData) => {
     let res = await userLogin(values);
-    if (res) {
-      const params = getLocationHash();
-      const href = '#/' + (params?.callback ?? '');
-      window.location.href = href;
-    }
+
+    const params = getLocationHash();
+    const href = '' + (params?.callback ?? '');
+    window.location.href = href;
   }, []);
 
   return (
@@ -37,14 +36,14 @@ const App: React.FC = () => {
           name="userName"
           rules={[{ required: true, message: '请输入用户名' }]}
         >
-          <Input placeholder="默认用户名: db_hub" />
+          <Input placeholder="默认用户名: dbhub" />
         </Form.Item>
         <Form.Item
           label="密码"
           name="password"
           rules={[{ required: true, message: '请输入密码' }]}
         >
-          <Input type="password" placeholder="默认密码: db_hub" />
+          <Input type="password" placeholder="默认密码: dbhub" />
         </Form.Item>
 
         <Button type="primary" htmlType="submit" className="login-form-button">
