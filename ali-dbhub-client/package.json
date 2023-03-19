@@ -11,7 +11,7 @@
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
     "electron": "electron .",
-    "build2Server": "umi build && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front"
+    "build2Server": "rm -rf ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front &&  umi build && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

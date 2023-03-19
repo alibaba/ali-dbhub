@@ -23,7 +23,7 @@ export default defineConfig({
     type: 'hash',
   },
   base: '/',
-  publicPath: './',
+  publicPath: './static/front/',
   hash: false,
   routes: [
     {
