@@ -1,8 +1,6 @@
 package com.alibaba.dbhub.server.start.config.config;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +19,8 @@ import cn.hutool.http.Header;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -40,6 +34,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @Slf4j
 public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
+
+    /**
+     * 全局放行的url
+     */
+    private static final String[] FRONT_PERMIT_ALL = new String[] {"/", "/favicon.ico", "/error", "/static/**"};
+
     @Resource
     private UserService userService;
 
@@ -89,7 +89,8 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                 }
             })
             .order(1)
-            .addPathPatterns("/**");
+            .addPathPatterns("/**")
+            .excludePathPatterns(FRONT_PERMIT_ALL);
 
         // 校验登录信息
         registry.addInterceptor(new AsyncHandlerInterceptor() {
@@ -113,7 +114,9 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
             })
             .order(2)
             .addPathPatterns("/**")
+            // 前端需要放行的链接
+            .excludePathPatterns(FRONT_PERMIT_ALL)
             // _a结尾的统一放行
-            .excludePathPatterns("/**/*_a","/api/system");
+            .excludePathPatterns("/**/*_a");
     }
 }

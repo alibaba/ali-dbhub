@@ -23,8 +23,8 @@ export default defineConfig({
     type: 'hash',
   },
   base: '/',
-  publicPath: './',
-  hash: true,
+  publicPath: './static/front/',
+  hash: false,
   routes: [
     {
       path: '/',
@@ -79,7 +79,7 @@ export default defineConfig({
   mfsu: {},
   fastRefresh: {},
   // 桌面端不需要懒加载
-  dynamicImportSyntax:{},
+  dynamicImportSyntax: {},
   dynamicImport: {
     loading: '@/components/Loading/LazyLoading',
   },

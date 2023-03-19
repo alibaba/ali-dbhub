@@ -11,6 +11,20 @@ spring:
     fallbackToSystemLocale: true
   jmx:
     enabled: false
+  # thymeleaf
+  thymeleaf:
+    prefix: classpath:/thymeleaf/
+    check-template-location: true
+    suffix: .html
+    servlet:
+      content-type: text/html
+    mode: HTML5
+  # 静态文件
+  mvc:
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations[0]: classpath:/static/
 ali:
   dbhub:
     version: 1.0.0
@@ -35,3 +49,7 @@ sa-token:
   is-log: true
   # jwt秘钥 部署的时候需要改掉，不然可以随便破解登录
   jwt-secret-key: jwt_dbhub
+
+
+
+
