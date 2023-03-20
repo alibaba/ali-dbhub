@@ -7,15 +7,17 @@ import type { MenuProps } from 'antd';
 // import { Menu } from 'antd';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import { IOperationData } from '@/components/OperationTableModal';
-import { TreeNodeType } from '@/utils/constants'
+import { TreeNodeType } from '@/utils/constants';
+import { ITreeConfigItem, ITreeConfig } from '@/components/Tree/treeConfig';
+import { ITreeNode } from '@/types';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 export type Iprops = {
   className?: string;
-  data: any;
+  data: ITreeNode;
   openOperationTableModal: any;
-  loadDataObj: any;
+  treeConfig: ITreeConfig;
 }
 
 function getItem(
@@ -54,10 +56,8 @@ const items: MenuItem[] = [
   ]),
 ];
 
-
-
 function TreeNodeRightClick(props: Iprops) {
-  const { className, data, openOperationTableModal, loadDataObj } = props;
+  const { className, data, openOperationTableModal, treeConfig } = props;
 
   const tableMenu: IMenu<string>[] = [
     {
@@ -82,7 +82,7 @@ function TreeNodeRightClick(props: Iprops) {
   ]
 
   function refresh() {
-    return loadDataObj[data.nodeType]?.getNodeData(data);
+    // return treeConfig[data.key]
   }
 
   function tableClick(item: IMenu<string>) {
@@ -133,10 +133,6 @@ function TreeNodeRightClick(props: Iprops) {
   } else {
     return <span></span>
   }
-
-  // return <div className={classnames(className, styles.box)}>
-  //   <Menu onClick={onClick} style={{ width: 256 }} mode="vertical" items={items} />
-  // </div>
 }
 
 export default memo(TreeNodeRightClick)

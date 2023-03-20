@@ -84,10 +84,12 @@ export default function Manage() {
       {
         title: '邮箱',
         dataIndex: 'email',
+        key: 'email'
       },
       {
         title: '角色',
         dataIndex: 'role',
+        key:'role',
         render: (role?: IRole) =>
           role && (
             <Tag color={role === 'admin' ? 'lime' : 'blue'}>
@@ -97,6 +99,7 @@ export default function Manage() {
       },
       {
         title: '操作',
+        key: 'operation',
         render: (item: IUser, record: IUser, index: number) => (
           <div>
             <Button

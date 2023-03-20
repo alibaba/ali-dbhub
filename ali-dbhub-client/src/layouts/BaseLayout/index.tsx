@@ -8,9 +8,7 @@ import Setting from '@/components/Setting';
 import BrandLogo from '@/components/BrandLogo';
 import i18n from '@/i18n';
 
-interface Iprops {
-
-}
+interface Iprops {}
 
 interface INavItem {
   title: string;
@@ -34,18 +32,23 @@ const LNKConfig: INavItem[] = [
     title: i18n('home.nav.github'),
     icon: '\ue885',
     path: 'https://github.com/alibaba/ali-dbhub',
-    openBrowser: true
+    openBrowser: true,
+  },
+  {
+    title: '后台管理',
+    icon: "\ue66d",
+    path: '/manage',
   },
 ];
 
 export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
   const [activeNav, setActiveNav] = useState<string>(LNKConfig[0].path);
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   function switchingNav(item: INavItem) {
     if (item.openBrowser) {
-      window.open(item.path)
+      window.open(item.path);
     } else {
       history.push(item.path);
       setActiveNav(item.path);
@@ -53,7 +56,7 @@ export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
   }
 
   function jumpHome() {
-    history.push('/')
+    history.push('/');
   }
 
   return (
@@ -81,9 +84,7 @@ export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
         </div>
       </div>
       <div className={styles.layoutRight}>
-        <div className={styles.main}>
-          {children}
-        </div>
+        <div className={styles.main}>{children}</div>
       </div>
     </div>
   );
