@@ -76,7 +76,10 @@ request.interceptors.response.use(async (response, options) => {
 
   const { errorCode, codeMessage } = res;
   if (errorCode === ErrorCode.NEED_LOGGED_IN) {
-    window.location.href = '#/login?callback=' + window.location.hash.substr(1);
+    // window.location.href = '#/login?callback=' + window.location.hash.substr(1);
+    const callback = window.location.hash.substr(1).split('?')[0];
+    window.location.href =
+      '#/login?' + (callback === '/login' ? '' : `callback=${callback}`);
   }
 
   return response;

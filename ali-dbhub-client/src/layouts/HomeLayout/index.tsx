@@ -34,6 +34,11 @@ const navConfig: INavItem[] = [
     path: 'https://github.com/alibaba/ali-dbhub',
     openBrowser: true
   },
+  {
+    title: '后台管理',
+    icon: "\ue66d",
+    path: '/manage',
+  },
 ];
 
 export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
