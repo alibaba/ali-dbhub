@@ -26,10 +26,10 @@ public interface PostgresqlMetaSchemaMapper {
      * 查询所有表中所有列信息
      *
      * @param tableSchema
-     * @param tableNames
+     * @param tableName
      * @return
      */
-    List<PostgresqlColumn> selectColumns(@Param("tableSchema") String tableSchema, @Param("tableNames") List<String> tableNames);
+    List<PostgresqlColumn> selectColumns(@Param("tableSchema") String tableSchema, @Param("tableName") String tableName);
 
     /**
      * 删除表
@@ -42,12 +42,9 @@ public interface PostgresqlMetaSchemaMapper {
      * 查询所有的表
      *
      * @param tableSchema
-     * @param pageSize
-     * @param pageSize
      * @return
      */
-    List<String> selectTables(@Param("tableSchema") String tableSchema, @Param("pageSize") long pageSize,
-        @Param("offset") long offset);
+    List<String> selectTables(@Param("tableSchema") String tableSchema);
 
     /**
      * @param tableSchema
@@ -68,9 +65,9 @@ public interface PostgresqlMetaSchemaMapper {
      * 查询表索引信息
      *
      * @param tableSchema
-     * @param tableNames
+     * @param tableName
      * @return
      */
     List<PostgresqlTableIndex> selectTableIndexes(@Param("tableSchema") String tableSchema,
-        @Param("tableNames") List<String> tableNames);
+        @Param("tableName") String tableName);
 }

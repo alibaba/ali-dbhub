@@ -39,4 +39,9 @@ public class TableQueryParam extends QueryParam {
      * 表名
      */
     private String tableName;
+
+    /**
+     * 空间名
+     */
+    private String schemaName;
 }

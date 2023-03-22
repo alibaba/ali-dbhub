@@ -73,7 +73,7 @@ public class TableTemplate implements TableOperations {
     @Override
     public String showCreateTable(ShowCreateTableParam param) {
         MetaSchema metaSchema = DbhubContext.getConnectInfo().getDbType().metaSchema();
-        return metaSchema.showCreateTable(param.getDatabaseName(), null, param.getTableName());
+        return metaSchema.tableDDL(param.getDatabaseName(), null, param.getTableName());
     }
 
     @Override
@@ -461,46 +461,45 @@ public class TableTemplate implements TableOperations {
     @Override
     public PageResult<Table> pageQuery(TablePageQueryParam param, TableSelector selector) {
         MetaSchema metaSchema = DbhubContext.getMetaSchema();
-        List<Table> list = metaSchema.queryTableList(param.getDatabaseName(), param.getTableName(), param.getPageNo(),
-            param.getPageSize());
+        List<Table> list = metaSchema.tables(param.getDatabaseName(), param.getTableName());
         if (CollectionUtils.isEmpty(list)) {
             return PageResult.of(list, 0L, param);
         }
-        List<String> tableNameList = EasyCollectionUtils.toList(list, Table::getName);
-        List<TableColumn> tableColumnList = new ArrayList<>();
-        List<TableIndex> tableIndexList = new ArrayList<>();
-        if(selector.getColumnList()) {
-            tableColumnList = metaSchema.queryColumnList(param.getDatabaseName(), null,
-                tableNameList);
-        }
-        if(selector.getIndexList()) {
-            tableIndexList = metaSchema.queryIndexList(param.getDatabaseName(), null, tableNameList);
-        }
-        Map<String, List<TableIndex>> tableIndexMap = EasyCollectionUtils.stream(tableIndexList)
-            // 排除主键
-            .filter(tableIndex -> !IndexTypeEnum.PRIMARY_KEY.getCode().equals(tableIndex.getType()))
-            .collect(Collectors.groupingBy(TableIndex::getTableName));
-        Map<String, List<TableColumn>> tableColumnMap = EasyCollectionUtils.stream(tableColumnList).collect(
-            Collectors.groupingBy(TableColumn::getTableName));
+        //List<String> tableNameList = EasyCollectionUtils.toList(list, Table::getName);
+        //List<TableColumn> tableColumnList = new ArrayList<>();
+        //List<TableIndex> tableIndexList = new ArrayList<>();
+        //if(selector.getColumnList()) {
+        //    tableColumnList = metaSchema.queryColumnList(param.getDatabaseName(), null,
+        //        tableNameList);
+        //}
+        //if(selector.getIndexList()) {
+        //    tableIndexList = metaSchema.queryIndexList(param.getDatabaseName(), null, tableNameList);
+        //}
+        //Map<String, List<TableIndex>> tableIndexMap = EasyCollectionUtils.stream(tableIndexList)
+        //    // 排除主键
+        //    .filter(tableIndex -> !IndexTypeEnum.PRIMARY_KEY.getCode().equals(tableIndex.getType()))
+        //    .collect(Collectors.groupingBy(TableIndex::getTableName));
+        //Map<String, List<TableColumn>> tableColumnMap = EasyCollectionUtils.stream(tableColumnList).collect(
+        //    Collectors.groupingBy(TableColumn::getTableName));
+        //
+        //list.stream().forEach(table -> {
+        //    table.setColumnList(tableColumnMap.get(table.getName()));
+        //    table.setIndexList(tableIndexMap.get(table.getName()));
+        //});
 
-        list.stream().forEach(table -> {
-            table.setColumnList(tableColumnMap.get(table.getName()));
-            table.setIndexList(tableIndexMap.get(table.getName()));
-        });
-
-        return PageResult.of(list, 100L, param);
+        return PageResult.of(list, Long.valueOf(list.size()), param);
     }
 
     @Override
     public List<TableColumn> queryColumns(TableQueryParam param) {
         MetaSchema metaSchema = DbhubContext.getMetaSchema();
-        return metaSchema.queryColumnList(param.getDatabaseName(), null, Lists.newArrayList(param.getTableName()));
+        return metaSchema.columns(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
     }
 
     @Override
     public List<TableIndex> queryIndexes(TableQueryParam param) {
         MetaSchema metaSchema = DbhubContext.getMetaSchema();
-         return metaSchema.queryIndexList(param.getDatabaseName(), null, Lists.newArrayList(param.getTableName()));
+         return metaSchema.indexes(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
 
     }
 

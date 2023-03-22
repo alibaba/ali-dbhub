@@ -1,16 +1,18 @@
 /**
  * alibaba.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
+ * Copyright (c) 2004-2023 All Rights Reserved.
  */
-package com.alibaba.dbhub.server.domain.support.dialect.oracle;
+package com.alibaba.dbhub.server.domain.support.dialect.sqlserver;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
-import com.alibaba.dbhub.server.domain.support.dialect.oracle.mapper.OracleMetaSchemaMapper;
+import com.alibaba.dbhub.server.domain.support.dialect.mysql.mapper.MysqlMetaSchemaMapper;
+import com.alibaba.dbhub.server.domain.support.dialect.sqlserver.mapper.SqlServerMetaSchemaMapper;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.model.CreateTableSql;
 import com.alibaba.dbhub.server.domain.support.model.Function;
 import com.alibaba.dbhub.server.domain.support.model.Procedure;
 import com.alibaba.dbhub.server.domain.support.model.Table;
@@ -26,19 +28,9 @@ import com.google.common.collect.Lists;
 
 /**
  * @author jipengfei
- * @version : OracleMetaSchemaSupport.java
+ * @version : SqlserverMetaSchemaSupport.java
  */
-public class OracleMetaSchemaSupport implements MetaSchema<Table> {
-
-    private OracleMetaSchemaMapper getMapper() {
-        return DbhubDataSource.getInstance().getMapper(OracleMetaSchemaMapper.class);
-    }
-
-    @Override
-    public DbTypeEnum dbType() {
-        return DbTypeEnum.ORACLE;
-    }
-
+public class SqlServerMetaSchemaSupport implements MetaSchema<Table> {
     @Override
     public List<String> databases() {
         return getMapper().showDatabases();
@@ -50,18 +42,23 @@ public class OracleMetaSchemaSupport implements MetaSchema<Table> {
     }
 
     @Override
+    public DbTypeEnum dbType() {
+        return DbTypeEnum.SQLSERVER;
+    }
+
+    @Override
     public String tableDDL(String databaseName, String schemaName, String tableName) {
-        return getMapper().showCreateTable(schemaName, tableName);
+        return getMapper().showCreateTable(databaseName, tableName);
     }
 
     @Override
     public void dropTable(String databaseName, String schemaName, String tableName) {
-        getMapper().dropTable(tableName);
+        getMapper().dropTable(databaseName, tableName);
     }
 
     @Override
-    public List<Table> tables(String databaseName, String schemaName) {
-        return getMapper().selectTables(databaseName);
+    public List tables(String databaseName, String schemaName) {
+        return getMapper().selectTables(databaseName, schemaName);
     }
 
     @Override
@@ -85,17 +82,16 @@ public class OracleMetaSchemaSupport implements MetaSchema<Table> {
     }
 
     @Override
-    public List<? extends TableIndex> indexes(String databaseName, String schemaName, String tableName) {
+    public List<TableIndex> indexes(String databaseName, String schemaName, String tableName) {
         List<TableIndex> dataList = Lists.newArrayList();
         List<TableIndexColumnUnion> list = getMapper().selectTableIndexes(databaseName, tableName);
-        Map<String, List<TableIndexColumnUnion>> map = list.stream().collect(
-            Collectors.groupingBy(TableIndexColumnUnion::getIndexName));
-        for (Map.Entry<String, List<TableIndexColumnUnion>> entry1 : map.entrySet()) {
-            TableIndexColumnUnion first = entry1.getValue().get(0);
-            dataList.add(buildTableIndex(tableName, entry1.getKey(), first.getType(), first.getComment(),
-                entry1.getValue()));
-        }
-        //按列分组
+            Map<String, List<TableIndexColumnUnion>> map = list.stream().collect(
+                Collectors.groupingBy(TableIndexColumnUnion::getIndexName));
+            for (Map.Entry<String, List<TableIndexColumnUnion>> entry1 : map.entrySet()) {
+                TableIndexColumnUnion first = entry1.getValue().get(0);
+                dataList.add(buildTableIndex(tableName, entry1.getKey(), first.getType(), first.getComment(),
+                    entry1.getValue()));
+            }
         return dataList;
     }
 
@@ -122,7 +118,11 @@ public class OracleMetaSchemaSupport implements MetaSchema<Table> {
     }
 
     @Override
-    public List<? extends TableColumn> columns(String databaseName, String schemaName, String tableName) {
-        return getMapper().selectColumns(tableName);
+    public List<TableColumn> columns(String databaseName, String schemaName, String tableName) {
+        return getMapper().selectColumns(databaseName, tableName);
+    }
+
+    private SqlServerMetaSchemaMapper getMapper() {
+        return DbhubDataSource.getInstance().getMapper(SqlServerMetaSchemaMapper.class);
     }
 }

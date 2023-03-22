@@ -5,7 +5,6 @@
 package com.alibaba.dbhub.server.domain.support.dialect.h2;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,11 +12,14 @@ import java.util.stream.Collectors;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.h2.mapper.H2MetaSchemaMapper;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.model.Function;
+import com.alibaba.dbhub.server.domain.support.model.Procedure;
 import com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
+import com.alibaba.dbhub.server.domain.support.model.Trigger;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 
@@ -32,20 +34,24 @@ import org.springframework.util.CollectionUtils;
 @Slf4j
 public class H2MetaSchemaSupport implements MetaSchema<Table> {
 
-
     @Override
-    public List<String> showDatabases() {
+    public List<String> databases() {
         return EasyCollectionUtils.toList(getMapper().showDatabases(), ShowDatabaseResult::getDatabase);
     }
 
     @Override
-    public DbTypeEnum supportDbType() {
+    public List<String> schemas(String databaseName) {
+        return null;
+    }
+
+    @Override
+    public DbTypeEnum dbType() {
         return DbTypeEnum.H2;
 
     }
 
     @Override
-    public String showCreateTable(String databaseName, String schemaName, String tableName) {
+    public String tableDDL(String databaseName, String schemaName, String tableName) {
         try {
             return getMapper().showCreateTable(databaseName, tableName);
         } catch (PersistenceException e) {
@@ -63,45 +69,49 @@ public class H2MetaSchemaSupport implements MetaSchema<Table> {
     }
 
     @Override
-    public int queryTableCount(String databaseName, String schemaName) {
-        return getMapper().selectTableCount(databaseName).intValue();
+    public List<Table> tables(String databaseName, String schemaName) {
+        return getMapper().selectTables(databaseName);
     }
 
     @Override
-    public List<Table> queryTableList(String databaseName, String tableName, int pageNo,
-        int pageSize) {
-        return getMapper().selectTables(databaseName, pageSize, pageNo <= 1 ? 0 : (pageNo - 1) * pageSize);
-    }
-
-    @Override
-    public Table queryTable(String databaseName, String schemaName, String tableName) {
+    public List<Table> views(String databaseName, String schemaName) {
         return null;
     }
 
     @Override
-    public List<TableColumn> queryColumnList(String databaseName, String schemaName,
-        List<String> tableNames) {
-        return tableNames.stream().map(tableName -> getMapper().selectColumns(databaseName, tableName))
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList());
+    public List<Function> functions(String databaseName, String schemaName) {
+        return null;
     }
 
     @Override
-    public List<TableIndex> queryIndexList(String databaseName, String schemaName,
-        List<String> tableNames) {
+    public List<Trigger> triggers(String databaseName, String schemaName) {
+        return null;
+    }
+
+    @Override
+    public List<Procedure> procedures(String databaseName, String schemaName) {
+        return null;
+    }
+
+    @Override
+    public List<TableColumn> columns(String databaseName, String schemaName, String tableName) {
+        return getMapper().selectColumns(databaseName, tableName);
+    }
+
+    @Override
+    public List<TableIndex> indexes(String databaseName, String schemaName,
+        String tableName) {
         List<TableIndex> indexList = new ArrayList<>();
         H2MetaSchemaMapper mapper = getMapper();
-        for (String tableName : tableNames) {
-            List<TableIndex> tableIndexList = mapper.selectTableIndexes(databaseName, tableName);
-            if (!CollectionUtils.isEmpty(tableIndexList)) {
-                List<TableIndexColumn> columnList = mapper.selectTableIndexColumns(databaseName, tableName);
-                Map<String, List<TableIndexColumn>> columnMap = EasyCollectionUtils.stream(columnList)
-                    .collect(Collectors.groupingBy(TableIndexColumn::getIndexName));
-                for (TableIndex tableIndex : tableIndexList) {
-                    tableIndex.setColumnList(columnMap.get(tableIndex.getName()));
-                }
-                indexList.addAll(tableIndexList);
+        List<TableIndex> tableIndexList = mapper.selectTableIndexes(databaseName, tableName);
+        if (!CollectionUtils.isEmpty(tableIndexList)) {
+            List<TableIndexColumn> columnList = mapper.selectTableIndexColumns(databaseName, tableName);
+            Map<String, List<TableIndexColumn>> columnMap = EasyCollectionUtils.stream(columnList)
+                .collect(Collectors.groupingBy(TableIndexColumn::getIndexName));
+            for (TableIndex tableIndex : tableIndexList) {
+                tableIndex.setColumnList(columnMap.get(tableIndex.getName()));
             }
+            indexList.addAll(tableIndexList);
         }
         return indexList;
     }
