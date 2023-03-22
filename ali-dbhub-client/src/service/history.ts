@@ -1,21 +1,12 @@
 import createRequest from "./base";
-import { IPageResponse, IConnectionBase,IPageParams,IHistoryRecord, IWindowTab } from '@/types';
-import { DatabaseTypeCode,ConsoleStatus } from '@/utils/constants'
+import { IPageResponse, IConnectionBase,IPageParams,IHistoryRecord, IWindowTab, ISavedConsole } from '@/types';
+import { DatabaseTypeCode, ConsoleStatus, TabOpened } from '@/utils/constants'
 
 export interface IGetHistoryListParams extends IPageParams  {
   dataSourceId?: string;
   databaseName?: string;
+  tabOpened?: TabOpened;
 }
-
-export interface ISavedConsole {
-  dataSourceId: number;
-  databaseName: string;
-  ddl: string;
-  id: number;
-  name: string;
-  type: DatabaseTypeCode;
-}
-
 export interface ISaveBasicInfo {
   name: string;
   type: DatabaseTypeCode;
@@ -25,7 +16,7 @@ export interface ISaveBasicInfo {
 }
 export interface ISaveConsole extends ISaveBasicInfo {
   status: ConsoleStatus;
-  tabOpened: 'y' | 'n';
+  tabOpened: TabOpened;
 }
 
 export interface IUpdateWindowParams {

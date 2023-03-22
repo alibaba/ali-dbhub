@@ -19,8 +19,8 @@ import { OSnow } from '@/utils'
 export interface IDatabaseQueryProps {
   activeTabKey: string;
   windowTab: ISQLQueryConsole;
-  treeNodeClickMessage: ITreeNode | null;
-  setTreeNodeClickMessage: Function;
+  treeNodeClickMessage?: ITreeNode | null;
+  setTreeNodeClickMessage?: Function;
 }
 
 interface IProps extends IDatabaseQueryProps {
@@ -32,7 +32,6 @@ let monacoEditorExternalList: any = {}
 export default memo<IProps>(function DatabaseQuery(props) {
   const { activeTabKey, windowTab, treeNodeClickMessage, setTreeNodeClickMessage } = props
   const params: { id: string, type: string } = useParams();
-  const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode;
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
   const monacoEditor = useRef<any>(null);
@@ -59,7 +58,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
           model.setValue(`${value}\nSELECT * FROM ${nodeData?.parent?.name} WHERE ${nodeData.name} = ''`)
         }
       }
-      setTreeNodeClickMessage(null)
+      setTreeNodeClickMessage?.(null)
     }
   }, [treeNodeClickMessage])
 
@@ -123,7 +122,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
       let p = {
         dataSourceId: windowTab?.dataSourceId,
         databaseName: windowTab?.databaseName,
-        name: windowTab?.label,
+        name: windowTab?.name,
         ddl: sql,
         type: params.type as DatabaseTypeCode
       }
@@ -137,8 +136,8 @@ export default memo<IProps>(function DatabaseQuery(props) {
   const saveWindowTabTab = () => {
     let p = {
       id: windowTab.consoleId,
-      name: windowTab?.label,
-      type: dataBaseType,
+      name: windowTab?.name,
+      type: 'mySql',
       dataSourceId: +params.id,
       databaseName: windowTab.databaseName,
       status: WindowTabStatus.RELEASE,

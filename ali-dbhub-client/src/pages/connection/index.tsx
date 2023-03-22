@@ -105,7 +105,7 @@ export default memo<IProps>(function ConnectionPage(props) {
 
   const jumpPage = (item: IConnectionBase) => {
     history.push({
-      pathname: `/database/${item.type}/${item.id}`,
+      pathname: `/database`,
     });
   };
 
