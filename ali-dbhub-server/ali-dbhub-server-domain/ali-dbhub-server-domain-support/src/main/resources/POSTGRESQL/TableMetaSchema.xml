@@ -63,14 +63,10 @@
         collation_schema,
         collation_name
         from information_schema.Columns
-        where table_schema= #{tableSchema,jdbcType=VARCHAR} and table_name IN
-        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
-            #{item}
-        </foreach>
+        where table_schema= #{tableSchema,jdbcType=VARCHAR}
+        and table_name =  #{tableName}
        order by ordinal_position;
     </select>
-
-
 
     <update id="dropTable">
         drop table ${tableName};
@@ -84,8 +80,6 @@
             AND schemaname=#{tableSchema,jdbcType=VARCHAR}
         </if>
         ORDER  BY  tablename
-        limit #{pageSize}
-        offset #{offset}
         ;
     </select>
 
@@ -216,9 +210,6 @@
     </select>
     <select id="selectTableIndexes" resultMap="TableIndexResultMap">
         select schemaname,tablename,indexname,indexdef
-        from pg_indexes  where schemaname=#{tableSchema,jdbcType=VARCHAR} and tablename IN
-        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
-            #{item}
-        </foreach>;
+        from pg_indexes  where schemaname=#{tableSchema,jdbcType=VARCHAR} and tablename = #{tableName};
     </select>
 </mapper>

@@ -53,8 +53,7 @@
     <select id="selectTables" resultMap="BaseTableResultMap">
         select TABLE_NAME,REMARKS from INFORMATION_SCHEMA.TABLES
         where table_schema =  #{databaseName}
-        order by TABLE_NAME desc
-        limit #{pageIndex},#{pageSize} ;
+        order by TABLE_NAME desc ;
     </select>
 
     <select id="selectColumns" resultMap="BaseTableColumnResultMap">
