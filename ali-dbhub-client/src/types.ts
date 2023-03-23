@@ -13,8 +13,8 @@ export interface IPageResponse<T> {
   pageSize: number;
   total: number;
   hasNextPage?: boolean;
-
 }
+
 export interface IPageParams {
   searchKey?:string;
   pageNo: number;
@@ -112,7 +112,7 @@ export interface IOptions {
 }
 
 export interface IConsoleBasic {
-  label: string; // 名称
+  name: string; // 名称
   key: string; // key 唯一
   type: ConsoleType; // 类型
   DBType: DatabaseTypeCode; // 数据库类型
@@ -133,3 +133,12 @@ export interface IEditTableConsole extends IConsoleBasic  {
 }
 
 export type IConsole = IEditTableConsole | ISQLQueryConsole 
+
+export interface ISavedConsole {
+  id: number;
+  name: string;
+  ddl: string;
+  dataSourceId: number;
+  databaseName: string;
+  type: DatabaseTypeCode;
+}
