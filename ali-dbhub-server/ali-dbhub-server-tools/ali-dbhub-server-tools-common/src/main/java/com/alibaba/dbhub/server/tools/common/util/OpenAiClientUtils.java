@@ -50,6 +50,7 @@ public class OpenAiClientUtils {
         try {
             URL url = new URL(API_URL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
             // 设置请求秘钥
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Authorization", "Bearer " + apiKey);

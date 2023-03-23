@@ -17,7 +17,6 @@ export const treeConfig: ITreeConfig = {
         let p = {
           id: parentData.key
         }
-
         connectionService.getDBList(p).then(res => {
           const data: ITreeNode[] = res.map(t => {
             return {
@@ -38,7 +37,7 @@ export const treeConfig: ITreeConfig = {
           r(data);
         })
       })
-    }
+    },
   },
 
   [TreeNodeType.TABLES]: {
