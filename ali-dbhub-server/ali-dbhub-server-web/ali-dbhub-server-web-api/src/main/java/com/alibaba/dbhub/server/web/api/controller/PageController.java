@@ -31,4 +31,5 @@ public class PageController {
     public String register(){
         return "register";
     }
+
 }
