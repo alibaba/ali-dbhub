@@ -4,20 +4,17 @@ import classnames from 'classnames';
 import { history, useParams } from 'umi';
 import { Button, DatePicker, Input, Table, Modal, Tabs, Dropdown, message, Tooltip } from 'antd';
 import i18n from '@/i18n';
-import AppHeader from '@/components/AppHeader';
 import Iconfont from '@/components/Iconfont';
 import Tree from '@/components/Tree';
 import MonacoEditor, { setEditorHint, IHintData } from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
-import DatabaseQuery from '@/components/DatabaseQuery';
 import SearchResult from '@/components/SearchResult';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import OperationTableModal, { IOperationData } from '@/components/OperationTableModal';
-import ModifyTable from '@/components/ModifyTable/ModifyTable';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import GlobalAddMenu from '@/components/GlobalAddMenu';
+import ConsoleList from '@/components/ConsoleList';
 import connectionServer from '@/service/connection';
-import historyServer from '@/service/history';
 import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
 import { IConnectionBase, ITreeNode, IWindowTab, IDB, IConsole, ISQLQueryConsole, IEditTableConsole } from '@/types'
@@ -62,8 +59,6 @@ function getCurrentPageInfo(): IParams {
 }
 
 export default memo<IProps>(function DatabasePage({ className }) {
-  const params: { id: string, type: DatabaseTypeCode } = useParams();
-  const dataBaseType = params.type.toUpperCase() as DatabaseTypeCode;
   const letfRef = useRef<HTMLDivElement | null>(null);
   const [connectionDetaile, setConnectionDetaile] = useState<IConnectionBase>()
   const [currentDB, setCurrentDB] = useState<IDB>()
@@ -116,18 +111,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }, [openDropdown])
 
   useEffect(() => {
-    if (!params.id) return
-    getDetaile();
-    getDBList();
-  }, [params.id])
-
-  useEffect(() => {
-    if (!currentDB) return
-    getWindowList()
-    getTableList(currentDB)
-  }, [currentDB])
-
-  useEffect(() => {
     if (!DBList?.length) return
     const locationHash = getCurrentPageInfo()
     let flag = false;
@@ -171,190 +154,9 @@ export default memo<IProps>(function DatabasePage({ className }) {
     setCurrentPosition()
   }
 
-  const getWindowList = () => {
-    let p = {
-      pageNo: 1,
-      pageSize: 999, // TODO: 查全部保存
-      dataSourceId: params.id,
-      databaseName: currentDB!.name,
-      tabOpened: 'y',
-    }
-    historyServer.getSaveList(p).then(res => {
-      const locationHash = getCurrentPageInfo();
-      if (res?.data?.length) {
-        const list: IConsole[] = res.data.map(item => {
-          return {
-            dataSourceId: +params.id,
-            label: item.name,
-            key: item.id.toString(),
-            consoleId: item.id,
-            DBType: item.type,
-            ddl: item.ddl,
-            type: ConsoleType.SQLQ,
-            databaseName: currentDB!.name,
-          }
-        })
-        let flag = false;
-        list?.map(item => {
-          if (locationHash.id && item.key == locationHash.id) {
-            setActiveKey(item.key)
-            flag = true
-          }
-        })
-        if (!flag) {
-          setActiveKey(list?.[0]?.key)
-        }
-        setWindowList(list)
-      } else {
-        addWindowTab([])
-      }
-    })
-  }
-
-  const getDBList = () => {
-    connectionServer.getDBList({
-      id: params.id
-    }).then(res => {
-      setDBList(res.map(item => {
-        return {
-          ...item,
-          databaseType: params.type
-        }
-      }))
-    })
-  }
-
-  const getTableList = (currentDB: IDB) => {
-    setTreeData(undefined)
-    let p = {
-      dataSourceId: +params.id,
-      databaseName: currentDB?.name,
-      pageNo: 1,
-      pageSize: 10000,
-    }
-
-    return mysqlServer.getList(p).then(res => {
-      const tableList: ITreeNode[] = res.data?.map(item => {
-        return {
-          name: item.name,
-          nodeType: TreeNodeType.TABLE,
-          key: item.name,
-          children: [
-            {
-              key: '1',
-              name: i18n('common.text.column'),
-              nodeType: TreeNodeType.LINETOTAL,
-              children: toTreeList({
-                data: item.columnList, nodeType: TreeNodeType.LINE, parent: {
-                  name: item.name,
-                  nodeType: TreeNodeType.TABLE,
-                  key: item.name
-                }
-              })
-            },
-            {
-              key: '2',
-              name: i18n('common.text.indexes'),
-              nodeType: TreeNodeType.INDEXESTOTAL,
-              children: toTreeList({
-                data: item.indexList, nodeType: TreeNodeType.INDEXES, parent: {
-                  name: item.name,
-                  nodeType: TreeNodeType.TABLE,
-                  key: item.name
-                }
-              })
-            }
-          ]
-        }
-      })
-
-      fixedTreeData.current = tableList
-      setTreeData(tableList)
-      disposalEditorHintData(tableList)
-      return tableList
-    })
-  }
-
-  const getDetaile = () => {
-    let p = {
-      id: params.id
-    }
-    connectionServer.getDetaile(p).then(res => {
-      setConnectionDetaile(res)
-    })
-  }
-
   const callback = () => {
     monacoEditorExternalList[activeKey!] && monacoEditorExternalList[activeKey!].layout()
   }
-
-  const addWindowTab = (windowList: IConsole[]) => {
-    let p = {
-      name: windowName,
-      type: dataBaseType,
-      dataSourceId: +params.id,
-      databaseName: currentDB?.name!,
-      status: ConsoleStatus.DRAFT,
-      ddl: 'SELECT * FROM',
-      tabOpened: 'y' as 'y' | 'n'
-    }
-    historyServer.saveWindowTab(p).then(res => {
-      const newWindow: IConsole = {
-        label: windowName,
-        key: res.toString(),
-        type: ConsoleType.EDITTABLE,
-        DBType: dataBaseType,
-        databaseName: currentDB?.name!,
-        dataSourceId: +params.id,
-        consoleId: res,
-        ddl: 'SELECT * FROM',
-      }
-      setWindowList([
-        ...windowList,
-        newWindow
-      ])
-      setActiveKey(res.toString());
-      setIsModalVisible(false);
-    })
-  };
-
-  const closeWindowTab = (targetKey: string) => {
-    let newActiveKey = activeKey;
-    let lastIndex = -1;
-    windowList.forEach((item, i) => {
-      if (item.key === targetKey) {
-        lastIndex = i - 1;
-      }
-    });
-    const newPanes = windowList.filter(item => item.key !== targetKey);
-    if (newPanes.length && newActiveKey === targetKey) {
-      if (lastIndex >= 0) {
-        newActiveKey = newPanes[lastIndex].key;
-      } else {
-        newActiveKey = newPanes[0].key;
-      }
-    }
-    setWindowList(newPanes);
-    setActiveKey(newActiveKey);
-    let p: any = {
-      id: targetKey,
-      tabOpened: 'n'
-    };
-    historyServer.updateWindowTab(p);
-    // historyServer.deleteWindowTab(p);
-  };
-
-  const onEdit = (targetKey: any, action: 'add' | 'remove') => {
-    if (action === 'add') {
-      setIsModalVisible(true)
-    } else {
-      closeWindowTab(targetKey);
-    }
-  };
-
-  const onChangeTab = (newActiveKey: string) => {
-    setActiveKey(newActiveKey);
-  };
 
   const searchTable = (value: string) => {
     if (fixedTreeData.current?.length) {
@@ -362,90 +164,60 @@ export default memo<IProps>(function DatabasePage({ className }) {
     }
   }
 
-  const DBListMenu = () => {
-    const switchDB = (item: IDB) => {
-      setOpenDropdown(false)
-      if (item.name !== currentDB?.name) {
-        setCurrentDB(item)
-        getTableList(item)
-      }
-    }
-
-    return <Menu>
-      {
-        DBList?.map(item => {
-          return <MenuItem key={item.name} onClick={switchDB.bind(null, item)}>
-            <div className={styles.switchDBItem}>
-              <div className={styles.DBName}>{item.name}</div>
-            </div>
-          </MenuItem>
-        })
-      }
-    </Menu>
-  }
-
-  function handleOk() {
-    addWindowTab(windowList);
-  }
-
-  function handleCancel() {
-    setIsModalVisible(false);
-  }
-
   function nodeDoubleClick(data: ITreeNode) {
     setTreeNodeClickMessage(data)
   }
 
-  function openOperationTableModal(value: IOperationData) {
-    let data = {
-      ...value,
-      database: currentDB,
-      connectionDetaile: connectionDetaile
-    }
-    setOperationData(data)
-    if (value.type === 'edit') {
-      let flag = false
-      windowList?.map(item => {
-        if (item.key === `editTable-${value.nodeData?.name}`) {
-          flag = true
-        }
-      })
-      const { databaseName, id } = getCurrentPageInfo();
-      if (!flag) {
-        const newData: IEditTableConsole = {
-          label: `编辑表-${value.nodeData?.name}`,
-          key: `editTable-${value.nodeData?.name}`,
-          type: ConsoleType.EDITTABLE,
-          DBType: params.type,
-          databaseName: databaseName,
-          dataSourceId: +params.id,
-          tableData: value.nodeData!,
-        }
-        setWindowList([...windowList, newData])
-        setActiveKey(`editTable-${value.nodeData?.name}`)
-      } else {
-        setActiveKey(`editTable-${value.nodeData?.name}`)
-      }
-    }
-    if (value.type === 'delete') {
-      Modal.confirm({
-        title: '你确定要删除该表吗',
-        onOk: () => {
-          let p = {
-            tableName: value?.nodeData?.name!,
-            dataSourceId: connectionDetaile?.id!,
-            databaseName: currentDB?.name!
-          }
-          mysqlServer.deleteTable(p).then(res => {
-            getTableList(currentDB!);
-            message.success('删除成功');
-          })
-        },
-        cancelText: '取消',
-        okText: '确认'
-      });
-    }
-  }
+  // function openOperationTableModal(value: IOperationData) {
+  //   let data = {
+  //     ...value,
+  //     database: currentDB,
+  //     connectionDetaile: connectionDetaile
+  //   }
+  //   setOperationData(data)
+  //   if (value.type === 'edit') {
+  //     let flag = false
+  //     windowList?.map(item => {
+  //       if (item.key === `editTable-${value.nodeData?.name}`) {
+  //         flag = true
+  //       }
+  //     })
+  //     const { databaseName, id } = getCurrentPageInfo();
+  //     if (!flag) {
+  //       const newData: IEditTableConsole = {
+  //         label: `编辑表-${value.nodeData?.name}`,
+  //         key: `editTable-${value.nodeData?.name}`,
+  //         type: ConsoleType.EDITTABLE,
+  //         DBType: params.type,
+  //         databaseName: databaseName,
+  //         dataSourceId: +params.id,
+  //         tableData: value.nodeData!,
+  //       }
+  //       setWindowList([...windowList, newData])
+  //       setActiveKey(`editTable-${value.nodeData?.name}`)
+  //     } else {
+  //       setActiveKey(`editTable-${value.nodeData?.name}`)
+  //     }
+  //   }
+  //   if (value.type === 'delete') {
+  //     Modal.confirm({
+  //       title: '你确定要删除该表吗',
+  //       onOk: () => {
+  //         let p = {
+  //           tableName: value?.nodeData?.name!,
+  //           dataSourceId: connectionDetaile?.id!,
+  //           databaseName: currentDB?.name!
+  //         }
+  //         mysqlServer.deleteTable(p).then(res => {
+  //           getTableList(currentDB!);
+  //           message.success('删除成功');
+  //         })
+  //       },
+  //       cancelText: '取消',
+  //       okText: '确认'
+  //     });
+  //   }
+  // }
 
   function createTable() {
     let flag = false
@@ -464,20 +236,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
       setActiveKey(`newTable-${currentDB?.name}`)
     } else {
       setActiveKey(`newTable-${currentDB?.name}`)
-    }
-  }
-
-  function renderCurrentTab(i: IConsole) {
-    if (i.type === 'editTable') {
-      return <ModifyTable data={i as IEditTableConsole}></ModifyTable>
-    } else {
-      return <DatabaseQuery
-        treeNodeClickMessage={treeNodeClickMessage}
-        setTreeNodeClickMessage={setTreeNodeClickMessage}
-        windowTab={i as ISQLQueryConsole}
-        key={i.key}
-        activeTabKey={activeKey!}
-      />
     }
   }
 
@@ -524,7 +282,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
             <span>{i18n('connection.button.overview')}</span>
           </div>
           <Tree
-            openOperationTableModal={openOperationTableModal}
+            // openOperationTableModal={openOperationTableModal}
             nodeDoubleClick={nodeDoubleClick}
             cRef={treeRef}
             className={styles.tree}
@@ -534,28 +292,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
       </div>
       <DraggableDivider callback={callback} volatileRef={letfRef} />
       <div className={styles.main}>
-        <AppHeader className={styles.appHeader} showRight={false}>
-          <div className={styles.tabsBox}>
-            <Tabs
-              type="editable-card"
-              onChange={onChangeTab}
-              activeKey={activeKey}
-              onEdit={onEdit}
-              items={windowList}
-            >
-            </Tabs>
-          </div>
-        </AppHeader>
-        <div className={styles.databaseQueryBox}>
-          {
-            currentDB &&
-            windowList?.map((i: IConsole, index: number) => {
-              return <div key={index} className={classnames(styles.windowContent, { [styles.concealTab]: activeKey !== i.key })}>
-                {renderCurrentTab(i)}
-              </div>
-            })
-          }
-        </div>
+        <ConsoleList></ConsoleList>
         <div className={styles.footer}>
           <div className={classnames({ [styles.reversalIconBox]: !isUnfold }, styles.iconBox)} onClick={moveLeftAside}>
             <Iconfont code='&#xeb93;'></Iconfont>
@@ -564,25 +301,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
         </div>
       </div>
     </div>
-    <Modal
-      title="新窗口名称"
-      open={isModalVisible}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      footer={
-        <>
-          <Button onClick={handleCancel} className={styles.cancel}>
-            取消
-          </Button>
-          <Button type="primary" onClick={handleOk} className={styles.cancel}>
-            添加
-          </Button>
-        </>
-      }
-    >
-
-      <Input value={windowName} onChange={(e) => { setWindowName(e.target.value) }} />
-    </Modal>
     {
       (operationData?.type === 'new' || operationData?.type === 'export') &&
       <OperationTableModal

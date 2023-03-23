@@ -116,4 +116,9 @@ export enum ConsoleType {
   EDITTABLE = 'editTable'
 }
 
+export enum  TabOpened {
+  IS_OPEN = 'Y',
+  NOT_OPEN = 'N'
+}
+
 

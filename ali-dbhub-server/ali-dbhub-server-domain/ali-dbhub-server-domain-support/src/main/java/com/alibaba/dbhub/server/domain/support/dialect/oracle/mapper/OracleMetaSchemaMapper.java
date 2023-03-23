@@ -30,10 +30,10 @@ public interface OracleMetaSchemaMapper {
     /**
      * 查询所有表中所有列信息
      *
-     * @param tableNames
+     * @param tableName
      * @return
      */
-    List<TableColumn> selectColumns( @Param("tableNames") List<String> tableNames);
+    List<TableColumn> selectColumns( @Param("tableName") String tableName);
 
     /**
      * 删除表
@@ -46,12 +46,9 @@ public interface OracleMetaSchemaMapper {
      * 查询所有的表
      *
      * @param tableSchema
-     * @param start
-     * @param end
      * @return
      */
-    List<Table> selectTables(@Param("tableSchema") String tableSchema, @Param("start") long start,
-        @Param("end") long end);
+    List<Table> selectTables(@Param("tableSchema") String tableSchema);
 
     /**
      * @param tableSchema
@@ -72,9 +69,9 @@ public interface OracleMetaSchemaMapper {
      * 查询表索引信息
      *
      * @param databaseName
-     * @param tableNames
+     * @param tableName
      * @return
      */
     List<TableIndexColumnUnion> selectTableIndexes(@Param("databaseName") String databaseName,
-        @Param("tableNames") List<String> tableNames);
+        @Param("tableName") String tableName);
 }

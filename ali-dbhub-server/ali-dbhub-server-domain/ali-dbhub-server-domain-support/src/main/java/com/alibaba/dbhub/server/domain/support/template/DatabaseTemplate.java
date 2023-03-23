@@ -22,7 +22,7 @@ public class DatabaseTemplate implements DatabaseOperations {
 
     @Override
     public List<Database> queryAll(DatabaseQueryAllParam param) {
-        List<String> databases = DbhubContext.getMetaSchema().showDatabases();
+        List<String> databases = DbhubContext.getMetaSchema().databases();
         return EasyCollectionUtils.toList(databases, name -> Database.builder().name(name).build());
     }
 }
