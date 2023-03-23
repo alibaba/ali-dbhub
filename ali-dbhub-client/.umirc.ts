@@ -23,7 +23,7 @@ export default defineConfig({
     type: 'hash',
   },
   base: '/',
-  publicPath: './static/front',
+  publicPath: '/',
   // publicPath: '/',
   hash: false,
   routes: [
@@ -40,7 +40,7 @@ export default defineConfig({
           routes: [
             {
               exact: true,
-              path: '/database/:type/:id',
+              path: '/database',
               component: '@/pages/database',
             },
           ],

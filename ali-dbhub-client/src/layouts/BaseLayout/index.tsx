@@ -8,7 +8,7 @@ import Setting from '@/components/Setting';
 import BrandLogo from '@/components/BrandLogo';
 import i18n from '@/i18n';
 
-interface Iprops {}
+interface Iprops { }
 
 interface INavItem {
   title: string;
@@ -44,7 +44,7 @@ const LNKConfig: INavItem[] = [
 export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
   const [activeNav, setActiveNav] = useState<string>(LNKConfig[0].path);
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   function switchingNav(item: INavItem) {
     if (item.openBrowser) {
