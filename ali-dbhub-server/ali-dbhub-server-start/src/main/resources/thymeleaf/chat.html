@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="/static/css/markdown.css" rel="stylesheet" type="text/css"/>
+
+<head>
+    <meta charset="UTF-8">
+    <title>战损版ChatGPT</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="image/favicon-32x32.png">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/static/js/markdown.min.js"></script>
+    <script src="/static/js/eventsource.min.js"></script>
+    <script>
+        function setText(text, uuid_str) {
+            let content = document.getElementById(uuid_str)
+            content.innerHTML = marked(text);
+        }
+
+        function uuid() {
+            var s = [];
+            var hexDigits = "0123456789abcdef";
+            for (var i = 0; i < 36; i++) {
+                s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+            }
+            s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
+            s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
+            s[8] = s[13] = s[18] = s[23] = "-";
+
+            var uuid = s.join("");
+            return uuid;
+        }
+
+
+        window.onload = function () {
+            let disconnectBtn = document.getElementById("disconnectSSE");
+            let messageElement = document.getElementById("message");
+            let chat = document.getElementById("chat");
+            let sse;
+            let uid = window.localStorage.getItem("uid");
+            if (uid == null || uid == '' || uid == 'null') {
+                uid = uuid();
+            }
+            // 设置本地存储
+            window.localStorage.setItem("uid", uid);
+            // 回车事件
+            messageElement.onkeydown = function () {
+                if (window.event.keyCode === 13) {
+                    if (!messageElement.value) {
+                        return;
+                    }
+                    let text = '';
+                    let uuid_str = uuid();
+                    const eventSource = new EventSourcePolyfill('/api/ai/chat?message=' + messageElement.value, {
+                        headers: {
+                            'uid': uid
+                        }
+                    });
+                    eventSource.onopen = (event) => {
+                        console.log("onopen", event.readyState, event.target);
+                        sse = event.target;
+                        //新增问题框
+                        chat.innerHTML += '<tr><td style="height: 50px;">' + messageElement.value + '</td></tr>';
+                        messageElement.value = null
+                        //新增答案框
+                        chat.innerHTML += '<tr><td><article id="' + uuid_str + '" class="markdown-body"></article></td></tr>';
+                    };
+                    eventSource.onmessage = (event) => {
+                        if (event.data == "[DONE]") {
+                            text = '';
+                            if (sse) {
+                                sse.close();
+                            }
+                            return;
+                        }
+                        let json_data = JSON.parse(event.data)
+                        if (json_data.content == null || json_data.content == 'null') {
+                            text = '';
+                            return;
+                        }
+                        text = text + json_data.content;
+                        setText(text, uuid_str)
+
+                    };
+                    eventSource.onerror = (event) => {
+                        console.log("onerror", event);
+                        alert("服务异常请重试并联系开发者！")
+                        if (event.readyState === EventSource.CLOSED) {
+                            console.log('connection is closed');
+                        } else {
+                            console.log("Error occured", event);
+                        }
+                        event.target.close();
+                    };
+                    eventSource.addEventListener("customEventName", (event) => {
+                        console.log("Message id is " + event.lastEventId);
+                    });
+                }
+            };
+
+            disconnectBtn.onclick = function () {
+                if (sse) {
+                    sse.close();
+                }
+            };
+
+        };
+    </script>
+    <!--    <script src="js/eventsource.min.js"></script>-->
+</head>
+
+<body>
+<!--<div class="float-card-item send-btn">-->
+<!--    <a id="connectSSE" rel="noopener noreferrer">发送请求</a>-->
+<!--</div>-->
+<!--<div class="float-card-item dis-btn">-->
+<!--    <a id="disconnectSSE" rel="noopener noreferrer">断开连接</a>-->
+<!--</div>-->
+<div class="float-card">
+    <div class="float-card-item">
+        <a id="disconnectSSE" rel="noopener noreferrer">停止输出</a>
+    </div>
+</div>
+<div class="input-card">
+    <div class="input-card-item">
+        <input id="message" placeholder="输入你的问题，回车结束......" type="text">
+    </div>
+</div>
+
+</body>
+<style>
+    .markdown-body {
+        box-sizing: border-box;
+        min-width: 200px;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 45px;
+    }
+
+    @media (max-width: 767px) {
+        .markdown-body {
+            padding: 15px;
+        }
+    }
+
+    input {
+        height: 50px;
+        width: 500px;
+        font-size: 20px;
+        background: url(10) no-repeat;
+        color: #d0838e;
+    }
+
+    .container {
+        width: 980px;
+        border: 1px solid black;
+        display: flex;
+        flex-direction: column;
+        margin-left: 150px;
+        margin-top: 40px;
+    }
+
+    .input-card {
+        position: fixed;
+        display: inline-block;
+        right: 37%;
+        top: 80%;
+    }
+
+    .input-card-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .float-card {
+        position: fixed;
+        display: inline-block;
+        right: 120px;
+        top: 100px;
+    }
+
+    .float-card-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #ccccd6;
+        margin-bottom: 16px;
+    }
+
+    .float-card-item:last-child {
+        margin-bottom: 0px;
+        background-color: #d0838e;
+    }
+
+    .float-card-item a {
+        text-decoration: none;
+        color: #594649;
+        font-size: 13px;
+    }
+</style>
+</html>
