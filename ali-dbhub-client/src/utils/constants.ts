@@ -2,11 +2,16 @@ import mysqlLogo from '@/assets/mysql-logo.png';
 import redisLogo from '@/assets/redis-logo.png';
 import h2Logo from '@/assets/h2-logo.png';
 import moreDBLogo from '@/assets/moreDB-logo.png';
-import {IDatabase} from '@/types'
+import { IDatabase } from '@/types';
+
+export enum ThemeType {
+  default = 'default',
+  dark = 'dark',
+}
 
 export enum StatusType {
-  SUCCESS= 'success',
-  FAIL = 'fail'
+  SUCCESS = 'success',
+  FAIL = 'fail',
 }
 
 export enum DatabaseTypeCode {
@@ -16,46 +21,46 @@ export enum DatabaseTypeCode {
   MONGODB = 'MONGODB',
   REDIS = 'REDIS',
   H2 = 'H2',
-  POSTGRESQL = 'POSTGRESQL'
+  POSTGRESQL = 'POSTGRESQL',
 }
 
-export const databaseType:{
-  [keys:string]:IDatabase;
+export const databaseType: {
+  [keys: string]: IDatabase;
 } = {
-  [DatabaseTypeCode.MYSQL]:{
+  [DatabaseTypeCode.MYSQL]: {
     name: 'MySQL',
     img: mysqlLogo,
     code: DatabaseTypeCode.MYSQL,
-    port: 3306
+    port: 3306,
   },
   // [DatabaseTypeCode.REDIS]:{
   //   name: 'Redis',
   //   img: redisLogo,
   //   code: DatabaseTypeCode.REDIS
   // },
-  [DatabaseTypeCode.H2]:{
+  [DatabaseTypeCode.H2]: {
     name: 'H2',
     img: h2Logo,
     code: DatabaseTypeCode.H2,
-    port: 9092
+    port: 9092,
   },
-  [DatabaseTypeCode.ORACLE]:{
+  [DatabaseTypeCode.ORACLE]: {
     name: 'Oracle',
     img: moreDBLogo,
     code: DatabaseTypeCode.ORACLE,
-    port: 1521
+    port: 1521,
   },
-  [DatabaseTypeCode.POSTGRESQL]:{
+  [DatabaseTypeCode.POSTGRESQL]: {
     name: 'PostgreSql',
     img: moreDBLogo,
     code: DatabaseTypeCode.POSTGRESQL,
-    port: 5432
+    port: 5432,
   },
-}
+};
 
-export const databaseTypeList = Object.keys(databaseType).map(keys=>{
-  return databaseType[keys]
-})
+export const databaseTypeList = Object.keys(databaseType).map((keys) => {
+  return databaseType[keys];
+});
 
 export enum TreeNodeType {
   DATASOURCE = 'dataSource',
@@ -90,7 +95,7 @@ export enum TableDataType {
   DATA = 'DATA',
   BYTE = 'BYTE',
   EMPTY = 'EMPTY',
-  BIG_DECIMAL = 'BIG_DECIMAL'
+  BIG_DECIMAL = 'BIG_DECIMAL',
 }
 
 export enum TableDataTypeCorresValue {
@@ -98,12 +103,12 @@ export enum TableDataTypeCorresValue {
   DATA = 'dateValue',
   BYTE = 'byteValue',
   EMPTY = 'emptyValue',
-  BIG_DECIMAL = 'bigDecimalValue'
+  BIG_DECIMAL = 'bigDecimalValue',
 }
 
 export enum EnvType {
   DAILY = 'DAILY',
-  PRODUCT = 'PRODUCT'
+  PRODUCT = 'PRODUCT',
 }
 
 export enum OSType {
@@ -113,7 +118,7 @@ export enum OSType {
 }
 export enum ConsoleType {
   SQLQ = 'SQLQ',
-  EDITTABLE = 'editTable'
+  EDITTABLE = 'editTable',
 }
 
 export enum  TabOpened {
