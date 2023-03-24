@@ -1,8 +1,10 @@
 package com.alibaba.dbhub.server.start;
 
+import com.unfbx.chatgpt.OpenAiStreamClient;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -17,5 +19,10 @@ public class Application {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+    }
+
+    @Bean
+    public OpenAiStreamClient openAiStreamClient() {
+        return OpenAiStreamClient.builder().apiHost("https://api.openai.com/").apiKey("").build();
     }
 }
