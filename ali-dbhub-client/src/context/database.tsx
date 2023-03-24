@@ -1,7 +1,5 @@
-
 import React, { memo, useEffect, useState, useRef, createContext } from 'react';
-const DatabaseContext = createContext({})
-
+const DatabaseContext = createContext({});
 
 export interface IDatabaseValue {
   createConsoleDialogVisible: boolean
