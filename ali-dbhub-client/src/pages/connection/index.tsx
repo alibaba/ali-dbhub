@@ -115,8 +115,6 @@ export default memo<IProps>(function ConnectionPage(props) {
     // form.resetFields();
   };
 
-  const onChange = () => { };
-
   const closeModal = () => {
     setRowData(null);
     form.resetFields();
@@ -232,7 +230,7 @@ export default memo<IProps>(function ConnectionPage(props) {
             onClick={showLinkModal}
           >
             <Iconfont code="&#xe631;"></Iconfont>
-            {i18n('connection.input.newLink')}1111
+            {i18n('connection.input.newLink')}
           </Button>
         </div>
       }
