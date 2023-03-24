@@ -23,6 +23,7 @@ import { databaseType, DatabaseTypeCode, TreeNodeType, ConsoleStatus, OSType, Co
 const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
 const { keywords } = language;
+import DatabaseContextProvider from '@/context/database';
 
 interface IProps {
   className?: any;
@@ -60,13 +61,8 @@ function getCurrentPageInfo(): IParams {
 
 export default memo<IProps>(function DatabasePage({ className }) {
   const letfRef = useRef<HTMLDivElement | null>(null);
-  const [connectionDetaile, setConnectionDetaile] = useState<IConnectionBase>()
-  const [currentDB, setCurrentDB] = useState<IDB>()
   const [activeKey, setActiveKey] = useState<string>();
-  const [windowList, setWindowList] = useState<IConsole[]>([]);
-  const [treeData, setTreeData] = useState<ITreeNode[]>();
   const fixedTreeData = useRef<ITreeNode[]>();
-  const [DBList, setDBList] = useState<IDB[]>();
   const [openDropdown, setOpenDropdown] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [windowName, setWindowName] = useState<string>('console_1');
@@ -76,10 +72,10 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [isUnfold, setIsUnfold] = useState(true);
   const [addTreeNode, setAddTreeNode] = useState<ITreeNode[]>();
   const treeRef = useRef<any>();
+
   const closeDropdownFn = () => {
     setOpenDropdown(false)
   }
-
 
   const disposalEditorHintData = (tableList: any) => {
     try {
@@ -110,26 +106,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
     }
   }, [openDropdown])
 
-  useEffect(() => {
-    if (!DBList?.length) return
-    const locationHash = getCurrentPageInfo()
-    let flag = false;
-    DBList.map(item => {
-      if (locationHash.databaseName && item.name == locationHash.databaseName) {
-        flag = true
-        setCurrentDB(item)
-      }
-    })
-    if (!flag) {
-      setCurrentDB(DBList?.[0])
-    }
-  }, [DBList])
-
-  useEffect(() => {
-    if (activeKey) {
-      setPageHash(currentDB?.name!, activeKey)
-    }
-  }, [activeKey])
 
   const moveLeftAside = () => {
     const databaseLeftAside = document.getElementById('database-left-aside');
@@ -144,24 +120,14 @@ export default memo<IProps>(function DatabasePage({ className }) {
     }
   }
 
-  function setPageHash(databaseName: string, windowId: string | number) {
-    // TODO:这里如果用正则替换应该会优雅一些
-    if (location.hash.split('?')[1]) {
-      location.hash = location.hash.split('?')[0] + `?databaseName=${databaseName}&id=${windowId}`
-    } else {
-      location.hash = location.hash + `?databaseName=${databaseName}&id=${windowId}`
-    }
-    setCurrentPosition()
-  }
-
   const callback = () => {
     monacoEditorExternalList[activeKey!] && monacoEditorExternalList[activeKey!].layout()
   }
 
   const searchTable = (value: string) => {
-    if (fixedTreeData.current?.length) {
-      setTreeData(approximateTreeNode(fixedTreeData.current, value));
-    }
+    // if (fixedTreeData.current?.length) {
+    //   setTreeData(approximateTreeNode(fixedTreeData.current, value));
+    // }
   }
 
   function nodeDoubleClick(data: ITreeNode) {
@@ -219,25 +185,25 @@ export default memo<IProps>(function DatabasePage({ className }) {
   //   }
   // }
 
-  function createTable() {
-    let flag = false
-    windowList?.map(item => {
-      if (item.key === `newTable-${currentDB?.name}`) {
-        flag = true
-      }
-    })
-    if (!flag) {
-      setWindowList([...windowList, {
-        label: `新建表-${currentDB?.name}`,
-        key: `newTable-${currentDB?.name}`,
-        tabType: 'editTable',
-        id: `newTable-${currentDB?.name}`,
-      } as any])
-      setActiveKey(`newTable-${currentDB?.name}`)
-    } else {
-      setActiveKey(`newTable-${currentDB?.name}`)
-    }
-  }
+  // function createTable() {
+  //   let flag = false
+  //   windowList?.map(item => {
+  //     if (item.key === `newTable-${currentDB?.name}`) {
+  //       flag = true
+  //     }
+  //   })
+  //   if (!flag) {
+  //     setWindowList([...windowList, {
+  //       label: `新建表-${currentDB?.name}`,
+  //       key: `newTable-${currentDB?.name}`,
+  //       tabType: 'editTable',
+  //       id: `newTable-${currentDB?.name}`,
+  //     } as any])
+  //     setActiveKey(`newTable-${currentDB?.name}`)
+  //   } else {
+  //     setActiveKey(`newTable-${currentDB?.name}`)
+  //   }
+  // }
 
   function refresh() {
     treeRef.current?.getDataSource();
@@ -247,24 +213,11 @@ export default memo<IProps>(function DatabasePage({ className }) {
     setAddTreeNode([data])
   }
 
-  return <>
+  return <DatabaseContextProvider>
     <div className={classnames(className, styles.box)}>
       <div ref={letfRef} className={styles.asideBox} id="database-left-aside">
         <div className={styles.aside}>
           <div className={styles.header}>
-            {/* <Dropdown open={openDropdown} overlay={DBListMenu} trigger={['click']}>
-              <div className={styles.currentNameBox} onClick={(event) => { event.stopPropagation(); setOpenDropdown(true) }}>
-                {
-                  currentDB &&
-                  <div className={styles.DBLogo} style={{ backgroundImage: `url(${databaseType[params.type.toUpperCase()]?.img})` }}></div>
-                }
-                <div className={styles.databaseName}>
-                  {currentDB?.name}
-                </div>
-                {(DBList?.length || 0) > 1 && <Iconfont code="&#xe7b1;"></Iconfont>}
-              </div>
-            </Dropdown> */}
-
             <div className={styles.searchBox}>
               <SearchInput onChange={searchTable} placeholder={i18n('common.text.search')}></SearchInput>
               <div className={classnames(styles.refresh, styles.button)} onClick={refresh}>
@@ -308,5 +261,5 @@ export default memo<IProps>(function DatabasePage({ className }) {
         operationData={operationData!}
       />
     }
-  </>
+  </DatabaseContextProvider>
 });
