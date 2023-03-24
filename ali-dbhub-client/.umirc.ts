@@ -23,8 +23,7 @@ export default defineConfig({
     type: 'hash',
   },
   base: '/',
-  publicPath: '/',
-  // publicPath: '/',
+  publicPath: './static/front',
   hash: false,
   routes: [
     {
@@ -85,4 +84,8 @@ export default defineConfig({
     type: 'none',
   },
   chainWebpack,
+  devServer: {
+    port: 8001,
+    host: '127.0.0.1',
+  },
 });
