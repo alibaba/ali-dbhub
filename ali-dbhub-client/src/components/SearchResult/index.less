@@ -1,23 +1,17 @@
 @import '../../var.less';
 
-.box{
+.box {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.recordIcon{
+.recordIcon {
   font-size: 16px;
   margin-right: 4px;
 }
 
-.searchResult{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.resultHeader{
+.resultHeader {
   flex-shrink: 0;
   overflow-x: scroll;
   padding: 0px 10px;
@@ -28,35 +22,35 @@
     display: none;
   }
 
-  & ::after{
+  & ::after {
     height: 0px !important;
   }
 
-  .statusIcon{
+  .statusIcon {
     margin-right: 4px;
     font-size: 12px;
   }
 
-  .successIcon{
+  .successIcon {
     color: rgb(71, 157, 255);
   }
-  
-  .failIcon{
+
+  .failIcon {
     color: red;
   }
 }
 
-.resultContent{
+.resultContent {
   flex: 1;
   width: 100%;
-  position:relative;
+  position: relative;
   overflow: scroll;
 }
 
-.tableStatus{
+.tableStatus {
   display: flex;
   align-items: center;
-  .dot{
+  .dot {
     display: inline-block;
     margin-right: 5px;
     width: 10px;
@@ -64,13 +58,12 @@
     background-color: #ff4d4f;
     border-radius: 50%;
   }
-  .successDot{
+  .successDot {
     background-color: #52c41a;
   }
 }
 
-
-.tableBox{
+.tableBox {
   position: absolute;
   top: 0;
   left: 0;
@@ -82,16 +75,16 @@
   background-color: var(--color-bg-100);
 }
 
-.cursorTableBox{
+.cursorTableBox {
   z-index: 1;
   opacity: 1;
 }
 
-.tableIndex{
+.tableIndex {
   width: 50px;
 }
 
-.tableHoverBox{
+.tableHoverBox {
   display: none;
   align-items: center;
   position: absolute;
@@ -99,26 +92,24 @@
   top: 0;
   right: 0;
   bottom: 0;
-  i{
+  i {
     font-size: 15px;
     margin: 0px 2px;
   }
-  i:hover{
+  i:hover {
     color: var(--custom-primary-color);
   }
 }
 
-.monacoEditor{
+.monacoEditor {
   height: 300px;
 }
 
-.tableItem{
+.tableItem {
   width: 100px;
   .f-lines(1);
   cursor: pointer;
-  &:hover .tableHoverBox{
+  &:hover .tableHoverBox {
     display: flex;
   }
 }
-
-
