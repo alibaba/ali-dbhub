@@ -12,33 +12,48 @@
   background-color: var(--color-bg-200);
   border-bottom: 1px solid var(--color-bg-100);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  // padding: 0px 10px;
-  button {
-    height: 20px;
-    line-height: 20px;
-    font-size: 12px;
-    border: 0;
-    padding: 0px 5px;
-    margin: 0px 5px;
-  }
-  div {
-    margin: 0px 2px;
-    padding: 0 3px;
-    height: 22px;
+  .left {
     display: flex;
-    justify-content: center;
     align-items: center;
-    border-radius: 2px;
-    &:hover {
-      filter: brightness(1.1);
-      background-color: var(--color-bg-hover);
-      cursor: pointer;
+    flex-shrink: 0;
+    button {
+      height: 20px;
+      line-height: 20px;
+      font-size: 12px;
+      border: 0;
+      padding: 0px 5px;
+      margin: 0px 5px;
+    }
+    div {
+      margin: 0px 2px;
+      padding: 0 3px;
+      height: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 2px;
+      &:hover {
+        filter: brightness(1.1);
+        background-color: var(--color-bg-hover);
+        cursor: pointer;
+      }
+    }
+    .icon {
+      font-size: 16px;
+      color: var(--custom-primary-color);
     }
   }
-  .icon {
-    font-size: 16px;
-    color: var(--custom-primary-color);
+  .right {
+    flex: 1;
+    width: 0px;
+    .f-single-line();
+    display: flex;
+    justify-content: flex-end;
+    span {
+      margin: 0px 20px;
+    }
   }
 }
 

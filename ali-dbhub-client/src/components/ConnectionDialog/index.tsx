@@ -145,6 +145,7 @@ export default memo<IProps>(function ConnectionDialog(props) {
 
   useEffect(() => {
     if (dataSourceType) {
+      setCurrentDBType(dataSourceType)
       form.setFieldValue('type', dataSourceType);
     }
   }, [dataSourceType])
@@ -165,9 +166,10 @@ export default memo<IProps>(function ConnectionDialog(props) {
       } else {
         const dataSource: ITreeNode = {
           name: p.alias,
-          key: p.alias.toString(),
+          key: res || p.id,
           nodeType: TreeNodeType.DATASOURCE,
-          dataSourceId: p.id,
+          dataSourceId: res || p.id,
+          dataType: currentDBType,
         }
         submitCallback?.(dataSource);
       }
