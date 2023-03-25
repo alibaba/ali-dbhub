@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState, useContext } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import ModifyTable from '@/components/ModifyTable/ModifyTable';
@@ -16,18 +16,16 @@ import {
 } from '@/types';
 import { TabOpened, ConsoleType, ConsoleStatus, DatabaseTypeCode } from '@/utils/constants';
 
+import { DatabaseContext } from '@/context/database'
+
 interface Iprops {
   className?: string;
 }
 
 export default memo<Iprops>(function ConsoleList(props) {
+  const { setcreateConsoleDialog } = useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [activeKey, setActiveKey] = useState<string>();
-  const [open, setOpen] = useState<boolean>(false);
-
-  useEffect(()=>{
-     // setOpen(boolean)
-  },['usereducer'])
 
   useEffect(() => {
     getConsoleList();
@@ -82,9 +80,12 @@ export default memo<Iprops>(function ConsoleList(props) {
   };
 
   const onEdit = (targetKey: any, action: 'add' | 'remove') => {
-    if (action === 'add') {
-      setOpen(true);
-    } else {
+    // if (action === 'add') {
+    //   setcreateConsoleDialog(true)
+    // } else {
+    //   closeWindowTab(targetKey);
+    // }
+    if (action === 'remove') {
       closeWindowTab(targetKey);
     }
   };
@@ -117,25 +118,27 @@ export default memo<Iprops>(function ConsoleList(props) {
   function createdCallback(newConsole: IConsole) {
     setWindowList([...windowList, newConsole]);
     setActiveKey(newConsole.key);
-    setOpen(false);
-    // usereducer触发搜索列表
   }
 
   return <div className={styles.box}>
     <AppHeader className={styles.appHeader} showRight={false}>
       <div className={styles.tabsBox}>
-        <Tabs
-          type="editable-card"
-          onChange={onChangeTab}
-          activeKey={activeKey}
-          onEdit={onEdit}
-          items={windowList.map(t => {
-            return {
-              key: t.key,
-              label: t.name
-            }
-          })}
-        ></Tabs>
+        {
+          !!windowList.length &&
+          <Tabs
+            hideAdd
+            type="editable-card"
+            onChange={onChangeTab}
+            activeKey={activeKey}
+            onEdit={onEdit}
+            items={windowList.map(t => {
+              return {
+                key: t.key,
+                label: t.name
+              }
+            })}
+          ></Tabs>
+        }
       </div>
     </AppHeader>
     <div className={styles.databaseQueryBox}>
@@ -152,22 +155,14 @@ export default memo<Iprops>(function ConsoleList(props) {
         );
       })}
     </div>
-    <CreateConsoleModal
-      open={open}
-      setOpen={setOpen}
-      createdCallback={createdCallback}
-    />
+    <CreateConsoleModal createdCallback={createdCallback} />
   </div>
 
 });
 
-export interface ICreateConsoleModal {
-  createdCallback: (newConsole: IConsole) => void;
-  setOpen: (status: boolean) => void;
-  open: boolean;
-}
-
-export function CreateConsoleModal({ createdCallback, open, setOpen }: ICreateConsoleModal) {
+export function CreateConsoleModal({ createdCallback }: { createdCallback: (newConsole: IConsole) => void }) {
+  const { model, setcreateConsoleDialog } = useContext(DatabaseContext);
+  const { createConsoleDialog } = model
   const [consoleName, setConsoleName] = useState<string>();
 
   function handleOk() {
@@ -175,7 +170,7 @@ export function CreateConsoleModal({ createdCallback, open, setOpen }: ICreateCo
   }
 
   function handleCancel() {
-    setOpen(false);
+    setcreateConsoleDialog(false)
   }
 
   function createConsole() {
@@ -183,11 +178,15 @@ export function CreateConsoleModal({ createdCallback, open, setOpen }: ICreateCo
       return
     }
 
+    if (!createConsoleDialog) {
+      return
+    }
+
     let p = {
       name: 'windowName',
       type: DatabaseTypeCode.MYSQL,
-      dataSourceId: 1,
-      databaseName: '01_01',
+      dataSourceId: createConsoleDialog.dataSourceId,
+      databaseName: createConsoleDialog?.databaseName,
       status: ConsoleStatus.DRAFT,
       ddl: 'SELECT * FROM',
       tabOpened: TabOpened.IS_OPEN,
@@ -199,21 +198,24 @@ export function CreateConsoleModal({ createdCallback, open, setOpen }: ICreateCo
         key: res.toString(),
         type: ConsoleType.SQLQ,
         DBType: DatabaseTypeCode.MYSQL,
-        databaseName: '01_01',
-        dataSourceId: 1,
+        databaseName: createConsoleDialog.databaseName,
+        dataSourceId: createConsoleDialog.dataSourceId,
         consoleId: res,
         ddl: 'SELECT * FROM',
       };
       createdCallback(newConsole);
+      setcreateConsoleDialog(false);
       setConsoleName('');
     });
   }
 
   return <Modal
     title="新建查询控制台"
-    open={open}
+    open={!!createConsoleDialog}
     onOk={handleOk}
     onCancel={handleCancel}
+    width={400}
+    style={{ top: '20%' }}
     footer={
       <>
         <Button onClick={handleCancel} className={styles.cancel}>

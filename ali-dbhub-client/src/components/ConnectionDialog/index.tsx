@@ -366,14 +366,15 @@ export default memo<IProps>(function ConnectionDialog(props) {
             label="用户名"
             name="user"
           >
-            <Input />
+            <Input id='user' />
           </Form.Item>
           <Form.Item
+            id='password'
             label="密码"
             name="password"
           // rules={[{ required: true, message: '密码不可为空！' }]}
           >
-            <Input.Password />
+            <Input.Password id='password' />
           </Form.Item>
         </div>
       }
