@@ -15,7 +15,7 @@ import { IOperationData } from '@/components/OperationTableModal';
 import connectionService from '@/service/connection';
 import mysqlServer from '@/service/mysql';
 import TreeNodeRightClick from './TreeNodeRightClick';
-import { treeConfig } from './treeConfig'
+import { treeConfig, switchIcon } from './treeConfig'
 
 interface IProps {
   className?: string;
@@ -41,6 +41,8 @@ function TreeNode(props: TreeNodeIProps) {
   const [isLoading, setIsLoading] = useState(false);
   const indentArr = new Array(level);
 
+  const treeNodeClick = useCanDoubleClick();
+
   for (let i = 0; i < level; i++) {
     indentArr[i] = 'indent';
   }
@@ -57,13 +59,13 @@ function TreeNode(props: TreeNodeIProps) {
 
     if (treeConfig[data.nodeType] && !data.children) {
       loadData(data)?.then((res: ITreeNode[]) => {
-        if (res?.length) {
-          data.children = res;
-        }
-        setIsLoading(false);
         setTimeout(() => {
-          setShowChildren(!showChildren);
-        }, 0);
+          data.children = res;
+          setIsLoading(false);
+          setTimeout(() => {
+            setShowChildren(!showChildren);
+          }, 0);
+        }, 300);
       })
     } else {
       if (level === 0) {
@@ -76,64 +78,15 @@ function TreeNode(props: TreeNodeIProps) {
   const renderMenu = () => {
     return <TreeNodeRightClick
       data={data}
-      treeConfig={treeConfig}
+      setIsLoading={setIsLoading}
       openOperationTableModal={openOperationTableModal}
+      nodeConfig={treeConfig[data.nodeType]}
     />
-  }
-
-  const switchIcon: { [key in TreeNodeType]: { icon: string } } = {
-    [TreeNodeType.DATASOURCE]: {
-      icon: '\ue62c'
-    },
-    [TreeNodeType.DATABASE]: {
-      icon: '\ue62c'
-    },
-    [TreeNodeType.TABLE]: {
-      icon: '\ue63e'
-    },
-    [TreeNodeType.TABLES]: {
-      icon: '\ueac5'
-    },
-    [TreeNodeType.COLUMNS]: {
-      icon: '\ueac5'
-    },
-    [TreeNodeType.COLUMN]: {
-      icon: '\ue611'
-    },
-    [TreeNodeType.KEYS]: {
-      icon: '\ueac5'
-    },
-    [TreeNodeType.KEY]: {
-      icon: '\ue611'
-    },
-    [TreeNodeType.INDEXES]: {
-      icon: '\ueac5'
-    },
-    [TreeNodeType.INDEXE]: {
-      icon: '\ue611'
-    },
-    [TreeNodeType.SEARCH]: {
-      icon: '\uec4c'
-    },
-    [TreeNodeType.LINE]: {
-      icon: '\ue611'
-    },
-    [TreeNodeType.LINETOTAL]: {
-      icon: '\ue611'
-    },
-    [TreeNodeType.SAVE]: {
-      icon: '\ue936'
-    },
-    [TreeNodeType.INDEXESTOTAL]: {
-      icon: '\ue648'
-    }
   }
 
   const recognizeIcon = (nodeType: TreeNodeType) => {
     return switchIcon[nodeType].icon
   }
-
-  const treeNodeClick = useCanDoubleClick();
 
   function renderTitle(data: ITreeNode) {
     return <>
@@ -157,6 +110,7 @@ function TreeNode(props: TreeNodeIProps) {
               })
             }
           }
+          key={data.key}
           className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
           <div className={styles.left}>
             {

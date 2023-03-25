@@ -1,9 +1,15 @@
-import {EnvType, DatabaseTypeCode, TreeNodeType, WindowTabStatus,TableDataType, ConsoleType} from '@/utils/constants'
-
+import {
+  EnvType,
+  DatabaseTypeCode,
+  TreeNodeType,
+  WindowTabStatus,
+  TableDataType,
+  ConsoleType,
+} from '@/utils/constants';
 
 export interface IDatabase {
   name: string;
-  code:DatabaseTypeCode;
+  code: DatabaseTypeCode;
   img: string;
   port: number;
 }
@@ -16,12 +22,12 @@ export interface IPageResponse<T> {
 }
 
 export interface IPageParams {
-  searchKey?:string;
+  searchKey?: string;
   pageNo: number;
   pageSize: number;
 }
-export interface IConnectionBase{
-  id?:number;
+export interface IConnectionBase {
+  id?: number;
   alias: string;
   url: string;
   user: string;
@@ -30,30 +36,30 @@ export interface IConnectionBase{
   tabOpened: 'y' | 'n';
   EnvType: EnvType;
 }
-export interface IHistoryRecord{
+export interface IHistoryRecord {
   id?: string | number;
   name: string;
   dataSourceId: string | number;
   databaseName: string;
   type: DatabaseTypeCode;
 }
-export interface ITableColumn{
+export interface ITableColumn {
   name: string;
   type: string;
   description: string;
 }
-export interface ITableIndex{
+export interface ITableIndex {
   name: string;
   type: string;
   columns: string;
 }
-export interface ITable{
+export interface ITable {
   name: string;
   description: string;
   columnList: ITableColumn[];
   indexList: ITableIndex[];
 }
-export interface ITreeNode{
+export interface ITreeNode {
   key: string;
   name: string;
   nodeType: TreeNodeType;
@@ -62,7 +68,8 @@ export interface ITreeNode{
   children?: ITreeNode[];
   parent?: ITreeNode;
   dataSourceId?: number;
-  dataBaseName?: string;
+  databaseName?: string;
+  tableName?: string;
   // columnType: string;
 }
 export interface IDB {
@@ -72,15 +79,15 @@ export interface IDB {
   databaseType?: DatabaseTypeCode;
 }
 export interface IWindowTab {
-  id?:string;
+  id?: string;
   name: string;
   DBType: DatabaseTypeCode;
-  dataSourceId: string|number;
+  dataSourceId: string | number;
   databaseName: string;
   consoleId?: string;
   status?: WindowTabStatus;
   ddl?: string;
-  sql?:string;
+  sql?: string;
 }
 
 export interface ITableHeaderItem {
@@ -108,7 +115,7 @@ export interface IManageResultData {
 export interface IOptions {
   value: string | number;
   label: string;
-  [key:string]: any;
+  [key: string]: any;
 }
 
 export interface IConsoleBasic {
@@ -128,11 +135,11 @@ export interface ISQLQueryConsole extends IConsoleBasic {
 }
 
 //编辑表结构的控制台
-export interface IEditTableConsole extends IConsoleBasic  {
+export interface IEditTableConsole extends IConsoleBasic {
   tableData?: ITreeNode;
 }
 
-export type IConsole = IEditTableConsole | ISQLQueryConsole 
+export type IConsole = IEditTableConsole | ISQLQueryConsole;
 
 export interface ISavedConsole {
   id: number;
