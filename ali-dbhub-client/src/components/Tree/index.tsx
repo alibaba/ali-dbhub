@@ -16,6 +16,7 @@ import connectionService from '@/service/connection';
 import mysqlServer from '@/service/mysql';
 import TreeNodeRightClick from './TreeNodeRightClick';
 import { treeConfig, switchIcon } from './treeConfig'
+import { databaseType } from '@/utils/constants'
 
 interface IProps {
   className?: string;
@@ -29,13 +30,14 @@ interface TreeNodeIProps {
   data: ITreeNode;
   level: number;
   show: boolean;
+  setTreeData: Function;
   showAllChildrenPenetrate?: boolean;
   nodeDoubleClick?: Function;
   openOperationTableModal?: Function;
 }
 
 function TreeNode(props: TreeNodeIProps) {
-  const { data, level, show = false, nodeDoubleClick, openOperationTableModal, showAllChildrenPenetrate = false } = props;
+  const { setTreeData, data, level, show = false, nodeDoubleClick, openOperationTableModal, showAllChildrenPenetrate = false } = props;
   const [showChildren, setShowChildren] = useState(false);
   const [showAllChildren, setShowAllChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -78,6 +80,7 @@ function TreeNode(props: TreeNodeIProps) {
   const renderMenu = () => {
     return <TreeNodeRightClick
       data={data}
+      setTreeData={setTreeData}
       setIsLoading={setIsLoading}
       openOperationTableModal={openOperationTableModal}
       nodeConfig={treeConfig[data.nodeType]}
@@ -110,7 +113,6 @@ function TreeNode(props: TreeNodeIProps) {
               })
             }
           }
-          key={data.key}
           className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
           <div className={styles.left}>
             {
@@ -135,7 +137,12 @@ function TreeNode(props: TreeNodeIProps) {
               </div>
             }
             <div className={styles.typeIcon}>
-              <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
+              {
+                data.nodeType === TreeNodeType.DATASOURCE ? 
+                <div style={{backgroundImage:`url(${databaseType[data.dataType!]?.img})`}} className={styles.typeImg}></div>
+                :
+                <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
+              }
             </div>
             <div className={styles.contentText} >
               <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
@@ -164,32 +171,14 @@ function Tree(props: IProps) {
     setTreeData([...(treeData || []), ...(addTreeData || [])]);
   }, [addTreeData])
 
-  function getDataSource() {
-    console.log('getDataSource')
-    let p = {
-      pageNo: 1,
-      pageSize: 100
-    }
 
-    connectionService.getList(p).then(res => {
-      const treeData = res.data.map(t => {
-        return {
-          name: t.alias,
-          key: t.id!.toString(),
-          nodeType: TreeNodeType.DATASOURCE,
-          dataSourceId: t.id,
-        }
-      })
-      setTreeData(treeData);
-    })
-  }
 
   useImperativeHandle(cRef, () => ({
     getDataSource
   }))
 
   useEffect(() => {
-    getDataSource();
+    getDataSource(setTreeData);
   }, [])
 
   const treeDataEmpty = () => {
@@ -205,6 +194,7 @@ function Tree(props: IProps) {
               return <TreeNode
                 openOperationTableModal={openOperationTableModal}
                 nodeDoubleClick={nodeDoubleClick}
+                setTreeData={setTreeData}
                 key={item.name}
                 show={true}
                 level={0}
@@ -217,6 +207,26 @@ function Tree(props: IProps) {
     </>
   );
 };
+
+export function getDataSource(setTreeData:Function) {
+  let p = {
+    pageNo: 1,
+    pageSize: 100
+  }
+
+  connectionService.getList(p).then(res => {
+    const treeData = res.data.map(t => {
+      return {
+        name: t.alias,
+        key: t.id!.toString(),
+        nodeType: TreeNodeType.DATASOURCE,
+        dataSourceId: t.id,
+        dataType: t.type
+      }
+    })
+    setTreeData(treeData);
+  })
+}
 
 function loadData(data: ITreeNode) {
   return treeConfig[data.nodeType]?.getNodeData(data);

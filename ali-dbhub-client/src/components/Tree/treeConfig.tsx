@@ -15,7 +15,7 @@ export const treeConfig: ITreeConfig = {
     getNodeData: (parentData: ITreeNode) => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let p = {
-          id: parentData.key
+          id: parentData.dataSourceId!
         }
         connectionService.getDBList(p).then(res => {
           const data: ITreeNode[] = res.map(t => {
@@ -70,6 +70,7 @@ export const treeConfig: ITreeConfig = {
               key: item.name,
               dataSourceId: parentData.dataSourceId!,
               databaseName: parentData.databaseName!,
+              tableName: item.name,
             }
           })
           r(tableList);

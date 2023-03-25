@@ -9,7 +9,10 @@ import { IOperationData } from '@/components/OperationTableModal';
 import { TreeNodeType } from '@/utils/constants';
 import { ITreeConfigItem, ITreeConfig, treeConfig } from '@/components/Tree/treeConfig';
 import { ITreeNode } from '@/types';
-import { DatabaseContext } from '@/context/database'
+import { DatabaseContext } from '@/context/database';
+import connectionServer from '@/service/connection';
+import { getDataSource } from '@/components/Tree';
+
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -17,12 +20,13 @@ export type Iprops = {
   className?: string;
   setIsLoading: (value: boolean) => void;
   data: ITreeNode;
+  setTreeData: Function;
   openOperationTableModal: any;
   nodeConfig: ITreeConfigItem | undefined;
 }
 
 function TreeNodeRightClick(props: Iprops) {
-  const { className, data, openOperationTableModal, nodeConfig, setIsLoading } = props;
+  const { className, setTreeData, data, openOperationTableModal, nodeConfig, setIsLoading } = props;
   const { setcreateConsoleDialog } = useContext(DatabaseContext);
 
   function refresh() {
@@ -59,6 +63,7 @@ function TreeNodeRightClick(props: Iprops) {
     {
       title: '新建控制台',
       key: 'newConsole',
+      icon: ''
     },
     {
       title: '刷新',
@@ -70,6 +75,10 @@ function TreeNodeRightClick(props: Iprops) {
     {
       title: '刷新',
       key: 'refresh',
+    },
+    {
+      title: '移除',
+      key: 'remove',
     },
   ]
 
@@ -97,7 +106,7 @@ function TreeNodeRightClick(props: Iprops) {
         databaseName: data.databaseName!,
       })
     } else if (item.key === 'refresh') {
-      refresh()
+
     }
     closeMenu();
   }
@@ -105,6 +114,10 @@ function TreeNodeRightClick(props: Iprops) {
   function dataSourseClick(item: IMenu<string>) {
     if (item.key === 'refresh') {
       refresh()
+    } else if (item.key === 'remove') {
+      connectionServer.remove({ id: +data.key }).then(res => {
+        getDataSource(setTreeData)
+      })
     }
     closeMenu();
   }
@@ -114,7 +127,10 @@ function TreeNodeRightClick(props: Iprops) {
       <Menu>
         {
           tableMenu.map(item => {
-            return <MenuItem key={item.key} onClick={tableClick.bind(null, item)}>{item.title}</MenuItem>
+            return <MenuItem key={item.key} onClick={tableClick.bind(null, item)}>
+              <Iconfont code={item.icon!}></Iconfont>
+              {item.title}
+            </MenuItem>
           })
         }
       </Menu>
@@ -124,7 +140,10 @@ function TreeNodeRightClick(props: Iprops) {
       <Menu>
         {
           dataBaseMenu.map(item => {
-            return <MenuItem key={item.key} onClick={dataBaseClick.bind(null, item)}>{item.title}</MenuItem>
+            return <MenuItem key={item.key} onClick={dataBaseClick.bind(null, item)}>
+              <Iconfont code={item.icon!}></Iconfont>
+              {item.title}
+            </MenuItem>
           })
         }
       </Menu>
@@ -134,7 +153,10 @@ function TreeNodeRightClick(props: Iprops) {
       <Menu>
         {
           dataSourseMenu.map(item => {
-            return <MenuItem key={item.key} onClick={dataSourseClick.bind(null, item)}>{item.title}</MenuItem>
+            return <MenuItem key={item.key} onClick={dataSourseClick.bind(null, item)}>
+              <Iconfont code={item.icon!}></Iconfont>
+              {item.title}
+            </MenuItem>
           })
         }
       </Menu>
