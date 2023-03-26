@@ -52,4 +52,14 @@ public class OperationVO {
      * ddl内容
      */
     private String ddl;
+
+    /**
+     * ddl语句状态:DRAFT/RELEASE
+     */
+    private String status;
+
+    /**
+     * 是否在tab中被打开,y表示打开,n表示未打开
+     */
+    private String tabOpened;
 }
