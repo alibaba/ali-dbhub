@@ -35,10 +35,15 @@ export default memo<IProps>(function DatabaseQuery(props) {
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
   const monacoEditor = useRef<any>(null);
+  const monacoHint = useRef<any>(null);
 
   useEffect(() => {
+    if (windowTab.consoleId !== +activeTabKey) {
+      return
+    }
     connectConsole();
-  }, [])
+    getTableList();
+  }, [activeTabKey])
 
   useEffect(() => {
     const nodeData = treeNodeClickMessage
@@ -68,8 +73,41 @@ export default memo<IProps>(function DatabaseQuery(props) {
       dataSourceId: windowTab.dataSourceId,
       databaseName: windowTab.databaseName,
     }
-    console.log(p)
-    mysqlServer.connectConsole(p)
+    mysqlServer.connectConsole(p);
+  }
+
+  const getTableList = () => {
+
+    let p = {
+      dataSourceId: windowTab.dataSourceId!,
+      databaseName: windowTab.databaseName!,
+      pageNo: 1,
+      pageSize: 999,
+    }
+
+    mysqlServer.getList(p).then(res => {
+      const tableList = res.data?.map(item => {
+        return {
+          name: item.name,
+          key: item.name,
+        }
+      })
+      disposalEditorHintData(tableList)
+    })
+  }
+
+  const disposalEditorHintData = (tableList: any) => {
+    try {
+      monacoHint.current?.dispose();
+      const myEditorHintData: any = {};
+      tableList?.map((item: any) => {
+        myEditorHintData[item.name] = []
+      })
+      monacoHint.current = setEditorHint(myEditorHintData);
+    }
+    catch {
+
+    }
   }
 
   const getEditor = (editor: any) => {
@@ -113,6 +151,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
     }
     let p = {
       sql,
+      type: windowTab.DBType,
       consoleId: +windowTab.consoleId!,
       dataSourceId: windowTab?.dataSourceId as number,
       databaseName: windowTab?.databaseName
@@ -124,7 +163,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
         databaseName: windowTab?.databaseName,
         name: windowTab?.name,
         ddl: sql,
-        type: params.type as DatabaseTypeCode
+        type: windowTab.DBType,
       }
       historyServer.createHistory(p)
       setManageResultDataList(res)
@@ -137,7 +176,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
     let p = {
       id: windowTab.consoleId,
       name: windowTab?.name,
-      type: 'mySql',
+      type: windowTab.DBType,
       dataSourceId: +params.id,
       databaseName: windowTab.databaseName,
       status: WindowTabStatus.RELEASE,
@@ -161,20 +200,26 @@ export default memo<IProps>(function DatabaseQuery(props) {
   return <>
     <div className={classnames(styles.databaseQuery)}>
       <div className={styles.operatingArea}>
-        <div>
-          <Tooltip placement="bottom" title="执行">
-            <Iconfont code="&#xe626;" className={styles.icon} onClick={executeSql} />
-          </Tooltip>
+        <div className={styles.left}>
+          <div>
+            <Tooltip placement="bottom" title="执行">
+              <Iconfont code="&#xe626;" className={styles.icon} onClick={executeSql} />
+            </Tooltip>
+          </div>
+          <div>
+            <Tooltip placement="bottom" title={OSnow() === OSType.WIN ? "保存 Ctrl + S" : "保存 CMD + S"} >
+              <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} />
+            </Tooltip>
+          </div>
+          <div>
+            <Tooltip placement="bottom" title="格式化">
+              <Iconfont code="&#xe7f8;" className={styles.icon} onClick={formatValue} />
+            </Tooltip>
+          </div>
         </div>
-        <div>
-          <Tooltip placement="bottom" title={OSnow() === OSType.WIN ? "保存 Ctrl + S" : "保存 CMD + S"} >
-            <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} />
-          </Tooltip>
-        </div>
-        <div>
-          <Tooltip placement="bottom" title="格式化">
-            <Iconfont code="&#xe7f8;" className={styles.icon} onClick={formatValue} />
-          </Tooltip>
+        <div className={styles.right}>
+          <span>dataSourseId: {windowTab.dataSourceId}</span>
+          <span>database: {windowTab.databaseName}</span>
         </div>
       </div>
       <div ref={monacoEditorBox} className={styles.monacoEditor}>

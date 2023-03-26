@@ -108,7 +108,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
 
   const jumpToDatabasePage = (item: IHistoryRecord) => {
     if (currentTab == TabsKey.SAVE) {
-      location.href = `/#/database/${item.type}/${item.dataSourceId}?databaseName=${item.databaseName}&id=${item.id}`
+      location.href = `/#/database`
     }
   }
 

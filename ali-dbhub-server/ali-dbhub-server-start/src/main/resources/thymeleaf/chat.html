@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>战损版ChatGPT</title>
+    <title>ChatGPT</title>
     <link rel="icon" type="image/png" sizes="32x32" href="image/favicon-32x32.png">
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
     <script src="/static/js/markdown.min.js"></script>
@@ -49,6 +49,7 @@
                     }
                     let text = '';
                     let uuid_str = uuid();
+                    // const eventSource = new EventSource('http://localhost:8000/chat?message=' + messageElement.value);
                     const eventSource = new EventSourcePolyfill('/api/ai/chat?message=' + messageElement.value, {
                         headers: {
                             'uid': uid
@@ -116,6 +117,12 @@
 <!--</div>-->
 <div class="float-card">
     <div class="float-card-item">
+        <a href="https://www.unfbx.com" target="_blank" rel="noopener noreferrer">Website</a>
+    </div>
+    <div class="float-card-item">
+        <a href="https://github.com/Grt1228" target="_blank" rel="noopener noreferrer">Github</a>
+    </div>
+    <div class="float-card-item">
         <a id="disconnectSSE" rel="noopener noreferrer">停止输出</a>
     </div>
 </div>
@@ -124,6 +131,13 @@
         <input id="message" placeholder="输入你的问题，回车结束......" type="text">
     </div>
 </div>
+<div class="container">
+    <table border="1">
+        <tbody id="chat">
+        </tbody>
+    </table>
+</div>
+
 
 </body>
 <style>
