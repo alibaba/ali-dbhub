@@ -5,6 +5,7 @@
 package com.alibaba.dbhub.server.domain.support.dialect;
 
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
