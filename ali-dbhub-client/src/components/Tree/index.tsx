@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
+import React, { memo, useEffect, useRef, useContext, useState, forwardRef, useImperativeHandle } from 'react';
 import globalStyle from '@/global.less';
 import styles from './index.less';
 import classnames from 'classnames';
@@ -17,6 +17,7 @@ import mysqlServer from '@/service/mysql';
 import TreeNodeRightClick from './TreeNodeRightClick';
 import { treeConfig, switchIcon } from './treeConfig'
 import { databaseType } from '@/utils/constants'
+import { DatabaseContext } from '@/context/database';
 
 interface IProps {
   className?: string;
@@ -40,12 +41,32 @@ function TreeNode(props: TreeNodeIProps) {
   const [showAllChildren, setShowAllChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const indentArr = new Array(level);
+  const { model, setNeedRefreshNodeTree } = useContext(DatabaseContext);
+  const { needRefreshNodeTree } = model
 
   const treeNodeClick = useCanDoubleClick();
 
   for (let i = 0; i < level; i++) {
     indentArr[i] = 'indent';
   }
+
+  useEffect(() => {
+    if (data?.dataSourceId === needRefreshNodeTree?.dataSourceId &&
+      data?.databaseName === needRefreshNodeTree?.databaseName &&
+      data.nodeType === needRefreshNodeTree.nodeType) {
+      console.log('daowole')
+      setIsLoading(true);
+      setNeedRefreshNodeTree(false);
+      data.children = []
+      loadData(data)?.then(res => {
+        setTimeout(() => {
+          data.children = res
+          setIsLoading(false);
+          setShowChildren(true)
+        }, 500);
+      })
+    }
+  }, [needRefreshNodeTree])
 
   useEffect(() => {
     setShowChildren(showAllChildrenPenetrate);
@@ -167,8 +188,6 @@ function Tree(props: IProps) {
   useEffect(() => {
     setTreeData([...(treeData || []), ...(addTreeData || [])]);
   }, [addTreeData])
-
-
 
   useImperativeHandle(cRef, () => ({
     getDataSource

@@ -15,8 +15,6 @@ import connectionServer from '@/service/connection';
 import mysqlServer from '@/service/mysql';
 import { getDataSource } from '@/components/Tree';
 
-
-
 type MenuItem = Required<MenuProps>['items'][number];
 
 export type Iprops = {
@@ -24,13 +22,12 @@ export type Iprops = {
   setIsLoading: (value: boolean) => void;
   data: ITreeNode;
   setTreeData: Function;
-  openOperationTableModal: any;
   nodeConfig: ITreeConfigItem | undefined;
 }
 
 function TreeNodeRightClick(props: Iprops) {
-  const { className, setTreeData, data, openOperationTableModal, nodeConfig, setIsLoading } = props;
-  const { setcreateConsoleDialog, setOperationDataDialog } = useContext(DatabaseContext);
+  const { className, setTreeData, data, nodeConfig, setIsLoading } = props;
+  const { setcreateConsoleDialog, setOperationDataDialog, setNeedRefreshNodeTree } = useContext(DatabaseContext);
   const [verifyDialog, setVerifyDialog] = useState<boolean>();
   const [verifyTableName, setVerifyTableName] = useState<string>('');
 
@@ -134,7 +131,6 @@ function TreeNodeRightClick(props: Iprops) {
         type: 'new',
         nodeData: data
       }
-      console.log(operationData)
       setOperationDataDialog(operationData)
     }
     closeMenu();
@@ -148,10 +144,15 @@ function TreeNodeRightClick(props: Iprops) {
     }
     if (verifyTableName === data.tableName) {
       mysqlServer.deleteTable(p).then(res => {
-        refresh()
+        setVerifyDialog(false);
+        setNeedRefreshNodeTree({
+          databaseName: data.databaseName,
+          dataSourceId: data.dataSourceId,
+          nodeType: TreeNodeType.TABLES
+        })
       })
     } else {
-      message.warning('表明输入不正确')
+      message.error('输入的表名与要删除的表名不一致，请再次确认')
     }
   }
 
@@ -169,11 +170,12 @@ function TreeNodeRightClick(props: Iprops) {
   if (data.nodeType == TreeNodeType.TABLE) {
     return <div className={styles.menuBox}>
       <Modal
-        title="请确认你要删除的表名"
+        title="删除确认"
         open={verifyDialog}
         onOk={handleOk}
+        width={400}
         onCancel={(() => { setVerifyDialog(false) })}>
-        <Input placeholder={data.tableName} value={verifyTableName} onChange={(e) => { setVerifyTableName(e.target.value) }}></Input>
+        <Input placeholder='请输入你要删除的表名' value={verifyTableName} onChange={(e) => { setVerifyTableName(e.target.value) }}></Input>
       </Modal>
       <Menu>
         {
