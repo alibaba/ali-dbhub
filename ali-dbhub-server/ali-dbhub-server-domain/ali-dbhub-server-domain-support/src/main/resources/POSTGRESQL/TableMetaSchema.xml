@@ -12,6 +12,10 @@
         <result property="defaultValue" jdbcType="CHAR" column="column_default"/>
     </resultMap>
 
+    <resultMap id="BaseTableResultMap" type="com.alibaba.dbhub.server.domain.support.model.Table">
+        <result property="name" jdbcType="CHAR" column="tablename"/>
+    </resultMap>
+
 
     <resultMap id="TableIndexResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndex">
         <result property="name" jdbcType="CHAR" column="indexname"/>
@@ -74,10 +78,13 @@
     <select id="showDatabases" resultType="java.lang.String">
         select datname from pg_database;
     </select>
-    <select id="selectTables" resultType="java.lang.String">
+    <select id="selectTables" resultMap="BaseTableResultMap">
         SELECT tablename FROM pg_tables WHERE tablename NOT LIKE 'pg%' AND tablename NOT LIKE 'sql_%'
         <if test="tableSchema != null">
             AND schemaname=#{tableSchema,jdbcType=VARCHAR}
+        </if>
+        <if test="tableName != null">
+            AND tablename=#{tableName,jdbcType=VARCHAR}
         </if>
         ORDER BY tablename
         ;

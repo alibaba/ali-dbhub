@@ -62,6 +62,9 @@
     <select id="selectTables" resultMap="BaseTableResultMap">
         select table_name,table_comment from information_schema.tables
         where table_schema = #{databaseName}
+        <if test="tableName != null">
+            AND table_name=#{tableName,jdbcType=VARCHAR}
+        </if>
         ;
     </select>
 
