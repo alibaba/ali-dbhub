@@ -35,10 +35,15 @@ export default memo<IProps>(function DatabaseQuery(props) {
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
   const monacoEditor = useRef<any>(null);
+  const monacoHint = useRef<any>(null);
 
   useEffect(() => {
+    if (windowTab.consoleId !== +activeTabKey) {
+      return
+    }
     connectConsole();
-  }, [])
+    getTableList();
+  }, [activeTabKey])
 
   useEffect(() => {
     const nodeData = treeNodeClickMessage
@@ -68,8 +73,41 @@ export default memo<IProps>(function DatabaseQuery(props) {
       dataSourceId: windowTab.dataSourceId,
       databaseName: windowTab.databaseName,
     }
-    console.log(p)
-    mysqlServer.connectConsole(p)
+    mysqlServer.connectConsole(p);
+  }
+
+  const getTableList = () => {
+
+    let p = {
+      dataSourceId: windowTab.dataSourceId!,
+      databaseName: windowTab.databaseName!,
+      pageNo: 1,
+      pageSize: 999,
+    }
+
+    mysqlServer.getList(p).then(res => {
+      const tableList = res.data?.map(item => {
+        return {
+          name: item.name,
+          key: item.name,
+        }
+      })
+      disposalEditorHintData(tableList)
+    })
+  }
+
+  const disposalEditorHintData = (tableList: any) => {
+    try {
+      monacoHint.current?.dispose();
+      const myEditorHintData: any = {};
+      tableList?.map((item: any) => {
+        myEditorHintData[item.name] = []
+      })
+      monacoHint.current = setEditorHint(myEditorHintData);
+    }
+    catch {
+
+    }
   }
 
   const getEditor = (editor: any) => {
@@ -180,7 +218,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
           </div>
         </div>
         <div className={styles.right}>
-          <span>dataSourseId: {windowTab.dataSourceId}</span>
+          <span>dataSourceId: {windowTab.dataSourceId}</span>
           <span>database: {windowTab.databaseName}</span>
         </div>
       </div>

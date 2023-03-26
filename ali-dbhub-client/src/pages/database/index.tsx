@@ -8,18 +8,11 @@ import Iconfont from '@/components/Iconfont';
 import Tree from '@/components/Tree';
 import MonacoEditor, { setEditorHint, IHintData } from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
-import SearchResult from '@/components/SearchResult';
-import LoadingContent from '@/components/Loading/LoadingContent';
 import OperationTableModal, { IOperationData } from '@/components/OperationTableModal';
-import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import GlobalAddMenu from '@/components/GlobalAddMenu';
 import ConsoleList from '@/components/ConsoleList';
-import connectionServer from '@/service/connection';
-import mysqlServer from '@/service/mysql';
 import SearchInput from '@/components/SearchInput';
 import { IConnectionBase, ITreeNode, IWindowTab, IDB, IConsole, ISQLQueryConsole, IEditTableConsole } from '@/types'
-import { toTreeList, createRandom, approximateTreeNode, setCurrentPosition, OSnow } from '@/utils'
-import { databaseType, DatabaseTypeCode, TreeNodeType, ConsoleStatus, OSType, ConsoleType } from '@/utils/constants'
 const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
 const { keywords } = language;
@@ -46,19 +39,6 @@ type IParams = {
   id: string;
 }
 
-function getCurrentPageInfo(): IParams {
-  const rightHash = location.hash.split('?')[1]
-  const params: any = {}
-  if (rightHash) {
-    const arr = rightHash.split('&')
-    arr.map(item => {
-      const splitRes = item.split('=')
-      params[splitRes[0]] = splitRes[1]
-    })
-  }
-  return params as IParams
-}
-
 export default memo<IProps>(function DatabasePage({ className }) {
   const letfRef = useRef<HTMLDivElement | null>(null);
   const [activeKey, setActiveKey] = useState<string>();
@@ -66,7 +46,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [windowName, setWindowName] = useState<string>('console_1');
-  const [operationData, setOperationData] = useState<IOperationData | null>();
   const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode | null>(null);
   const monacoHint = useRef<any>(null);
   const [isUnfold, setIsUnfold] = useState(true);
@@ -134,77 +113,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
     setTreeNodeClickMessage(data)
   }
 
-  // function openOperationTableModal(value: IOperationData) {
-  //   let data = {
-  //     ...value,
-  //     database: currentDB,
-  //     connectionDetaile: connectionDetaile
-  //   }
-  //   setOperationData(data)
-  //   if (value.type === 'edit') {
-  //     let flag = false
-  //     windowList?.map(item => {
-  //       if (item.key === `editTable-${value.nodeData?.name}`) {
-  //         flag = true
-  //       }
-  //     })
-  //     const { databaseName, id } = getCurrentPageInfo();
-  //     if (!flag) {
-  //       const newData: IEditTableConsole = {
-  //         label: `编辑表-${value.nodeData?.name}`,
-  //         key: `editTable-${value.nodeData?.name}`,
-  //         type: ConsoleType.EDITTABLE,
-  //         DBType: params.type,
-  //         databaseName: databaseName,
-  //         dataSourceId: +params.id,
-  //         tableData: value.nodeData!,
-  //       }
-  //       setWindowList([...windowList, newData])
-  //       setActiveKey(`editTable-${value.nodeData?.name}`)
-  //     } else {
-  //       setActiveKey(`editTable-${value.nodeData?.name}`)
-  //     }
-  //   }
-  //   if (value.type === 'delete') {
-  //     Modal.confirm({
-  //       title: '你确定要删除该表吗',
-  //       onOk: () => {
-  //         let p = {
-  //           tableName: value?.nodeData?.name!,
-  //           dataSourceId: connectionDetaile?.id!,
-  //           databaseName: currentDB?.name!
-  //         }
-  //         mysqlServer.deleteTable(p).then(res => {
-  //           getTableList(currentDB!);
-  //           message.success('删除成功');
-  //         })
-  //       },
-  //       cancelText: '取消',
-  //       okText: '确认'
-  //     });
-  //   }
-  // }
-
-  // function createTable() {
-  //   let flag = false
-  //   windowList?.map(item => {
-  //     if (item.key === `newTable-${currentDB?.name}`) {
-  //       flag = true
-  //     }
-  //   })
-  //   if (!flag) {
-  //     setWindowList([...windowList, {
-  //       label: `新建表-${currentDB?.name}`,
-  //       key: `newTable-${currentDB?.name}`,
-  //       tabType: 'editTable',
-  //       id: `newTable-${currentDB?.name}`,
-  //     } as any])
-  //     setActiveKey(`newTable-${currentDB?.name}`)
-  //   } else {
-  //     setActiveKey(`newTable-${currentDB?.name}`)
-  //   }
-  // }
-
   function refresh() {
     treeRef.current?.getDataSource();
   }
@@ -254,13 +162,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
         </div>
       </div>
     </div>
-    {/* {
-      (operationData?.type === 'new' || operationData?.type === 'export') &&
-      <OperationTableModal
-        setOperationData={setOperationData}
-        operationData={operationData!}
-      />
-    } */}
     <OperationTableModal />
   </DatabaseContextProvider>
 });

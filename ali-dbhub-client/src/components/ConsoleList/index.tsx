@@ -35,7 +35,7 @@ export default memo<Iprops>(function ConsoleList(props) {
     let p = {
       pageNo: 1,
       pageSize: 999,
-      // tabOpened: TabOpened.IS_OPEN,  
+      tabOpened: TabOpened.IS_OPEN,
     };
 
     historyService.getSaveList(p).then((res) => {
@@ -64,6 +64,13 @@ export default memo<Iprops>(function ConsoleList(props) {
       return <ModifyTable data={i as IEditTableConsole}></ModifyTable>;
     } else {
       return (
+        // <DatabaseQuery
+        //   // treeNodeClickMessage={treeNodeClickMessage}
+        //   // setTreeNodeClickMessage={setTreeNodeClickMessage}
+        //   windowTab={i as ISQLQueryConsole}
+        //   key={i.key}
+        //   activeTabKey={activeKey!}
+        // />
         <DatabaseQuery
           // treeNodeClickMessage={treeNodeClickMessage}
           // setTreeNodeClickMessage={setTreeNodeClickMessage}

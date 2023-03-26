@@ -17,6 +17,9 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.IvParameterSpec;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
+
 /**
  * @author moji
  * @version DESUtil.java, v 0.1 2022年12月26日 19:54 moji Exp $
@@ -159,6 +162,9 @@ public class DesUtil {
      * @date 2017年3月2日下午7:48:21
      */
     public String decrypt(String data, String decryptType) throws Exception {
+        if (StringUtils.isBlank(data)) {
+            return Strings.EMPTY;
+        }
         Cipher cipher = getPattern(decryptType, DECRYPT_MODE);
         byte[] pasByte = cipher.doFinal(Base64.getDecoder().decode(data));
         return new String(pasByte, "UTF-8");
