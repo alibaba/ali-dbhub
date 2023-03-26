@@ -64,6 +64,13 @@ export default memo<Iprops>(function ConsoleList(props) {
       return <ModifyTable data={i as IEditTableConsole}></ModifyTable>;
     } else {
       return (
+        // <DatabaseQuery
+        //   // treeNodeClickMessage={treeNodeClickMessage}
+        //   // setTreeNodeClickMessage={setTreeNodeClickMessage}
+        //   windowTab={i as ISQLQueryConsole}
+        //   key={i.key}
+        //   activeTabKey={activeKey!}
+        // />
         <DatabaseQuery
           // treeNodeClickMessage={treeNodeClickMessage}
           // setTreeNodeClickMessage={setTreeNodeClickMessage}
