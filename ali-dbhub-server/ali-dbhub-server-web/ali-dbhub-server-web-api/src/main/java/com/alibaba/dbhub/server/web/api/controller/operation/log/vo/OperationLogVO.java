@@ -33,6 +33,11 @@ public class OperationLogVO {
     private String dataSourceName;
 
     /**
+     * 是否可连接
+     */
+    private Boolean connectable;
+
+    /**
      * DB名称
      */
     private String databaseName;
