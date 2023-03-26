@@ -113,6 +113,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
     }
     let p = {
       sql,
+      type: windowTab.DBType,
       consoleId: +windowTab.consoleId!,
       dataSourceId: windowTab?.dataSourceId as number,
       databaseName: windowTab?.databaseName
@@ -124,7 +125,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
         databaseName: windowTab?.databaseName,
         name: windowTab?.name,
         ddl: sql,
-        type: params.type as DatabaseTypeCode
+        type: windowTab.DBType,
       }
       historyServer.createHistory(p)
       setManageResultDataList(res)
@@ -137,7 +138,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
     let p = {
       id: windowTab.consoleId,
       name: windowTab?.name,
-      type: 'mySql',
+      type: windowTab.DBType,
       dataSourceId: +params.id,
       databaseName: windowTab.databaseName,
       status: WindowTabStatus.RELEASE,
