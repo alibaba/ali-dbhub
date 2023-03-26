@@ -21,7 +21,6 @@ import { databaseType } from '@/utils/constants'
 interface IProps {
   className?: string;
   nodeDoubleClick?: Function;
-  openOperationTableModal?: Function;
   cRef: any;
   addTreeData?: ITreeNode[];
 }
@@ -33,11 +32,10 @@ interface TreeNodeIProps {
   setTreeData: Function;
   showAllChildrenPenetrate?: boolean;
   nodeDoubleClick?: Function;
-  openOperationTableModal?: Function;
 }
 
 function TreeNode(props: TreeNodeIProps) {
-  const { setTreeData, data, level, show = false, nodeDoubleClick, openOperationTableModal, showAllChildrenPenetrate = false } = props;
+  const { setTreeData, data, level, show = false, nodeDoubleClick, showAllChildrenPenetrate = false } = props;
   const [showChildren, setShowChildren] = useState(false);
   const [showAllChildren, setShowAllChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -82,7 +80,6 @@ function TreeNode(props: TreeNodeIProps) {
       data={data}
       setTreeData={setTreeData}
       setIsLoading={setIsLoading}
-      openOperationTableModal={openOperationTableModal}
       nodeConfig={treeConfig[data.nodeType]}
     />
   }
@@ -156,7 +153,7 @@ function TreeNode(props: TreeNodeIProps) {
       !!data.children?.length &&
       data.children.map((item: any, i: number) => {
         return (
-          <TreeNode setTreeData={setTreeData} openOperationTableModal={openOperationTableModal} nodeDoubleClick={nodeDoubleClick} key={i} showAllChildrenPenetrate={showAllChildrenPenetrate || showAllChildren} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
+          <TreeNode setTreeData={setTreeData} nodeDoubleClick={nodeDoubleClick} key={i} showAllChildrenPenetrate={showAllChildrenPenetrate || showAllChildren} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
         );
       })
     }
@@ -164,7 +161,7 @@ function TreeNode(props: TreeNodeIProps) {
 }
 
 function Tree(props: IProps) {
-  const { className, nodeDoubleClick, cRef, addTreeData, openOperationTableModal } = props;
+  const { className, nodeDoubleClick, cRef, addTreeData } = props;
   const [treeData, setTreeData] = useState<ITreeNode[] | undefined>();
 
   useEffect(() => {
@@ -192,7 +189,6 @@ function Tree(props: IProps) {
           {
             treeData?.map((item) => {
               return <TreeNode
-                openOperationTableModal={openOperationTableModal}
                 nodeDoubleClick={nodeDoubleClick}
                 setTreeData={setTreeData}
                 key={item.name}

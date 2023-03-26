@@ -1,8 +1,9 @@
-import React, { memo, useContext } from 'react';
+import React, { memo, useContext, useState } from 'react';
 import classnames from 'classnames';
 import styles from './index.less';
 import Iconfont from '../../Iconfont';
-import type { MenuProps } from 'antd';
+import { MenuProps, message } from 'antd';
+import { Modal, Input } from 'antd';
 // import { Menu } from 'antd';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import { IOperationData } from '@/components/OperationTableModal';
@@ -11,7 +12,9 @@ import { ITreeConfigItem, ITreeConfig, treeConfig } from '@/components/Tree/tree
 import { ITreeNode } from '@/types';
 import { DatabaseContext } from '@/context/database';
 import connectionServer from '@/service/connection';
+import mysqlServer from '@/service/mysql';
 import { getDataSource } from '@/components/Tree';
+
 
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -28,6 +31,8 @@ export type Iprops = {
 function TreeNodeRightClick(props: Iprops) {
   const { className, setTreeData, data, openOperationTableModal, nodeConfig, setIsLoading } = props;
   const { setcreateConsoleDialog, setOperationDataDialog } = useContext(DatabaseContext);
+  const [verifyDialog, setVerifyDialog] = useState<boolean>();
+  const [verifyTableName, setVerifyTableName] = useState<string>('');
 
   function refresh() {
     data.children = []
@@ -102,12 +107,16 @@ function TreeNodeRightClick(props: Iprops) {
   }
 
   function tableClick(item: IMenu<string>) {
-    const operationData: IOperationData = {
-      type: item.key,
-      nodeData: data
-    }
-    if (operationData.type === 'export') {
-      setOperationDataDialog(operationData)
+    if (item.key === 'export') {
+      const operationData: IOperationData = {
+        type: item.key,
+        nodeData: data
+      }
+      if (operationData.type === 'export') {
+        setOperationDataDialog(operationData);
+      }
+    } else if (item.key === 'delete') {
+      setVerifyDialog(true)
     }
     closeMenu();
   }
@@ -131,6 +140,21 @@ function TreeNodeRightClick(props: Iprops) {
     closeMenu();
   }
 
+  function handleOk() {
+    let p = {
+      tableName: verifyTableName,
+      dataSourceId: data.dataSourceId!,
+      databaseName: data.databaseName!
+    }
+    if (verifyTableName === data.tableName) {
+      mysqlServer.deleteTable(p).then(res => {
+        refresh()
+      })
+    } else {
+      message.warning('表明输入不正确')
+    }
+  }
+
   function dataSourseClick(item: IMenu<string>) {
     if (item.key === 'refresh') {
       refresh()
@@ -144,6 +168,13 @@ function TreeNodeRightClick(props: Iprops) {
 
   if (data.nodeType == TreeNodeType.TABLE) {
     return <div className={styles.menuBox}>
+      <Modal
+        title="请确认你要删除的表名"
+        open={verifyDialog}
+        onOk={handleOk}
+        onCancel={(() => { setVerifyDialog(false) })}>
+        <Input placeholder={data.tableName} value={verifyTableName} onChange={(e) => { setVerifyTableName(e.target.value) }}></Input>
+      </Modal>
       <Menu>
         {
           tableMenu.map(item => {

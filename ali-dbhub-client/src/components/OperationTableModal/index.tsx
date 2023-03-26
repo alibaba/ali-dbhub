@@ -26,20 +26,23 @@ export interface IOperationTableModalProps {
 }
 
 export default memo<IOperationTableModalProps>(function OperationTableModal(props) {
+
   const { className } = props;
   const { model, setOperationDataDialog } = useContext(DatabaseContext);
   const { operationData } = model;
+
   const monacoEditor = useRef();
   const [consoleId, setConsoleId] = useState<string>();
-  if (!operationData) {
-    return <></>
-  }
 
   useEffect(() => {
     addWindowTab();
   }, [])
 
   useEffect(() => {
+    console.log(operationData)
+    if (!operationData) {
+      return
+    }
     if (operationData.type == 'new') {
       mysqlServer.createTableExample({ dbType: operationData.nodeData?.dataType }).then(res => {
         setMonacoEditorValue(monacoEditor.current, res)
@@ -60,9 +63,12 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
         setMonacoEditorValue(monacoEditor.current, res)
       })
     }
-  }, [])
+  }, [operationData])
 
   const addWindowTab = () => {
+    if (!operationData) {
+      return
+    }
     let p = {
       name: '弹窗',
       type: operationData.nodeData?.dataType,
@@ -148,6 +154,10 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
       default:
         return '确定'
     }
+  }
+
+  if (!operationData) {
+    return <></>
   }
 
   return <Modal
