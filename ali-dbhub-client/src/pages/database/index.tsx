@@ -254,12 +254,13 @@ export default memo<IProps>(function DatabasePage({ className }) {
         </div>
       </div>
     </div>
-    {
+    {/* {
       (operationData?.type === 'new' || operationData?.type === 'export') &&
       <OperationTableModal
         setOperationData={setOperationData}
         operationData={operationData!}
       />
-    }
+    } */}
+    <OperationTableModal />
   </DatabaseContextProvider>
 });

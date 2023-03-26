@@ -138,15 +138,15 @@ function TreeNode(props: TreeNodeIProps) {
             }
             <div className={styles.typeIcon}>
               {
-                data.nodeType === TreeNodeType.DATASOURCE ? 
-                <div style={{backgroundImage:`url(${databaseType[data.dataType!]?.img})`}} className={styles.typeImg}></div>
-                :
-                <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
+                data.nodeType === TreeNodeType.DATASOURCE ?
+                  <div style={{ backgroundImage: `url(${databaseType[data.dataType!]?.img})` }} className={styles.typeImg}></div>
+                  :
+                  <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
               }
             </div>
             <div className={styles.contentText} >
               <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
-              <div className={styles.type}>{data.dataType}</div>
+              {/* <div className={styles.type}>{data.dataType}</div> */}
             </div>
           </div>
         </div>
@@ -156,7 +156,7 @@ function TreeNode(props: TreeNodeIProps) {
       !!data.children?.length &&
       data.children.map((item: any, i: number) => {
         return (
-          <TreeNode openOperationTableModal={openOperationTableModal} nodeDoubleClick={nodeDoubleClick} key={i} showAllChildrenPenetrate={showAllChildrenPenetrate || showAllChildren} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
+          <TreeNode setTreeData={setTreeData} openOperationTableModal={openOperationTableModal} nodeDoubleClick={nodeDoubleClick} key={i} showAllChildrenPenetrate={showAllChildrenPenetrate || showAllChildren} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
         );
       })
     }
@@ -208,7 +208,7 @@ function Tree(props: IProps) {
   );
 };
 
-export function getDataSource(setTreeData:Function) {
+export function getDataSource(setTreeData: Function) {
   let p = {
     pageNo: 1,
     pageSize: 100
