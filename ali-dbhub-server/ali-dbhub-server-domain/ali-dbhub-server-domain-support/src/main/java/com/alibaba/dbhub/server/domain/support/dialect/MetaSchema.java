@@ -11,6 +11,7 @@ import javax.validation.constraints.NotEmpty;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Function;
 import com.alibaba.dbhub.server.domain.support.model.Procedure;
+import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.Trigger;
@@ -19,7 +20,7 @@ import com.alibaba.dbhub.server.domain.support.model.Trigger;
  * @author jipengfei
  * @version : MetaSchemaManager.java, v 0.1 2022年12月14日 16:26 jipengfei Exp $
  */
-public interface MetaSchema<T> {
+public interface MetaSchema<T extends BaseMapper> {
     /**
      * 支持的数据库类型
      *
@@ -65,7 +66,7 @@ public interface MetaSchema<T> {
      * @param databaseName
      * @return
      */
-    List<T> tables(@NotEmpty String databaseName, String schemaName);
+    List<Table> tables(@NotEmpty String databaseName, String schemaName,String tableName);
 
     /**
      * 查询所有视图
@@ -74,7 +75,7 @@ public interface MetaSchema<T> {
      * @param schemaName
      * @return
      */
-    List<T> views(@NotEmpty String databaseName, String schemaName);
+    List<? extends Table> views(@NotEmpty String databaseName, String schemaName);
 
     /**
      * 查询所有的函数
@@ -120,5 +121,9 @@ public interface MetaSchema<T> {
      * @param tableName    * @return
      */
     List<? extends TableIndex> indexes(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName);
+
+
+
+    T  getMapper();
 
 }

@@ -54,7 +54,6 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlRenameTableStateme
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlRenameTableStatement.Item;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlTableIndex;
 
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -73,18 +72,29 @@ public class TableTemplate implements TableOperations {
     @Override
     public String showCreateTable(ShowCreateTableParam param) {
         MetaSchema metaSchema = DbhubContext.getConnectInfo().getDbType().metaSchema();
-        return metaSchema.tableDDL(param.getDatabaseName(), null, param.getTableName());
+        return metaSchema.tableDDL(param.getDatabaseName(), param.getTableSchema(), param.getTableName());
     }
 
     @Override
     public void drop(DropParam param) {
         MetaSchema metaSchema = DbhubContext.getConnectInfo().getDbType().metaSchema();
-        metaSchema.dropTable(param.getDatabaseName(), null, param.getTableName());
+        metaSchema.dropTable(param.getDatabaseName(), param.getTableSchema(), param.getTableName());
     }
 
     @Override
     public Table query(TableQueryParam param, TableSelector selector) {
-        return null;
+        MetaSchema metaSchema = DbhubContext.getConnectInfo().getDbType().metaSchema();
+        List<Table> tables = metaSchema.tables(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
+        if (CollectionUtils.isEmpty(tables)) {
+            return null;
+        } else {
+            Table table = tables.get(0);
+            table.setIndexList(
+                metaSchema.indexes(param.getDatabaseName(), param.getSchemaName(), param.getTableName()));
+            table.setColumnList(
+                metaSchema.columns(param.getDatabaseName(), param.getSchemaName(), param.getTableName()));
+            return table;
+        }
     }
 
     @Override
@@ -147,7 +157,7 @@ public class TableTemplate implements TableOperations {
                         if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
                             for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
                                 SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
                                 CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
                                     tableIndexColumn.getCollation());
                                 if (collation != null) {
@@ -164,7 +174,7 @@ public class TableTemplate implements TableOperations {
                         if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
                             for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
                                 SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
                                 CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
                                     tableIndexColumn.getCollation());
                                 if (collation != null) {
@@ -369,7 +379,7 @@ public class TableTemplate implements TableOperations {
                 if (!CollectionUtils.isEmpty(newTableIndex.getColumnList())) {
                     for (TableIndexColumn tableIndexColumn : newTableIndex.getColumnList()) {
                         SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                        sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                        sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
                         CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
                             tableIndexColumn.getCollation());
                         if (collation != null) {
@@ -387,9 +397,9 @@ public class TableTemplate implements TableOperations {
                 || !Objects.equals(oldTableIndex.getUnique(), newTableIndex.getUnique());
             if (!hasChange) {
                 Map<String, TableIndexColumn> oldTableIndexColumnMap = EasyCollectionUtils.toIdentityMap(
-                    oldTableIndex.getColumnList(), TableIndexColumn::getName);
+                    oldTableIndex.getColumnList(), TableIndexColumn::getColumnName);
                 Map<String, TableIndexColumn> newTableIndexColumnMap = EasyCollectionUtils.toIdentityMap(
-                    newTableIndex.getColumnList(), TableIndexColumn::getName);
+                    newTableIndex.getColumnList(), TableIndexColumn::getColumnName);
                 hasChange = oldTableIndexColumnMap.entrySet()
                     .stream()
                     .anyMatch(oldTableIndexColumnEntry -> {
@@ -399,7 +409,8 @@ public class TableTemplate implements TableOperations {
                             return true;
                         }
                         TableIndexColumn oldTableIndexColumn = oldTableIndexColumnEntry.getValue();
-                        return !StringUtils.equals(oldTableIndexColumn.getName(), newTableIndexColumn.getName())
+                        return !StringUtils.equals(oldTableIndexColumn.getColumnName(),
+                            newTableIndexColumn.getColumnName())
                             || !CollationEnum.equals(oldTableIndexColumn.getCollation(),
                             newTableIndexColumn.getCollation());
                     })
@@ -433,7 +444,7 @@ public class TableTemplate implements TableOperations {
             if (!CollectionUtils.isEmpty(newTableIndex.getColumnList())) {
                 for (TableIndexColumn tableIndexColumn : newTableIndex.getColumnList()) {
                     SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                    sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                    sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
                     CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
                         tableIndexColumn.getCollation());
                     if (collation != null) {
@@ -461,7 +472,7 @@ public class TableTemplate implements TableOperations {
     @Override
     public PageResult<Table> pageQuery(TablePageQueryParam param, TableSelector selector) {
         MetaSchema metaSchema = DbhubContext.getMetaSchema();
-        List<Table> list = metaSchema.tables(param.getDatabaseName(), param.getTableName());
+        List<Table> list = metaSchema.tables(param.getDatabaseName(), param.getTableSchema(), param.getTableName());
         if (CollectionUtils.isEmpty(list)) {
             return PageResult.of(list, 0L, param);
         }
@@ -499,7 +510,7 @@ public class TableTemplate implements TableOperations {
     @Override
     public List<TableIndex> queryIndexes(TableQueryParam param) {
         MetaSchema metaSchema = DbhubContext.getMetaSchema();
-         return metaSchema.indexes(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
+        return metaSchema.indexes(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
 
     }
 

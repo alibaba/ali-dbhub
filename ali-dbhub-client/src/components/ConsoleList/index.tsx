@@ -35,7 +35,7 @@ export default memo<Iprops>(function ConsoleList(props) {
     let p = {
       pageNo: 1,
       pageSize: 999,
-      // tabOpened: TabOpened.IS_OPEN,  
+      tabOpened: TabOpened.IS_OPEN,
     };
 
     historyService.getSaveList(p).then((res) => {
