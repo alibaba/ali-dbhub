@@ -31,6 +31,7 @@
     "monaco-editor-esm-webpack-plugin": "^2.1.0",
     "monaco-editor-nls": "^3.0.0",
     "monaco-editor-webpack-plugin": "^7.0.1",
+    "npm": "^9.6.2",
     "react": "17.x",
     "react-dom": "17.x",
     "sql-formatter": "^12.0.4",

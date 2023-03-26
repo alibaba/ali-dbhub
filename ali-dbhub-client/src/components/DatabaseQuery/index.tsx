@@ -161,20 +161,26 @@ export default memo<IProps>(function DatabaseQuery(props) {
   return <>
     <div className={classnames(styles.databaseQuery)}>
       <div className={styles.operatingArea}>
-        <div>
-          <Tooltip placement="bottom" title="执行">
-            <Iconfont code="&#xe626;" className={styles.icon} onClick={executeSql} />
-          </Tooltip>
+        <div className={styles.left}>
+          <div>
+            <Tooltip placement="bottom" title="执行">
+              <Iconfont code="&#xe626;" className={styles.icon} onClick={executeSql} />
+            </Tooltip>
+          </div>
+          <div>
+            <Tooltip placement="bottom" title={OSnow() === OSType.WIN ? "保存 Ctrl + S" : "保存 CMD + S"} >
+              <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} />
+            </Tooltip>
+          </div>
+          <div>
+            <Tooltip placement="bottom" title="格式化">
+              <Iconfont code="&#xe7f8;" className={styles.icon} onClick={formatValue} />
+            </Tooltip>
+          </div>
         </div>
-        <div>
-          <Tooltip placement="bottom" title={OSnow() === OSType.WIN ? "保存 Ctrl + S" : "保存 CMD + S"} >
-            <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} />
-          </Tooltip>
-        </div>
-        <div>
-          <Tooltip placement="bottom" title="格式化">
-            <Iconfont code="&#xe7f8;" className={styles.icon} onClick={formatValue} />
-          </Tooltip>
+        <div className={styles.right}>
+          <span>dataSourseId: {windowTab.dataSourceId}</span>
+          <span>database: {windowTab.databaseName}</span>
         </div>
       </div>
       <div ref={monacoEditorBox} className={styles.monacoEditor}>
