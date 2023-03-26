@@ -3,11 +3,14 @@ package com.alibaba.dbhub.server.web.api.controller.rdb;
 import java.util.List;
 
 import com.alibaba.dbhub.server.domain.api.param.DlExecuteParam;
+import com.alibaba.dbhub.server.domain.api.service.DatabaseService;
 import com.alibaba.dbhub.server.domain.api.service.DlTemplateService;
 import com.alibaba.dbhub.server.domain.api.service.TableService;
+import com.alibaba.dbhub.server.domain.support.model.Schema;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
+import com.alibaba.dbhub.server.domain.support.param.database.SchemaQueryParam;
 import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
 import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
@@ -20,6 +23,7 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dbhub.server.web.api.aspect.ConnectionInfoAspect;
+import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.converter.RdbWebConverter;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DdlExportRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DdlRequest;
@@ -35,6 +39,7 @@ import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ColumnVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.IndexVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.KeyVO;
+import com.alibaba.dbhub.server.web.api.controller.rdb.vo.SchemaVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.SqlVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.TableVO;
 
@@ -70,6 +75,10 @@ public class RdbDdlController {
     private RdbWebConverter rdbWebConverter;
 
 
+    @Autowired
+    private DatabaseService databaseService;
+
+
     /**
      * 查询当前DB下的表列表
      *
@@ -89,7 +98,18 @@ public class RdbDdlController {
             request.getPageSize());
     }
 
-
+    /**
+     * 查询数据库里包含的schema_list
+     * @param request
+     * @return
+     */
+    @GetMapping("/schema_list")
+    public ListResult<SchemaVO> schemaList(DataSourceBaseRequest request) {
+        SchemaQueryParam queryParam = SchemaQueryParam.builder().dataBaseName(request.getDatabaseName()).build();
+        ListResult<Schema> tableColumns = databaseService.querySchema(queryParam);
+        List<SchemaVO> tableVOS = rdbWebConverter.schemaDto2vo(tableColumns.getData());
+        return ListResult.of(tableVOS);
+    }
 
 
     /**

@@ -3,8 +3,10 @@ package com.alibaba.dbhub.server.domain.support.template;
 import java.util.List;
 
 import com.alibaba.dbhub.server.domain.support.model.Database;
+import com.alibaba.dbhub.server.domain.support.model.Schema;
 import com.alibaba.dbhub.server.domain.support.operations.DatabaseOperations;
 import com.alibaba.dbhub.server.domain.support.param.database.DatabaseQueryAllParam;
+import com.alibaba.dbhub.server.domain.support.param.database.SchemaQueryParam;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 
@@ -24,5 +26,11 @@ public class DatabaseTemplate implements DatabaseOperations {
     public List<Database> queryAll(DatabaseQueryAllParam param) {
         List<String> databases = DbhubContext.getMetaSchema().databases();
         return EasyCollectionUtils.toList(databases, name -> Database.builder().name(name).build());
+    }
+
+    @Override
+    public List<Schema> querySchema(SchemaQueryParam param) {
+        List<String> databases = DbhubContext.getMetaSchema().schemas(param.getDataBaseName());
+        return EasyCollectionUtils.toList(databases, name -> Schema.builder().name(name).build());
     }
 }

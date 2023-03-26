@@ -40,7 +40,7 @@ public class PostgresqlMetaSchemaSupport extends BaseMetaSchemaSupport implement
 
     @Override
     public List<String> schemas(String databaseName) {
-        return null;
+        return getMapper().schemas(databaseName);
     }
 
 
