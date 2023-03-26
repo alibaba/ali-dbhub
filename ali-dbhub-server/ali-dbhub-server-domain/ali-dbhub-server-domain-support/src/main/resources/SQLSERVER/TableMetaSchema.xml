@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.alibaba.dbhub.server.domain.support.dialect.mysql.mapper.MysqlMetaSchemaMapper">
+<mapper namespace="com.alibaba.dbhub.server.domain.support.dialect.sqlserver.mapper.SqlServerMetaSchemaMapper">
     <resultMap id="BaseTableResultMap" type="com.alibaba.dbhub.server.domain.support.model.Table">
         <result property="name" jdbcType="CHAR" column="table_name"/>
         <result property="comment" jdbcType="CHAR" column="table_comment"/>
@@ -23,7 +23,7 @@
         <result property="ordinalPosition" jdbcType="INTEGER" column="ordinal_position"/>
     </resultMap>
     <resultMap id="TableIndexColumnUnionResultMap"
-               type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">
+               type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumn">
         <result property="indexName" jdbcType="CHAR" column="INDEX_NAME"/>
         <result property="tableName" jdbcType="CHAR" column="TABLE_NAME"/>
         <result property="columnName" jdbcType="CHAR" column="COLUMN_NAME"/>

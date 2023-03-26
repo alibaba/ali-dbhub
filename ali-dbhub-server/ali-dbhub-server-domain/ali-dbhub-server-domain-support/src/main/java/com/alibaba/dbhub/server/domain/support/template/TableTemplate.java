@@ -147,7 +147,7 @@ public class TableTemplate implements TableOperations {
                         if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
                             for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
                                 SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
                                 CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
                                     tableIndexColumn.getCollation());
                                 if (collation != null) {
@@ -164,7 +164,7 @@ public class TableTemplate implements TableOperations {
                         if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
                             for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
                                 SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
                                 CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
                                     tableIndexColumn.getCollation());
                                 if (collation != null) {
@@ -369,7 +369,7 @@ public class TableTemplate implements TableOperations {
                 if (!CollectionUtils.isEmpty(newTableIndex.getColumnList())) {
                     for (TableIndexColumn tableIndexColumn : newTableIndex.getColumnList()) {
                         SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                        sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                        sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
                         CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
                             tableIndexColumn.getCollation());
                         if (collation != null) {
@@ -387,9 +387,9 @@ public class TableTemplate implements TableOperations {
                 || !Objects.equals(oldTableIndex.getUnique(), newTableIndex.getUnique());
             if (!hasChange) {
                 Map<String, TableIndexColumn> oldTableIndexColumnMap = EasyCollectionUtils.toIdentityMap(
-                    oldTableIndex.getColumnList(), TableIndexColumn::getName);
+                    oldTableIndex.getColumnList(), TableIndexColumn::getColumnName);
                 Map<String, TableIndexColumn> newTableIndexColumnMap = EasyCollectionUtils.toIdentityMap(
-                    newTableIndex.getColumnList(), TableIndexColumn::getName);
+                    newTableIndex.getColumnList(), TableIndexColumn::getColumnName);
                 hasChange = oldTableIndexColumnMap.entrySet()
                     .stream()
                     .anyMatch(oldTableIndexColumnEntry -> {
@@ -399,7 +399,7 @@ public class TableTemplate implements TableOperations {
                             return true;
                         }
                         TableIndexColumn oldTableIndexColumn = oldTableIndexColumnEntry.getValue();
-                        return !StringUtils.equals(oldTableIndexColumn.getName(), newTableIndexColumn.getName())
+                        return !StringUtils.equals(oldTableIndexColumn.getColumnName(), newTableIndexColumn.getColumnName())
                             || !CollationEnum.equals(oldTableIndexColumn.getCollation(),
                             newTableIndexColumn.getCollation());
                     })
@@ -433,7 +433,7 @@ public class TableTemplate implements TableOperations {
             if (!CollectionUtils.isEmpty(newTableIndex.getColumnList())) {
                 for (TableIndexColumn tableIndexColumn : newTableIndex.getColumnList()) {
                     SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                    sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getName()));
+                    sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
                     CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
                         tableIndexColumn.getCollation());
                     if (collation != null) {
