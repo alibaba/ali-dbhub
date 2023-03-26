@@ -122,8 +122,8 @@ export enum ConsoleType {
 }
 
 export enum  TabOpened {
-  IS_OPEN = 'Y',
-  NOT_OPEN = 'N'
+  IS_OPEN = 'y',
+  NOT_OPEN = 'n'
 }
 
 

@@ -218,7 +218,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
           </div>
         </div>
         <div className={styles.right}>
-          <span>dataSourseId: {windowTab.dataSourceId}</span>
+          <span>dataSourceId: {windowTab.dataSourceId}</span>
           <span>database: {windowTab.databaseName}</span>
         </div>
       </div>
