@@ -44,7 +44,8 @@ public abstract class OperationLogWebConverter {
      * @return
      */
     @Mappings({
-        @Mapping(source = "ddl", target = "name")
+        @Mapping(source = "ddl", target = "name"),
+        @Mapping(target = "connectable", expression = "java(ddlDTO.getDataSourceName() != null)"),
     })
     public abstract OperationLogVO dto2vo(OperationLog ddlDTO);
 

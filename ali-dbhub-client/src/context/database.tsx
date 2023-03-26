@@ -11,17 +11,20 @@ export type IOperationDataDialog = false | IOperationData
 export interface IModel {
   createConsoleDialog: ICreateConsoleDialog;
   operationData: IOperationDataDialog;
+  needRefreshNodeTree: any;
 }
 
 export interface IContext {
   model: IModel;
   setcreateConsoleDialog: (value: ICreateConsoleDialog) => void;
   setOperationDataDialog: (value: IOperationDataDialog) => void;
+  setNeedRefreshNodeTree: (value: any) => void;
 }
 
 const initDatabaseValue: IModel = {
   createConsoleDialog: false,
   operationData: false,
+  needRefreshNodeTree: {}
 }
 
 export const DatabaseContext = createContext<IContext>({} as any);
@@ -41,11 +44,18 @@ export default function DatabaseContextProvider({ children }: { children: React.
       operationData
     })
   }
+  const setNeedRefreshNodeTree = (needRefreshNodeTree: any) => {
+    setStateModel({
+      ...model,
+      needRefreshNodeTree
+    })
+  }
 
   return <DatabaseContext.Provider value={{
     model,
     setcreateConsoleDialog,
-    setOperationDataDialog
+    setOperationDataDialog,
+    setNeedRefreshNodeTree
   }}>
     {children}
   </DatabaseContext.Provider>
