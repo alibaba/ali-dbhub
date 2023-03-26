@@ -37,6 +37,45 @@ export const treeConfig: ITreeConfig = {
   [TreeNodeType.DATABASE]: {
     getNodeData: (parentData: ITreeNode) => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
+        let p = {
+          dataSourceId: parentData.dataSourceId!,
+          databaseName: parentData.databaseName!
+        }
+        mysqlServer.getSchemaList(p).then(res => {
+          if (res.length) {
+            const data: ITreeNode[] = res.map(t => {
+              return {
+                key: t.name,
+                name: t.name,
+                nodeType: TreeNodeType.SCHEMAS,
+                dataType: parentData.dataType,
+                schemaName: t.name,
+                dataSourceId: parentData.dataSourceId!,
+                databaseName: parentData.databaseName!
+              }
+            })
+            r(data);
+          } else {
+            let data = [
+              {
+                key: parentData.name + 'tables',
+                name: 'tables',
+                nodeType: TreeNodeType.TABLES,
+                dataSourceId: parentData.dataSourceId,
+                databaseName: parentData.databaseName,
+                dataType: parentData.dataType,
+              }
+            ]
+            r(data);
+          }
+        })
+      })
+    },
+  },
+
+  [TreeNodeType.SCHEMAS]: {
+    getNodeData: (parentData: ITreeNode) => {
+      return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let data = [
           {
             key: parentData.name + 'tables',
@@ -45,6 +84,7 @@ export const treeConfig: ITreeConfig = {
             dataSourceId: parentData.dataSourceId,
             databaseName: parentData.databaseName,
             dataType: parentData.dataType,
+            schemaName: parentData.schemaName,
           }
         ]
         r(data);
@@ -60,6 +100,7 @@ export const treeConfig: ITreeConfig = {
         let p = {
           dataSourceId: parentData.dataSourceId!,
           databaseName: parentData.databaseName!,
+          schemaName: parentData.schemaName,
           pageNo: 1,
           pageSize: 100,
         }
@@ -74,6 +115,7 @@ export const treeConfig: ITreeConfig = {
               databaseName: parentData.databaseName!,
               dataType: parentData.dataType,
               tableName: item.name,
+              schemaName: parentData.schemaName,
             }
           })
           r(tableList);
@@ -96,6 +138,7 @@ export const treeConfig: ITreeConfig = {
             dataSourceId: parentData.dataSourceId!,
             databaseName: parentData.databaseName!,
             dataType: parentData.dataType,
+            schemaName: parentData.schemaName,
           },
           {
             name: 'keys',
@@ -105,6 +148,7 @@ export const treeConfig: ITreeConfig = {
             dataSourceId: parentData.dataSourceId!,
             databaseName: parentData.databaseName!,
             dataType: parentData.dataType,
+            schemaName: parentData.schemaName,
           },
           {
             name: 'indexs',
@@ -114,6 +158,7 @@ export const treeConfig: ITreeConfig = {
             dataSourceId: parentData.dataSourceId!,
             databaseName: parentData.databaseName!,
             dataType: parentData.dataType,
+            schemaName: parentData.schemaName,
           },
         ]
 
@@ -132,6 +177,7 @@ export const treeConfig: ITreeConfig = {
           databaseName: parentData.databaseName!,
           tableName: parentData.tableName!,
           dataType: parentData.dataType,
+          schemaName: parentData.schemaName,
         }
         console.log(p)
 
@@ -205,6 +251,9 @@ export const switchIcon: { [key in TreeNodeType]: { icon: string } } = {
   },
   [TreeNodeType.DATABASE]: {
     icon: '\ue62c'
+  },
+  [TreeNodeType.SCHEMAS]: {
+    icon: '\ue696'
   },
   [TreeNodeType.TABLE]: {
     icon: '\ue63e'

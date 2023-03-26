@@ -36,7 +36,7 @@ function getItem(
 
 const newDataSourceChildren = Object.keys(databaseType).map(t => {
   const source: IDatabase = databaseType[t]
-  return getItem(source.name, source.code, <img className={styles.dataSourceTypeImg} src={source.img} alt="" />)
+  return getItem(source.name, source.code, <Iconfont className={styles.databaseTypeIcon} code={source.icon} />)
 })
 
 type IGlobalAddMenuItem = {

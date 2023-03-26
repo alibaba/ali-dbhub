@@ -35,9 +35,9 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
   const monacoEditor = useRef();
   const [consoleId, setConsoleId] = useState<string>();
 
-  useEffect(() => {
-    addWindowTab();
-  }, [])
+  // useEffect(() => {
+  //   addWindowTab();
+  // }, [operationData])
 
   useEffect(() => {
     if (!operationData) {
@@ -65,23 +65,23 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
     }
   }, [operationData])
 
-  const addWindowTab = () => {
-    if (!operationData) {
-      return
-    }
-    let p = {
-      name: '弹窗',
-      type: operationData.nodeData?.dataType,
-      dataSourceId: operationData.nodeData?.dataSourceId,
-      databaseName: operationData.nodeData?.databaseName,
-      status: WindowTabStatus.DRAFT,
-      tabOpened: 'n',
-      ddl: ''
-    }
-    historyServer.saveWindowTab(p).then(res => {
-      setConsoleId(res)
-    })
-  };
+  // const addWindowTab = () => {
+  //   if (!operationData) {
+  //     return
+  //   }
+  //   let p = {
+  //     name: '弹窗',
+  //     type: operationData.nodeData?.dataType,
+  //     dataSourceId: operationData.nodeData?.dataSourceId,
+  //     databaseName: operationData.nodeData?.databaseName,
+  //     status: WindowTabStatus.DRAFT,
+  //     tabOpened: 'n',
+  //     ddl: ''
+  //   }
+  //   historyServer.saveWindowTab(p).then(res => {
+  //     setConsoleId(res)
+  //   })
+  // };
 
   function handleOk() {
     if (!operationData) {

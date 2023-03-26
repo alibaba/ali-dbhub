@@ -106,7 +106,11 @@ function TreeNode(props: TreeNodeIProps) {
   }
 
   const recognizeIcon = (nodeType: TreeNodeType) => {
-    return switchIcon[nodeType].icon
+    if (nodeType === TreeNodeType.DATASOURCE) {
+      return databaseType[data.dataType!]?.icon
+    } else {
+      return switchIcon[nodeType].icon
+    }
   }
 
   function renderTitle(data: ITreeNode) {
@@ -155,12 +159,7 @@ function TreeNode(props: TreeNodeIProps) {
               </div>
             }
             <div className={styles.typeIcon}>
-              {
-                data.nodeType === TreeNodeType.DATASOURCE ?
-                  <div style={{ backgroundImage: `url(${databaseType[data.dataType!]?.img})` }} className={styles.typeImg}></div>
-                  :
-                  <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
-              }
+              <Iconfont code={recognizeIcon(data.nodeType)}></Iconfont>
             </div>
             <div className={styles.contentText} >
               <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>

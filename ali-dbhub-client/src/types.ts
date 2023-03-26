@@ -12,6 +12,7 @@ export interface IDatabase {
   code: DatabaseTypeCode;
   img: string;
   port: number;
+  icon: string;
 }
 export interface IPageResponse<T> {
   data: T[];
@@ -70,6 +71,7 @@ export interface ITreeNode {
   dataSourceId?: number;
   databaseName?: string;
   tableName?: string;
+  schemaName?: string;
   // columnType: string;
 }
 export interface IDB {
@@ -125,6 +127,7 @@ export interface IConsoleBasic {
   DBType: DatabaseTypeCode; // 数据库类型
   databaseName: string; // 数据库名称
   dataSourceId: number; // 数据源id
+  dataSourceName?: string; // 数据源名称
 }
 
 // 查询sql的控制台
@@ -147,5 +150,7 @@ export interface ISavedConsole {
   ddl: string;
   dataSourceId: number;
   databaseName: string;
+  dataSourceName: string;
   type: DatabaseTypeCode;
+  status: string;
 }
