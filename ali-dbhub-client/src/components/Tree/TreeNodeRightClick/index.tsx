@@ -27,7 +27,7 @@ export type Iprops = {
 
 function TreeNodeRightClick(props: Iprops) {
   const { className, setTreeData, data, openOperationTableModal, nodeConfig, setIsLoading } = props;
-  const { setcreateConsoleDialog } = useContext(DatabaseContext);
+  const { setcreateConsoleDialog, setOperationDataDialog } = useContext(DatabaseContext);
 
   function refresh() {
     data.children = []
@@ -45,17 +45,20 @@ function TreeNodeRightClick(props: Iprops) {
   const { getNodeData } = nodeConfig;
 
   const tableMenu: IMenu<string>[] = [
-    {
-      title: '设计表结构',
-      key: 'edit',
-    },
+    // {
+    //   title: '设计表结构',
+    //   key: 'edit',
+    //   icon: '\ue60f'
+    // },
     {
       title: '导出建表语句',
       key: 'export',
+      icon: '\ue613'
     },
     {
       title: '删除表',
       key: 'delete',
+      icon: '\ue6a7'
     }
   ]
 
@@ -63,11 +66,17 @@ function TreeNodeRightClick(props: Iprops) {
     {
       title: '新建控制台',
       key: 'newConsole',
-      icon: ''
+      icon: '\ue631'
+    },
+    {
+      title: '新建Table',
+      key: 'createTable',
+      icon: '\ue6b6'
     },
     {
       title: '刷新',
       key: 'refresh',
+      icon: '\uec08'
     },
   ]
 
@@ -75,10 +84,12 @@ function TreeNodeRightClick(props: Iprops) {
     {
       title: '刷新',
       key: 'refresh',
+      icon: '\uec08'
     },
     {
       title: '移除',
       key: 'remove',
+      icon: '\ue6a7'
     },
   ]
 
@@ -95,7 +106,9 @@ function TreeNodeRightClick(props: Iprops) {
       type: item.key,
       nodeData: data
     }
-    openOperationTableModal?.(operationData)
+    if (operationData.type === 'export') {
+      setOperationDataDialog(operationData)
+    }
     closeMenu();
   }
 
@@ -106,7 +119,14 @@ function TreeNodeRightClick(props: Iprops) {
         databaseName: data.databaseName!,
       })
     } else if (item.key === 'refresh') {
-
+      refresh()
+    } else if (item.key === 'createTable') {
+      const operationData: IOperationData = {
+        type: 'new',
+        nodeData: data
+      }
+      console.log(operationData)
+      setOperationDataDialog(operationData)
     }
     closeMenu();
   }
