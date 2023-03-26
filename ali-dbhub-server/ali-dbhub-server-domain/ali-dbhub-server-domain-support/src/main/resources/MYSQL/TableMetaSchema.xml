@@ -41,7 +41,7 @@
         select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA;
     </select>
 
-    <select id="showCreateTable" resultMap="java.lang.String">
+    <select id="showCreateTable" resultType="java.lang.String">
         SHOW
         CREATE TABLE ${databaseName}.${tableName};
     </select>
