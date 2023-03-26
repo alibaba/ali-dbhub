@@ -36,6 +36,11 @@ public class OperationLog {
     private Long dataSourceId;
 
     /**
+     * 数据源
+     */
+    private String dataSourceName;
+
+    /**
      * db名称
      */
     private String databaseName;

@@ -28,6 +28,11 @@ public class OperationLogVO {
     private Long dataSourceId;
 
     /**
+     * 数据源名称
+     */
+    private String dataSourceName;
+
+    /**
      * DB名称
      */
     private String databaseName;
