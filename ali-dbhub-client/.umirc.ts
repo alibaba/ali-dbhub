@@ -23,13 +23,14 @@ export default defineConfig({
     type: 'hash',
   },
   base: '/',
-  publicPath: './static/front',
+  publicPath: '/static/front/',
   hash: false,
   routes: [
     {
       path: '/',
       component: '@/components/AppContainer',
       routes: [
+        { path: '/chat', exact: true, component: '@/pages/chat-ai' },
         { path: '/login', exact: true, component: '@/pages/login' },
         { path: '/error', component: '@/pages/error' },
         { path: '/demo', exact: true, component: '@/pages/demo' },
