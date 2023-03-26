@@ -214,7 +214,8 @@ export default memo<IProps>(function ConnectionPage(props) {
   }
 
   function submitCallback(data: ITreeNode) {
-    getConnectionList()
+    getConnectionList();
+    setIsModalVisible(false);
   }
 
   return (
