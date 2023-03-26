@@ -436,6 +436,7 @@ public class TableOperationsTest extends BaseTest {
         Assertions.assertEquals(CollationEnum.DESC.getCode(), idxDate.getColumnList().get(0).getCollation(),
             "查询表结构失败");
 
+
         TableIndex ukNumber = tableIndexMap.get(dialectProperties.toCase(tableName + "_uk_number"));
         Assertions.assertEquals("唯一索引", ukNumber.getComment(), "查询表结构失败");
         Assertions.assertEquals(IndexTypeEnum.UNIQUE.getCode(), ukNumber.getType(), "查询表结构失败");
