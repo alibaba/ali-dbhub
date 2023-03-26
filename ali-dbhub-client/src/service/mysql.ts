@@ -61,6 +61,14 @@ export interface IColumn {
   characterMaximumLength: number;
 }
 
+export interface ISchemaParams {
+  dataSourceId: number;
+  databaseName: string;
+}
+export interface ISchemaResponse {
+  name: string;
+}
+
 const deleteTable = createRequest<ITableParams, void>('/api/rdb/ddl/delete',{method: 'post'});
 const createTableExample = createRequest<{dbType:DatabaseTypeCode}, string>('/api/rdb/ddl/create/example',{method: 'get'});
 const updateTableExample = createRequest<{dbType:DatabaseTypeCode}, string>('/api/rdb/ddl/update/example',{method: 'get'});
@@ -70,6 +78,7 @@ const executeTable = createRequest<IExecuteTableParams, string>('/api/rdb/ddl/ex
 const getColumnList = createRequest<ITableParams, IColumn[]>('/api/rdb/ddl/column_list',{method: 'get'});
 const getIndexList = createRequest<ITableParams, IColumn[]>('/api/rdb/ddl/index_list',{method: 'get'});
 const getKeyList = createRequest<ITableParams, IColumn[]>('/api/rdb/ddl/key_list',{method: 'get'});
+const getSchemaList = createRequest<ISchemaParams, ISchemaResponse[]>('/api/rdb/ddl/schema_list',{method: 'get'});
 
 
 export default {
@@ -83,5 +92,6 @@ export default {
   executeTable,
   getColumnList,
   getIndexList,
-  getKeyList
+  getKeyList,
+  getSchemaList
 }

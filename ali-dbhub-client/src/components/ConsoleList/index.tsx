@@ -46,12 +46,14 @@ export default memo<Iprops>(function ConsoleList(props) {
           }
           return {
             consoleId: item.id,
-            ddl: '111',
+            ddl: item.ddl,
             name: item.name,
             key: item.id + '',
-            type: ConsoleType.SQLQ,
             DBType: item.type,
+            type: ConsoleType.SQLQ,
+            status: item.status,
             databaseName: item.databaseName,
+            databaseSource: item?.dataSourceName,
             dataSourceId: item.dataSourceId,
           };
         }),
@@ -86,18 +88,19 @@ export default memo<Iprops>(function ConsoleList(props) {
     setActiveKey(newActiveKey);
   };
 
-  const onEdit = (targetKey: any, action: 'add' | 'remove') => {
+  const onEdit = (targetKey: any, action: 'add' | 'remove', window: any) => {
     // if (action === 'add') {
     //   setcreateConsoleDialog(true)
     // } else {
     //   closeWindowTab(targetKey);
     // }
+    console.log(window)
     if (action === 'remove') {
-      closeWindowTab(targetKey);
+      closeWindowTab(targetKey, window);
     }
   };
 
-  const closeWindowTab = (targetKey: string) => {
+  const closeWindowTab = (targetKey: string, window: any) => {
     let newActiveKey = activeKey;
     let lastIndex = -1;
     windowList.forEach((item, i) => {
@@ -119,7 +122,12 @@ export default memo<Iprops>(function ConsoleList(props) {
       id: targetKey,
       tabOpened: 'n',
     };
-    historyService.updateWindowTab(p);
+
+    if (window.status === 'DRAFT') {
+      historyService.deleteWindowTab({ id: window.id })
+    } else {
+      historyService.updateWindowTab(p);
+    }
   };
 
   function createdCallback(newConsole: IConsole) {
@@ -137,7 +145,7 @@ export default memo<Iprops>(function ConsoleList(props) {
             type="editable-card"
             onChange={onChangeTab}
             activeKey={activeKey}
-            onEdit={onEdit}
+            onEdit={(targetKey: any, action: 'add' | 'remove') => { onEdit(targetKey, action, window) }}
             items={windowList.map(t => {
               return {
                 key: t.key,
@@ -190,7 +198,7 @@ export function CreateConsoleModal({ createdCallback }: { createdCallback: (newC
     }
 
     let p = {
-      name: 'windowName',
+      name: consoleName,
       type: DatabaseTypeCode.MYSQL,
       dataSourceId: createConsoleDialog.dataSourceId,
       databaseName: createConsoleDialog?.databaseName,

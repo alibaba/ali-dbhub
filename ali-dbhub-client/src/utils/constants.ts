@@ -32,6 +32,7 @@ export const databaseType: {
     img: mysqlLogo,
     code: DatabaseTypeCode.MYSQL,
     port: 3306,
+    icon: '\uec6d'
   },
   // [DatabaseTypeCode.REDIS]:{
   //   name: 'Redis',
@@ -43,18 +44,21 @@ export const databaseType: {
     img: h2Logo,
     code: DatabaseTypeCode.H2,
     port: 9092,
+    icon: '\ue61c'
   },
   [DatabaseTypeCode.ORACLE]: {
     name: 'Oracle',
     img: moreDBLogo,
     code: DatabaseTypeCode.ORACLE,
     port: 1521,
+    icon: '\uec48'
   },
   [DatabaseTypeCode.POSTGRESQL]: {
     name: 'PostgreSql',
     img: moreDBLogo,
     code: DatabaseTypeCode.POSTGRESQL,
     port: 5432,
+    icon: '\uec5d'
   },
 };
 
@@ -65,6 +69,7 @@ export const databaseTypeList = Object.keys(databaseType).map((keys) => {
 export enum TreeNodeType {
   DATASOURCE = 'dataSource',
   DATABASE = 'database',
+  SCHEMAS = 'schemas',
   TABLES = 'tables',
   TABLE = 'table',
   COLUMNS = 'columns',
