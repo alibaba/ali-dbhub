@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Input, Button } from 'antd';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
 import mila from 'markdown-it-link-attributes';
 import mdKatex from '@traptitech/markdown-it-katex';
 import { EventSourcePolyfill } from 'event-source-polyfill';
-import 'katex/dist/katex.min.css'
+import 'katex/dist/katex.min.css';
 // import 'github-markdown-css/github-markdown-light.css'
 // import 'highlight.js/styles/base16'
-import './hljs.css'
+import './hljs.css';
 import styles from './index.less';
 
 function uuid() {
@@ -30,7 +30,6 @@ const md = new MarkdownIt({
   breaks: true,
   highlight: (str: string, lang: string, attrs: string): string => {
     let content = str;
-    console.log('lang==>', lang)
     if (lang && hljs.getLanguage(lang)) {
       try {
         content = hljs.highlight(str, {
@@ -59,7 +58,10 @@ function ChatAI() {
   >([]);
   const [inputValue, setInputValue] = useState<string>('');
   const [question, setQuestion] = useState('');
-
+  const [autoScroll, setAutoScroll] = useState(false);
+  const [isChatting, setIsChatting] = useState(false);
+  const flowRef = useRef<HTMLDivElement>(null);
+  const curSourceTarget = useRef<EventTarget>(null);
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -68,11 +70,19 @@ function ChatAI() {
     if (inputValue.trim() !== '') {
       setInputValue('');
       setQuestion(inputValue);
-
+      setAutoScroll(true);
+      setIsChatting(true);
       const key = uuid();
       setMessages([...messages, { key, question: inputValue, answer: '' }]);
     }
   };
+
+  useEffect(() => {
+    if (flowRef?.current && autoScroll) {
+      flowRef?.current?.scrollTo(0, flowRef?.current?.scrollHeight);
+    }
+  }, [flowRef?.current?.scrollHeight]);
+
   useEffect(() => {
     if (!question) return;
 
@@ -81,7 +91,6 @@ function ChatAI() {
       uid = uuid();
     }
 
-    let sse;
     let text = '';
     const eventSource = new EventSourcePolyfill(
       'http://38.55.129.58/api/ai/chat?message=' + question,
@@ -93,15 +102,14 @@ function ChatAI() {
     );
 
     eventSource.onopen = (event) => {
-      sse = event.target;
+      curSourceTarget.current = event.target;
     };
 
     eventSource.onmessage = (event) => {
       if (event.data == '[DONE]') {
-        console.log('text', text);
-        // text = '';
-        if (sse) {
-          sse.close();
+        setIsChatting(false);
+        if (curSourceTarget?.current) {
+          curSourceTarget?.current?.close();
         }
         return;
       }
@@ -113,8 +121,9 @@ function ChatAI() {
       text = text + json_data.content;
 
       const message = messages.find((i) => i.question === question);
-      message.answer = text;
-      console.log('text==>', text);
+      if (message) {
+        message.answer = text;
+      }
       setMessages([...messages]);
     };
     eventSource.onerror = (event) => {
@@ -138,7 +147,7 @@ function ChatAI() {
   }, [question]);
   return (
     <div className={styles.chatAI}>
-      <div className={styles.chatFlow}>
+      <div className={styles.chatFlow} ref={flowRef}>
         {(messages || []).map((item) => (
           <div className={styles.chatItem} key={item.key}>
             <div className={styles.title}>问题：{item.question}</div>
@@ -150,18 +159,35 @@ function ChatAI() {
         ))}
       </div>
 
-      <Input
-        className={styles.chatBtn}
-        placeholder="请输入"
-        value={inputValue}
-        onChange={handleInputChange}
-        // onPressEnter={handleSendMessage}
-        suffix={
-          <Button type="primary" onClick={handleSendMessage}>
-            发送
+      <div className={styles.chatBtnBlock}>
+        {!isChatting ? (
+          <Input
+            className={styles.chatBtn}
+            placeholder="请输入"
+            value={inputValue}
+            onChange={handleInputChange}
+            onPressEnter={handleSendMessage}
+            suffix={
+              <Button type="primary" size="large" onClick={handleSendMessage}>
+                发送
+              </Button>
+            }
+          />
+        ) : (
+          <Button
+            type="primary"
+            danger
+            size="large"
+            style={{ marginLeft: '20px' }}
+            onClick={() => {
+              curSourceTarget?.current?.close();
+              setIsChatting(false)
+            }}
+          >
+            停止
           </Button>
-        }
-      />
+        )}
+      </div>
     </div>
   );
 }
