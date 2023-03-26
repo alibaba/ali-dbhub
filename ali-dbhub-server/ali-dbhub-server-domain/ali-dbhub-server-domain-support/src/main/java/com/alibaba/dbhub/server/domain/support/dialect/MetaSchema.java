@@ -66,7 +66,7 @@ public interface MetaSchema<T extends BaseMapper> {
      * @param databaseName
      * @return
      */
-    List<? extends Table> tables(@NotEmpty String databaseName, String schemaName);
+    List<Table> tables(@NotEmpty String databaseName, String schemaName,String tableName);
 
     /**
      * 查询所有视图
