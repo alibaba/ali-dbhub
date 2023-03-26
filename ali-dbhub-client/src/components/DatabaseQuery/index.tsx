@@ -68,8 +68,26 @@ export default memo<IProps>(function DatabaseQuery(props) {
       dataSourceId: windowTab.dataSourceId,
       databaseName: windowTab.databaseName,
     }
-    console.log(p)
-    mysqlServer.connectConsole(p)
+    mysqlServer.connectConsole(p);
+    getTableList();
+  }
+
+  const getTableList = () => {
+    let p = {
+      dataSourceId: windowTab.dataSourceId!,
+      databaseName: windowTab.databaseName!,
+      pageNo: 1,
+      pageSize: 999,
+    }
+
+    mysqlServer.getList(p).then(res => {
+      const tableList = res.data?.map(item => {
+        return {
+          name: item.name,
+          key: item.name,
+        }
+      })
+    })
   }
 
   const getEditor = (editor: any) => {
