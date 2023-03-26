@@ -733,6 +733,13 @@
   resolved "https://registry.npm.alibaba-inc.com/@tootallnate/once/download/@tootallnate/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha1-zLkURTYBeaBOf+av94wA/8Hur4I=
 
+"@traptitech/markdown-it-katex@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.npm.alibaba-inc.com/@traptitech/markdown-it-katex/download/@traptitech/markdown-it-katex-3.6.0.tgz#6f2605668ecf56a50aa2fadce1fc76f90dc82529"
+  integrity sha512-CnJzTWxsgLGXFdSrWRaGz7GZ1kUUi8g3E9HzJmeveX1YwVJavrKYqysktfHZQsujdnRqV5O7g8FPKEA/aeTkOQ==
+  dependencies:
+    katex "^0.16.0"
+
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.20.0"
   resolved "https://registry.npm.alibaba-inc.com/@types/babel__core/download/@types/babel__core-7.20.0.tgz#61bc5a4cae505ce98e1e36c5445e4bee060d8891"
@@ -765,6 +772,11 @@
   integrity sha512-1kbcJ40lLB7MHsj39U4Sh1uTd2E7rLEa79kmDpI6cy+XiXsteB3POdQomoq4FxszMrO3ZYchkhYJw7A2862b3w==
   dependencies:
     "@babel/types" "^7.3.0"
+
+"@types/event-source-polyfill@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npm.alibaba-inc.com/@types/event-source-polyfill/download/@types/event-source-polyfill-1.0.1.tgz#ffcb4ca17bc35bc1ca5d3e047fe833292bb73c32"
+  integrity sha512-dls8b0lUgJ/miRApF0efboQ9QZnAm7ofTO6P1ILu8bRPxUFKDxVwFf8+TeuuErmNui6blpltyr7+eV72dbQXlQ==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.6"
@@ -826,6 +838,24 @@
   version "7.0.11"
   resolved "https://registry.npm.alibaba-inc.com/@types/json-schema/download/@types/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
   integrity sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==
+
+"@types/linkify-it@*":
+  version "3.0.2"
+  resolved "https://registry.npm.alibaba-inc.com/@types/linkify-it/download/@types/linkify-it-3.0.2.tgz#fd2cd2edbaa7eaac7e7f3c1748b52a19143846c9"
+  integrity sha1-/SzS7bqn6qx+fzwXSLUqGRQ4Rsk=
+
+"@types/markdown-it@^12.2.3":
+  version "12.2.3"
+  resolved "https://registry.npm.alibaba-inc.com/@types/markdown-it/download/@types/markdown-it-12.2.3.tgz#0d6f6e5e413f8daaa26522904597be3d6cd93b51"
+  integrity sha1-DW9uXkE/jaqiZSKQRZe+PWzZO1E=
+  dependencies:
+    "@types/linkify-it" "*"
+    "@types/mdurl" "*"
+
+"@types/mdurl@*":
+  version "1.0.2"
+  resolved "https://registry.npm.alibaba-inc.com/@types/mdurl/download/@types/mdurl-1.0.2.tgz#e2ce9d83a613bacf284c7be7d491945e39e1f8e9"
+  integrity sha1-4s6dg6YTus8oTHvn1JGUXjnh+Ok=
 
 "@types/node@*":
   version "18.14.6"
@@ -2190,6 +2220,11 @@ commander@^6.2.0:
   resolved "https://registry.npm.alibaba-inc.com/commander/download/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
   integrity sha1-B5LraC37wyWZm7K4T93duhEKxzw=
 
+commander@^8.0.0:
+  version "8.3.0"
+  resolved "https://registry.npm.alibaba-inc.com/commander/download/commander-8.3.0.tgz#4837ea1b2da67b9c616a67afbb0fafee567bca66"
+  integrity sha1-SDfqGy2me5xhamevuw+v7lZ7ymY=
+
 component-classes@^1.2.5:
   version "1.2.6"
   resolved "https://registry.npm.alibaba-inc.com/component-classes/download/component-classes-1.2.6.tgz#c642394c3618a4d8b0b8919efccbbd930e5cd691"
@@ -2711,6 +2746,11 @@ enquirer@^2.3.6:
   dependencies:
     ansi-colors "^4.1.1"
 
+entities@~3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npm.alibaba-inc.com/entities/download/entities-3.0.1.tgz#2b887ca62585e96db3903482d336c1006c3001d4"
+  integrity sha1-K4h8piWF6W2zkDSC0zbBAGwwAdQ=
+
 error-ex@^1.3.1:
   version "1.3.2"
   resolved "https://registry.npm.alibaba-inc.com/error-ex/download/error-ex-1.3.2.tgz#b4ac40648107fdcdcfae242f428bea8a14d4f1bf"
@@ -2781,6 +2821,11 @@ esutils@^2.0.2:
   version "2.0.3"
   resolved "https://registry.npm.alibaba-inc.com/esutils/download/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha1-dNLrTeC42hKTcRkQ1Qd1ubcQ72Q=
+
+event-source-polyfill@^1.0.31:
+  version "1.0.31"
+  resolved "https://registry.npm.alibaba-inc.com/event-source-polyfill/download/event-source-polyfill-1.0.31.tgz#45fb0a6fc1375b2ba597361ba4287ffec5bf2e0c"
+  integrity sha512-4IJSItgS/41IxN5UVAVuAyczwZF7ZIEsM1XAoUzIHA6A+xzusEZUutdXz2Nr+MQPLxfTiCvqE79/C8HT8fKFvA==
 
 events@^3.0.0:
   version "3.3.0"
@@ -3069,6 +3114,11 @@ get-value@^2.0.3, get-value@^2.0.6:
   resolved "https://registry.npm.alibaba-inc.com/get-value/download/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
 
+github-markdown-css@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.npm.alibaba-inc.com/github-markdown-css/download/github-markdown-css-5.2.0.tgz#9f9e30f16cbc1d3b76110667b7c36ca3d96c9cdc"
+  integrity sha512-hq5RaCInSUZ48bImOZpkppW2/MT44StRgsbsZ8YA4vJFwLKB/Vo3k7R2t+pUGqO+ThG0QDMi96TewV/B3vyItg==
+
 glob-parent@~5.1.0:
   version "5.1.2"
   resolved "https://registry.npm.alibaba-inc.com/glob-parent/download/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
@@ -3185,6 +3235,11 @@ hash.js@^1.0.0, hash.js@^1.0.3:
   dependencies:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
+
+highlight.js@^11.7.0:
+  version "11.7.0"
+  resolved "https://registry.npm.alibaba-inc.com/highlight.js/download/highlight.js-11.7.0.tgz#3ff0165bc843f8c9bce1fd89e2fda9143d24b11e"
+  integrity sha512-1rRqesRFhMO/PRF+G86evnyJkCgaZFOI+Z6kdj15TA18funfoqJXvgPCLSf0SWq3SRfg1j3HlDs8o4s3EGq1oQ==
 
 history-with-query@4.10.4:
   version "4.10.4"
@@ -4189,6 +4244,13 @@ json5@^2.1.2, json5@^2.2.1, json5@^2.2.2:
   resolved "https://registry.npm.alibaba-inc.com/json5/download/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
   integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
 
+katex@^0.16.0:
+  version "0.16.4"
+  resolved "https://registry.npm.alibaba-inc.com/katex/download/katex-0.16.4.tgz#87021bc3bbd80586ef715aeb476794cba6a49ad4"
+  integrity sha512-WudRKUj8yyBeVDI4aYMNxhx5Vhh2PjpzQw1GRu/LVGqL4m1AxwD1GcUp0IMbdJaf5zsjtj8ghP0DOQRYhroNkw==
+  dependencies:
+    commander "^8.0.0"
+
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.npm.alibaba-inc.com/kind-of/download/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -4235,6 +4297,13 @@ lines-and-columns@^1.1.6:
   version "1.2.4"
   resolved "https://registry.npm.alibaba-inc.com/lines-and-columns/download/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha1-7KKE910pZQeTCdwK2SVauy68FjI=
+
+linkify-it@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.npm.alibaba-inc.com/linkify-it/download/linkify-it-4.0.1.tgz#01f1d5e508190d06669982ba31a7d9f56a5751ec"
+  integrity sha512-C7bfi1UZmoj8+PQx22XyeXCuBlokoyWQL5pWSP+EI6nzRylyThouddufc2c1NDIcP9k5agmN9fLpA7VNJfIiqw==
+  dependencies:
+    uc.micro "^1.0.1"
 
 lint-staged@^10.0.7:
   version "10.5.4"
@@ -4389,6 +4458,22 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
+markdown-it-link-attributes@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.npm.alibaba-inc.com/markdown-it-link-attributes/download/markdown-it-link-attributes-4.0.1.tgz#25751f2cf74fd91f0a35ba7b3247fa45f2056d88"
+  integrity sha512-pg5OK0jPLg62H4k7M9mRJLT61gUp9nvG0XveKYHMOOluASo9OEF13WlXrpAp2aj35LbedAy3QOCgQCw0tkLKAQ==
+
+markdown-it@^13.0.1:
+  version "13.0.1"
+  resolved "https://registry.npm.alibaba-inc.com/markdown-it/download/markdown-it-13.0.1.tgz#c6ecc431cacf1a5da531423fc6a42807814af430"
+  integrity sha512-lTlxriVoy2criHP0JKRhO2VDG9c2ypWCsT237eDiLqi09rmbKoUetyGHq2uOIRoRS//kfoJckS0eUzzkDR+k2Q==
+  dependencies:
+    argparse "^2.0.1"
+    entities "~3.0.1"
+    linkify-it "^4.0.1"
+    mdurl "^1.0.1"
+    uc.micro "^1.0.5"
+
 matchmediaquery@^0.3.0:
   version "0.3.1"
   resolved "https://registry.npm.alibaba-inc.com/matchmediaquery/download/matchmediaquery-0.3.1.tgz#8247edc47e499ebb7c58f62a9ff9ccf5b815c6d7"
@@ -4404,6 +4489,11 @@ md5.js@^1.3.4:
     hash-base "^3.0.0"
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
+
+mdurl@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npm.alibaba-inc.com/mdurl/download/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
+  integrity sha1-/oWy7HWlkDfyrf7BAP1sYBdhFS4=
 
 memoize-one@^5.1.1:
   version "5.2.1"
@@ -7440,6 +7530,11 @@ ua-parser-js@^0.7.30:
   version "0.7.33"
   resolved "https://registry.npm.alibaba-inc.com/ua-parser-js/download/ua-parser-js-0.7.33.tgz#1d04acb4ccef9293df6f70f2c3d22f3030d8b532"
   integrity sha512-s8ax/CeZdK9R/56Sui0WM6y9OFREJarMRHqLB2EwkovemBxNQ+Bqu8GAsUnVcXKgphb++ghr/B2BZx4mahujPw==
+
+uc.micro@^1.0.1, uc.micro@^1.0.5:
+  version "1.0.6"
+  resolved "https://registry.npm.alibaba-inc.com/uc.micro/download/uc.micro-1.0.6.tgz#9c411a802a409a91fc6cf74081baba34b24499ac"
+  integrity sha1-nEEagCpAmpH8bPdAgbq6NLJEmaw=
 
 umi-request@^1.2.14, umi-request@^1.4.0:
   version "1.4.0"
