@@ -20,7 +20,7 @@
                 typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlColumnKeyHandler"/>
     </resultMap>
     <resultMap id="TableIndexColumnUnionResultMap"
-               type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">
+               type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumn">
         <result property="indexName" jdbcType="CHAR" column="INDEX_NAME"/>
         <result property="tableName" jdbcType="CHAR" column="TABLE_NAME"/>
         <result property="columnName" jdbcType="CHAR" column="COLUMN_NAME"/>
@@ -36,16 +36,16 @@
         <result property="tableName" jdbcType="CHAR" column="Table"/>
         <result property="sql" jdbcType="CHAR" column="Create Table"/>
     </resultMap>
-    <resultMap id="ShowDatabasesResultMap" type="com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult">
-        <result property="database" jdbcType="CHAR" column="Database"/>
-    </resultMap>
 
-    <select id="showDatabases" resultMap="ShowDatabasesResultMap">
-        SHOW
-        databases ;
+    <select id="showDatabases" resultType="java.lang.String">
+        select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA;
     </select>
 
-    <select id="showCreateTable" resultMap="CreateTableResultMap">
+    <select id="showCreateTable" resultMap="java.lang.String">
+        SHOW
+        CREATE TABLE ${databaseName}.${tableName};
+    </select>
+    <select id="showCreateTable0" resultMap="CreateTableResultMap">
         SHOW
         CREATE TABLE ${databaseName}.${tableName};
     </select>
