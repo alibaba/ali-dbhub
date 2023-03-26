@@ -78,6 +78,11 @@
     <select id="showDatabases" resultType="java.lang.String">
         select datname from pg_database;
     </select>
+    <select id="schemas" resultType="java.lang.String">
+        SELECT schema_name FROM information_schema.schemata where catalog_name = #{databaseName,jdbcType=VARCHAR}
+        order by schema_name;
+    </select>
+
     <select id="selectTables" resultMap="BaseTableResultMap">
         SELECT tablename FROM pg_tables WHERE tablename NOT LIKE 'pg%' AND tablename NOT LIKE 'sql_%'
         <if test="tableSchema != null">
