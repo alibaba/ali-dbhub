@@ -29,6 +29,7 @@ public class ThymeleafController {
 
     @RequestMapping(value = "/chat.html", method={RequestMethod.GET}, produces="text/html;charset=utf-8")
     public String chat(){
+
         return "chat";
     }
 }

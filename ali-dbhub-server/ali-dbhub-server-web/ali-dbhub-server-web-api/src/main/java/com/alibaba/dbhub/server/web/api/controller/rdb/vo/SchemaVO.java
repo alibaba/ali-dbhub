@@ -12,4 +12,8 @@ import lombok.Data;
  */
 @Data
 public class SchemaVO {
+    /**
+     * 数据名字
+     */
+    private String name;
 }
