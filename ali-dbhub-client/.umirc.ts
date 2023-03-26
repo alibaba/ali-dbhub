@@ -23,12 +23,8 @@ export default defineConfig({
     type: 'hash',
   },
   base: '/',
-<<<<<<< HEAD
-  publicPath: '/static/front/',
-=======
   // publicPath: './static/front/',
   publicPath: '/',
->>>>>>> a4e4fbc168b0139ce2c1843a934a01286af38544
   hash: false,
   routes: [
     {
