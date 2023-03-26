@@ -58,10 +58,6 @@ public class OperationSavedController {
     @GetMapping("/list")
     public WebPageResult<OperationVO> list(OperationQueryRequest request) {
         OperationPageQueryParam param = operationWebConverter.queryReq2param(request);
-        if (StringUtils.isBlank(request.getDatabaseName()) && Objects.isNull(request.getDataSourceId())) {
-            // 如果dbname为空，则查询db下面关联的所有保存
-            param.setStatus(StatusEnum.RELEASE.getCode());
-        }
         PageResult<Operation> dtoPageResult = operationService.queryPage(param);
         List<OperationVO> operationVOS = operationWebConverter.dto2vo(dtoPageResult.getData());
         return WebPageResult.of(operationVOS, dtoPageResult.getTotal(), request.getPageNo(), request.getPageSize());
