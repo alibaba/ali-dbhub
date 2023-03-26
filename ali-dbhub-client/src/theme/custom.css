@@ -2269,7 +2269,6 @@ li:last-child .custom-breadcrumb-separator {
   margin-left: 0;
 }
 .custom-btn {
-  line-height: 1.5715;
   position: relative;
   display: inline-block;
   font-weight: 400;
@@ -2282,9 +2281,10 @@ li:last-child .custom-breadcrumb-separator {
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   user-select: none;
   touch-action: manipulation;
-  height: 32px;
-  padding: 4px 15px;
-  font-size: 14px;
+  height: 26px;
+  line-height: 20px;
+  padding: 2px 10px;
+  font-size: 12px;
   color: var(--color-text-85);
   border-color: var(--color-border);
   background: var(--color-bg-100) ;
@@ -14013,7 +14013,7 @@ _:-ms-fullscreen
   display: inline-block;
   width: 100%;
   min-width: 0;
-  padding: 2px 6px;
+  padding: 0px 6px;
   color: var(--color-text-85);
   font-size: 12px;
   line-height: 1.5715;
@@ -18084,7 +18084,7 @@ textarea.custom-mentions {
   background-color: var(--color-bg-100) !important ;
   background-clip: padding-box;
   border: 0;
-  border-radius: 8px;
+  border-radius: 3px;
   box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
     0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
   pointer-events: auto;
@@ -18122,14 +18122,14 @@ textarea.custom-mentions {
   text-decoration: none;
 }
 .custom-modal-header {
-  padding: 13px 24px;
+  padding: 12px 12px;
   color: var(--color-text-85);
   background: var(--color-bg-100) ;
   /* border-bottom: 1px solid var(--color-bg-6); */
   border-radius: 2px 2px 0 0;
 }
 .custom-modal-body {
-  padding: 0px 24px 24px;
+  padding: 0px 12px 12px;
   font-size: 14px;
   line-height: 1.5715;
   word-wrap: break-word;

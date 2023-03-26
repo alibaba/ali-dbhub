@@ -36,6 +36,11 @@ public class Operation {
     private Long dataSourceId;
 
     /**
+     * 数据源名称
+     */
+    private String dataSourceName;
+
+    /**
      * db名称
      */
     private String databaseName;

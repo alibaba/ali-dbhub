@@ -145,6 +145,7 @@ export default memo<IProps>(function ConnectionDialog(props) {
 
   useEffect(() => {
     if (dataSourceType) {
+      setCurrentDBType(dataSourceType)
       form.setFieldValue('type', dataSourceType);
     }
   }, [dataSourceType])
@@ -165,9 +166,10 @@ export default memo<IProps>(function ConnectionDialog(props) {
       } else {
         const dataSource: ITreeNode = {
           name: p.alias,
-          key: p.alias.toString(),
+          key: res || p.id,
           nodeType: TreeNodeType.DATASOURCE,
-          dataSourceId: p.id,
+          dataSourceId: res || p.id,
+          dataType: currentDBType,
         }
         submitCallback?.(dataSource);
       }
@@ -366,14 +368,15 @@ export default memo<IProps>(function ConnectionDialog(props) {
             label="用户名"
             name="user"
           >
-            <Input />
+            <Input id='user' />
           </Form.Item>
           <Form.Item
+            id='password'
             label="密码"
             name="password"
           // rules={[{ required: true, message: '密码不可为空！' }]}
           >
-            <Input.Password />
+            <Input.Password id='password' />
           </Form.Item>
         </div>
       }
