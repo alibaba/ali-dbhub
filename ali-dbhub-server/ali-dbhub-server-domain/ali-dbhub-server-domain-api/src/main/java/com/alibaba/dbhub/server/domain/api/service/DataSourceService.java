@@ -1,5 +1,7 @@
 package com.alibaba.dbhub.server.domain.api.service;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
@@ -71,6 +73,14 @@ public interface DataSourceService {
      * @return
      */
     PageResult<DataSource> queryPage(DataSourcePageQueryParam param, DataSourceSelector selector);
+
+    /**
+     * 通过ID列表查询数据源
+     *
+     * @param ids
+     * @return
+     */
+    ListResult<DataSource> queryByIds(List<Long>ids);
 
     /**
      * 数据源连接测试

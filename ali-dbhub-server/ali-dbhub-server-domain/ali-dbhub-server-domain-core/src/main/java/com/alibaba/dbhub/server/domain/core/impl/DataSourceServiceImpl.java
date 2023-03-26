@@ -110,6 +110,13 @@ public class DataSourceServiceImpl implements DataSourceService {
     }
 
     @Override
+    public ListResult<DataSource> queryByIds(List<Long> ids) {
+        List<DataSourceDO> dataSourceDOS = dataSourceMapper.selectBatchIds(ids);
+        List<DataSource> dataSources = dataSourceConverter.do2dto(dataSourceDOS);
+        return ListResult.of(dataSources);
+    }
+
+    @Override
     public ActionResult preConnect(DataSourcePreConnectParam param) {
         com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceTestParam dataSourceTestParam
             = dataSourceConverter.param2param(param);

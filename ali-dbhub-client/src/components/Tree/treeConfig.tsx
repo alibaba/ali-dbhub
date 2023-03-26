@@ -23,6 +23,7 @@ export const treeConfig: ITreeConfig = {
               key: t.name,
               name: t.name,
               nodeType: TreeNodeType.DATABASE,
+              dataType: parentData.dataType,
               dataSourceId: +parentData.key,
               databaseName: t.name
             }
@@ -43,6 +44,7 @@ export const treeConfig: ITreeConfig = {
             nodeType: TreeNodeType.TABLES,
             dataSourceId: parentData.dataSourceId,
             databaseName: parentData.databaseName,
+            dataType: parentData.dataType,
           }
         ]
         r(data);
@@ -70,6 +72,7 @@ export const treeConfig: ITreeConfig = {
               key: item.name,
               dataSourceId: parentData.dataSourceId!,
               databaseName: parentData.databaseName!,
+              dataType: parentData.dataType,
               tableName: item.name,
             }
           })
@@ -92,6 +95,7 @@ export const treeConfig: ITreeConfig = {
             tableName: parentData.tableName,
             dataSourceId: parentData.dataSourceId!,
             databaseName: parentData.databaseName!,
+            dataType: parentData.dataType,
           },
           {
             name: 'keys',
@@ -100,6 +104,7 @@ export const treeConfig: ITreeConfig = {
             tableName: parentData.tableName,
             dataSourceId: parentData.dataSourceId!,
             databaseName: parentData.databaseName!,
+            dataType: parentData.dataType,
           },
           {
             name: 'indexs',
@@ -108,6 +113,7 @@ export const treeConfig: ITreeConfig = {
             tableName: parentData.tableName,
             dataSourceId: parentData.dataSourceId!,
             databaseName: parentData.databaseName!,
+            dataType: parentData.dataType,
           },
         ]
 
@@ -125,6 +131,7 @@ export const treeConfig: ITreeConfig = {
           dataSourceId: parentData.dataSourceId!,
           databaseName: parentData.databaseName!,
           tableName: parentData.tableName!,
+          dataType: parentData.dataType,
         }
         console.log(p)
 
