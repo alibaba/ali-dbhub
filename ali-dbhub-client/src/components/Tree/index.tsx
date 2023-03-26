@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
+import React, { memo, useEffect, useRef, useContext, useState, forwardRef, useImperativeHandle } from 'react';
 import globalStyle from '@/global.less';
 import styles from './index.less';
 import classnames from 'classnames';
@@ -17,11 +17,11 @@ import mysqlServer from '@/service/mysql';
 import TreeNodeRightClick from './TreeNodeRightClick';
 import { treeConfig, switchIcon } from './treeConfig'
 import { databaseType } from '@/utils/constants'
+import { DatabaseContext } from '@/context/database';
 
 interface IProps {
   className?: string;
   nodeDoubleClick?: Function;
-  openOperationTableModal?: Function;
   cRef: any;
   addTreeData?: ITreeNode[];
 }
@@ -33,21 +33,40 @@ interface TreeNodeIProps {
   setTreeData: Function;
   showAllChildrenPenetrate?: boolean;
   nodeDoubleClick?: Function;
-  openOperationTableModal?: Function;
 }
 
 function TreeNode(props: TreeNodeIProps) {
-  const { setTreeData, data, level, show = false, nodeDoubleClick, openOperationTableModal, showAllChildrenPenetrate = false } = props;
+  const { setTreeData, data, level, show = false, nodeDoubleClick, showAllChildrenPenetrate = false } = props;
   const [showChildren, setShowChildren] = useState(false);
   const [showAllChildren, setShowAllChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const indentArr = new Array(level);
+  const { model, setNeedRefreshNodeTree } = useContext(DatabaseContext);
+  const { needRefreshNodeTree } = model
 
   const treeNodeClick = useCanDoubleClick();
 
   for (let i = 0; i < level; i++) {
     indentArr[i] = 'indent';
   }
+
+  useEffect(() => {
+    if (data?.dataSourceId === needRefreshNodeTree?.dataSourceId &&
+      data?.databaseName === needRefreshNodeTree?.databaseName &&
+      data.nodeType === needRefreshNodeTree.nodeType) {
+      console.log('daowole')
+      setIsLoading(true);
+      setNeedRefreshNodeTree(false);
+      data.children = []
+      loadData(data)?.then(res => {
+        setTimeout(() => {
+          data.children = res
+          setIsLoading(false);
+          setShowChildren(true)
+        }, 500);
+      })
+    }
+  }, [needRefreshNodeTree])
 
   useEffect(() => {
     setShowChildren(showAllChildrenPenetrate);
@@ -82,7 +101,6 @@ function TreeNode(props: TreeNodeIProps) {
       data={data}
       setTreeData={setTreeData}
       setIsLoading={setIsLoading}
-      openOperationTableModal={openOperationTableModal}
       nodeConfig={treeConfig[data.nodeType]}
     />
   }
@@ -156,7 +174,7 @@ function TreeNode(props: TreeNodeIProps) {
       !!data.children?.length &&
       data.children.map((item: any, i: number) => {
         return (
-          <TreeNode setTreeData={setTreeData} openOperationTableModal={openOperationTableModal} nodeDoubleClick={nodeDoubleClick} key={i} showAllChildrenPenetrate={showAllChildrenPenetrate || showAllChildren} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
+          <TreeNode setTreeData={setTreeData} nodeDoubleClick={nodeDoubleClick} key={i} showAllChildrenPenetrate={showAllChildrenPenetrate || showAllChildren} show={(showChildren && show)} level={level + 1} data={item}></TreeNode>
         );
       })
     }
@@ -164,14 +182,12 @@ function TreeNode(props: TreeNodeIProps) {
 }
 
 function Tree(props: IProps) {
-  const { className, nodeDoubleClick, cRef, addTreeData, openOperationTableModal } = props;
+  const { className, nodeDoubleClick, cRef, addTreeData } = props;
   const [treeData, setTreeData] = useState<ITreeNode[] | undefined>();
 
   useEffect(() => {
     setTreeData([...(treeData || []), ...(addTreeData || [])]);
   }, [addTreeData])
-
-
 
   useImperativeHandle(cRef, () => ({
     getDataSource
@@ -192,7 +208,6 @@ function Tree(props: IProps) {
           {
             treeData?.map((item) => {
               return <TreeNode
-                openOperationTableModal={openOperationTableModal}
                 nodeDoubleClick={nodeDoubleClick}
                 setTreeData={setTreeData}
                 key={item.name}
