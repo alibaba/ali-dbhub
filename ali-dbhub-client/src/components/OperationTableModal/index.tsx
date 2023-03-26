@@ -9,6 +9,7 @@ import { DatabaseTypeCode, WindowTabStatus } from '@/utils/constants';
 import historyServer from '@/service/history';
 import { format } from 'sql-formatter';
 import { DatabaseContext } from '@/context/database';
+import { TreeNodeType } from '@/utils/constants';
 
 
 export interface IOperationData {
@@ -28,7 +29,7 @@ export interface IOperationTableModalProps {
 export default memo<IOperationTableModalProps>(function OperationTableModal(props) {
 
   const { className } = props;
-  const { model, setOperationDataDialog } = useContext(DatabaseContext);
+  const { model, setOperationDataDialog, setNeedRefreshNodeTree } = useContext(DatabaseContext);
   const { operationData } = model;
 
   const monacoEditor = useRef();
@@ -39,7 +40,6 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
   }, [])
 
   useEffect(() => {
-    console.log(operationData)
     if (!operationData) {
       return
     }
@@ -98,9 +98,16 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
         p.tableName = operationData.nodeData?.name
       }
       mysqlServer.executeTable(p).then(res => {
-        message.success('更新成功')
-        operationData.callback && operationData.callback(operationData.database)
-        setOperationDataDialog(false)
+        message.success('更新成功');
+        setNeedRefreshNodeTree({
+          databaseName: operationData.nodeData?.databaseName,
+          dataSourceId: operationData.nodeData?.dataSourceId,
+          nodeType: TreeNodeType.TABLES
+        })
+        setTimeout(() => {
+          setOperationDataDialog(false);
+        }, 0);
+        // operationData.callback && operationData.callback(operationData.database)
       })
     } else {
       setOperationDataDialog(false)

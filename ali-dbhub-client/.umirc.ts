@@ -31,6 +31,7 @@ export default defineConfig({
       path: '/',
       component: '@/components/AppContainer',
       routes: [
+        { path: '/chat', exact: true, component: '@/pages/chat-ai' },
         { path: '/login', exact: true, component: '@/pages/login' },
         { path: '/error', component: '@/pages/error' },
         { path: '/demo', exact: true, component: '@/pages/demo' },
@@ -85,4 +86,8 @@ export default defineConfig({
     type: 'none',
   },
   chainWebpack,
+  devServer: {
+    port: 8001,
+    host: '127.0.0.1',
+  },
 });

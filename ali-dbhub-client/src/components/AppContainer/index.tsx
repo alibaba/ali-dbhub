@@ -8,10 +8,14 @@ import { getLastPosition, setCurrentPosition } from '@/utils';
 import miscService from '@/service/misc';
 import LoadingLiquid from '@/components/Loading/LoadingLiquid';
 import i18n from '@/i18n';
+import { ThemeType } from '@/utils/constants';
 
 interface IProps {
   className?: any;
 }
+
+/** 重启次数 */
+const restartCount = 30;
 
 export default memo<IProps>(function AppContainer({ className, children }) {
   const [startSchedule, setStartSchedule] = useState(0); // 0 初始状态 1 服务启动报错 2 启动成功
@@ -48,7 +52,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         clearInterval(time);
         setServiceStart(true);
       });
-      if (flag > 30) {
+      if (flag > restartCount) {
         setServiceFail(true);
         clearInterval(time);
         // setServiceStart(true)
@@ -57,7 +61,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
   }
 
   function settings() {
-    const theme = localStorage.getItem('theme') || 'dark';
+    const theme = localStorage.getItem('theme') || ThemeType.dark;
     document.documentElement.setAttribute('theme', theme);
     localStorage.setItem('theme', theme);
     document.documentElement.setAttribute(
@@ -72,6 +76,8 @@ export default memo<IProps>(function AppContainer({ className, children }) {
     //   e.preventDefault();
     // };
   }
+
+  // console.log('xxxxx=>', children);
 
   return (
     <ConfigProvider prefixCls="custom">
