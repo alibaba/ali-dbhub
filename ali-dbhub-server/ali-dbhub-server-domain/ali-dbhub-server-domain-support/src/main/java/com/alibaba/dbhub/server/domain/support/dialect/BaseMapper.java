@@ -5,6 +5,7 @@
 package com.alibaba.dbhub.server.domain.support.dialect;
 
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
@@ -31,7 +32,7 @@ public interface BaseMapper {
      * @param tableName
      * @return
      */
-    List<TableColumn> selectColumns(@Param("databaseName") String databaseName, @Param("tableName") String tableName);
+    List<TableColumn> selectColumns(@Param("databaseName") String databaseName,@Param("tableSchema") String tableSchema, @Param("tableName") String tableName);
 
     /**
      * 删除表
@@ -48,7 +49,7 @@ public interface BaseMapper {
      * @param schemaName
      * @return
      */
-    List<Table> selectTables(@Param("databaseName") String databaseName, @Param("schemaName") String schemaName);
+    List<Table> selectTables(@Param("databaseName") String databaseName, @Param("tableSchema") String tableSchema,@Param("tableName") String tableName);
 
     /**
      * @param databaseName
@@ -63,7 +64,7 @@ public interface BaseMapper {
      * @param tableName
      * @return
      */
-    String showCreateTable(@Param("databaseName") String databaseName,
+    String showCreateTable(@Param("databaseName") String databaseName,@Param("tableSchema") String tableSchema,
         @Param("tableName") String tableName);
 
     /**
@@ -73,6 +74,6 @@ public interface BaseMapper {
      * @param tableName
      * @return
      */
-    List<TableIndexColumn> selectTableIndexes(@Param("databaseName") String databaseName,
+    List<TableIndexColumn> selectTableIndexes(@Param("databaseName") String databaseName,@Param("tableSchema") String tableSchema,
         @Param("tableName") String tableName);
 }

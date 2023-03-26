@@ -38,4 +38,10 @@ public class TablePageQueryParam extends PageQueryParam {
      * 表名
      */
     private String tableName;
+
+
+    /**
+     *
+     */
+    private String tableSchema;
 }

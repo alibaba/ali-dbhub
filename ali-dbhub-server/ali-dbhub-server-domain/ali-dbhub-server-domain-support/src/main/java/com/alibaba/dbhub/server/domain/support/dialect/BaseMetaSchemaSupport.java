@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import javax.validation.constraints.NotEmpty;
+
 import com.alibaba.dbhub.server.domain.support.model.Function;
 import com.alibaba.dbhub.server.domain.support.model.Procedure;
+import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
@@ -36,7 +38,7 @@ public abstract class BaseMetaSchemaSupport implements MetaSchema{
 
     @Override
     public String tableDDL(String databaseName, String schemaName, String tableName) {
-        return getMapper().showCreateTable(databaseName, tableName);
+        return getMapper().showCreateTable(databaseName,schemaName, tableName);
     }
 
     @Override
@@ -45,8 +47,8 @@ public abstract class BaseMetaSchemaSupport implements MetaSchema{
     }
 
     @Override
-    public List tables(String databaseName, String schemaName) {
-        return getMapper().selectTables(databaseName, schemaName);
+    public List tables(@NotEmpty String databaseName, String schemaName,String tableName) {
+        return getMapper().selectTables(databaseName, schemaName,tableName);
     }
 
     @Override
@@ -71,13 +73,13 @@ public abstract class BaseMetaSchemaSupport implements MetaSchema{
 
     @Override
     public List<? extends TableColumn> columns(String databaseName, String schemaName, String tableName) {
-        return getMapper().selectColumns(databaseName, tableName);
+        return getMapper().selectColumns(databaseName,schemaName, tableName);
     }
 
     @Override
     public List<TableIndex> indexes(String databaseName, String schemaName, String tableName) {
         List<TableIndex> dataList = Lists.newArrayList();
-        List<TableIndexColumn> list = getMapper().selectTableIndexes(databaseName, tableName);
+        List<TableIndexColumn> list = getMapper().selectTableIndexes(databaseName, schemaName,tableName);
         Map<String, List<TableIndexColumn>> map = list.stream().collect(
             Collectors.groupingBy(TableIndexColumn::getIndexName));
         for (Map.Entry<String, List<TableIndexColumn>> entry1 : map.entrySet()) {
