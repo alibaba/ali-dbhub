@@ -35,10 +35,15 @@ export default memo<IProps>(function DatabaseQuery(props) {
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
   const monacoEditorBox = useRef<HTMLDivElement | null>(null);
   const monacoEditor = useRef<any>(null);
+  const monacoHint = useRef<any>(null);
 
   useEffect(() => {
+    if (windowTab.consoleId !== +activeTabKey) {
+      return
+    }
     connectConsole();
-  }, [])
+    getTableList();
+  }, [activeTabKey])
 
   useEffect(() => {
     const nodeData = treeNodeClickMessage
@@ -69,10 +74,10 @@ export default memo<IProps>(function DatabaseQuery(props) {
       databaseName: windowTab.databaseName,
     }
     mysqlServer.connectConsole(p);
-    getTableList();
   }
 
   const getTableList = () => {
+
     let p = {
       dataSourceId: windowTab.dataSourceId!,
       databaseName: windowTab.databaseName!,
@@ -87,7 +92,22 @@ export default memo<IProps>(function DatabaseQuery(props) {
           key: item.name,
         }
       })
+      disposalEditorHintData(tableList)
     })
+  }
+
+  const disposalEditorHintData = (tableList: any) => {
+    try {
+      monacoHint.current?.dispose();
+      const myEditorHintData: any = {};
+      tableList?.map((item: any) => {
+        myEditorHintData[item.name] = []
+      })
+      monacoHint.current = setEditorHint(myEditorHintData);
+    }
+    catch {
+
+    }
   }
 
   const getEditor = (editor: any) => {
