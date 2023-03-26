@@ -152,7 +152,7 @@ public class TableOperationsTest extends BaseTest {
             Assertions.assertEquals("日期索引", idxDate.getComment(), "查询表结构失败");
             Assertions.assertEquals(IndexTypeEnum.NORMAL.getCode(), idxDate.getType(), "查询表结构失败");
             Assertions.assertEquals(1L, idxDate.getColumnList().size(), "查询表结构失败");
-            Assertions.assertEquals(dialectProperties.toCase("date"), idxDate.getColumnList().get(0).getName(),
+            Assertions.assertEquals(dialectProperties.toCase("date"), idxDate.getColumnList().get(0).getColumnName(),
                 "查询表结构失败");
             Assertions.assertEquals(CollationEnum.DESC.getCode(), idxDate.getColumnList().get(0).getCollation(),
                 "查询表结构失败");
@@ -268,7 +268,7 @@ public class TableOperationsTest extends BaseTest {
             .type(IndexTypeEnum.NORMAL.getCode())
             .comment("日期索引")
             .columnList(Lists.newArrayList(TableIndexColumn.builder()
-                .name("date")
+                .columnName("date")
                 .collation(CollationEnum.DESC.getCode())
                 .build()))
             .build());
@@ -279,7 +279,7 @@ public class TableOperationsTest extends BaseTest {
             .type(IndexTypeEnum.UNIQUE.getCode())
             .comment("唯一索引")
             .columnList(Lists.newArrayList(TableIndexColumn.builder()
-                .name("number")
+                .columnName("number")
                 .build()))
             .build());
         //        index DATA_OPS_TEMPLATE_TEST_1673093980449_idx_number_string (number, date) comment '联合索引'
@@ -288,10 +288,10 @@ public class TableOperationsTest extends BaseTest {
             .type(IndexTypeEnum.NORMAL.getCode())
             .comment("联合索引")
             .columnList(Lists.newArrayList(TableIndexColumn.builder()
-                    .name("number")
+                    .columnName("number")
                     .build(),
                 TableIndexColumn.builder()
-                    .name("date")
+                    .columnName("date")
                     .build()))
             .build());
         // 构建sql
@@ -356,7 +356,7 @@ public class TableOperationsTest extends BaseTest {
             .type(IndexTypeEnum.NORMAL.getCode())
             .comment("新的字符串索引")
             .columnList(Lists.newArrayList(TableIndexColumn.builder()
-                .name("add_string")
+                .columnName("add_string")
                 .collation(CollationEnum.DESC.getCode())
                 .build()))
             .build());
@@ -431,7 +431,7 @@ public class TableOperationsTest extends BaseTest {
         Assertions.assertEquals("日期索引", idxDate.getComment(), "查询表结构失败");
         Assertions.assertEquals(IndexTypeEnum.NORMAL.getCode(), idxDate.getType(), "查询表结构失败");
         Assertions.assertEquals(1L, idxDate.getColumnList().size(), "查询表结构失败");
-        Assertions.assertEquals(dialectProperties.toCase("date"), idxDate.getColumnList().get(0).getName(),
+        Assertions.assertEquals(dialectProperties.toCase("date"), idxDate.getColumnList().get(0).getColumnName(),
             "查询表结构失败");
         Assertions.assertEquals(CollationEnum.DESC.getCode(), idxDate.getColumnList().get(0).getCollation(),
             "查询表结构失败");
