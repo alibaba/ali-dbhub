@@ -2,7 +2,7 @@ package com.alibaba.dbhub.server.domain.core.impl;
 
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
 import com.alibaba.dbhub.server.domain.api.service.ConsoleService;
-import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCloseParam;
+import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 

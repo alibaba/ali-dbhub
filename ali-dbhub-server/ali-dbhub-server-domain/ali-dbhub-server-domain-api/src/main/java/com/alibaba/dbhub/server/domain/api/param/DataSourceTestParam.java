@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.domain.support.param.datasource;
+package com.alibaba.dbhub.server.domain.api.param;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 数据源创建参数
+ * 数据源测试参数
  *
  * @author Jiaju Zhuang
  */
@@ -18,13 +18,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DataSourceCreateParam {
-    /**
-     * 对应数据库存储的来源id
-     * 确保不要重复，重复的情况下会弃用以前的连接，并重新创建
-     */
-    @NotNull
-    private Long dataSourceId;
+public class DataSourceTestParam {
 
     /**
      * 数据库类型

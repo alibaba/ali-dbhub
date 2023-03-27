@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.domain.support.param.user;
+package com.alibaba.dbhub.server.domain.api.param;
 
 import java.io.Serial;
 

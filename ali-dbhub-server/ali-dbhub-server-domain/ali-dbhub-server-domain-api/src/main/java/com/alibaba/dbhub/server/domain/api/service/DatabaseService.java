@@ -1,11 +1,9 @@
 package com.alibaba.dbhub.server.domain.api.service;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.support.model.Database;
 import com.alibaba.dbhub.server.domain.support.model.Schema;
-import com.alibaba.dbhub.server.domain.support.param.database.DatabaseQueryAllParam;
-import com.alibaba.dbhub.server.domain.support.param.database.SchemaQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.DatabaseQueryAllParam;
+import com.alibaba.dbhub.server.domain.api.param.SchemaQueryParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 
 /**

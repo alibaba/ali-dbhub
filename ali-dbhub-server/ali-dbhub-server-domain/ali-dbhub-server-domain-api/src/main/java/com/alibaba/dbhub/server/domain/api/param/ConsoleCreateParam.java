@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.domain.support.param.console;
+package com.alibaba.dbhub.server.domain.api.param;
 
 import javax.validation.constraints.NotNull;
 

@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.domain.support.param.console;
+package com.alibaba.dbhub.server.domain.api.param;
 
 import javax.validation.constraints.NotNull;
 
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 控制台关闭参数
+ * 展示数据库信息
  *
  * @author Jiaju Zhuang
  */
@@ -16,17 +16,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConsoleCloseParam {
-
+public class DatabaseQueryAllParam {
     /**
      * 对应数据库存储的来源id
      */
     @NotNull
     private Long dataSourceId;
-
-    /**
-     * 控制台的id ，确保全局唯一
-     */
-    @NotNull
-    private Long consoleId;
 }

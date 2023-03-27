@@ -1,7 +1,7 @@
 package com.alibaba.dbhub.server.domain.api.service;
 
 import com.alibaba.dbhub.server.domain.api.model.User;
-import com.alibaba.dbhub.server.domain.support.param.user.UserQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.UserQueryParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 

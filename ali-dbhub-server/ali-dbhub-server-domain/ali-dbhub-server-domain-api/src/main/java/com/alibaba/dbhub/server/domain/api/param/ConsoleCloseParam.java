@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.domain.support.param.sql;
+package com.alibaba.dbhub.server.domain.api.param;
 
 import javax.validation.constraints.NotNull;
 
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * Sql解析参数
+ * 控制台关闭参数
  *
  * @author Jiaju Zhuang
  */
@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SqlAnalyseParam {
+public class ConsoleCloseParam {
 
     /**
      * 对应数据库存储的来源id
@@ -25,7 +25,8 @@ public class SqlAnalyseParam {
     private Long dataSourceId;
 
     /**
-     * 需要解析的sql 可能是一个复杂的sql
+     * 控制台的id ，确保全局唯一
      */
-    private String sql;
+    @NotNull
+    private Long consoleId;
 }
