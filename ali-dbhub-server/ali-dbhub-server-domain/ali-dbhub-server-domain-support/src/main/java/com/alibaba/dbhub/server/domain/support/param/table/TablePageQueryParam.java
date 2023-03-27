@@ -43,5 +43,5 @@ public class TablePageQueryParam extends PageQueryParam {
     /**
      *
      */
-    private String tableSchema;
+    private String schemaName;
 }

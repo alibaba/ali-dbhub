@@ -48,4 +48,15 @@ services:
    # command: redis-server/etc/redis/redis.conf
     ports:
       - 6379:6379
+    #服务名称
+  mssql:
+    image: "mcr.microsoft.com/azure-sql-edge"
+    container_name: MS_SQL_Server
+    restart: always
+    environment:
+      SA_PASSWORD: "Ali_dbhub!"
+      ACCEPT_EULA: "Y"
+    ports:
+      # The default port of SQL Server is 1433. Let's also tell the container that the use its port 1433 to connect to port 1433 of sql server
+      - 1433:1433
 

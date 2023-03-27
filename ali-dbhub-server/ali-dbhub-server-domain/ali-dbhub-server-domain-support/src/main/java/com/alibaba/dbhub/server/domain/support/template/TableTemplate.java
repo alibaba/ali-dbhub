@@ -472,7 +472,7 @@ public class TableTemplate implements TableOperations {
     @Override
     public PageResult<Table> pageQuery(TablePageQueryParam param, TableSelector selector) {
         MetaSchema metaSchema = DbhubContext.getMetaSchema();
-        List<Table> list = metaSchema.tables(param.getDatabaseName(), param.getTableSchema(), param.getTableName());
+        List<Table> list = metaSchema.tables(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
         if (CollectionUtils.isEmpty(list)) {
             return PageResult.of(list, 0L, param);
         }
