@@ -62,7 +62,7 @@ export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
   return (
     <div className={styles.page}>
       <div className={styles.layoutLeft}>
-        <BrandLogo onClick={jumpHome} className={styles.brandLogo} />
+        {/* <BrandLogo onClick={jumpHome} className={styles.brandLogo} /> */}
         <ul className={styles.navList}>
           {LNKConfig.map((item) => {
             return (
