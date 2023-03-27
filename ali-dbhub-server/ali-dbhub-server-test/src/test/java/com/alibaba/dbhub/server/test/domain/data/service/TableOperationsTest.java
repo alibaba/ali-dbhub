@@ -126,7 +126,7 @@ public class TableOperationsTest extends BaseTest {
             tablePageQueryParam.setDatabaseName(dialectProperties.getDatabaseName());
             tablePageQueryParam.setTableName(dialectProperties.toCase(TABLE_NAME));
             if (dialectProperties.getDbType() == DbTypeEnum.POSTGRESQL) {
-                tablePageQueryParam.setTableSchema("public");
+                tablePageQueryParam.setSchemaName("public");
             }
             List<Table> tableList = tableOperations.pageQuery(tablePageQueryParam, TableSelector.builder()
                 .columnList(Boolean.TRUE)
@@ -160,7 +160,7 @@ public class TableOperationsTest extends BaseTest {
             Assertions.assertEquals("DATA", TestUtils.unWrapperDefaultValue(string.getDefaultValue()),
                 "查询表结构失败");
             if (dialectProperties.getDbType() == DbTypeEnum.POSTGRESQL) {
-                tablePageQueryParam.setTableSchema("public");
+                tablePageQueryParam.setSchemaName("public");
             }
             List<TableIndex> tableIndexList = tableOperations.queryIndexes(tableQueryParam);
             log.info("分析数据返回{}", JSON.toJSONString(tableIndexList));

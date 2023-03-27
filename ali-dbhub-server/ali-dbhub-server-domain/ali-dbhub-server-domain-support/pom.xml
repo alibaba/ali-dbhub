@@ -59,5 +59,9 @@
             <scope>system</scope>
             <systemPath>${basedir}/src/main/resources/jdbc/ojdbc11.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+        </dependency>
     </dependencies>
 </project>
