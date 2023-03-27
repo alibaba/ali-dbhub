@@ -17,10 +17,10 @@
     </resultMap>
 
 
-    <resultMap id="TableIndexResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndex">
-        <result property="name" jdbcType="CHAR" column="indexname"/>
+    <resultMap id="TableIndexResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumn">
+        <result property="indexName" jdbcType="CHAR" column="indexname"/>
         <result property="tableName" jdbcType="CHAR" column="tablename"/>
-        <result property="tableSchemaName" jdbcType="INTEGER" column="schemaname"/>
+        <result property="columnName" jdbcType="INTEGER" column="schemaname"/>
         <result property="comment" jdbcType="CHAR" column="indexdef"/>
     </resultMap>
 
