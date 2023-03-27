@@ -47,6 +47,7 @@
   "devDependencies": {
     "@types/event-source-polyfill": "^1.0.1",
     "@types/markdown-it": "^12.2.3",
+    "@types/markdown-it-link-attributes": "^3.0.1",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@umijs/preset-react": "1.x",
