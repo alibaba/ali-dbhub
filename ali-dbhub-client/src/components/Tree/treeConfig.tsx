@@ -203,6 +203,7 @@ export const treeConfig: ITreeConfig = {
           dataSourceId: parentData.dataSourceId!,
           databaseName: parentData.databaseName!,
           tableName: parentData.tableName!,
+          schemaName: parentData.schemaName,
         }
 
         mysqlServer.getIndexList(p).then(res => {
@@ -227,9 +228,11 @@ export const treeConfig: ITreeConfig = {
           dataSourceId: parentData.dataSourceId!,
           databaseName: parentData.databaseName!,
           tableName: parentData.tableName!,
+          schemaName: parentData.schemaName,
         }
 
         mysqlServer.getKeyList(p).then(res => {
+          console.log(res)
           const tableList: ITreeNode[] = res?.map(item => {
             return {
               name: item.name,
@@ -271,13 +274,13 @@ export const switchIcon: { [key in TreeNodeType]: { icon: string } } = {
     icon: '\ueac5'
   },
   [TreeNodeType.KEY]: {
-    icon: '\ue611'
+    icon: '\ue775'
   },
   [TreeNodeType.INDEXES]: {
     icon: '\ueac5'
   },
   [TreeNodeType.INDEXE]: {
-    icon: '\ue611'
+    icon: '\ue65b'
   },
   [TreeNodeType.SEARCH]: {
     icon: '\uec4c'

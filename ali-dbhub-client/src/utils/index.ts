@@ -1,6 +1,19 @@
 import i18n, { isEN } from "@/i18n";
-import { TreeNodeType, OSType } from '@/utils/constants'
-import { ITreeNode } from '@/types'
+import { TreeNodeType, OSType } from '@/utils/constants';
+import { ITreeNode } from '@/types';
+
+// TODO: 
+export const env = (() => {
+  const { host } = location;
+  // 本地jar包启用的服务
+  if (host.indexOf('127.0.0.1:7001') > -1) {
+    return 'jar';
+  }
+  // 桌面端
+  if (host.indexOf('') > -1) {
+    return 'desktop';
+  }
+})();
 
 export function formatDate(date:any, fmt = 'yyyy-MM-dd') {
   if (!date) {
