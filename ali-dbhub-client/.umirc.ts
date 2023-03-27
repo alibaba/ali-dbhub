@@ -78,10 +78,9 @@ export default defineConfig({
       ],
     },
   ],
+
   mfsu: {},
   fastRefresh: {},
-  // 桌面端不需要懒加载
-
   nodeModulesTransform: {
     type: 'none',
   },

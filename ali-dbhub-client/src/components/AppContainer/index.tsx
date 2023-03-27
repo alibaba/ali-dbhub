@@ -28,18 +28,14 @@ export default memo<IProps>(function AppContainer({ className, children }) {
   }
 
   useLayoutEffect(() => {
+    settings();
     window.addEventListener('hashchange', hashchange);
-    // const hash = getLastPosition();
-    // if (hash) {
-    //   location.hash = hash;
-    // }
     return () => {
       window.removeEventListener('hashchange', hashchange);
     };
   }, []);
 
   useEffect(() => {
-    settings();
     detectionService();
   }, []);
 
@@ -55,7 +51,6 @@ export default memo<IProps>(function AppContainer({ className, children }) {
       if (flag > restartCount) {
         setServiceFail(true);
         clearInterval(time);
-        // setServiceStart(true)
       }
     }, 300);
   }
@@ -68,16 +63,16 @@ export default memo<IProps>(function AppContainer({ className, children }) {
       'primary-color',
       localStorage.getItem('primary-color') || 'polar-blue',
     );
+
     if (!localStorage.getItem('lang')) {
       localStorage.setItem('lang', 'zh-cn');
     }
+
     //禁止右键
     // document.oncontextmenu = (e) => {
     //   e.preventDefault();
     // };
   }
-
-  // console.log('xxxxx=>', children);
 
   return (
     <ConfigProvider prefixCls="custom">
@@ -95,7 +90,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
             {serviceFail && (
               <>
                 <div className={styles.restart}>
-                  联系我们-钉钉群：9135032392
+                  联系我们-钉钉群：<a href="dingtalk://dingtalkclient/action/sendmsg?dingtalk_id=9135032392">9135032392</a>
                 </div>
                 <div className={styles.restart} onClick={detectionService}>
                   尝试重新启动
