@@ -4,9 +4,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.alibaba.dbhub.server.domain.support.operations.ExampleOperations;
+import com.alibaba.dbhub.server.domain.api.service.TableService;
 import com.alibaba.dbhub.server.test.common.BaseTest;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ExampleOperationsTest extends BaseTest {
 
     @Resource
-    private ExampleOperations exampleOperations;
+    private TableService tableService;
     @Autowired
     private List<DialectProperties> dialectPropertiesList;
 
@@ -31,10 +32,10 @@ public class ExampleOperationsTest extends BaseTest {
     @Order(1)
     public void example() {
         for (DialectProperties dialectProperties : dialectPropertiesList) {
-            String createTable = exampleOperations.createTable(dialectProperties.getDbType());
+            DataResult<String> createTable = tableService.createTableExample(dialectProperties.getDbType().getCode());
             log.info("返回建表语句:{}", createTable);
             Assertions.assertNotNull(createTable, "查询样例失败");
-            String alterTable = exampleOperations.alterTable(dialectProperties.getDbType());
+            DataResult<String> alterTable = tableService.alterTableExample(dialectProperties.getDbType().getCode());
             log.info("返回建修改表语句:{}", alterTable);
             Assertions.assertNotNull(alterTable, "查询样例失败");
         }

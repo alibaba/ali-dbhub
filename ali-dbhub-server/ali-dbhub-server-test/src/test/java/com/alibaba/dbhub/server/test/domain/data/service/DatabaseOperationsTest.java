@@ -4,15 +4,16 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
+import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
+import com.alibaba.dbhub.server.domain.api.service.DatabaseService;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.support.operations.DataSourceOperations;
-import com.alibaba.dbhub.server.domain.support.operations.DatabaseOperations;
 import com.alibaba.dbhub.server.domain.support.param.database.DatabaseQueryAllParam;
-import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam;
 import com.alibaba.dbhub.server.test.common.BaseTest;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dbhub.server.test.domain.data.utils.TestUtils;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.fastjson2.JSON;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +30,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class DatabaseOperationsTest extends BaseTest {
     @Resource
-    private DataSourceOperations dataSourceOperations;
+    private DataSourceService dataSourceService;
     @Autowired
     private List<DialectProperties> dialectPropertiesList;
     @Resource
-    private DatabaseOperations databaseOperations;
+    private DatabaseService databaseService;
 
     @Test
     @Order(1)
@@ -46,20 +47,20 @@ public class DatabaseOperationsTest extends BaseTest {
             putConnect(dialectProperties.getUrl(), dialectProperties.getUsername(), dialectProperties.getPassword(),
                 dialectProperties.getDbType(), dialectProperties.getDatabaseName(), dataSourceId, null);
 
-            DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
-            dataSourceCreateParam.setDataSourceId(dataSourceId);
-            dataSourceCreateParam.setDbType(dbTypeEnum.getCode());
+            DataSourcePreConnectParam dataSourceCreateParam = new DataSourcePreConnectParam();
+
+            dataSourceCreateParam.setType(dbTypeEnum.getCode());
             dataSourceCreateParam.setUrl(dialectProperties.getUrl());
-            dataSourceCreateParam.setUsername(dialectProperties.getUsername());
+            dataSourceCreateParam.setUser(dialectProperties.getUsername());
             dataSourceCreateParam.setPassword(dialectProperties.getPassword());
-            dataSourceOperations.create(dataSourceCreateParam);
+            dataSourceService.preConnect(dataSourceCreateParam);
 
             DatabaseQueryAllParam databaseQueryAllParam = new DatabaseQueryAllParam();
             databaseQueryAllParam.setDataSourceId(dataSourceId);
-            List<Database> databaseList = databaseOperations.queryAll(databaseQueryAllParam);
+            ListResult<Database> databaseList = databaseService.queryAll(databaseQueryAllParam);
             log.info("查询数据库返回:{}", JSON.toJSONString(databaseList));
 
-            Database Database = databaseList.stream()
+            Database Database = databaseList.getData().stream()
                 .filter(database -> dialectProperties.getDatabaseName().equals(database.getName()))
                 .findFirst()
                 .orElse(null);

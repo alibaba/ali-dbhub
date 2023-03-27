@@ -1,4 +1,8 @@
-package com.alibaba.dbhub.server.domain.support.template;
+/**
+ * alibaba.com Inc.
+ * Copyright (c) 2004-2023 All Rights Reserved.
+ */
+package com.alibaba.dbhub.server.domain.support.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +11,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
 import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Sql;
@@ -15,14 +18,6 @@ import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
-import com.alibaba.dbhub.server.domain.support.operations.TableOperations;
-import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
-import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
-import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
-import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
-import com.alibaba.dbhub.server.domain.support.param.table.TableSelector;
-import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
-import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.common.util.EasyBooleanUtils;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
@@ -54,51 +49,17 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlRenameTableStateme
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlRenameTableStatement.Item;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlTableIndex;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 
 /**
- * 表结构服务
- *
- * @author Jiaju Zhuang
+ * @author jipengfei
+ * @version : SqlUtils.java
  */
-@Service
-@Slf4j
-public class TableTemplate implements TableOperations {
+public class SqlUtils {
 
-    @Override
-    public String showCreateTable(ShowCreateTableParam param) {
-        MetaSchema metaSchema = DbhubContext.getConnectInfo().getDbType().metaSchema();
-        return metaSchema.tableDDL(param.getDatabaseName(), param.getTableSchema(), param.getTableName());
-    }
-
-    @Override
-    public void drop(DropParam param) {
-        MetaSchema metaSchema = DbhubContext.getConnectInfo().getDbType().metaSchema();
-        metaSchema.dropTable(param.getDatabaseName(), param.getTableSchema(), param.getTableName());
-    }
-
-    @Override
-    public Table query(TableQueryParam param, TableSelector selector) {
-        MetaSchema metaSchema = DbhubContext.getConnectInfo().getDbType().metaSchema();
-        List<Table> tables = metaSchema.tables(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
-        if (CollectionUtils.isEmpty(tables)) {
-            return null;
-        } else {
-            Table table = tables.get(0);
-            table.setIndexList(
-                metaSchema.indexes(param.getDatabaseName(), param.getSchemaName(), param.getTableName()));
-            table.setColumnList(
-                metaSchema.columns(param.getDatabaseName(), param.getSchemaName(), param.getTableName()));
-            return table;
-        }
-    }
-
-    @Override
-    public List<Sql> buildSql(Table oldTable, Table newTable) {
+    public static List<Sql> buildSql(Table oldTable, Table newTable) {
         List<Sql> sqlList = new ArrayList<>();
         // 创建表
         if (oldTable == null) {
@@ -220,7 +181,7 @@ public class TableTemplate implements TableOperations {
         return sqlList;
     }
 
-    private void modifyColumn(List<Sql> sqlList, Table oldTable, Table newTable) {
+    private static void modifyColumn(List<Sql> sqlList, Table oldTable, Table newTable) {
         Map<String, TableColumn> oldColumnMap = EasyCollectionUtils.toIdentityMap(oldTable.getColumnList(),
             tableColumn -> {
                 if (tableColumn.getOldName() != null) {
@@ -361,7 +322,7 @@ public class TableTemplate implements TableOperations {
         }
     }
 
-    private void modifyIndex(List<Sql> sqlList, Table oldTable, Table newTable) {
+    private static void modifyIndex(List<Sql> sqlList, Table oldTable, Table newTable) {
         Map<String, TableIndex> oldIndexMap = EasyCollectionUtils.toIdentityMap(oldTable.getIndexList(),
             TableIndex::getName);
         Map<String, TableIndex> newIndexMap = EasyCollectionUtils.toIdentityMap(newTable.getIndexList(),
@@ -468,50 +429,4 @@ public class TableTemplate implements TableOperations {
             }
         });
     }
-
-    @Override
-    public PageResult<Table> pageQuery(TablePageQueryParam param, TableSelector selector) {
-        MetaSchema metaSchema = DbhubContext.getMetaSchema();
-        List<Table> list = metaSchema.tables(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
-        if (CollectionUtils.isEmpty(list)) {
-            return PageResult.of(list, 0L, param);
-        }
-        //List<String> tableNameList = EasyCollectionUtils.toList(list, Table::getName);
-        //List<TableColumn> tableColumnList = new ArrayList<>();
-        //List<TableIndex> tableIndexList = new ArrayList<>();
-        //if(selector.getColumnList()) {
-        //    tableColumnList = metaSchema.queryColumnList(param.getDatabaseName(), null,
-        //        tableNameList);
-        //}
-        //if(selector.getIndexList()) {
-        //    tableIndexList = metaSchema.queryIndexList(param.getDatabaseName(), null, tableNameList);
-        //}
-        //Map<String, List<TableIndex>> tableIndexMap = EasyCollectionUtils.stream(tableIndexList)
-        //    // 排除主键
-        //    .filter(tableIndex -> !IndexTypeEnum.PRIMARY_KEY.getCode().equals(tableIndex.getType()))
-        //    .collect(Collectors.groupingBy(TableIndex::getTableName));
-        //Map<String, List<TableColumn>> tableColumnMap = EasyCollectionUtils.stream(tableColumnList).collect(
-        //    Collectors.groupingBy(TableColumn::getTableName));
-        //
-        //list.stream().forEach(table -> {
-        //    table.setColumnList(tableColumnMap.get(table.getName()));
-        //    table.setIndexList(tableIndexMap.get(table.getName()));
-        //});
-
-        return PageResult.of(list, Long.valueOf(list.size()), param);
-    }
-
-    @Override
-    public List<TableColumn> queryColumns(TableQueryParam param) {
-        MetaSchema metaSchema = DbhubContext.getMetaSchema();
-        return metaSchema.columns(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
-    }
-
-    @Override
-    public List<TableIndex> queryIndexes(TableQueryParam param) {
-        MetaSchema metaSchema = DbhubContext.getMetaSchema();
-        return metaSchema.indexes(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
-
-    }
-
 }

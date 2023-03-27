@@ -15,16 +15,18 @@ import com.alibaba.dbhub.server.domain.repository.entity.DataSourceDO;
 import com.alibaba.dbhub.server.domain.repository.mapper.DataSourceMapper;
 import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.support.operations.DataSourceOperations;
-import com.alibaba.dbhub.server.domain.support.operations.DatabaseOperations;
 import com.alibaba.dbhub.server.domain.support.param.database.DatabaseQueryAllParam;
 import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCloseParam;
+import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
+import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
+import com.alibaba.dbhub.server.domain.support.util.JdbcUtils;
 import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
 import com.alibaba.dbhub.server.tools.base.excption.DatasourceErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
+import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -44,12 +46,6 @@ public class DataSourceServiceImpl implements DataSourceService {
 
     @Autowired
     private DataSourceMapper dataSourceMapper;
-
-    @Autowired
-    private DataSourceOperations dataSourceOperations;
-
-    @Autowired
-    private DatabaseOperations databaseOperations;
 
     @Autowired
     private DataSourceConverter dataSourceConverter;
@@ -118,36 +114,29 @@ public class DataSourceServiceImpl implements DataSourceService {
 
     @Override
     public ActionResult preConnect(DataSourcePreConnectParam param) {
-        com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceTestParam dataSourceTestParam
+        com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceTestParam testParam
             = dataSourceConverter.param2param(param);
-        DataSourceConnect dataSourceConnect = dataSourceOperations.test(dataSourceTestParam);
+        DataSourceConnect dataSourceConnect = JdbcUtils.testConnect(testParam.getUrl(),
+            testParam.getUsername(), testParam.getPassword(), testParam.getDbType());
         if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
-            throw new BusinessException(DatasourceErrorEnum.DATASOURCE_TEST_ERROR);
+          return   ActionResult.fail(dataSourceConnect.getMessage(), dataSourceConnect.getDescription());
         }
         return ActionResult.isSuccess();
     }
 
     @Override
     public ListResult<Database> connect(Long id) {
-        //DataSourceDO dataSourceDO = dataSourceMapper.selectById(id);
-        //com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam param = dataSourceConverter.do2param(dataSourceDO);
-        //DataSourceConnect dataSourceConnect = dataSourceOperations.create(param);
-        //if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
-        //    throw new BusinessException(DatasourceErrorEnum.DATASOURCE_CONNECT_ERROR);
-        //}
-        // 查询database
         DatabaseQueryAllParam queryAllParam = new DatabaseQueryAllParam();
         queryAllParam.setDataSourceId(id);
-        return ListResult.of(databaseOperations.queryAll(queryAllParam));
+        List<String> databases = DbhubContext.getMetaSchema().databases();
+        return ListResult.of(EasyCollectionUtils.toList(databases, name -> Database.builder().name(name).build()));
     }
-
-
 
     @Override
     public ActionResult close(Long id) {
         DataSourceCloseParam closeParam = new DataSourceCloseParam();
         closeParam.setDataSourceId(id);
-        dataSourceOperations.close(closeParam);
+        DbhubDataSource.getInstance().close();
         return ActionResult.isSuccess();
     }
 
