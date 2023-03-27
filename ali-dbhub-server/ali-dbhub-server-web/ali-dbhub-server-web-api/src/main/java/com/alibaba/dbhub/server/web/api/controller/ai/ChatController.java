@@ -11,8 +11,10 @@ import com.alibaba.dbhub.server.web.api.controller.ai.listener.OpenAIEventSource
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.google.common.collect.Lists;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.entity.chat.Message;
+import com.unfbx.chatgpt.entity.completions.Completion;
 import com.unfbx.chatgpt.exception.BaseException;
 import com.unfbx.chatgpt.exception.CommonError;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +43,14 @@ public class ChatController {
         this.openAiStreamClient = openAiStreamClient;
     }
 
+    /**
+     * 问答对话模型
+     *
+     * @param msg
+     * @param headers
+     * @return
+     * @throws IOException
+     */
     @GetMapping("/chat")
     @CrossOrigin
     public SseEmitter chat(@RequestParam("message") String msg, @RequestHeader Map<String, String> headers)
@@ -84,6 +94,48 @@ public class ChatController {
         OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
         openAiStreamClient.streamChatCompletion(messages, openAIEventSourceListener);
         LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
+        return sseEmitter;
+    }
+
+    /**
+     * SQL转换模型
+     *
+     * @param msg
+     * @param headers
+     * @return
+     * @throws IOException
+     */
+    @GetMapping("/completions")
+    @CrossOrigin
+    public SseEmitter completions(@RequestParam("message") String msg, @RequestHeader Map<String, String> headers)
+        throws IOException {
+        //默认30秒超时,设置为0L则永不超时
+        SseEmitter sseEmitter = new SseEmitter(0L);
+        String uid = headers.get("uid");
+        if (StrUtil.isBlank(uid)) {
+            throw new BaseException(CommonError.SYS_ERROR);
+        }
+        sseEmitter.send(SseEmitter.event().id(uid).name("连接成功！！！！").data(LocalDateTime.now()).reconnectTime(3000));
+        sseEmitter.onCompletion(() -> {
+            log.info(LocalDateTime.now() + ", uid#" + uid + ", on completions");
+        });
+        sseEmitter.onTimeout(
+            () -> log.info(LocalDateTime.now() + ", uid#" + uid + ", on timeout#" + sseEmitter.getTimeout()));
+        sseEmitter.onError(
+            throwable -> {
+                try {
+                    log.info(LocalDateTime.now() + ", uid#" + "1234567" + ", on error#" + throwable.toString());
+                    sseEmitter.send(SseEmitter.event().id("1234567").name("发生异常！").data(throwable.getMessage())
+                        .reconnectTime(3000));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        );
+        OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
+        Completion completion = Completion.builder().model("code-davinci-002").maxTokens(150).stream(true).stop(
+            Lists.newArrayList("#", ";")).user(uid).prompt(msg).build();
+        openAiStreamClient.streamCompletions(completion, openAIEventSourceListener);
         return sseEmitter;
     }
 }
