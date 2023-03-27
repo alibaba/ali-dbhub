@@ -8,6 +8,7 @@ import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceSelector;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceTestParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.core.converter.DataSourceConverter;
@@ -15,13 +16,11 @@ import com.alibaba.dbhub.server.domain.repository.entity.DataSourceDO;
 import com.alibaba.dbhub.server.domain.repository.mapper.DataSourceMapper;
 import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.support.param.database.DatabaseQueryAllParam;
-import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCloseParam;
+import com.alibaba.dbhub.server.domain.api.param.DatabaseQueryAllParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceCloseParam;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
 import com.alibaba.dbhub.server.domain.support.util.JdbcUtils;
-import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
-import com.alibaba.dbhub.server.tools.base.excption.DatasourceErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
@@ -114,7 +113,7 @@ public class DataSourceServiceImpl implements DataSourceService {
 
     @Override
     public ActionResult preConnect(DataSourcePreConnectParam param) {
-        com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceTestParam testParam
+        DataSourceTestParam testParam
             = dataSourceConverter.param2param(param);
         DataSourceConnect dataSourceConnect = JdbcUtils.testConnect(testParam.getUrl(),
             testParam.getUsername(), testParam.getPassword(), testParam.getDbType());

@@ -9,7 +9,7 @@ import com.alibaba.dbhub.server.domain.api.service.UserService;
 import com.alibaba.dbhub.server.domain.core.converter.UserConverter;
 import com.alibaba.dbhub.server.domain.repository.entity.DbhubUserDO;
 import com.alibaba.dbhub.server.domain.repository.mapper.DbhubUserMapper;
-import com.alibaba.dbhub.server.domain.support.param.user.UserQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.UserQueryParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 

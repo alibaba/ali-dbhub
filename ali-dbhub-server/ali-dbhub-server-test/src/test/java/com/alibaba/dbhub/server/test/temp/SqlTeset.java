@@ -15,7 +15,7 @@ import com.alibaba.dbhub.server.domain.api.service.TableService;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
 import com.alibaba.dbhub.server.domain.support.model.Sql;
-import com.alibaba.dbhub.server.domain.support.param.sql.SqlAnalyseParam;
+import com.alibaba.dbhub.server.domain.api.param.SqlAnalyseParam;
 import com.alibaba.dbhub.server.test.common.BaseTest;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.MysqlDialectProperties;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;

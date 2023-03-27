@@ -9,7 +9,7 @@ import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.api.service.DatabaseService;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.support.param.database.DatabaseQueryAllParam;
+import com.alibaba.dbhub.server.domain.api.param.DatabaseQueryAllParam;
 import com.alibaba.dbhub.server.test.common.BaseTest;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dbhub.server.test.domain.data.utils.TestUtils;

@@ -15,7 +15,7 @@ import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.domain.api.service.ConsoleService;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCloseParam;
+import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
@@ -35,8 +35,6 @@ import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourc
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceUpdateRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DataSourceVO;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DatabaseVO;
-import com.alibaba.dbhub.server.web.api.controller.rdb.request.SchemaQueryRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.TableVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;

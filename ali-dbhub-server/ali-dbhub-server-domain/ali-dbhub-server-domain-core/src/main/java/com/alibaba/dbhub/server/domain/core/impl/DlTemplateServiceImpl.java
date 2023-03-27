@@ -7,7 +7,7 @@ import java.util.List;
 import com.alibaba.dbhub.server.domain.api.param.DlExecuteParam;
 import com.alibaba.dbhub.server.domain.api.service.DlTemplateService;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
-import com.alibaba.dbhub.server.domain.support.param.sql.SqlAnalyseParam;
+import com.alibaba.dbhub.server.domain.api.param.SqlAnalyseParam;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
 import com.alibaba.dbhub.server.domain.support.util.JdbcUtils;

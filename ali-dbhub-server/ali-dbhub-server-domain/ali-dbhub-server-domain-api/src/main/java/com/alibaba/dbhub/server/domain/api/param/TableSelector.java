@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.domain.support.param.table;
+package com.alibaba.dbhub.server.domain.api.param;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

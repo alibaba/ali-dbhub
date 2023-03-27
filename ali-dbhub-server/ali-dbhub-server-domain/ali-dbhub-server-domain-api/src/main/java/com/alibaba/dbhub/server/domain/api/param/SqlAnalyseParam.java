@@ -1,8 +1,4 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
-package com.alibaba.dbhub.server.domain.support.param.database;
+package com.alibaba.dbhub.server.domain.api.param;
 
 import javax.validation.constraints.NotNull;
 
@@ -12,18 +8,24 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * @author jipengfei
- * @version : SchemaQueryParam.java
+ * Sql解析参数
+ *
+ * @author Jiaju Zhuang
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SchemaQueryParam {
+public class SqlAnalyseParam {
 
+    /**
+     * 对应数据库存储的来源id
+     */
     @NotNull
     private Long dataSourceId;
 
-    @NotNull
-    private String dataBaseName;
+    /**
+     * 需要解析的sql 可能是一个复杂的sql
+     */
+    private String sql;
 }

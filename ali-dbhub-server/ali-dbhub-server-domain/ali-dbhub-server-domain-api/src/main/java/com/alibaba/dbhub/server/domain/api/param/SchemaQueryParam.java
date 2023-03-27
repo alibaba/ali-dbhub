@@ -1,4 +1,8 @@
-package com.alibaba.dbhub.server.domain.support.param.datasource;
+/**
+ * alibaba.com Inc.
+ * Copyright (c) 2004-2023 All Rights Reserved.
+ */
+package com.alibaba.dbhub.server.domain.api.param;
 
 import javax.validation.constraints.NotNull;
 
@@ -8,19 +12,18 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 数据源关闭
- *
- * @author Jiaju Zhuang
+ * @author jipengfei
+ * @version : SchemaQueryParam.java
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DataSourceCloseParam {
-    /**
-     * 对应数据库存储的来源id
-     */
+public class SchemaQueryParam {
+
     @NotNull
     private Long dataSourceId;
 
+    @NotNull
+    private String dataBaseName;
 }
