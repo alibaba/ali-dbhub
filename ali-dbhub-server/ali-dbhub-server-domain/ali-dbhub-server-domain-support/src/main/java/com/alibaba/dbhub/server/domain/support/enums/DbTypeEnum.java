@@ -6,6 +6,7 @@ import com.alibaba.dbhub.server.domain.support.dialect.h2.H2MetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.mysql.MysqlMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.oracle.OracleMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.postgresql.PostgresqlMetaSchemaSupport;
+import com.alibaba.dbhub.server.domain.support.dialect.sqlserver.SqlServerMetaSchemaSupport;
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
 
 import lombok.Getter;
@@ -102,6 +103,8 @@ public enum DbTypeEnum implements BaseEnum<String> {
             case ORACLE:
                 metaSchema = new OracleMetaSchemaSupport();
                 break;
+            case SQLSERVER:
+                metaSchema = new SqlServerMetaSchemaSupport();
             default:
         }
         return metaSchema;
@@ -126,6 +129,9 @@ public enum DbTypeEnum implements BaseEnum<String> {
                 SpiExample = SpiExample.builder().createTable(ORACLE_CREATE_TABLE_SIMPLE).alterTable(
                     ORACLE_ALTER_TABLE_SIMPLE).build();
                 break;
+            case SQLSERVER:
+                SpiExample = SpiExample.builder().createTable(ORACLE_CREATE_TABLE_SIMPLE).alterTable(
+                    ORACLE_ALTER_TABLE_SIMPLE).build();
             default:
         }
         return SpiExample;
