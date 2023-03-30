@@ -25,5 +25,12 @@ public class SqlServerMetaSchemaSupport extends BaseMetaSchemaSupport implements
     public SqlServerMetaSchemaMapper getMapper() {
         return DbhubDataSource.getInstance().getMapper(SqlServerMetaSchemaMapper.class);
     }
-
+    @Override
+    public String tableDDL(String databaseName, String schemaName, String tableName) {
+        try {
+            getMapper().createDDLFunction(schemaName);
+        }catch (Exception e) {
+        }
+        return getMapper().showCreateTable(databaseName, schemaName, tableName);
+    }
 }

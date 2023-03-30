@@ -13,6 +13,7 @@ import lombok.Getter;
 @Getter
 public class RedirectBusinessException extends BusinessException {
 
+    private static final long serialVersionUID = -7370118120765115377L;
     private final String redirect;
 
     public RedirectBusinessException(String redirect) {
