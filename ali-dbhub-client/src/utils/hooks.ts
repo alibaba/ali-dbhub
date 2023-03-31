@@ -53,7 +53,7 @@ export function useCanDoubleClick() {
           onClick && onClick()
         }
         count.current = 0
-      }, 500);
+      }, 200);
     }
   }
 }

@@ -11,6 +11,30 @@ export type ITreeConfig = Partial<{ [key in TreeNodeType]: ITreeConfigItem }>;
 
 export const treeConfig: ITreeConfig = {
 
+  [TreeNodeType.DATASOURCES]: {
+    getNodeData: () => {
+      return new Promise((r: (value: ITreeNode[]) => void, j) => {
+        let p = {
+          pageNo: 1,
+          pageSize: 999
+        }
+
+        connectionService.getList(p).then(res => {
+          const data: ITreeNode[] = res.data.map(t => {
+            return {
+              name: t.alias,
+              key: t.id!.toString(),
+              nodeType: TreeNodeType.DATASOURCE,
+              dataSourceId: t.id,
+              dataType: t.type
+            }
+          })
+          r(data);
+        })
+      })
+    },
+  },
+
   [TreeNodeType.DATASOURCE]: {
     getNodeData: (parentData: ITreeNode) => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
@@ -248,10 +272,7 @@ export const treeConfig: ITreeConfig = {
   }
 }
 
-export const switchIcon: { [key in TreeNodeType]: { icon: string } } = {
-  [TreeNodeType.DATASOURCE]: {
-    icon: '\ue62c'
-  },
+export const switchIcon: Partial<{ [key in TreeNodeType]: { icon: string } }> = {
   [TreeNodeType.DATABASE]: {
     icon: '\ue62c'
   },

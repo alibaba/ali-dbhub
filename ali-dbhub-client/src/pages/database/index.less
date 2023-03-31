@@ -5,12 +5,12 @@
   height: 100vh;
 }
 
-.asideBox{
+.asideBox {
   position: relative;
   width: 250px;
   background-color: var(--color-bg-200);
   overflow: hidden;
-  transition: width .2s background 0.3s;
+  transition: width 0.2s background 0.3s;
 }
 
 .aside {
@@ -24,14 +24,16 @@
   display: flex;
   flex-direction: column;
 
-  .header{
+  .header {
     flex-shrink: 0;
   }
 
-  .tree{
+  .tree {
     flex: 1;
     overflow: scroll;
-    ::-webkit-scrollbar{display:none}
+    ::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
@@ -45,7 +47,7 @@
   margin: 10px 10px 0px 10px;
 }
 
-.overview{
+.overview {
   margin: 0px 5px;
   display: flex;
   align-items: center;
@@ -53,37 +55,35 @@
   height: 24px;
   border-radius: 2px;
   padding: 0px 10px;
-  cursor: pointer;
-  i{
+  i {
     font-size: 16px;
     margin-right: 8px;
   }
-
-  &:hover{
-    color: var(--custom-primary-color);
-    background-color: var(--custom-primary-1);
-  }
+  // &:hover{
+  //   color: var(--custom-primary-color);
+  //   background-color: var(--custom-primary-1);
+  // }
 }
 
-.currentNameBox{
+.currentNameBox {
   height: 28px;
   display: flex;
   align-items: center;
   margin-bottom: 8px;
   cursor: pointer;
   font-weight: 500;
-  &:hover{
+  &:hover {
     color: var(--custom-primary-color);
   }
 }
 
-.databaseName{
+.databaseName {
   font-size: 18px;
   margin: 0 10px;
-  .f-single-line() 
+  .f-single-line();
 }
 
-.DBLogo{
+.DBLogo {
   flex-shrink: 0;
   width: 24px;
   height: 24px;
@@ -91,25 +91,25 @@
   background-size: cover;
 }
 
-.switchDBItem{
+.switchDBItem {
   display: flex;
   align-items: center;
   width: 100%;
-  .DBLogo{
+  .DBLogo {
     width: 20px;
     height: 20px;
     margin-right: 10px;
   }
-  .DBName{
+  .DBName {
     flex: 1;
     .f-single-line();
   }
 }
 
-.searchBox{
+.searchBox {
   width: 100%;
   display: flex;
-  .inputBox{
+  .inputBox {
     position: relative;
     display: flex;
     align-items: center;
@@ -117,17 +117,16 @@
     margin-right: 4px;
     border: 1px solid var(--color-border);
     border-radius: 4px;
-    i{
+    i {
       position: absolute;
       left: 5px;
       top: 50%;
       transform: translateY(-50%);
       margin-right: 10px;
     }
-    
   }
 
-  input{
+  input {
     display: block;
     margin-left: 24px;
     flex: 1;
@@ -138,7 +137,7 @@
     background-color: transparent;
   }
 
-  .button{
+  .button {
     margin: 0px 4px;
     display: flex;
     justify-content: center;
@@ -152,19 +151,18 @@
     &:hover {
       filter: brightness(1.1);
     }
-    i{
+    i {
       color: var(--color-bg-100);
     }
-
   }
-  .refresh{
+  .refresh {
   }
 
-  .create{
+  .create {
   }
 }
 
-.footer{
+.footer {
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -174,16 +172,15 @@
   background-color: var(--color-bg-200);
 }
 
-.reversalIconBox{
+.reversalIconBox {
   transform: rotate(180deg);
 }
 
-.iconBox{
+.iconBox {
   padding: 4px 10px;
   border-radius: 3px;
-  &:hover{
+  &:hover {
     cursor: pointer;
     background-color: var(--color-bg-hover);
   }
 }
-
