@@ -10,7 +10,7 @@ import { TreeNodeType } from '@/utils/constants';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import StateIndicator from '@/components/StateIndicator';
 import LoadingContent from '../Loading/LoadingContent';
-import { useCanDoubleClick } from '@/utils/hooks';
+import { useCanDoubleClick, useUpdateEffect } from '@/utils/hooks';
 import { IOperationData } from '@/components/OperationTableModal';
 import connectionService from '@/service/connection';
 import mysqlServer from '@/service/mysql';
@@ -32,6 +32,77 @@ interface TreeNodeIProps {
   setTreeData: Function;
   showAllChildrenPenetrate?: boolean;
 }
+
+function loadData(data: ITreeNode) {
+  return treeConfig[data.nodeType]?.getNodeData(data);
+}
+
+function Tree(props: IProps) {
+  const { className, cRef, addTreeData } = props;
+  const [treeData, setTreeData] = useState<ITreeNode[] | null>(null);
+  const [searchedTreeData, setSearchedTreeData] = useState<ITreeNode[] | null>(null);
+
+  useUpdateEffect(() => {
+    setTreeData([...(treeData || []), ...(addTreeData || [])]);
+  }, [addTreeData])
+
+  function filtrationDataTree(keywords: string) {
+    if (!keywords) {
+      setSearchedTreeData(null)
+    } else if (treeData?.length && keywords) {
+      setSearchedTreeData(approximateTreeNode(treeData, keywords));
+    }
+  }
+
+  function getDataSource() {
+    setTreeData(null);
+
+    let p = {
+      pageNo: 1,
+      pageSize: 999
+    }
+
+    connectionService.getList(p).then(res => {
+      const treeData = res.data.map(t => {
+        return {
+          name: t.alias,
+          key: t.id!.toString(),
+          nodeType: TreeNodeType.DATASOURCE,
+          dataSourceId: t.id,
+          dataType: t.type
+        }
+      })
+      setTimeout(() => {
+        setTreeData(treeData);
+      }, 200);
+    })
+  }
+
+  useImperativeHandle(cRef, () => ({
+    getDataSource,
+    filtrationDataTree
+  }))
+
+  useEffect(() => {
+    getDataSource();
+  }, [])
+
+  return <div className={classnames(className, styles.box)}>
+    <LoadingContent data={treeData} handleEmpty>
+      {
+        (searchedTreeData || treeData)?.map((item) => {
+          return <TreeNode
+            setTreeData={setTreeData}
+            key={item.name}
+            show={true}
+            level={0}
+            data={item}
+          />
+        })
+      }
+    </LoadingContent>
+  </div>
+};
 
 function TreeNode(props: TreeNodeIProps) {
   const { setTreeData, data, level, show = false, showAllChildrenPenetrate = false } = props;
@@ -177,99 +248,6 @@ function TreeNode(props: TreeNodeIProps) {
       })
     }
   </> : <></>
-}
-
-function Tree(props: IProps) {
-  const { className, cRef, addTreeData } = props;
-  const [treeData, setTreeData] = useState<ITreeNode[] | null>(null);
-  const [searchedTreeData, setSearchedTreeData] = useState<ITreeNode[] | null>(null);
-
-  useEffect(() => {
-    setTreeData([...(treeData || []), ...(addTreeData || [])]);
-  }, [addTreeData])
-
-  function filtrationDataTree(keywords: string) {
-    if (!keywords) {
-      setSearchedTreeData(null)
-    } else if (treeData?.length && keywords) {
-      setSearchedTreeData(approximateTreeNode(treeData, keywords));
-    }
-  }
-
-  function getDataSource() {
-    setTreeData(null);
-
-    let p = {
-      pageNo: 1,
-      pageSize: 999
-    }
-
-    connectionService.getList(p).then(res => {
-      const treeData = res.data.map(t => {
-        return {
-          name: t.alias,
-          key: t.id!.toString(),
-          nodeType: TreeNodeType.DATASOURCE,
-          dataSourceId: t.id,
-          dataType: t.type
-        }
-      })
-      setTimeout(() => {
-        setTreeData(treeData);
-      }, 200);
-    })
-  }
-
-  useImperativeHandle(cRef, () => ({
-    getDataSource,
-    filtrationDataTree
-  }))
-
-  useEffect(() => {
-    getDataSource();
-  }, [])
-
-  return <div className={classnames(className, styles.box)}>
-    <LoadingContent data={treeData} handleEmpty>
-      {
-        (searchedTreeData || treeData)?.map((item) => {
-          return <TreeNode
-            setTreeData={setTreeData}
-            key={item.name}
-            show={true}
-            level={0}
-            data={item}
-          />
-        })
-      }
-    </LoadingContent>
-  </div>
-};
-
-// export function getDataSource(setTreeData: Function) {
-//   setTreeData(null);
-
-//   let p = {
-//     pageNo: 1,
-//     pageSize: 999
-//   }
-
-//   connectionService.getList(p).then(res => {
-//     const treeData = res.data.map(t => {
-//       return {
-//         name: t.alias,
-//         key: t.id!.toString(),
-//         nodeType: TreeNodeType.DATASOURCE,
-//         dataSourceId: t.id,
-//         dataType: t.type
-//       }
-//     })
-//     setTreeData(treeData);
-//   })
-// }
-
-function loadData(data: ITreeNode) {
-  return treeConfig[data.nodeType]?.getNodeData(data);
 }
 
 export default forwardRef(Tree);
