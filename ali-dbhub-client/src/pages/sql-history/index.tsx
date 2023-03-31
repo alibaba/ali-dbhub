@@ -108,34 +108,9 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
 
   const jumpToDatabasePage = (item: IHistoryRecord) => {
     if (currentTab == TabsKey.SAVE) {
-      location.href = `/#/database`
+      location.href = `/#/database?consoleId=${item.id}`
     }
   }
-
-  const handleChangeConnection = (value: string) => {
-    console.log(value)
-    listParams.current.dataSourceId = value;
-    let p = {
-      id: value
-    }
-    connectionServer.getDBList(p).then(res => {
-      let list: SelectProps['options'] = []
-      list = res.map(item => {
-        return {
-          label: item.name,
-          value: item.name,
-        }
-      })
-      setDatabaseOptions(list)
-    })
-  };
-
-  const handleChangeDatabase = (value: string) => {
-    console.log(value)
-    listParams.current.databaseName = value;
-    listParams.current.pageNo = 1;
-    getList();
-  };
 
   return <div className={classnames(className, styles.box)}>
     <div className={styles.header}>
@@ -149,20 +124,6 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
     ></Tabs>
     <div className={styles.searchInputBox}>
       <SearchInput onChange={searchChange} className={styles.searchInput} placeholder={i18n('common.text.search')}></SearchInput>
-      {/* <Select
-        className={styles.select}
-        // allowClear
-        placeholder={i18n('common.placeholder.select', '连接')}
-        onChange={handleChangeConnection}
-        options={connectionOptions}
-      />
-      <Select
-        // allowClear
-        className={styles.select}
-        placeholder={i18n('common.placeholder.select', '数据库')}
-        onChange={handleChangeDatabase}
-        options={databaseOptions}
-      /> */}
     </div>
     <div className={styles.sqlListBox} ref={scrollerRef}>
       <ScrollLoading
@@ -184,6 +145,12 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
                 <div className={styles.databaseName}>
                   {item.databaseName}
                 </div>
+                <div className={styles.databaseName}>
+                  {item.dataSourceName}
+                </div>
+                <div className={styles.databaseName}>
+                  {item.ddl}
+                </div>
                 {
                   currentTab == TabsKey.SAVE &&
                   <div className={styles.arrows}>
@@ -192,7 +159,6 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
                 }
               </div>
             })
-
           }
         </div>
       </ScrollLoading>

@@ -31,23 +31,13 @@ interface IEditTableConslo {
   operationData: any;
 }
 
-const basicsTree: ITreeNode[] = []
 let monacoEditorExternalList: any = {}
-
-type IParams = {
-  databaseName: string;
-  id: string;
-}
 
 export default memo<IProps>(function DatabasePage({ className }) {
   const letfRef = useRef<HTMLDivElement | null>(null);
   const [activeKey, setActiveKey] = useState<string>();
-  const fixedTreeData = useRef<ITreeNode[]>();
   const [openDropdown, setOpenDropdown] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [windowName, setWindowName] = useState<string>('console_1');
   const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode | null>(null);
-  const monacoHint = useRef<any>(null);
   const [isUnfold, setIsUnfold] = useState(true);
   const [addTreeNode, setAddTreeNode] = useState<ITreeNode[]>();
   const treeRef = useRef<any>();
@@ -57,10 +47,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   useEffect(() => {
-    setWindowName('console_1');
-  }, [isModalVisible])
-
-  useEffect(() => {
     if (openDropdown) {
       document.documentElement.addEventListener('click', closeDropdownFn)
     }
@@ -68,7 +54,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
       document.documentElement.removeEventListener('click', closeDropdownFn)
     }
   }, [openDropdown])
-
 
   const moveLeftAside = () => {
     const databaseLeftAside = document.getElementById('database-left-aside');
@@ -88,7 +73,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   const searchTable = (value: string) => {
-    // 可能有用但是目前不支持搜索
     treeRef.current?.filtrationDataTree(value);
   }
 

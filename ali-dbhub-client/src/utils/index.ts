@@ -1,6 +1,7 @@
 import i18n, { isEN } from "@/i18n";
 import { TreeNodeType, OSType } from '@/utils/constants';
 import { ITreeNode } from '@/types';
+import querystring from 'query-string';
 
 // TODO: 
 export const env = (() => {
@@ -214,4 +215,9 @@ export function scrollPage(position: number, element?: HTMLElement, timeScale = 
       }
     })();
   });
+}
+
+// 获取地址栏 ? 参数 如果换成历史模式需要改这里
+export function qs<T>() {
+  return querystring.parse(location.hash.split('?')[1]) as T
 }

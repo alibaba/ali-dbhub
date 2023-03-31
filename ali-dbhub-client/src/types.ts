@@ -43,6 +43,8 @@ export interface IHistoryRecord {
   dataSourceId: string | number;
   databaseName: string;
   type: DatabaseTypeCode;
+  dataSourceName: string;
+  ddl: string;
 }
 export interface ITableColumn {
   name: string;
