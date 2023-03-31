@@ -38,12 +38,14 @@ function TreeNodeRightClick(props: Iprops) {
       setTimeout(() => {
         data.children = res;
         setIsLoading(false)
-      }, 500);
+      }, 200);
     })
   }
+
   if (!nodeConfig) {
     return <></>
   }
+
   const { getNodeData } = nodeConfig;
 
   const tableMenu: IMenu<string>[] = [
@@ -70,6 +72,18 @@ function TreeNodeRightClick(props: Iprops) {
       key: 'newConsole',
       icon: '\ue631'
     },
+    {
+      title: '新建Table',
+      key: 'createTable',
+      icon: '\ue6b6'
+    },
+    {
+      title: '刷新',
+      key: 'refresh',
+      icon: '\uec08'
+    },
+  ]
+  const tablesMenu: IMenu<string>[] = [
     {
       title: '新建Table',
       key: 'createTable',
@@ -214,6 +228,20 @@ function TreeNodeRightClick(props: Iprops) {
         }
       </Menu>
     </div>
+  } else if (data.nodeType == TreeNodeType.TABLES) {
+    return <div className={styles.menuBox}>
+      <Menu>
+        {
+          tablesMenu.map(item => {
+            return <MenuItem key={item.key} onClick={dataBaseClick.bind(null, item)}>
+              <Iconfont code={item.icon!}></Iconfont>
+              {item.title}
+            </MenuItem>
+          })
+        }
+      </Menu>
+    </div>
+
   } else {
     return <span></span>
   }

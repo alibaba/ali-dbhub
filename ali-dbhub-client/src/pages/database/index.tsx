@@ -56,22 +56,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
     setOpenDropdown(false)
   }
 
-  const disposalEditorHintData = (tableList: any) => {
-    try {
-      monacoHint.current?.dispose();
-      const myEditorHintData: any = {};
-      tableList?.map((item: any) => {
-        myEditorHintData[item.name] = item.children[0].children.map((item: any) => {
-          return item.name
-        })
-      })
-      monacoHint.current = setEditorHint(myEditorHintData);
-    }
-    catch {
-
-    }
-  }
-
   useEffect(() => {
     setWindowName('console_1');
   }, [isModalVisible])
@@ -104,9 +88,8 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }
 
   const searchTable = (value: string) => {
-    // if (fixedTreeData.current?.length) {
-    //   setTreeData(approximateTreeNode(fixedTreeData.current, value));
-    // }
+    // 可能有用但是目前不支持搜索
+    treeRef.current?.filtrationDataTree(value);
   }
 
   function nodeDoubleClick(data: ITreeNode) {
@@ -127,7 +110,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
         <div className={styles.aside}>
           <div className={styles.header}>
             <div className={styles.searchBox}>
-              <SearchInput onChange={searchTable} placeholder={i18n('common.text.search')}></SearchInput>
+              <SearchInput onChange={searchTable} placeholder='搜索数据源'></SearchInput>
               <div className={classnames(styles.refresh, styles.button)} onClick={refresh}>
                 <Iconfont code="&#xec08;"></Iconfont>
               </div>
@@ -143,8 +126,6 @@ export default memo<IProps>(function DatabasePage({ className }) {
             <span>{i18n('connection.button.overview')}</span>
           </div>
           <Tree
-            // openOperationTableModal={openOperationTableModal}
-            nodeDoubleClick={nodeDoubleClick}
             cRef={treeRef}
             className={styles.tree}
             addTreeData={addTreeNode}

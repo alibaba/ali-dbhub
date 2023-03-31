@@ -125,10 +125,11 @@ export function createRandomId(length:number){
 export function approximateTreeNode(treeData: ITreeNode[], target: string, isDelete = true){
   if(target){
     const newTree:ITreeNode[] = JSON.parse(JSON.stringify(treeData));
-    newTree.map((item,index)=>{
-      if(item.children?.length){
-        item.children = approximateTreeNode(item.children, target,false);
-      }
+    newTree.map((item, index) => {
+      // 暂时不递归，只搜索datasorce
+      // if(item.children?.length){
+      //   item.children = approximateTreeNode(item.children, target,false);
+      // }
       if(item.name?.toUpperCase()?.indexOf(target?.toUpperCase()) == -1 && isDelete){
         delete newTree[index];
       }else{
