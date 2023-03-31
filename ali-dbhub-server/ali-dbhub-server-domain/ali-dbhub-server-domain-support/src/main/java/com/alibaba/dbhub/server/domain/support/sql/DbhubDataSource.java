@@ -252,7 +252,7 @@ public class DbhubDataSource extends DynamicDataSource {
     public void connectDatabase(String database) {
         ConnectInfo info = DbhubContext.getConnectInfo();
         switch (info.getDbType()) {
-            case MYSQL, H2 -> {
+            case MYSQL, H2, SQLSERVER -> {
                 try {
                     execute("use " + database + ";", null);
                 } catch (SQLException e) {

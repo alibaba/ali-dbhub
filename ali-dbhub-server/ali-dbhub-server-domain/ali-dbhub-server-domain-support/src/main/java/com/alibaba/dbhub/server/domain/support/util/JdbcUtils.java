@@ -49,6 +49,8 @@ public class JdbcUtils {
                 return DbType.sqlite;
             case POSTGRESQL:
                 return DbType.postgresql;
+            case SQLSERVER:
+                return DbType.sqlserver;
             default:
                 throw new SystemException(CommonErrorEnum.PARAM_ERROR);
         }

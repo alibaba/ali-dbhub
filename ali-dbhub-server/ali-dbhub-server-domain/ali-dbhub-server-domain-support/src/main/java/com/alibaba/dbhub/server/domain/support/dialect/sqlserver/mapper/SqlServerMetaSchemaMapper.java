@@ -4,6 +4,8 @@
  */
 package com.alibaba.dbhub.server.domain.support.dialect.sqlserver.mapper;
 
+import java.util.List;
+
 import com.alibaba.dbhub.server.domain.support.dialect.BaseMapper;
 
 import org.apache.ibatis.annotations.Param;
@@ -25,4 +27,12 @@ public interface SqlServerMetaSchemaMapper extends BaseMapper {
      * @param tableSchema
      */
     void createDDLFunction(@Param("tableSchema") String tableSchema);
+
+
+    /**
+     * 查询表空间
+     * @param databaseName
+     * @return
+     */
+    List<String> schemas(@Param("databaseName") String databaseName);
 }
