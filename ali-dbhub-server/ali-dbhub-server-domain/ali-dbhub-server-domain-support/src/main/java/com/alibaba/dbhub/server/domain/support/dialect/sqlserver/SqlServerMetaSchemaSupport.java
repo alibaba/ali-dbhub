@@ -4,6 +4,8 @@
  */
 package com.alibaba.dbhub.server.domain.support.dialect.sqlserver;
 
+import java.util.List;
+
 import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.sqlserver.mapper.SqlServerMetaSchemaMapper;
@@ -19,6 +21,11 @@ public class SqlServerMetaSchemaSupport extends BaseMetaSchemaSupport implements
     @Override
     public DbTypeEnum dbType() {
         return DbTypeEnum.SQLSERVER;
+    }
+
+    @Override
+    public List<String> schemas(String databaseName) {
+        return  getMapper().schemas(databaseName);
     }
 
     @Override

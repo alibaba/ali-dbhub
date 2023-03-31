@@ -13,7 +13,7 @@
     </resultMap>
 
     <resultMap id="BaseTableResultMap" type="com.alibaba.dbhub.server.domain.support.model.Table">
-        <result property="name" jdbcType="CHAR" column="table_name"/>
+        <result property="name" jdbcType="CHAR" column="OBJECT_NAME"/>
     </resultMap>
 
 <!--    <resultMap id="TableIndexColumnUnionResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">-->
@@ -65,12 +65,12 @@
     </select>
     <select id="selectTables" resultMap="BaseTableResultMap">
         select OBJECT_NAME  from user_objects where object_type='TABLE'
-        and OBJECT_NAME in (select TABLE_NAME from all_tables where TABLESPACE_NAME =#{tableSchema,jdbcType=VARCHAR})
+        and OBJECT_NAME in (select TABLE_NAME from all_tables where TABLESPACE_NAME =#{databaseName,jdbcType=VARCHAR})
     </select>
 
     <select id="selectTableCount">
         select count(*)  from user_objects where object_type='TABLE'
-        and OBJECT_NAME in (select TABLE_NAME from all_tables where TABLESPACE_NAME =#{tableSchema,jdbcType=VARCHAR})
+        and OBJECT_NAME in (select TABLE_NAME from all_tables where TABLESPACE_NAME =#{databaseName,jdbcType=VARCHAR})
     </select>
 
     <select id="showCreateTable" resultType="java.lang.String">

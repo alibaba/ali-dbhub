@@ -27,7 +27,7 @@ public class PostgresqlDialectProperties implements DialectProperties {
 
     @Override
     public String getUrl() {
-        return "jdbc:postgresql://localhost:5432/postgres";
+        return "jdbc:postgresql://localhost:5432/ali_dbhub_test";
     }
 
     @Override
