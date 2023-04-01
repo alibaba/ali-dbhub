@@ -13,6 +13,7 @@ import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.domain.repository.entity.DataSourceDO;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -45,12 +46,14 @@ public abstract class DataSourceConverter {
      */
     protected String encryptString(DataSourceCreateParam param) {
         String encryptStr = param.getPassword();
-        try {
-            DesUtil desUtil = new DesUtil(DesUtil.DES_KEY);
-            encryptStr = desUtil.encrypt(param.getPassword(), "CBC");
-        } catch (Exception exception) {
-            // do nothing
-            log.error("encrypt error", exception);
+        if(StringUtils.isNotBlank(encryptStr)) {
+            try {
+                DesUtil desUtil = new DesUtil(DesUtil.DES_KEY);
+                encryptStr = desUtil.encrypt(param.getPassword(), "CBC");
+            } catch (Exception exception) {
+                // do nothing
+                log.error("encrypt error", exception);
+            }
         }
         return encryptStr;
     }
