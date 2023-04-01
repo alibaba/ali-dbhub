@@ -20,5 +20,19 @@ import org.apache.ibatis.annotations.Param;
  * @version : H2MetaSchemaMapper.java, v 0.1 2022年12月14日 22:28 jipengfei Exp $
  */
 public interface H2MetaSchemaMapper extends BaseMapper {
+    /**
+     * 查询表空间
+     *
+     * @param databaseName
+     * @return
+     */
+    List<String> schemas(@Param("databaseName") String databaseName);
 
+
+    /**
+     * 查询表空间
+     * @param tableName
+     * @return
+     */
+    List<String> ddl(@Param("tableName") String tableName);
 }
