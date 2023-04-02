@@ -1,5 +1,8 @@
 package com.alibaba.dbhub.server.start;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +32,6 @@ public class Application {
     private String apiHost;
     @Bean
     public OpenAiStreamClient openAiStreamClient() {
-        return OpenAiStreamClient.builder().apiHost(apiHost).apiKey(apiKey).build();
+        return OpenAiStreamClient.builder().apiHost(apiHost).apiKey(Lists.newArrayList(apiKey)).build();
     }
 }

@@ -51,7 +51,7 @@ public class ChatController {
      * @return
      * @throws IOException
      */
-    @GetMapping("/chat")
+    @GetMapping("/chat1")
     @CrossOrigin
     public SseEmitter chat(@RequestParam("message") String msg, @RequestHeader Map<String, String> headers)
         throws IOException {
@@ -110,32 +110,50 @@ public class ChatController {
     public SseEmitter completions(@RequestParam("message") String msg, @RequestHeader Map<String, String> headers)
         throws IOException {
         //默认30秒超时,设置为0L则永不超时
-        SseEmitter sseEmitter = new SseEmitter(0L);
+        //默认30秒超时,设置为0L则永不超时
+        SseEmitter sseEmitter = new SseEmitter(0l);
         String uid = headers.get("uid");
         if (StrUtil.isBlank(uid)) {
             throw new BaseException(CommonError.SYS_ERROR);
         }
+        String messageContext = (String)LocalCache.CACHE.get(uid);
+        List<Message> messages = new ArrayList<>();
+        if (StrUtil.isNotBlank(messageContext)) {
+            messages = JSONUtil.toList(messageContext, Message.class);
+            if (messages.size() >= 10) {
+                messages = messages.subList(1, 10);
+            }
+            Message currentMessage = Message.builder().content(msg).role(Message.Role.USER).build();
+            messages.add(currentMessage);
+        } else {
+            Message currentMessage = Message.builder().content(msg).role(Message.Role.USER).build();
+            messages.add(currentMessage);
+        }
         sseEmitter.send(SseEmitter.event().id(uid).name("连接成功！！！！").data(LocalDateTime.now()).reconnectTime(3000));
         sseEmitter.onCompletion(() -> {
-            log.info(LocalDateTime.now() + ", uid#" + uid + ", on completions");
+            log.info(LocalDateTime.now() + ", uid#" + uid + ", on completion");
         });
         sseEmitter.onTimeout(
             () -> log.info(LocalDateTime.now() + ", uid#" + uid + ", on timeout#" + sseEmitter.getTimeout()));
         sseEmitter.onError(
             throwable -> {
                 try {
-                    log.info(LocalDateTime.now() + ", uid#" + "1234567" + ", on error#" + throwable.toString());
-                    sseEmitter.send(SseEmitter.event().id("1234567").name("发生异常！").data(throwable.getMessage())
+                    log.info(LocalDateTime.now() + ", uid#" + "765431" + ", on error#" + throwable.toString());
+                    sseEmitter.send(SseEmitter.event().id("765431").name("发生异常！").data(throwable.getMessage())
                         .reconnectTime(3000));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         );
-        OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
-        Completion completion = Completion.builder().model("code-davinci-002").maxTokens(150).stream(true).stop(
-            Lists.newArrayList("#", ";")).user(uid).prompt(msg).build();
+       String prompt= "### Postgres SQL tables, with their properties:\n#\n# Employee(id, name, department_id)\n# Department(id, name, address)\n# Salary_Payments(id, employee_id, amount, date)\n#\n### A query to list the names of the departments which employed more than 10 employees in the last 3 months\n";
+
+       OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
+        Completion completion = Completion.builder().model("text-davinci-003").maxTokens(150).stream(true).stop(
+            Lists.newArrayList("#", ";")).user(uid).prompt(prompt).build();
         openAiStreamClient.streamCompletions(completion, openAIEventSourceListener);
+        LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
         return sseEmitter;
+
     }
 }

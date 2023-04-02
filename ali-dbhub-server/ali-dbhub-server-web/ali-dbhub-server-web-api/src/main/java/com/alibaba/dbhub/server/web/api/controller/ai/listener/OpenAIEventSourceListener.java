@@ -2,8 +2,10 @@ package com.alibaba.dbhub.server.web.api.controller.ai.listener;
 
 import java.util.Objects;
 
+import com.alibaba.dbhub.server.web.api.controller.ai.response.ChatCompletionResponse;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unfbx.chatgpt.entity.chat.ChatCompletionResponse;
+import com.unfbx.chatgpt.entity.chat.Message;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
@@ -52,12 +54,16 @@ public class OpenAIEventSourceListener extends EventSourceListener {
         }
         ObjectMapper mapper = new ObjectMapper();
         ChatCompletionResponse completionResponse = mapper.readValue(data, ChatCompletionResponse.class); // 读取Json
+        String text = completionResponse.getChoices().get(0).getDelta()==null
+            ?completionResponse.getChoices().get(0).getText()
+            :completionResponse.getChoices().get(0).getDelta().getContent();
+        Message message = new Message();
+        message.setContent(text);
         sseEmitter.send(SseEmitter.event()
                 .id(completionResponse.getId())
-                .data(completionResponse.getChoices().get(0).getDelta())
+                .data(message)
                 .reconnectTime(3000));
     }
-
 
     @Override
     public void onClosed(EventSource eventSource) {
