@@ -37,7 +37,14 @@ md.use(mdKatex, {
 });
 md.use(mila, { attrs: { target: '_blank', rel: 'noopener' } });
 
-function ChatAI() {
+interface IChatAIProps {
+  /** 数据源id */
+  dataSourceId: number;
+  /** DB名称 */
+  databaseName: string;
+}
+
+function ChatAI(props: IChatAIProps) {
   const [messages, setMessages] = useState<
     Array<{ key: string; question: string; answer: string }>
   >([]);
@@ -78,8 +85,11 @@ function ChatAI() {
     }
 
     let text = '';
+    // dataSourceId number
+    // databaseName string
+    const params = `message=${question}&dataSourceId=${props.dataSourceId}&databaseName=${props.databaseName}`;
     const eventSource = new EventSourcePolyfill(
-      'http://38.55.129.58/api/ai/chat?message=' + question,
+      'http://38.55.129.58/api/ai/chat?' + params,
       {
         headers: {
           uid,
@@ -133,7 +143,7 @@ function ChatAI() {
         console.log('remove eventSource');
       });
     };
-  }, [question]);
+  }, [question, props.dataSourceId, props.databaseName]);
 
   return (
     <div className={styles.chatAI}>
