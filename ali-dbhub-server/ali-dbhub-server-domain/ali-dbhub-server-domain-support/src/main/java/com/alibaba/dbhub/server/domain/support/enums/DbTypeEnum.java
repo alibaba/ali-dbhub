@@ -6,6 +6,7 @@ import com.alibaba.dbhub.server.domain.support.dialect.h2.H2MetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.mysql.MysqlMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.oracle.OracleMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.postgresql.PostgresqlMetaSchemaSupport;
+import com.alibaba.dbhub.server.domain.support.dialect.sqlite.SQLiteMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.sqlserver.SqlServerMetaSchemaSupport;
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
 
@@ -105,6 +106,10 @@ public enum DbTypeEnum implements BaseEnum<String> {
                 break;
             case SQLSERVER:
                 metaSchema = new SqlServerMetaSchemaSupport();
+                break;
+            case SQLITE:
+                metaSchema = new SQLiteMetaSchemaSupport();
+                break;
             default:
         }
         return metaSchema;

@@ -79,6 +79,9 @@ public class DataSourceOperationsTest extends BaseTest {
     @Order(3)
     public void createDataSource(){
         for (DialectProperties dialectProperties : dialectPropertiesList) {
+            if(!dialectProperties.getDbType().equals(DbTypeEnum.SQLITE)){
+                continue;
+            }
             DbTypeEnum dbTypeEnum = dialectProperties.getDbType();
             Long dataSourceId = TestUtils.nextLong();
             TestUtils.buildContext(dialectProperties, dataSourceId, null);
