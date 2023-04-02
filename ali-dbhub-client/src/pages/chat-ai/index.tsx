@@ -133,6 +133,7 @@ function ChatAI(props: IChatAIProps) {
     };
     eventSource.onerror = (event) => {
       console.log('onerror', event);
+      curMessageIndex.current++;
       message.warning('服务异常请重试并联系开发者！')
       if (event.readyState === EventSource.CLOSED) {
         console.log('connection is closed');
