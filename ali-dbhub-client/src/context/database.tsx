@@ -14,6 +14,7 @@ export interface IModel {
   operationData: IOperationDataDialog;
   needRefreshNodeTree: any;
   dblclickNodeData: ITreeNode | null;
+  aiImportSql: string;
 }
 
 export interface IContext {
@@ -22,6 +23,7 @@ export interface IContext {
   setOperationDataDialog: (value: IOperationDataDialog) => void;
   setNeedRefreshNodeTree: (value: any) => void;
   setDblclickNodeData: (value: ITreeNode | null) => void;
+  setAiImportSql: (value: string) => void;
 }
 
 const initDatabaseValue: IModel = {
@@ -29,6 +31,7 @@ const initDatabaseValue: IModel = {
   operationData: false,
   needRefreshNodeTree: {},
   dblclickNodeData: null,
+  aiImportSql: '',
 }
 
 export const DatabaseContext = createContext<IContext>({} as any);
@@ -62,12 +65,20 @@ export default function DatabaseContextProvider({ children }: { children: React.
     })
   }
 
+  const setAiImportSql = (aiImportSql: any) => {
+    setStateModel({
+      ...model,
+      aiImportSql
+    })
+  }
+
   return <DatabaseContext.Provider value={{
     model,
     setcreateConsoleDialog,
     setOperationDataDialog,
     setNeedRefreshNodeTree,
-    setDblclickNodeData
+    setDblclickNodeData,
+    setAiImportSql
   }}>
     {children}
   </DatabaseContext.Provider>

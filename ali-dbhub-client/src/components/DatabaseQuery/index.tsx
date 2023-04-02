@@ -30,7 +30,7 @@ interface IProps extends IDatabaseQueryProps {
 let monacoEditorExternalList: any = {}
 
 export default memo<IProps>(function DatabaseQuery(props) {
-  const { model, setDblclickNodeData } = useContext(DatabaseContext);
+  const { model, setDblclickNodeData, setAiImportSql } = useContext(DatabaseContext);
   const { activeTabKey, windowTab } = props
   const params: { id: string, type: string } = useParams();
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
@@ -38,7 +38,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
   const traditionSql = useRef<any>(null);
   const monacoEditor = useRef<any>(null);
   const monacoHint = useRef<any>(null);
-  const { dblclickNodeData } = model;
+  const { dblclickNodeData, aiImportSql } = model;
 
   useEffect(() => {
     if (windowTab.consoleId !== +activeTabKey) {
@@ -47,6 +47,14 @@ export default memo<IProps>(function DatabaseQuery(props) {
     connectConsole();
     getTableList();
   }, [activeTabKey])
+
+  useEffect(() => {
+    if (aiImportSql) {
+      const model = monacoEditor.current.getModel(monacoEditor.current)
+      model.setValue(aiImportSql)
+      setAiImportSql('');
+    }
+  }, [aiImportSql])
 
   useEffect(() => {
     if (!dblclickNodeData) {
