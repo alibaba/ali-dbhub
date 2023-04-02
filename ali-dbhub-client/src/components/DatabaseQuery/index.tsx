@@ -232,7 +232,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
           </div>
         </div>
         <div className={styles.chatBox}>
-          <ChatAI classNames={styles.chatAI}></ChatAI>
+          <ChatAI databaseName={windowTab.databaseName} dataSourceId={windowTab.dataSourceId} classNames={styles.chatAI}></ChatAI>
         </div>
       </div>
       <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
