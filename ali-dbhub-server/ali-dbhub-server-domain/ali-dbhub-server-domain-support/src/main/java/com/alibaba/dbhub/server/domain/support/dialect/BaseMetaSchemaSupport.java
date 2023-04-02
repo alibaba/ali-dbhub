@@ -4,6 +4,9 @@
  */
 package com.alibaba.dbhub.server.domain.support.dialect;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,13 +20,16 @@ import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
 import com.alibaba.dbhub.server.domain.support.model.Trigger;
+import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
 
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author jipengfei
  * @version : BaseMetaSchemaSupport.java
  */
+@Slf4j
 public abstract class BaseMetaSchemaSupport implements MetaSchema{
 
     @Override
@@ -74,6 +80,34 @@ public abstract class BaseMetaSchemaSupport implements MetaSchema{
     @Override
     public List<? extends TableColumn> columns(String databaseName, String schemaName, String tableName) {
         return getMapper().selectColumns(databaseName,schemaName, tableName);
+    }
+
+    @Override
+    public List<? extends TableColumn> columns(String databaseName, String schemaName,String tableName, String columnName) {
+        List<TableColumn> tableColumns = Lists.newArrayList();
+        try {
+            Connection connection = DbhubDataSource.getInstance().getConnection();
+            ResultSet columns = connection.getMetaData().getColumns(databaseName, schemaName, tableName, columnName);
+            List<String> columnDefinitions = new ArrayList<>();
+            while (columns.next()) {
+                String cname = columns.getString("COLUMN_NAME");
+                String columnType = columns.getString("TYPE_NAME");
+                int columnSize = columns.getInt("COLUMN_SIZE");
+                String remarks = columns.getString("REMARKS");
+                String defaultValue = columns.getString("COLUMN_DEF");
+                String tname = columns.getString("TABLE_NAME");
+                TableColumn tableColumn = new TableColumn();
+                tableColumn.setName(cname);
+                tableColumn.setComment(remarks);
+                tableColumn.setDefaultValue(defaultValue);
+                tableColumn.setDataType(columnType);
+                tableColumn.setTableName(tname);
+                tableColumns.add(tableColumn);
+            }
+        } catch (Exception e) {
+            log.error("get columns error", e);
+        }
+        return tableColumns;
     }
 
     @Override

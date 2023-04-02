@@ -47,22 +47,24 @@ public class OpenAIEventSourceListener extends EventSourceListener {
         if (data.equals("[DONE]")) {
             log.info("OpenAI返回数据结束了");
             sseEmitter.send(SseEmitter.event()
-                    .id("[DONE]")
-                    .data("[DONE]")
-                    .reconnectTime(3000));
+                .id("[DONE]")
+                .data("[DONE]")
+                .reconnectTime(3000));
             return;
         }
         ObjectMapper mapper = new ObjectMapper();
         ChatCompletionResponse completionResponse = mapper.readValue(data, ChatCompletionResponse.class); // 读取Json
-        String text = completionResponse.getChoices().get(0).getDelta()==null
-            ?completionResponse.getChoices().get(0).getText()
-            :completionResponse.getChoices().get(0).getDelta().getContent();
+        String text = completionResponse.getChoices().get(0).getDelta() == null
+            ? completionResponse.getChoices().get(0).getText()
+            : completionResponse.getChoices().get(0).getDelta().getContent();
         Message message = new Message();
-        message.setContent(text);
-        sseEmitter.send(SseEmitter.event()
+        if (text != null) {
+            message.setContent(text);
+            sseEmitter.send(SseEmitter.event()
                 .id(completionResponse.getId())
                 .data(message)
                 .reconnectTime(3000));
+        }
     }
 
     @Override
@@ -70,11 +72,10 @@ public class OpenAIEventSourceListener extends EventSourceListener {
         log.info("OpenAI关闭sse连接...");
     }
 
-
     @SneakyThrows
     @Override
     public void onFailure(EventSource eventSource, Throwable t, Response response) {
-        if(Objects.isNull(response)){
+        if (Objects.isNull(response)) {
             return;
         }
         ResponseBody body = response.body();
