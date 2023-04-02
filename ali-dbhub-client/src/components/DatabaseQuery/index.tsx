@@ -50,8 +50,9 @@ export default memo<IProps>(function DatabaseQuery(props) {
 
   useEffect(() => {
     if (aiImportSql) {
-      const model = monacoEditor.current.getModel(monacoEditor.current)
-      model.setValue(aiImportSql)
+      const model = monacoEditor.current.getModel(monacoEditor.current);
+      const value = model.getValue();
+      model.setValue(`${value}\n${aiImportSql}`);
       setAiImportSql('');
     }
   }, [aiImportSql])
@@ -140,8 +141,8 @@ export default memo<IProps>(function DatabaseQuery(props) {
 
   const getMonacoEditorValue = () => {
     if (monacoEditor?.current?.getModel) {
-      const model = monacoEditor?.current.getModel(monacoEditor?.current)
-      const value = model.getValue()
+      const model = monacoEditor?.current.getModel(monacoEditor?.current);
+      const value = model.getValue();
       return value
     }
   }
