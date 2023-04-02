@@ -110,7 +110,7 @@ function TreeNode(props: TreeNodeIProps) {
   const [showAllChildren, setShowAllChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const indentArr = new Array(level).fill('indent');
-  const { model, setNeedRefreshNodeTree } = useContext(DatabaseContext);
+  const { model, setNeedRefreshNodeTree, setDblclickNodeData } = useContext(DatabaseContext);
   const { needRefreshNodeTree } = model;
 
   const treeNodeClick = useCanDoubleClick();
@@ -187,19 +187,27 @@ function TreeNode(props: TreeNodeIProps) {
     </>
   }
 
+  function nodeDoubleClick() {
+    if (data.nodeType === TreeNodeType.TABLE || data.nodeType === TreeNodeType.COLUMN) {
+      setDblclickNodeData(data);
+    } else {
+      handleClick(data);
+    }
+  }
+
+  function nodeClick() {
+    if (data.nodeType === TreeNodeType.TABLE || data.nodeType === TreeNodeType.LINE) {
+      handleClick(data);
+    }
+  }
 
 
   return show ? <>
     <Dropdown overlay={renderMenu()} trigger={['contextMenu']}>
       <Tooltip placement="right" title={renderTitle(data)}>
         <div
-          onClick={handleClick.bind(null, data)}
-          // (e) => {
-          //   treeNodeClick({
-          //     onClick: handleClick.bind(null, data),
-          //     onDoubleClick: () => { nodeDoubleClick && nodeDoubleClick(data) }
-          //   })
-          // }
+          onClick={nodeClick}
+          onDoubleClick={nodeDoubleClick}
           className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
           <div className={styles.left}>
             {
@@ -211,7 +219,7 @@ function TreeNode(props: TreeNodeIProps) {
           <div className={styles.right}>
             {
               !data.isLeaf &&
-              <div className={styles.arrows}>
+              <div onClick={handleClick.bind(null, data)} className={styles.arrows}>
                 {/* {
                   isLoading
                     ?
