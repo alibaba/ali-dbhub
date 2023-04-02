@@ -239,7 +239,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
         </div>
         <DraggableDivider direction='line' min={200} volatileRef={traditionSql} />
         <div className={styles.chatBox}>
-          <ChatAI databaseName={windowTab.databaseName} dataSourceId={windowTab.dataSourceId} classNames={styles.chatAI}></ChatAI>
+          <ChatAI type='embed' consoleId={windowTab.consoleId} databaseName={windowTab.databaseName} dataSourceId={windowTab.dataSourceId} classNames={styles.chatAI}></ChatAI>
         </div>
       </div>
       <DraggableDivider callback={callback} direction='row' min={200} volatileRef={inputHub} />
