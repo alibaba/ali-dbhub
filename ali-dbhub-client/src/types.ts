@@ -66,7 +66,7 @@ export interface ITreeNode {
   key: string;
   name: string;
   nodeType: TreeNodeType;
-  dataType?: string;
+  dataType?: DatabaseTypeCode;
   isLeaf?: boolean;
   children?: ITreeNode[];
   parent?: ITreeNode;

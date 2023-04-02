@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Input, Button } from 'antd';
+import { Input, Button, message } from 'antd';
 import classnames from 'classnames';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
@@ -73,6 +73,7 @@ function ChatAI(props: IChatAIProps) {
   const flowRef = useRef<HTMLDivElement>(null);
   const curSourceTarget = useRef<EventTarget>(null);
   const uid = useRef<string>('');
+  const curMessageIndex = useRef<number>(0);
 
   useEffect(() => {
     if (flowRef?.current && autoScroll) {
@@ -85,6 +86,7 @@ function ChatAI(props: IChatAIProps) {
   }, [consoleId]);
 
   useEffect(() => {
+    const question = messages[curMessageIndex.current]?.question;
     if (!question) return;
 
     let text = '';
@@ -107,11 +109,10 @@ function ChatAI(props: IChatAIProps) {
     eventSource.onmessage = (event) => {
       if (event.data == '[DONE]') {
         setIsChatting(false);
-        console.log('');
+        curMessageIndex.current++;
         if (curSourceTarget?.current) {
           curSourceTarget?.current?.close();
         }
-        const message = messages.find((i) => i.question === question);
         return;
       }
       let json_data = JSON.parse(event.data);
@@ -121,7 +122,7 @@ function ChatAI(props: IChatAIProps) {
       }
       text = text + json_data.content;
 
-      const message = messages.find((i) => i.question === question);
+      const message = messages[curMessageIndex.current];
       if (message) {
         message.answer = text;
       }
@@ -129,7 +130,7 @@ function ChatAI(props: IChatAIProps) {
     };
     eventSource.onerror = (event) => {
       console.log('onerror', event);
-      alert('服务异常请重试并联系开发者！');
+      message.warning('服务异常请重试并联系开发者！')
       if (event.readyState === EventSource.CLOSED) {
         console.log('connection is closed');
       } else {
@@ -145,7 +146,7 @@ function ChatAI(props: IChatAIProps) {
         console.log('remove eventSource');
       });
     };
-  }, [question, props.dataSourceId, props.databaseName]);
+  }, [messages.length, props.dataSourceId, props.databaseName]);
 
   const handleInputChange = (event) => {
     setInputValue(event?.target?.value);
@@ -158,7 +159,14 @@ function ChatAI(props: IChatAIProps) {
       setAutoScroll(true);
       setIsChatting(true);
       const key = uuid();
-      setMessages([...messages, { key, question: inputValue, answer: '' }]);
+      setMessages([
+        ...messages,
+        {
+          key,
+          question: inputValue,
+          answer: '',
+        },
+      ]);
     }
   };
 
