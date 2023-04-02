@@ -29,7 +29,7 @@ export interface IUpdateWindowParams {
 
 const saveWindowTab = createRequest<ISaveConsole, number>('/api/operation/saved/create', { method: 'post' });
 
-const getWindowTab = createRequest<ISaveConsole, number>('/api/operation/saved/:id',{method: 'get'});
+const getWindowTab = createRequest<{id:string}, number>('/api/operation/saved/:id',{method: 'get'});
 
 const updateWindowTab = createRequest<IUpdateWindowParams, number>('/api/operation/saved/update',{method: 'put'});
 
