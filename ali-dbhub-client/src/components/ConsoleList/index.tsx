@@ -245,7 +245,7 @@ export function CreateConsoleModal({ createdCallback }: { createdCallback: (newC
 
     historyService.saveWindowTab(p).then((res) => {
       const newConsole: IConsole = {
-        name: consoleName!,
+        name: `${createConsoleDialog.databaseName}-console`,
         key: res.toString(),
         type: ConsoleType.SQLQ,
         DBType: DatabaseTypeCode.MYSQL,
