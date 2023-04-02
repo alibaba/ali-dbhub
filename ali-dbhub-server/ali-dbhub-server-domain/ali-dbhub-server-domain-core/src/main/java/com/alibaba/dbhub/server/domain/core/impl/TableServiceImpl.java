@@ -92,7 +92,7 @@ public class TableServiceImpl implements TableService {
     @Override
     public List<TableColumn> queryColumns(TableQueryParam param) {
         MetaSchema metaSchema = DbhubContext.getMetaSchema();
-        return metaSchema.columns(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
+        return metaSchema.columns(param.getDatabaseName(), param.getSchemaName(), param.getTableName(),null);
     }
 
     @Override
