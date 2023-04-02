@@ -147,7 +147,7 @@ function ChatAI(props: IChatAIProps) {
     };
   }, [question, props.dataSourceId, props.databaseName]);
 
-  const handleInputChange = (event: Event) => {
+  const handleInputChange = (event) => {
     setInputValue(event?.target?.value);
   };
 
@@ -185,15 +185,14 @@ function ChatAI(props: IChatAIProps) {
             onChange={handleInputChange}
             onPressEnter={handleSendMessage}
             suffix={
-              <Button type="primary" size="large" onClick={handleSendMessage}>
+              <Button type="text" onClick={handleSendMessage}>
                 发送
               </Button>
             }
           />
         ) : (
           <Button
-            type="primary"
-            danger
+            type="text"
             size="large"
             style={{ marginLeft: '20px' }}
             onClick={() => {
