@@ -142,19 +142,6 @@ public class ChatController {
             throw new BusinessException(CommonErrorEnum.PARAM_ERROR);
         }
 
-        // 查询schema信息
-        String dataSourceType = DbTypeEnum.MYSQL.getCode();
-        TableQueryParam queryParam = chatConverter.chat2tableQuery(queryRequest);
-        Map<String, List<TableColumn>> tableColumns = buildTableColumn(queryParam);
-        List<String> tableSchemas = tableColumns.entrySet().stream().map(
-            entry -> String.format("%s(%s)", entry.getKey(),
-                entry.getValue().stream().map(TableColumn::getName).collect(
-                    Collectors.joining(", ")))).collect(Collectors.toList());
-        String properties = String.join("\n#", tableSchemas);
-        String prompt = CollectionUtils.isNotEmpty(tableSchemas) ? String.format(
-            "### %s SQL tables, with their properties:\n#\n# %s\n#\n### %s", dataSourceType, properties,
-            queryRequest.getMessage()) : String.format("### %s", queryRequest.getMessage());
-
         String messageContext = (String)LocalCache.CACHE.get(uid);
         List<String> messages = new ArrayList<>();
         if (StrUtil.isNotBlank(messageContext)) {
@@ -162,9 +149,9 @@ public class ChatController {
             if (messages.size() >= 10) {
                 messages = messages.subList(1, 10);
             }
-            messages.add(prompt);
+            messages.add(queryRequest.getMessage());
         } else {
-            messages.add(prompt);
+            messages.add(queryRequest.getMessage());
         }
         sseEmitter.send(SseEmitter.event().id(uid).name("连接成功！！！！").data(LocalDateTime.now()).reconnectTime(3000));
         sseEmitter.onCompletion(() -> {
@@ -184,9 +171,24 @@ public class ChatController {
             }
         );
 
+        // 查询schema信息
+        String dataSourceType = DbTypeEnum.MYSQL.getCode();
+        TableQueryParam queryParam = chatConverter.chat2tableQuery(queryRequest);
+        Map<String, List<TableColumn>> tableColumns = buildTableColumn(queryParam);
+        List<String> tableSchemas = tableColumns.entrySet().stream().map(
+            entry -> String.format("%s(%s)", entry.getKey(),
+                entry.getValue().stream().map(TableColumn::getName).collect(
+                    Collectors.joining(", ")))).collect(Collectors.toList());
+        String properties = String.join("\n#", tableSchemas);
+        String message = String.join("\n# ", messages);
+        String prompt = CollectionUtils.isNotEmpty(tableSchemas) ? String.format(
+            "### %s SQL tables, with their properties:\n#\n# %s\n#\n### %s", dataSourceType, properties,
+            message) : String.format("### %s", message);
+
+        // 获取返回结果
         OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
         Completion completion = Completion.builder().model("text-davinci-003").maxTokens(150).stream(true).stop(
-            Lists.newArrayList("#", ";")).user(uid).prompt(JSONUtil.toJsonStr(messages)).build();
+            Lists.newArrayList("#", ";")).user(uid).prompt(prompt).build();
         openAiStreamClient.streamCompletions(completion, openAIEventSourceListener);
         LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
         return sseEmitter;
