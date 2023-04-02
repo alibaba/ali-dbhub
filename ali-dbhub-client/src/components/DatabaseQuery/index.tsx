@@ -1,4 +1,4 @@
-import React, { memo, useState, useRef, useEffect } from 'react';
+import React, { memo, useState, useRef, useEffect, useContext } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { history, useParams } from 'umi';
@@ -16,12 +16,11 @@ const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { format } from 'sql-formatter';
 import historyServer from '@/service/history';
 import { OSnow } from '@/utils'
+import { DatabaseContext } from '@/context/database'
 
 export interface IDatabaseQueryProps {
   activeTabKey: string;
   windowTab: ISQLQueryConsole;
-  treeNodeClickMessage?: ITreeNode | null;
-  setTreeNodeClickMessage?: Function;
 }
 
 interface IProps extends IDatabaseQueryProps {
@@ -31,12 +30,15 @@ interface IProps extends IDatabaseQueryProps {
 let monacoEditorExternalList: any = {}
 
 export default memo<IProps>(function DatabaseQuery(props) {
-  const { activeTabKey, windowTab, treeNodeClickMessage, setTreeNodeClickMessage } = props
+  const { model, setDblclickNodeData } = useContext(DatabaseContext);
+  const { activeTabKey, windowTab } = props
   const params: { id: string, type: string } = useParams();
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
-  const monacoEditorBox = useRef<HTMLDivElement | null>(null);
+  const inputHub = useRef<HTMLDivElement | null>(null);
+  const traditionSql = useRef<any>(null);
   const monacoEditor = useRef<any>(null);
   const monacoHint = useRef<any>(null);
+  const { dblclickNodeData } = model;
 
   useEffect(() => {
     if (windowTab.consoleId !== +activeTabKey) {
@@ -47,26 +49,30 @@ export default memo<IProps>(function DatabaseQuery(props) {
   }, [activeTabKey])
 
   useEffect(() => {
-    const nodeData = treeNodeClickMessage
+    if (!dblclickNodeData) {
+      return
+    }
+    console.log(dblclickNodeData)
+    const nodeData = dblclickNodeData;
     if (nodeData && windowTab.consoleId === +activeTabKey) {
       const model = monacoEditor.current.getModel(monacoEditor.current)
       const value = model.getValue()
       if (nodeData.nodeType == TreeNodeType.TABLE) {
-        if (value == 'SELECT * FROM') {
+        if (value == 'SELECT * FROM' || value == 'SELECT * FROM ') {
           model.setValue(`SELECT * FROM ${nodeData.name};`)
         } else {
           model.setValue(`${value}\nSELECT * FROM ${nodeData.name};`)
         }
-      } else if (nodeData.nodeType == TreeNodeType.LINE) {
-        if (value == 'SELECT * FROM') {
+      } else if (nodeData.nodeType == TreeNodeType.COLUMN) {
+        if (value == 'SELECT * FROM' || value == 'SELECT * FROM ') {
           model.setValue(`SELECT * FROM ${nodeData?.parent?.name} WHERE ${nodeData.name} = ''`)
         } else {
           model.setValue(`${value}\nSELECT * FROM ${nodeData?.parent?.name} WHERE ${nodeData.name} = ''`)
         }
       }
-      setTreeNodeClickMessage?.(null)
+      setDblclickNodeData(null)
     }
-  }, [treeNodeClickMessage])
+  }, [dblclickNodeData])
 
   const connectConsole = () => {
     let p = {
@@ -200,8 +206,8 @@ export default memo<IProps>(function DatabaseQuery(props) {
 
   return <>
     <div className={classnames(styles.databaseQuery)}>
-      <div className={styles.inputHub}>
-        <div className={styles.traditionSql}>
+      <div ref={inputHub} className={styles.inputHub}>
+        <div ref={traditionSql} className={styles.traditionSql}>
           <div className={styles.operatingArea}>
             <div className={styles.left}>
               <div>
@@ -225,17 +231,18 @@ export default memo<IProps>(function DatabaseQuery(props) {
               <span>database: {windowTab.databaseName}</span>
             </div>
           </div>
-          <div ref={monacoEditorBox} className={styles.monacoEditor}>
+          <div className={styles.monacoEditor}>
             {
               <MonacoEditor onSave={saveWindowTabTab} onChange={monacoEditorChange} id={windowTab.consoleId!} getEditor={getEditor}></MonacoEditor>
             }
           </div>
         </div>
+        <DraggableDivider direction='line' min={200} volatileRef={traditionSql} />
         <div className={styles.chatBox}>
           <ChatAI databaseName={windowTab.databaseName} dataSourceId={windowTab.dataSourceId} classNames={styles.chatAI}></ChatAI>
         </div>
       </div>
-      <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
+      <DraggableDivider callback={callback} direction='row' min={200} volatileRef={inputHub} />
       <div className={styles.searchResult}>
         <LoadingContent data={manageResultDataList} handleEmpty>
           <SearchResult manageResultDataList={manageResultDataList}></SearchResult>
