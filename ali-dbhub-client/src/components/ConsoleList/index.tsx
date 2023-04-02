@@ -117,7 +117,12 @@ export default memo<Iprops>(function ConsoleList(props) {
     };
 
     historyService.getSaveList(p).then((res) => {
+      if (!res.data?.length) {
+        return
+      }
+
       let flag = false;
+
       const newWindowList = res.data?.map((item, index) => {
         if (!consoleId && index === 0) {
           setActiveKey(item.id + '');
