@@ -36,7 +36,7 @@ const noNeedToastErrorCode = [ErrorCode.NEED_LOGGED_IN];
 
 const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
 const onLineServiceUrl = 'http://127.0.0.1:10824';
-const localServiceUrl = '/';
+const localServiceUrl = '';
 // const localServiceUrl = 'http://38.55.129.58';
 
 const baseURL =
