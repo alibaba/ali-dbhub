@@ -167,7 +167,7 @@ export function TableBox(props: ITableProps) {
 
   return <div {...rest} className={classnames(className, styles.tableBox)}>
     {
-      dataList?.length
+      (dataList !== null)
         ?
         <Table bordered pagination={false} columns={columns} dataSource={tableData} size="small" />
         :
