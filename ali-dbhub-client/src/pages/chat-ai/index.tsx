@@ -7,9 +7,9 @@ import mila from 'markdown-it-link-attributes';
 import mdKatex from '@traptitech/markdown-it-katex';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import 'katex/dist/katex.min.css';
-import './hljs.css';
 import styles from './index.less';
 import { uuid } from '@/utils/common';
+import './hljs.css';
 
 const md = new MarkdownIt({
   linkify: true,
@@ -40,14 +40,29 @@ md.use(mdKatex, {
 md.use(mila, { attrs: { target: '_blank', rel: 'noopener' } });
 
 interface IChatAIProps {
+  /** consoleId */
+  consoleId: number;
   /** 数据源id */
   dataSourceId: number;
   /** DB名称 */
   databaseName: string;
+  /** 被使用形式 */
+  type: 'page' | 'embed';
   classNames: string;
 }
 
+function formatParams(obj: { [key: string]: any }) {
+  let params = '';
+  for (let key in obj) {
+    if (obj[key]) {
+      params += `${key}=${obj[key]}&`;
+    }
+  }
+  return params;
+}
+
 function ChatAI(props: IChatAIProps) {
+  const { dataSourceId, databaseName, consoleId, type = 'page' } = props;
   const [messages, setMessages] = useState<
     Array<{ key: string; question: string; answer: string }>
   >([]);
@@ -57,21 +72,7 @@ function ChatAI(props: IChatAIProps) {
   const [isChatting, setIsChatting] = useState(false);
   const flowRef = useRef<HTMLDivElement>(null);
   const curSourceTarget = useRef<EventTarget>(null);
-
-  const handleInputChange = (event: Event) => {
-    setInputValue(event?.target?.value);
-  };
-
-  const handleSendMessage = () => {
-    if (inputValue.trim() !== '') {
-      setInputValue('');
-      setQuestion(inputValue);
-      setAutoScroll(true);
-      setIsChatting(true);
-      const key = uuid();
-      setMessages([...messages, { key, question: inputValue, answer: '' }]);
-    }
-  };
+  const uid = useRef<string>('');
 
   useEffect(() => {
     if (flowRef?.current && autoScroll) {
@@ -80,25 +81,24 @@ function ChatAI(props: IChatAIProps) {
   }, [flowRef?.current?.scrollHeight]);
 
   useEffect(() => {
+    uid.current = uuid();
+  }, [consoleId]);
+
+  useEffect(() => {
     if (!question) return;
 
-    let uid = window.localStorage.getItem('uid');
-    if (uid == null || uid == '' || uid == 'null') {
-      uid = uuid();
-    }
-
     let text = '';
-    // dataSourceId number
-    // databaseName string
-    const params = `message=${question}&dataSourceId=${props.dataSourceId}&databaseName=${props.databaseName}`;
-    const eventSource = new EventSourcePolyfill(
-      'http://38.55.129.58/api/ai/chat?' + params,
-      {
-        headers: {
-          uid,
-        },
+    const params = formatParams({
+      dataSourceId,
+      databaseName,
+      message: question,
+    });
+    const url = type === 'page' ? '/api/ai/chat1' : '/api/ai/chat';
+    const eventSource = new EventSourcePolyfill(`${url}?${params}`, {
+      headers: {
+        uid: uid.current,
       },
-    );
+    });
 
     eventSource.onopen = (event) => {
       curSourceTarget.current = event.target;
@@ -112,7 +112,6 @@ function ChatAI(props: IChatAIProps) {
           curSourceTarget?.current?.close();
         }
         const message = messages.find((i) => i.question === question);
-        console.log('message===>', message?.answer);
         return;
       }
       let json_data = JSON.parse(event.data);
@@ -147,6 +146,21 @@ function ChatAI(props: IChatAIProps) {
       });
     };
   }, [question, props.dataSourceId, props.databaseName]);
+
+  const handleInputChange = (event: Event) => {
+    setInputValue(event?.target?.value);
+  };
+
+  const handleSendMessage = () => {
+    if (inputValue.trim() !== '') {
+      setInputValue('');
+      setQuestion(inputValue);
+      setAutoScroll(true);
+      setIsChatting(true);
+      const key = uuid();
+      setMessages([...messages, { key, question: inputValue, answer: '' }]);
+    }
+  };
 
   return (
     <div className={classnames(props.classNames, styles.chatAI)}>
