@@ -61,7 +61,7 @@ public class ChatController {
      * @return
      * @throws IOException
      */
-    @GetMapping("/chat1")
+    @GetMapping("/chat")
     @CrossOrigin
     public SseEmitter chat(@RequestParam("message") String msg, @RequestHeader Map<String, String> headers)
         throws IOException {
