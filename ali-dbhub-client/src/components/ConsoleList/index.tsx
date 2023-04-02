@@ -25,7 +25,7 @@ interface Iprops {
 
 export default memo<Iprops>(function ConsoleList(props) {
   const { consoleId } = qs<{ consoleId: string }>()
-  const { setcreateConsoleDialog } = useContext(DatabaseContext);
+  const { model, setcreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [activeKey, setActiveKey] = useState<string>(consoleId);
 
@@ -73,13 +73,6 @@ export default memo<Iprops>(function ConsoleList(props) {
       return <ModifyTable data={i as IEditTableConsole}></ModifyTable>;
     } else {
       return (
-        // <DatabaseQuery
-        //   // treeNodeClickMessage={treeNodeClickMessage}
-        //   // setTreeNodeClickMessage={setTreeNodeClickMessage}
-        //   windowTab={i as ISQLQueryConsole}
-        //   key={i.key}
-        //   activeTabKey={activeKey!}
-        // />
         <DatabaseQuery
           windowTab={i as ISQLQueryConsole}
           key={i.key}

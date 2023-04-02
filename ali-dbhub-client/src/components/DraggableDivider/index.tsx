@@ -21,15 +21,15 @@ export default memo<IProps>(function DraggableDivider({ className, volatileRef, 
 
       DividerRef.current.onmouseover = e => {
         if (DividerRef.current && DividerLine.current) {
-          DividerLine.current.style.backgroundColor = 'var(--custom-primary-color)';
-          DividerLine.current.style.cursor = direction == 'line' ? 'col-resize' : 'row-resize';
+          DividerRef.current.style.backgroundColor = 'var(--custom-primary-color)';
+          DividerRef.current.style.cursor = direction == 'line' ? 'col-resize' : 'row-resize';
         }
       }
 
       DividerRef.current.onmouseout = e => {
-        if (DividerRef.current && DividerLine.current) {
-          DividerLine.current.style.backgroundColor = 'transparent';
-          DividerLine.current.style.cursor = 'default';
+        if (DividerRef.current && DividerLine.current && !dragging) {
+          DividerRef.current.style.backgroundColor = 'transparent';
+          DividerRef.current.style.cursor = 'default';
         }
       }
 
@@ -55,7 +55,7 @@ export default memo<IProps>(function DraggableDivider({ className, volatileRef, 
     }
   }, [])
 
-  const moveHandle = (nowClientXY, letfDom, clientStart, volatileBoxXY) => {
+  const moveHandle = (nowClientXY: any, letfDom: any, clientStart: any, volatileBoxXY: any) => {
 
     let computedXY = nowClientXY - clientStart;
     let changeLength = volatileBoxXY + computedXY;
@@ -74,9 +74,12 @@ export default memo<IProps>(function DraggableDivider({ className, volatileRef, 
     classnames(
       className,
       (direction == 'line' ? styles.divider : styles.rowDivider),
-      { [styles.dragging]: dragging },
-      { [styles.rowDragging]: (dragging && direction == 'row') },
+
     )} >
-    <div ref={DividerRef} className={styles.dividerCenter}></div>
+    <div ref={DividerRef} className={classnames(
+      styles.dividerCenter,
+      { [styles.dragging]: dragging },
+      { [styles.rowDragging]: (dragging && direction == 'row') }
+    )}></div>
   </div>
 })
