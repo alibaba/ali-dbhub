@@ -117,6 +117,9 @@ export function TableBox(props: ITableProps) {
   }
 
   useEffect(() => {
+    if (headerList?.length) {
+      return
+    }
     const columns: any = headerList?.map((item: any, index) => {
       const data = {
         title: item.stringValue,
