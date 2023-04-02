@@ -13,8 +13,6 @@ import { formatDate } from '@/utils';
 import { IManageResultData, ITableHeaderItem, ITableCellItem } from '@/types';
 import Item from 'antd/lib/list/Item';
 
-
-
 interface IProps {
   className?: string;
   manageResultDataList: IManageResultData[];
@@ -117,10 +115,11 @@ export function TableBox(props: ITableProps) {
   }
 
   useEffect(() => {
-    if (headerList?.length) {
+    if (!headerList?.length) {
       return
     }
     const columns: any = headerList?.map((item: any, index) => {
+      console.log(item)
       const data = {
         title: item.stringValue,
         dataIndex: item.stringValue,
@@ -138,17 +137,19 @@ export function TableBox(props: ITableProps) {
       }
       return data
     })
-    // columns?.unshift({
-    //   title: '序号',
-    //   dataIndex: 'aliDBHub_table_index',
-    //   key: 'aliDBHub_table_index',
-    //   fixed: 'left',
-    //   render: (text: any) => (
-    //     <div className={styles.tableIndex}>
-    //       {text}
-    //     </div>
-    //   ),
-    // })
+    console.log(columns)
+
+    columns?.unshift({
+      title: '序号',
+      dataIndex: 'aliDBHub_table_index',
+      key: 'aliDBHub_table_index',
+      fixed: 'left',
+      render: (text: any) => (
+        <div className={styles.tableIndex}>
+          {text}
+        </div>
+      ),
+    })
     setColumns(columns)
   }, [headerList])
 
