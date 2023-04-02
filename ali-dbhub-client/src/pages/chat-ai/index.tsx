@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Input, Button } from 'antd';
+import { Input, Button, message } from 'antd';
 import classnames from 'classnames';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
@@ -133,7 +133,7 @@ function ChatAI(props: IChatAIProps) {
     };
     eventSource.onerror = (event) => {
       console.log('onerror', event);
-      alert('服务异常请重试并联系开发者！');
+      message.warning('服务异常请重试并联系开发者！')
       if (event.readyState === EventSource.CLOSED) {
         console.log('connection is closed');
       } else {

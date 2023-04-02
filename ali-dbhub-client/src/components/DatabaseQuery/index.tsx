@@ -52,7 +52,9 @@ export default memo<IProps>(function DatabaseQuery(props) {
     if (!dblclickNodeData) {
       return
     }
-    console.log(dblclickNodeData)
+    if (dblclickNodeData.databaseName !== windowTab.databaseName || dblclickNodeData.dataSourceId !== windowTab.dataSourceId) {
+      return
+    }
     const nodeData = dblclickNodeData;
     if (nodeData && windowTab.consoleId === +activeTabKey) {
       const model = monacoEditor.current.getModel(monacoEditor.current)

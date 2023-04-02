@@ -67,6 +67,12 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
+    public DataResult<Operation> find(Long id) {
+        OperationSavedDO operationSavedDO = operationSavedMapper.selectById(id);
+        return DataResult.of(operationConverter.do2dto(operationSavedDO));
+    }
+
+    @Override
     public ActionResult delete(Long id) {
         operationSavedMapper.deleteById(id);
         return ActionResult.isSuccess();

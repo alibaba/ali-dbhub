@@ -212,6 +212,11 @@ export const treeConfig: ITreeConfig = {
               nodeType: TreeNodeType.COLUMN,
               key: item.name,
               isLeaf: true,
+              dataSourceId: parentData.dataSourceId!,
+              databaseName: parentData.databaseName!,
+              tableName: parentData.tableName!,
+              dataType: parentData.dataType,
+              schemaName: parentData.schemaName,
             }
           })
           r(tableList);
@@ -237,6 +242,11 @@ export const treeConfig: ITreeConfig = {
               nodeType: TreeNodeType.INDEXE,
               key: item.name,
               isLeaf: true,
+              dataSourceId: parentData.dataSourceId!,
+              databaseName: parentData.databaseName!,
+              tableName: parentData.tableName!,
+              dataType: parentData.dataType,
+              schemaName: parentData.schemaName,
             }
           })
           r(tableList);
@@ -263,6 +273,11 @@ export const treeConfig: ITreeConfig = {
               nodeType: TreeNodeType.KEY,
               key: item.name,
               isLeaf: true,
+              dataSourceId: parentData.dataSourceId!,
+              databaseName: parentData.databaseName!,
+              tableName: parentData.tableName!,
+              dataType: parentData.dataType,
+              schemaName: parentData.schemaName,
             }
           })
           r(tableList);
