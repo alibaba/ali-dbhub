@@ -23,4 +23,9 @@ public class DataSourceBaseRequest implements DataSourceBaseRequestInfo{
      */
     @NotNull
     private String databaseName;
+
+    /**
+     * 表所在空间
+     */
+    private String schemaName;
 }

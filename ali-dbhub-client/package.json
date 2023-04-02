@@ -10,7 +10,8 @@
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
-    "electron": "electron ."
+    "electron": "electron .",
+    "build2Server": "mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static && rm -rf ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front &&  umi build && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
@@ -25,11 +26,18 @@
   },
   "dependencies": {
     "@ant-design/pro-layout": "6.5.0",
+    "@traptitech/markdown-it-katex": "^3.6.0",
     "antd": "4.23.2",
+    "event-source-polyfill": "^1.0.31",
+    "github-markdown-css": "^5.2.0",
+    "highlight.js": "^11.7.0",
+    "markdown-it": "^13.0.1",
+    "markdown-it-link-attributes": "^4.0.1",
     "monaco-editor": "^0.34.0",
     "monaco-editor-esm-webpack-plugin": "^2.1.0",
     "monaco-editor-nls": "^3.0.0",
     "monaco-editor-webpack-plugin": "^7.0.1",
+    "npm": "^9.6.2",
     "react": "17.x",
     "react-dom": "17.x",
     "sql-formatter": "^12.0.4",
@@ -37,6 +45,9 @@
     "umi-request": "^1.4.0"
   },
   "devDependencies": {
+    "@types/event-source-polyfill": "^1.0.1",
+    "@types/markdown-it": "^12.2.3",
+    "@types/markdown-it-link-attributes": "^3.0.1",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@umijs/preset-react": "1.x",

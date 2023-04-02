@@ -34,6 +34,9 @@ public class BusinessExceptionHandler {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
     private static final String LOCALE_HEADER = "Accept-Language";
 
     @Around("within(@com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect *)")
@@ -95,7 +98,7 @@ public class BusinessExceptionHandler {
                 = ((ServletRequestAttributes)(RequestContextHolder.currentRequestAttributes())).getRequest();
             Locale locale = servletRequest.getHeaders(LOCALE_HEADER).hasMoreElements() ?
                 new Locale(servletRequest.getHeaders(LOCALE_HEADER).nextElement()) : Locale.CHINA;
-            return messageSource.getMessage(CommonErrorEnum.COMMON_SYSTEM_ERROR.name(),
+            return messageSource.getMessage(code,
                 null, message, locale);
         } catch (Exception exception) {
             log.error("get i18n message error", exception);

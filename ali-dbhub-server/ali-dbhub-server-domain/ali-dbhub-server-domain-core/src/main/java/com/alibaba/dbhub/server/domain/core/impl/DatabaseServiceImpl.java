@@ -1,12 +1,16 @@
 package com.alibaba.dbhub.server.domain.core.impl;
 
+import java.util.List;
+
 import com.alibaba.dbhub.server.domain.api.service.DatabaseService;
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.support.operations.DatabaseOperations;
-import com.alibaba.dbhub.server.domain.support.param.database.DatabaseQueryAllParam;
+import com.alibaba.dbhub.server.domain.support.model.Schema;
+import com.alibaba.dbhub.server.domain.api.param.DatabaseQueryAllParam;
+import com.alibaba.dbhub.server.domain.api.param.SchemaQueryParam;
+import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
+import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,12 +21,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class DatabaseServiceImpl implements DatabaseService {
 
-    @Autowired
-    private DatabaseOperations databaseOperations;
-
     @Override
     public ListResult<Database> queryAll(DatabaseQueryAllParam param) {
-        return ListResult.of(databaseOperations.queryAll(param));
+        List<String> databases = DbhubContext.getMetaSchema().databases();
+        return ListResult.of(EasyCollectionUtils.toList(databases, name -> Database.builder().name(name).build()));
+    }
+
+    @Override
+    public ListResult<Schema> querySchema(SchemaQueryParam param) {
+        List<String> databases = DbhubContext.getMetaSchema().schemas(param.getDataBaseName());
+        return ListResult.of(EasyCollectionUtils.toList(databases, name -> Schema.builder().name(name).build()));
     }
 
 }

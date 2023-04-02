@@ -16,7 +16,7 @@
         <result property="autoIncrement" jdbcType="VARCHAR" column="IS_IDENTITY" typeHandler="com.alibaba.dbhub.server.domain.support.dialect.common.handler.BooleanTypeHandler"/>
     </resultMap>
     <resultMap id="TableIndexColumnResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumn">
-        <result property="name" jdbcType="VARCHAR" column="COLUMN_NAME"/>
+        <result property="columnName" jdbcType="VARCHAR" column="COLUMN_NAME"/>
         <result property="tableName" jdbcType="VARCHAR" column="TABLE_NAME"/>
         <result property="indexName" jdbcType="VARCHAR" column="INDEX_NAME"/>
         <result property="collation" jdbcType="VARCHAR" column="ORDERING_SPECIFICATION"/>
@@ -32,16 +32,22 @@
         <result property="database" jdbcType="VARCHAR" column="SCHEMA_NAME"/>
     </resultMap>
 
-    <select id="showDatabases" resultMap="ShowDatabasesResultMap">
-        SHOW databases ;
+    <select id="showDatabases" resultType="java.lang.String">
+        SELECT distinct CATALOG_NAME FROM INFORMATION_SCHEMA.SCHEMATA;
+    </select>
+
+    <select id="schemas" resultType="java.lang.String">
+        SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA where CATALOG_NAME = #{databaseName};
     </select>
 
     <select id="showCreateTable" resultType="java.lang.String">
-        select SQL
-        from INFORMATION_SCHEMA.TABLES
-        where TABLE_SCHEMA = #{databaseName}
-        AND    TABLE_NAME = #{tableName};
+        SCRIPT NODATA TABLE EXAMPLE_TABLE;
     </select>
+
+    <select id="ddl" resultType="java.lang.String">
+        SCRIPT NODATA TABLE ${tableName};
+    </select>
+
     <update id="dropTable">
         drop table ${databaseName}.${tableName};
     </update>
@@ -52,9 +58,9 @@
 
     <select id="selectTables" resultMap="BaseTableResultMap">
         select TABLE_NAME,REMARKS from INFORMATION_SCHEMA.TABLES
-        where table_schema =  #{databaseName}
-        order by TABLE_NAME desc
-        limit #{pageIndex},#{pageSize} ;
+        where TABLE_SCHEMA =  #{tableSchema}
+        AND TABLE_CATALOG = #{databaseName}
+        order by TABLE_NAME desc ;
     </select>
 
     <select id="selectColumns" resultMap="BaseTableColumnResultMap">
@@ -68,30 +74,31 @@
         REMARKS
         FROM INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_NAME = #{tableName}
-        AND TABLE_SCHEMA = #{databaseName}
+        AND TABLE_SCHEMA = #{tableSchema}
+        AND TABLE_CATALOG = #{databaseName}
         ORDER BY ORDINAL_POSITION;
     </select>
 
-    <select id="selectTableIndexes" resultMap="BaseTableIndex">
-        SELECT INDEX_TYPE_NAME,
-        TABLE_NAME,
-        INDEX_NAME,
-        REMARKS
-        FROM INFORMATION_SCHEMA.INDEXES
-        WHERE TABLE_NAME = #{tableName}
-        AND INDEX_SCHEMA =  #{databaseName}
-        AND TABLE_SCHEMA =  #{databaseName}
-    </select>
+<!--    <select id="selectTableIndexes" resultMap="BaseTableIndex">-->
+<!--        SELECT INDEX_TYPE_NAME,-->
+<!--        TABLE_NAME,-->
+<!--        INDEX_NAME,-->
+<!--        REMARKS-->
+<!--        FROM INFORMATION_SCHEMA.INDEXES-->
+<!--        WHERE TABLE_NAME = #{tableName}-->
+<!--        AND TABLE_CATALOG =  #{databaseName}-->
+<!--        AND TABLE_SCHEMA =  #{tableSchema}-->
+<!--    </select>-->
 
-    <select id="selectTableIndexColumns" resultMap="TableIndexColumnResultMap">
+    <select id="selectTableIndexes" resultMap="TableIndexColumnResultMap">
         SELECT TABLE_NAME,
         INDEX_NAME,
         COLUMN_NAME,
         ORDERING_SPECIFICATION
         FROM INFORMATION_SCHEMA.INDEX_COLUMNS
         WHERE TABLE_NAME = #{tableName}
-        AND INDEX_SCHEMA = #{databaseName}
-        AND TABLE_SCHEMA = #{databaseName}
+        AND TABLE_CATALOG = #{databaseName}
+        AND TABLE_SCHEMA = #{tableSchema}
         order by ORDINAL_POSITION
     </select>
 </mapper>

@@ -13,7 +13,7 @@
     </resultMap>
 
     <resultMap id="BaseTableResultMap" type="com.alibaba.dbhub.server.domain.support.model.Table">
-        <result property="name" jdbcType="CHAR" column="table_name"/>
+        <result property="name" jdbcType="CHAR" column="OBJECT_NAME"/>
     </resultMap>
 
 <!--    <resultMap id="TableIndexColumnUnionResultMap" type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">-->
@@ -32,7 +32,7 @@
     </resultMap>
 
     <resultMap id="TableIndexColumnUnionResultMap"
-               type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">
+               type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumn">
         <result property="indexName" jdbcType="CHAR" column="INDEX_NAME"/>
         <result property="tableName" jdbcType="CHAR" column="TABLE_NAME"/>
         <result property="columnName" jdbcType="CHAR" column="COLUMN_NAME"/>
@@ -54,10 +54,7 @@
         from user_tab_cols t1, user_col_comments t2
         where t1.TABLE_NAME = t2.table_name
         and t1.COLUMN_NAME = t2.column_name
-        and t1.TABLE_NAME IN
-        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
-            #{item}
-        </foreach>
+        and t1.TABLE_NAME = #{tableName}
         order by t1.COLUMN_ID
     </select>
     <update id="dropTable">
@@ -67,15 +64,13 @@
         select tablespace_name from sys.dba_tablespaces  where tablespace_name not in ('SYSAUX','UNDOTBS1','TEMP','USERS','EXAMPLE')
     </select>
     <select id="selectTables" resultMap="BaseTableResultMap">
-        select tt.OBJECT_NAME as table_name from (select rownum rn,t.* from(
         select OBJECT_NAME  from user_objects where object_type='TABLE'
-        and OBJECT_NAME in (select TABLE_NAME from all_tables where TABLESPACE_NAME =#{tableSchema,jdbcType=VARCHAR}) order by CREATED desc) t where rownum &lt;= #{end} ) tt where  tt.rn &gt; #{start}
+        and OBJECT_NAME in (select TABLE_NAME from all_tables where TABLESPACE_NAME =#{databaseName,jdbcType=VARCHAR})
     </select>
 
     <select id="selectTableCount">
         select count(*)  from user_objects where object_type='TABLE'
-        and OBJECT_NAME in (select TABLE_NAME from all_tables where TABLESPACE_NAME =#{tableSchema,jdbcType=VARCHAR})
-
+        and OBJECT_NAME in (select TABLE_NAME from all_tables where TABLESPACE_NAME =#{databaseName,jdbcType=VARCHAR})
     </select>
 
     <select id="showCreateTable" resultType="java.lang.String">
@@ -91,9 +86,6 @@
         i.INDEX_TYPE as INDEX_TYPE
         from user_ind_columns t,user_indexes i
         where t.index_name = i.index_name and t.table_name = i.table_name
-        and t.table_name IN
-        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
-            #{item}
-        </foreach>
+        and t.table_name = #{tableName}
     </select>
 </mapper>

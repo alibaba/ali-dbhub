@@ -21,6 +21,21 @@ public enum ErrorEnum implements BaseErrorEnum {
      */
     CONSOLE_NOT_FOUND,
 
+    /**
+     * 需要登录
+     */
+    NEED_LOGGED_IN,
+
+    /**
+     * 未登录
+     */
+    NOT_LOGGED_IN,
+
+    /**
+     * 重定向
+     */
+    REDIRECT,
+
     ;
 
     @Override

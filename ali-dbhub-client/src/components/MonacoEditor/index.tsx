@@ -11,7 +11,7 @@ import { useTheme } from '@/utils/hooks';
 
 
 interface IProps {
-  id: string;
+  id: number;
   onChange?: Function;
   className?: string;
   height?: number;

@@ -6,8 +6,7 @@ package com.alibaba.dbhub.server.domain.support.dialect.postgresql.mapper;
 
 import java.util.List;
 
-import com.alibaba.dbhub.server.domain.support.dialect.postgresql.model.PostgresqlColumn;
-import com.alibaba.dbhub.server.domain.support.dialect.postgresql.model.PostgresqlTableIndex;
+import com.alibaba.dbhub.server.domain.support.dialect.BaseMapper;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -15,62 +14,12 @@ import org.apache.ibatis.annotations.Param;
  * @author jipengfei
  * @version : PostgresqlMetaSchemaMapper.java, v 0.1 2022年12月13日 17:38 jipengfei Exp $
  */
-public interface PostgresqlMetaSchemaMapper {
+public interface PostgresqlMetaSchemaMapper extends BaseMapper {
 
     /**
-     * 查询Database
-     * @return database
-     */
-    List<String> showDatabases();
-    /**
-     * 查询所有表中所有列信息
-     *
-     * @param tableSchema
-     * @param tableNames
+     * 查询表空间
+     * @param databaseName
      * @return
      */
-    List<PostgresqlColumn> selectColumns(@Param("tableSchema") String tableSchema, @Param("tableNames") List<String> tableNames);
-
-    /**
-     * 删除表
-     *
-     * @param tableName
-     */
-    void dropTable(@Param("tableName") String tableName);
-
-    /**
-     * 查询所有的表
-     *
-     * @param tableSchema
-     * @param pageSize
-     * @param pageSize
-     * @return
-     */
-    List<String> selectTables(@Param("tableSchema") String tableSchema, @Param("pageSize") long pageSize,
-        @Param("offset") long offset);
-
-    /**
-     * @param tableSchema
-     * @return
-     */
-    Long selectTableCount(@Param("tableSchema") String tableSchema);
-
-    /**
-     * 查询建表语句
-     *
-     * @param tableSchema
-     * @param tableName
-     * @return
-     */
-    String showCreateTable(@Param("tableSchema") String tableSchema, @Param("tableName") String tableName);
-
-    /**
-     * 查询表索引信息
-     *
-     * @param tableSchema
-     * @param tableNames
-     * @return
-     */
-    List<PostgresqlTableIndex> selectTableIndexes(@Param("tableSchema") String tableSchema,
-        @Param("tableNames") List<String> tableNames);
+    List<String> schemas(@Param("databaseName") String databaseName);
 }

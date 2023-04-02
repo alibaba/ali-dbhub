@@ -13,8 +13,6 @@ import { formatDate } from '@/utils';
 import { IManageResultData, ITableHeaderItem, ITableCellItem } from '@/types';
 import Item from 'antd/lib/list/Item';
 
-
-
 interface IProps {
   className?: string;
   manageResultDataList: IManageResultData[];
@@ -61,19 +59,6 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
     return list
   }
 
-  const moveLeftAside = () => {
-    const databaseLeftAside = document.getElementById('database-left-aside');
-    if (databaseLeftAside) {
-      if (databaseLeftAside.offsetWidth === 0) {
-        databaseLeftAside.style.width = '250px'
-        setIsUnfold(true)
-      } else {
-        databaseLeftAside.style.width = '0px'
-        setIsUnfold(false)
-      }
-    }
-  }
-
   return <div className={classnames(className, styles.box)}>
     <div className={styles.resultHeader}>
       <Tabs
@@ -93,13 +78,6 @@ export default memo<IProps>(function SearchResult({ className, manageResultDataL
           })
         }
       </LoadingContent>
-    </div>
-    <div className={styles.footer}>
-      <div className={classnames({ [styles.reversalIconBox]: !isUnfold }, styles.iconBox)} onClick={moveLeftAside}>
-        <Iconfont code='&#xeb93;'></Iconfont>
-      </div>
-      <div>
-      </div>
     </div>
   </div>
 })
@@ -137,7 +115,11 @@ export function TableBox(props: ITableProps) {
   }
 
   useEffect(() => {
+    if (!headerList?.length) {
+      return
+    }
     const columns: any = headerList?.map((item: any, index) => {
+      console.log(item)
       const data = {
         title: item.stringValue,
         dataIndex: item.stringValue,
@@ -155,7 +137,9 @@ export function TableBox(props: ITableProps) {
       }
       return data
     })
-    columns.unshift({
+    console.log(columns)
+
+    columns?.unshift({
       title: '序号',
       dataIndex: 'aliDBHub_table_index',
       key: 'aliDBHub_table_index',

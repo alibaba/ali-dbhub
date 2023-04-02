@@ -20,7 +20,7 @@
                 typeHandler="com.alibaba.dbhub.server.domain.support.dialect.mysql.handler.MysqlColumnKeyHandler"/>
     </resultMap>
     <resultMap id="TableIndexColumnUnionResultMap"
-               type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumnUnion">
+               type="com.alibaba.dbhub.server.domain.support.model.TableIndexColumn">
         <result property="indexName" jdbcType="CHAR" column="INDEX_NAME"/>
         <result property="tableName" jdbcType="CHAR" column="TABLE_NAME"/>
         <result property="columnName" jdbcType="CHAR" column="COLUMN_NAME"/>
@@ -36,16 +36,16 @@
         <result property="tableName" jdbcType="CHAR" column="Table"/>
         <result property="sql" jdbcType="CHAR" column="Create Table"/>
     </resultMap>
-    <resultMap id="ShowDatabasesResultMap" type="com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult">
-        <result property="database" jdbcType="CHAR" column="Database"/>
-    </resultMap>
 
-    <select id="showDatabases" resultMap="ShowDatabasesResultMap">
-        SHOW
-        databases ;
+    <select id="showDatabases" resultType="java.lang.String">
+        select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA;
     </select>
 
-    <select id="showCreateTable" resultMap="CreateTableResultMap">
+    <select id="showCreateTable" resultType="java.lang.String">
+        SHOW
+        CREATE TABLE ${databaseName}.${tableName};
+    </select>
+    <select id="showCreateTable0" resultMap="CreateTableResultMap">
         SHOW
         CREATE TABLE ${databaseName}.${tableName};
     </select>
@@ -62,11 +62,9 @@
     <select id="selectTables" resultMap="BaseTableResultMap">
         select table_name,table_comment from information_schema.tables
         where table_schema = #{databaseName}
-        <if test="tableName != null ">
-            and table_name = #{tableName}
+        <if test="tableName != null">
+            AND table_name=#{tableName,jdbcType=VARCHAR}
         </if>
-        order by create_time desc
-        limit #{pageIndex},#{pageSize}
         ;
     </select>
 
@@ -82,10 +80,7 @@
                COLUMN_KEY
         FROM INFORMATION_SCHEMA.COLUMNS
         where table_schema = #{databaseName}
-          AND table_name IN
-        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
-            #{item}
-        </foreach>
+          AND table_name = #{tableName}
         ORDER BY ORDINAL_POSITION
     </select>
 
@@ -94,10 +89,7 @@
                TABLE_NAME,
                COLUMN_NAME, COLLATION, SEQ_IN_INDEX, NON_UNIQUE, INDEX_COMMENT
         FROM INFORMATION_SCHEMA.STATISTICS
-        WHERE TABLE_NAME IN
-        <foreach collection="tableNames" item="item" separator="," open="(" close=")">
-            #{item}
-        </foreach>
+        WHERE TABLE_NAME = #{tableName}
           AND INDEX_SCHEMA = #{databaseName}
           AND TABLE_SCHEMA = #{databaseName}
         order by SEQ_IN_INDEX

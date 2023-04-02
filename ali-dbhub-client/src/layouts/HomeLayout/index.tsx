@@ -34,6 +34,11 @@ const navConfig: INavItem[] = [
     path: 'https://github.com/alibaba/ali-dbhub',
     openBrowser: true
   },
+  {
+    title: '后台管理',
+    icon: "\ue66d",
+    path: '/manage',
+  },
 ];
 
 export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
@@ -54,7 +59,7 @@ export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
   return (
     <div className={styles.page}>
       <div className={styles.layoutLeft}>
-        <BrandLogo size={70} className={styles.brandLogo} />
+        {/* <BrandLogo size={70} className={styles.brandLogo} /> */}
         <ul className={styles.navList}>
           {navConfig.map((item) => {
             return (

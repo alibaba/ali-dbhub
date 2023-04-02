@@ -2,12 +2,12 @@ import { defineConfig } from 'umi';
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 // const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin');
 
-const chainWebpack = (config:any, { webpack }:any) => {
+const chainWebpack = (config: any, { webpack }: any) => {
   config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
     {
-      languages: [ 'mysql', 'pgsql', 'sql']
-    }
-  ])
+      languages: ['mysql', 'pgsql', 'sql'],
+    },
+  ]);
 
   // TODO: Monaco汉化
   // config.module.rules()
@@ -18,13 +18,14 @@ const chainWebpack = (config:any, { webpack }:any) => {
 };
 
 export default defineConfig({
-  title: 'dataOps',
+  title: 'dbHub',
   history: {
-    type: 'hash'
+    type: 'hash',
   },
   base: '/',
-  publicPath: './',
-  hash:true,
+  publicPath: '/',
+  // publicPath: './static/front/',
+  hash: false,
   routes: [
     {
       path: '/',
@@ -34,29 +35,18 @@ export default defineConfig({
         { path: '/error', component: '@/pages/error' },
         { path: '/demo', exact: true, component: '@/pages/demo' },
         {
-          path: '/database',
+          path: '/',
           component: '@/layouts/BaseLayout',
           routes: [
             {
               exact: true,
-              path: '/database/:type/:id',
+              path: '/',
               component: '@/pages/database',
             },
-          ],
-        },
-        { 
-          path: '/', 
-          component: '@/layouts/HomeLayout',
-          routes:[
             {
-              path: '/',
               exact: true,
-              component: '@/pages/connection',
-            },
-            {
-              path: '/connection',
-              exact: true,
-              component: '@/pages/connection',
+              path: '/database',
+              component: '@/pages/database',
             },
             {
               path: '/sql-history',
@@ -64,22 +54,32 @@ export default defineConfig({
               component: '@/pages/sql-history',
             },
             {
-              redirect: '/error',
+              path: '/manage',
+              exact: true,
+              component: '@/pages/manage',
             },
+            {
+              path: '/chat',
+              exact: true,
+              component: '@/pages/chat-ai'
+            },
+            {
+              redirect: '/error',
+            }
           ]
         }
       ],
     },
   ],
+
   mfsu: {},
   fastRefresh: {},
-  // 桌面端不需要懒加载
-  // dynamicImport: {
-  //   loading: '@/components/Loading/LazyLoading',
-  // },
-  dynamicImportSyntax:{},
   nodeModulesTransform: {
     type: 'none',
   },
   chainWebpack,
+  devServer: {
+    port: 8001,
+    host: '127.0.0.1',
+  },
 });

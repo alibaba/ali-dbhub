@@ -48,6 +48,11 @@ public class TableIndex {
     private String comment;
 
     /**
+     * 索引所属schema
+     */
+    private String schemaName;
+
+    /**
      * 索引包含的列
      */
     private List<TableIndexColumn> columnList;

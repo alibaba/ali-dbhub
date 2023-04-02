@@ -4,13 +4,12 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
+import com.alibaba.dbhub.server.domain.api.service.ConsoleService;
+import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.operations.ConsoleOperations;
-import com.alibaba.dbhub.server.domain.support.operations.DataSourceOperations;
-import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCloseParam;
-import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCreateParam;
-import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCloseParam;
-import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam;
+import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
 import com.alibaba.dbhub.server.test.common.BaseTest;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dbhub.server.test.domain.data.utils.TestUtils;
@@ -28,9 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class ConsoleOperationsTest extends BaseTest {
     @Resource
-    private DataSourceOperations dataSourceOperations;
+    private DataSourceService dataSourceService;
     @Resource
-    private ConsoleOperations consoleOperations;
+    private ConsoleService consoleService;
     @Autowired
     private List<DialectProperties> dialectPropertiesList;
 
@@ -43,26 +42,25 @@ public class ConsoleOperationsTest extends BaseTest {
             Long consoleId = TestUtils.nextLong();
             TestUtils.buildContext(dialectProperties, dataSourceId, consoleId);
 
-            DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
-            dataSourceCreateParam.setDataSourceId(dataSourceId);
-            dataSourceCreateParam.setDbType(dbTypeEnum.getCode());
+            DataSourcePreConnectParam dataSourceCreateParam = new DataSourcePreConnectParam();
+            dataSourceCreateParam.setType(dbTypeEnum.getCode());
             dataSourceCreateParam.setUrl(dialectProperties.getUrl());
-            dataSourceCreateParam.setUsername(dialectProperties.getUsername());
+            dataSourceCreateParam.setUser(dialectProperties.getUsername());
             dataSourceCreateParam.setPassword(dialectProperties.getPassword());
-            dataSourceOperations.create(dataSourceCreateParam);
+            dataSourceService.preConnect(dataSourceCreateParam);
 
             // 创建
-            ConsoleCreateParam consoleCreateParam = new ConsoleCreateParam();
+            ConsoleConnectParam consoleCreateParam = new ConsoleConnectParam();
             consoleCreateParam.setDataSourceId(dataSourceId);
             consoleCreateParam.setConsoleId(consoleId);
             consoleCreateParam.setDatabaseName(dialectProperties.getDatabaseName());
-            consoleOperations.create(consoleCreateParam);
+            consoleService.createConsole(consoleCreateParam);
 
             // 关闭
             ConsoleCloseParam consoleCloseParam = new ConsoleCloseParam();
             consoleCloseParam.setDataSourceId(dataSourceId);
             consoleCloseParam.setConsoleId(consoleId);
-            consoleOperations.close(consoleCloseParam);
+            consoleService.closeConsole(consoleCloseParam);
             TestUtils.remove();
         }
     }
@@ -76,17 +74,14 @@ public class ConsoleOperationsTest extends BaseTest {
             Long consoleId = TestUtils.nextLong();
             TestUtils.buildContext(dialectProperties, dataSourceId, consoleId);
 
-            DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
-            dataSourceCreateParam.setDataSourceId(dataSourceId);
-            dataSourceCreateParam.setDbType(dbTypeEnum.getCode());
+            DataSourcePreConnectParam dataSourceCreateParam = new DataSourcePreConnectParam();
+            dataSourceCreateParam.setType(dbTypeEnum.getCode());
             dataSourceCreateParam.setUrl(dialectProperties.getUrl());
-            dataSourceCreateParam.setUsername(dialectProperties.getUsername());
+            dataSourceCreateParam.setUser(dialectProperties.getUsername());
             dataSourceCreateParam.setPassword(dialectProperties.getPassword());
-            dataSourceOperations.create(dataSourceCreateParam);
+            dataSourceService.preConnect(dataSourceCreateParam);
 
-            DataSourceCloseParam dataSourceCloseParam = new DataSourceCloseParam();
-            dataSourceCloseParam.setDataSourceId(dataSourceId);
-            dataSourceOperations.close(dataSourceCloseParam);
+            dataSourceService.close(dataSourceId);
 
             TestUtils.remove();
         }
@@ -100,24 +95,22 @@ public class ConsoleOperationsTest extends BaseTest {
             Long dataSourceId = TestUtils.nextLong();
             Long consoleId = TestUtils.nextLong();
             TestUtils.buildContext(dialectProperties, dataSourceId, consoleId);
-            DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
-            dataSourceCreateParam.setDataSourceId(dataSourceId);
-            dataSourceCreateParam.setDbType(dbTypeEnum.getCode());
+
+            DataSourcePreConnectParam dataSourceCreateParam = new DataSourcePreConnectParam();
+            dataSourceCreateParam.setType(dbTypeEnum.getCode());
             dataSourceCreateParam.setUrl(dialectProperties.getUrl());
-            dataSourceCreateParam.setUsername(dialectProperties.getUsername());
+            dataSourceCreateParam.setUser(dialectProperties.getUsername());
             dataSourceCreateParam.setPassword(dialectProperties.getPassword());
-            dataSourceOperations.create(dataSourceCreateParam);
+            dataSourceService.preConnect(dataSourceCreateParam);
 
             // 创建控制台
-            ConsoleCreateParam consoleCreateParam = new ConsoleCreateParam();
+            ConsoleConnectParam consoleCreateParam = new ConsoleConnectParam();
             consoleCreateParam.setDataSourceId(dataSourceId);
             consoleCreateParam.setConsoleId(consoleId);
             consoleCreateParam.setDatabaseName(dialectProperties.getDatabaseName());
-            consoleOperations.create(consoleCreateParam);
+            consoleService.createConsole(consoleCreateParam);
 
-            DataSourceCloseParam dataSourceCloseParam = new DataSourceCloseParam();
-            dataSourceCloseParam.setDataSourceId(dataSourceId);
-            dataSourceOperations.close(dataSourceCloseParam);
+            dataSourceService.close(dataSourceId);
             TestUtils.remove();
         }
     }

@@ -1,6 +1,20 @@
 import i18n, { isEN } from "@/i18n";
-import { TreeNodeType, OSType } from '@/utils/constants'
-import { ITreeNode } from '@/types'
+import { TreeNodeType, OSType } from '@/utils/constants';
+import { ITreeNode } from '@/types';
+import querystring from 'query-string';
+
+// TODO: 
+export const env = (() => {
+  const { host } = location;
+  // 本地jar包启用的服务
+  if (host.indexOf('127.0.0.1:7001') > -1) {
+    return 'jar';
+  }
+  // 桌面端
+  if (host.indexOf('') > -1) {
+    return 'desktop';
+  }
+})();
 
 export function formatDate(date:any, fmt = 'yyyy-MM-dd') {
   if (!date) {
@@ -72,6 +86,10 @@ export function formatNaturalDate(date: any) {
   return formatDate(d);
 }
 
+export function safeAccess<T = any>(obj: any, str: string) {
+  return str.split('.').reduce((o, k) => (o ? o[k] : undefined), obj) as T;
+};
+
 export interface IToTreeProps{
   parent?: any;
   data: any[];
@@ -108,10 +126,11 @@ export function createRandomId(length:number){
 export function approximateTreeNode(treeData: ITreeNode[], target: string, isDelete = true){
   if(target){
     const newTree:ITreeNode[] = JSON.parse(JSON.stringify(treeData));
-    newTree.map((item,index)=>{
-      if(item.children?.length){
-        item.children = approximateTreeNode(item.children, target,false);
-      }
+    newTree.map((item, index) => {
+      // 暂时不递归，只搜索datasorce
+      // if(item.children?.length){
+      //   item.children = approximateTreeNode(item.children, target,false);
+      // }
       if(item.name?.toUpperCase()?.indexOf(target?.toUpperCase()) == -1 && isDelete){
         delete newTree[index];
       }else{
@@ -124,6 +143,10 @@ export function approximateTreeNode(treeData: ITreeNode[], target: string, isDel
   }
 }
 
+/**
+ * 获取参数 
+ * @returns 
+ */
 export function getLocationHash(){
     const rightHash = location.hash.split('?')[1]
     const params:any = {}
@@ -166,4 +189,35 @@ export function OSnow():OSType{
   }else{
     return OSType.RESTS
   }
+}
+
+export const rootScrollingElement = document.scrollingElement as HTMLElement || document.documentElement || document.body;
+
+export function scrollPage(position: number, element?: HTMLElement, timeScale = 0) {
+  return new Promise(r => {
+    const scrollingElement = element || rootScrollingElement;
+    position = Math.max(0, Math.min(position, scrollingElement.scrollHeight - scrollingElement.clientHeight));
+    const start = scrollingElement.scrollTop;
+    const duration = Math.abs(position - start) ** .3 * 50 * timeScale;
+    const startTime = +new Date();
+    (function animate() {
+      let t = duration ? (+new Date() - startTime) / duration : 1;
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        t = 1;
+      }
+      const newPosition = (Math.sin(Math.PI * (t - .5)) / 2 + .5) * (position - start) + start;
+      scrollingElement.scrollTop = newPosition;
+      if (t == 1) {
+        scrollingElement.scrollTop = position;
+        r(undefined);
+      }
+    })();
+  });
+}
+
+// 获取地址栏 ? 参数 如果换成历史模式需要改这里
+export function qs<T>() {
+  return querystring.parse(location.hash.split('?')[1]) as T
 }

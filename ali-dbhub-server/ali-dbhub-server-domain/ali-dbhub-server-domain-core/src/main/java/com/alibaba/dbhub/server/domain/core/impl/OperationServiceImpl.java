@@ -2,23 +2,32 @@ package com.alibaba.dbhub.server.domain.core.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import com.alibaba.dbhub.server.domain.api.model.DataSource;
 import com.alibaba.dbhub.server.domain.api.model.Operation;
+import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceSelector;
 import com.alibaba.dbhub.server.domain.api.param.OperationPageQueryParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationSavedParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationUpdateParam;
+import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.api.service.OperationService;
 import com.alibaba.dbhub.server.domain.core.converter.OperationConverter;
 import com.alibaba.dbhub.server.domain.repository.entity.OperationSavedDO;
 import com.alibaba.dbhub.server.domain.repository.mapper.OperationSavedMapper;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +46,9 @@ public class OperationServiceImpl implements OperationService {
     @Autowired
     private OperationConverter operationConverter;
 
+    @Autowired
+    private DataSourceService dataSourceService;
+
     @Override
     public DataResult<Long> create(OperationSavedParam param) {
         OperationSavedDO userSavedDdlDO = operationConverter.param2do(param);
@@ -52,6 +64,12 @@ public class OperationServiceImpl implements OperationService {
         userSavedDdlDO.setGmtModified(LocalDateTime.now());
         operationSavedMapper.updateById(userSavedDdlDO);
         return ActionResult.isSuccess();
+    }
+
+    @Override
+    public DataResult<Operation> find(Long id) {
+        OperationSavedDO operationSavedDO = operationSavedMapper.selectById(id);
+        return DataResult.of(operationConverter.do2dto(operationSavedDO));
     }
 
     @Override
@@ -84,6 +102,16 @@ public class OperationServiceImpl implements OperationService {
         page.setOptimizeCountSql(false);
         IPage<OperationSavedDO> iPage = operationSavedMapper.selectPage(page, queryWrapper);
         List<Operation> userSavedDdlDOS = operationConverter.do2dto(iPage.getRecords());
+        if (CollectionUtils.isEmpty(userSavedDdlDOS)) {
+            return PageResult.empty(param.getPageNo(), param.getPageSize());
+        }
+        List<Long> dataSourceIds = userSavedDdlDOS.stream().map(Operation::getDataSourceId).toList();
+        ListResult<DataSource> dataSourceListResult = dataSourceService.queryByIds(dataSourceIds);
+        Map<Long, DataSource> dataSourceMap = dataSourceListResult.getData().stream().collect(
+            Collectors.toMap(DataSource::getId, Function.identity(), (a, b) -> a));
+        userSavedDdlDOS.forEach(userSavedDdl -> userSavedDdl.setDataSourceName(
+            dataSourceMap.containsKey(userSavedDdl.getDataSourceId()) ? dataSourceMap.get(
+                userSavedDdl.getDataSourceId()).getAlias() : null));
         return PageResult.of(userSavedDdlDOS, iPage.getTotal(), param);
     }
 }
