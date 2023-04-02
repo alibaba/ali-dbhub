@@ -29,7 +29,7 @@ export default memo<Iprops>(function ConsoleList(props) {
   const { model, setcreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [activeKey, setActiveKey] = useState<string>(consoleId);
-  const { dblclickNodeData } = model;
+  const { dblclickNodeData, createConsoleDialog } = model;
 
   useEffect(() => {
     if (dblclickNodeData) {
@@ -69,6 +69,43 @@ export default memo<Iprops>(function ConsoleList(props) {
   }, [dblclickNodeData])
 
   useEffect(() => {
+    if (createConsoleDialog) {
+      createConsole()
+    }
+  }, [createConsoleDialog])
+
+  function createConsole() {
+    if (!createConsoleDialog) {
+      return
+    }
+
+    let p = {
+      name: `${createConsoleDialog?.databaseName}-console`,
+      type: DatabaseTypeCode.MYSQL,
+      dataSourceId: createConsoleDialog.dataSourceId,
+      databaseName: createConsoleDialog?.databaseName,
+      status: ConsoleStatus.DRAFT,
+      ddl: 'SELECT * FROM',
+      tabOpened: TabOpened.IS_OPEN,
+    };
+
+    historyService.saveWindowTab(p).then((res) => {
+      const newConsole: IConsole = {
+        name: `${createConsoleDialog.databaseName}-console`,
+        key: res.toString(),
+        type: ConsoleType.SQLQ,
+        DBType: DatabaseTypeCode.MYSQL,
+        databaseName: createConsoleDialog.databaseName,
+        dataSourceId: createConsoleDialog.dataSourceId,
+        consoleId: res,
+        ddl: 'SELECT * FROM',
+      };
+      setActiveKey(newConsole.key)
+      setWindowList([...windowList, newConsole])
+    });
+  }
+
+  useEffect(() => {
     getConsoleList();
   }, []);
 
@@ -101,9 +138,24 @@ export default memo<Iprops>(function ConsoleList(props) {
         };
       })
       if (!flag) {
-        // newWindowList.push({})
+        historyService.getWindowTab({ id: consoleId }).then((res: any) => {
+          newWindowList.push({
+            consoleId: res.id,
+            ddl: res.ddl,
+            name: res.name,
+            key: res.id + '',
+            DBType: res.type,
+            type: ConsoleType.SQLQ,
+            status: res.status,
+            databaseName: res.databaseName,
+            dataSourceName: res?.dataSourceName,
+            dataSourceId: res.dataSourceId
+          })
+          setWindowList(newWindowList);
+        })
+      } else {
+        setWindowList(newWindowList);
       }
-      setWindowList(newWindowList);
     });
   }
 
@@ -166,11 +218,6 @@ export default memo<Iprops>(function ConsoleList(props) {
     }
   };
 
-  function createdCallback(newConsole: IConsole) {
-    setWindowList([...windowList, newConsole]);
-    setActiveKey(newConsole.key);
-  }
-
   return <div className={styles.box}>
     <AppHeader className={styles.appHeader} showRight={false}>
       <div className={styles.tabsBox}>
@@ -206,78 +253,6 @@ export default memo<Iprops>(function ConsoleList(props) {
         );
       })}
     </div>
-    <CreateConsoleModal createdCallback={createdCallback} />
   </div>
-
 });
 
-export function CreateConsoleModal({ createdCallback }: { createdCallback: (newConsole: IConsole) => void }) {
-  const { model, setcreateConsoleDialog } = useContext(DatabaseContext);
-  const { createConsoleDialog } = model
-  const [consoleName, setConsoleName] = useState<string>();
-
-  function handleOk() {
-    createConsole();
-  }
-
-  function handleCancel() {
-    setcreateConsoleDialog(false)
-  }
-
-  function createConsole() {
-    if (!consoleName) {
-      return
-    }
-
-    if (!createConsoleDialog) {
-      return
-    }
-
-    let p = {
-      name: consoleName,
-      type: DatabaseTypeCode.MYSQL,
-      dataSourceId: createConsoleDialog.dataSourceId,
-      databaseName: createConsoleDialog?.databaseName,
-      status: ConsoleStatus.DRAFT,
-      ddl: 'SELECT * FROM',
-      tabOpened: TabOpened.IS_OPEN,
-    };
-
-    historyService.saveWindowTab(p).then((res) => {
-      const newConsole: IConsole = {
-        name: `${createConsoleDialog.databaseName}-console`,
-        key: res.toString(),
-        type: ConsoleType.SQLQ,
-        DBType: DatabaseTypeCode.MYSQL,
-        databaseName: createConsoleDialog.databaseName,
-        dataSourceId: createConsoleDialog.dataSourceId,
-        consoleId: res,
-        ddl: 'SELECT * FROM',
-      };
-      createdCallback(newConsole);
-      setcreateConsoleDialog(false);
-      setConsoleName('');
-    });
-  }
-
-  return <Modal
-    title="新建查询控制台"
-    open={!!createConsoleDialog}
-    onOk={handleOk}
-    onCancel={handleCancel}
-    width={400}
-    style={{ top: '20%' }}
-    footer={
-      <>
-        <Button onClick={handleCancel} className={styles.cancel}>
-          取消
-        </Button>
-        <Button type="primary" onClick={handleOk} className={styles.cancel}>
-          添加
-        </Button>
-      </>
-    }
-  >
-    <Input value={consoleName} onChange={(e) => { setConsoleName(e.target.value) }} />
-  </Modal>
-}

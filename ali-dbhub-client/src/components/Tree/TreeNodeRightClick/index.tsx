@@ -103,7 +103,6 @@ function TreeNodeRightClick(props: Iprops) {
   ]
 
   const dataSourseMenu: IMenu<string>[] = [
-    ...baseMenu,
     {
       title: '刷新',
       key: 'refresh',
