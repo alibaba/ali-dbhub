@@ -53,4 +53,4 @@ chatgpt:
   apiKey: sk-xxxx
   apiHost: https://api.openai.com/
   context:
-    length: 2
+    length: 1
