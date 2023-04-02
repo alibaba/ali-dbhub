@@ -29,23 +29,18 @@ function TreeNodeRightClick(props: Iprops) {
   const { setcreateConsoleDialog, setOperationDataDialog, setNeedRefreshNodeTree } = useContext(DatabaseContext);
   const [verifyDialog, setVerifyDialog] = useState<boolean>();
   const [verifyTableName, setVerifyTableName] = useState<string>('');
+  const getNodeData = nodeConfig?.getNodeData;
 
   function refresh() {
     data.children = []
     setIsLoading(true)
-    getNodeData(data).then(res => {
+    getNodeData?.(data).then(res => {
       setTimeout(() => {
         data.children = res;
         setIsLoading(false)
       }, 200);
     })
   }
-
-  if (!nodeConfig) {
-    return <></>
-  }
-
-  const { getNodeData } = nodeConfig;
 
   const baseMenu: IMenu<string>[] = [
     {
@@ -62,6 +57,7 @@ function TreeNodeRightClick(props: Iprops) {
         databaseName: data.databaseName!,
       })
     }
+    closeMenu();
   }
 
   const tableMenu: IMenu<string>[] = [
@@ -96,6 +92,7 @@ function TreeNodeRightClick(props: Iprops) {
       icon: '\uec08'
     },
   ]
+
   const tablesMenu: IMenu<string>[] = [
     ...baseMenu,
     {
@@ -138,6 +135,11 @@ function TreeNodeRightClick(props: Iprops) {
       }
     } else if (item.key === 'delete') {
       setVerifyDialog(true)
+    } else if (item.key === 'newConsole') {
+      setcreateConsoleDialog({
+        dataSourceId: data.dataSourceId!,
+        databaseName: data.databaseName!,
+      })
     }
     closeMenu();
   }
@@ -255,17 +257,18 @@ function TreeNodeRightClick(props: Iprops) {
     </div>
 
   } else if (
-    data.nodeType == TreeNodeType.COLUMNS ||
     data.nodeType == TreeNodeType.COLUMN ||
+    data.nodeType == TreeNodeType.COLUMNS ||
     data.nodeType == TreeNodeType.INDEXES ||
     data.nodeType == TreeNodeType.INDEXE ||
     data.nodeType == TreeNodeType.KEYS ||
     data.nodeType == TreeNodeType.KEY
   ) {
+    console.log(data)
     return <div className={styles.menuBox}>
       <Menu>
         {
-          tablesMenu.map(item => {
+          baseMenu.map(item => {
             return <MenuItem key={item.key} onClick={baseClick.bind(null, item)}>
               <Iconfont code={item.icon!}></Iconfont>
               {item.title}
