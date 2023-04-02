@@ -259,7 +259,7 @@ public class DbhubDataSource extends DynamicDataSource {
                     throw new RuntimeException(e);
                 }
             }
-            case ORACLE,H2 -> {
+            case ORACLE,H2,SQLITE -> {
 
             }
             case POSTGRESQL -> {
@@ -272,7 +272,9 @@ public class DbhubDataSource extends DynamicDataSource {
                 }
 
             }
-            default -> throw new SystemException(CommonErrorEnum.PARAM_ERROR);
+            default -> {
+
+            }
         }
     }
 
