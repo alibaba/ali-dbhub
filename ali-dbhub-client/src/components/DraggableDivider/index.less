@@ -1,9 +1,9 @@
 @import '../../var.less';
 
-.divider{
+.divider {
   width: 1px;
   position: relative;
-  .dividerCenter{
+  .dividerCenter {
     position: absolute;
     width: 9px;
     top: 0px;
@@ -13,26 +13,24 @@
   }
 }
 
-.rowDivider{
+.rowDivider {
   height: 1px;
   position: relative;
-  .dividerCenter{
+  .dividerCenter {
     position: absolute;
     height: 9px;
     left: 0px;
     right: 0px;
     z-index: 100;
-    transform: translateY(-50%);
+    transform: translateY(-3px);
   }
 }
 
-.dragging{
+.dragging {
   cursor: col-resize;
   background-color: var(--custom-primary-color);
 }
 
-.rowDragging{
+.rowDragging {
   cursor: row-resize;
 }
-
-

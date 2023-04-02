@@ -1,8 +1,10 @@
 .chatAI {
-  height: 100vh;
-  width: 100vw;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
   background-color: #444654;
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,10 +21,10 @@
   }
 }
 
-
 .chatFlow {
   height: calc(100vh - 100px);
-  width: 680px;
+  max-width: 680px;
+  width: 100%;
   padding: 32px 0;
   overflow-y: auto;
 }
@@ -32,7 +34,6 @@
   color: white;
   font-size: 16px;
   line-height: 24px;
-
 }
 
 .title {
