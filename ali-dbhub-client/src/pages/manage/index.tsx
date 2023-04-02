@@ -57,7 +57,6 @@ export default function Manage() {
 
   const onOpen = useCallback(() => {
     setVisible(true);
-    setFormData(initUser);
   }, []);
   const onClose = useCallback(() => {
     setFormData(undefined);
@@ -142,7 +141,13 @@ export default function Manage() {
   return (
     <div className={styles.manage}>
       <div className={styles['add-user']}>
-        <Button onClick={onOpen} type="primary">
+        <Button
+          onClick={() => {
+            setFormData(initUser);
+            onOpen();
+          }}
+          type="primary"
+        >
           新增用户
         </Button>
       </div>
