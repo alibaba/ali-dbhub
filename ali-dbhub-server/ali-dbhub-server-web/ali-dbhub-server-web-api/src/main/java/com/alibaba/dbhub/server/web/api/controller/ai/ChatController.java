@@ -147,16 +147,6 @@ public class ChatController {
         }
 
         String messageContext = (String)LocalCache.CACHE.get(uid);
-        //List<String> messages = new ArrayList<>();
-        //if (StrUtil.isNotBlank(messageContext)) {
-        //    messages = JSONUtil.toList(messageContext, String.class);
-        //    if (messages.size() >= 10) {
-        //        messages = messages.subList(1, 10);
-        //    }
-        //    messages.add(queryRequest.getMessage());
-        //} else {
-        //    messages.add(queryRequest.getMessage());
-        //}
         String msg = queryRequest.getMessage();
         Message currentMessage = Message.builder().content(msg).role(Message.Role.USER).build();
         List<Message> messages = new ArrayList<>();
@@ -194,7 +184,6 @@ public class ChatController {
                 entry.getValue().stream().map(TableColumn::getName).collect(
                     Collectors.joining(", ")))).collect(Collectors.toList());
         String properties = String.join("\n#", tableSchemas);
-        //String message = String.join("\n# ", messages);
         String prompt = CollectionUtils.isNotEmpty(tableSchemas) ? String.format(
             "### %s SQL tables, with their properties:\n#\n# %s\n#\n### %s", dataSourceType, properties,
             msg) : String.format("### %s", msg);
