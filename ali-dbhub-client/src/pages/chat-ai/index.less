@@ -1,12 +1,22 @@
 @import '../../var.less';
 
+html {
+  --editor-background: #fff;
+  --editor-foreground: #000000;
+}
+
+html[theme='dark'] {
+  --editor-background: #15161a;
+  --editor-foreground: #ffffff;
+}
+
 .chatAI {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   top: 0;
-  background-color: var(--color-bg-100);
+  background-color: var(--editor-background);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,17 +34,21 @@
 }
 
 .chatFlow {
-  height: calc(100vh - 100px);
-  max-width: 680px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 60px;
   width: 100%;
-  padding: 10px 0 32px 0;
+  padding: 10px;
   overflow-y: auto;
 }
 
 .chatItem {
-  margin-bottom: 20px;
+  max-width: 680px;
+  margin: 0px auto 20px;
   color: var(--color-text);
-  font-size: 16px;
+  font-size: 12px;
   line-height: 24px;
 }
 
@@ -51,6 +65,8 @@
 }
 
 .chatBtnBlock {
+  position: absolute;
+  bottom: 0px;
   height: 60px;
   width: 100%;
   display: flex;
@@ -58,9 +74,17 @@
   justify-content: center;
   margin-top: 10px;
 
-  .chatBtn {
+  input {
     height: 100%;
+    line-height: 100%;
+  }
+
+  button {
+  }
+
+  .chatBtn {
     width: 680px;
+    max-width: 70%;
     height: 40px;
     border-radius: 4px;
   }

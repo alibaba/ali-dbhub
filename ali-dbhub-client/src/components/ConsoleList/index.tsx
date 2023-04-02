@@ -18,6 +18,7 @@ import {
 import { TabOpened, ConsoleType, ConsoleStatus, DatabaseTypeCode } from '@/utils/constants';
 
 import { DatabaseContext } from '@/context/database'
+import { MenuItem } from '../Menu';
 
 interface Iprops {
   className?: string;
@@ -28,6 +29,44 @@ export default memo<Iprops>(function ConsoleList(props) {
   const { model, setcreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [activeKey, setActiveKey] = useState<string>(consoleId);
+  const { dblclickNodeData } = model;
+
+  useEffect(() => {
+    if (dblclickNodeData) {
+      let flag = false
+      windowList.map(i => {
+        if (i.databaseName === dblclickNodeData.databaseName && i.dataSourceId === dblclickNodeData.dataSourceId) {
+          flag = true
+        }
+      })
+      if (!flag) {
+        let p = {
+          name: `${dblclickNodeData?.databaseName}-console`,
+          type: dblclickNodeData.dataType as DatabaseTypeCode,
+          dataSourceId: dblclickNodeData.dataSourceId!,
+          databaseName: dblclickNodeData?.databaseName!,
+          status: ConsoleStatus.DRAFT,
+          ddl: 'SELECT * FROM',
+          tabOpened: TabOpened.IS_OPEN,
+        };
+
+        historyService.saveWindowTab(p).then((res) => {
+          const newConsole: IConsole = {
+            name: `${dblclickNodeData?.databaseName}-console`,
+            key: res.toString(),
+            type: ConsoleType.SQLQ,
+            DBType: dblclickNodeData.dataType!,
+            databaseName: dblclickNodeData.databaseName!,
+            dataSourceId: dblclickNodeData.dataSourceId!,
+            consoleId: res,
+            ddl: 'SELECT * FROM',
+          };
+          setActiveKey(newConsole.key)
+          setWindowList([...windowList, newConsole])
+        });
+      }
+    }
+  }, [dblclickNodeData])
 
   useEffect(() => {
     getConsoleList();
