@@ -50,5 +50,5 @@ sa-token:
   # jwt秘钥 部署的时候需要改掉，不然可以随便破解登录
   jwt-secret-key: jwt_dbhub
 chatgpt:
-  apiKey: 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
+  apiKey: sk-xxxx
   apiHost: https://api.openai.com/

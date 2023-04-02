@@ -5,19 +5,26 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.alibaba.dbhub.server.domain.api.param.TableQueryParam;
+import com.alibaba.dbhub.server.domain.api.service.TableService;
+import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.web.api.controller.ai.config.LocalCache;
 import com.alibaba.dbhub.server.web.api.controller.ai.listener.OpenAIEventSourceListener;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.entity.chat.Message;
 import com.unfbx.chatgpt.entity.completions.Completion;
 import com.unfbx.chatgpt.exception.BaseException;
 import com.unfbx.chatgpt.exception.CommonError;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -38,6 +45,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class ChatController {
 
     private final OpenAiStreamClient openAiStreamClient;
+
+    @Autowired
+    private TableService tableService;
 
     public ChatController(OpenAiStreamClient openAiStreamClient) {
         this.openAiStreamClient = openAiStreamClient;
@@ -146,14 +156,29 @@ public class ChatController {
                 }
             }
         );
-       String prompt= "### Postgres SQL tables, with their properties:\n#\n# Employee(id, name, department_id)\n# Department(id, name, address)\n# Salary_Payments(id, employee_id, amount, date)\n#\n### A query to list the names of the departments which employed more than 10 employees in the last 3 months\n";
+        String prompt
+            = "### Postgres SQL tables, with their properties:\n#\n# Employee(id, name, department_id)\n# Department"
+            + "(id, name, address)\n# Salary_Payments(id, employee_id, amount, date)\n#\n### A query to list the "
+            + "names of the departments which employed more than 10 employees in the last 3 months\n";
 
-       OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
+        OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
         Completion completion = Completion.builder().model("text-davinci-003").maxTokens(150).stream(true).stop(
             Lists.newArrayList("#", ";")).user(uid).prompt(prompt).build();
         openAiStreamClient.streamCompletions(completion, openAIEventSourceListener);
         LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
         return sseEmitter;
+
+    }
+
+    private Map<String, List<TableColumn>> buildTableColumn() {
+        TableQueryParam tableQueryParam = new TableQueryParam();
+        List<TableColumn> tableColumns = tableService.queryColumns(tableQueryParam);
+        StringBuilder prompt = new StringBuilder();
+        if (CollectionUtils.isEmpty(tableColumns)) {
+            return Maps.newHashMap();
+        }
+        return tableColumns.stream().collect(
+            Collectors.groupingBy(TableColumn::getTableName, Collectors.toList()));
 
     }
 }
