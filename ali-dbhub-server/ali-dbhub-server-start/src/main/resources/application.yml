@@ -9,11 +9,22 @@ spring:
     basename: i18n/messages/messages
     encoding: UTF-8
     fallbackToSystemLocale: true
-  #  用于数据库表结构版本管理
-  flyway:
-    locations: classpath:db/migration
   jmx:
     enabled: false
+  # thymeleaf
+  thymeleaf:
+    prefix: classpath:/thymeleaf/
+    check-template-location: true
+    suffix: .html
+    servlet:
+      content-type: text/html
+    mode: HTML5
+  # 静态文件
+  mvc:
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations[0]: classpath:/static/
 ali:
   dbhub:
     version: 1.0.0
@@ -22,3 +33,24 @@ logging:
   level:
     org:
       flywaydb: debug
+# 登录功能
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: DBHUB
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: true
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: true
+  # jwt秘钥 部署的时候需要改掉，不然可以随便破解登录
+  jwt-secret-key: jwt_dbhub
+chatgpt:
+  apiKey: sk-xxxx
+  apiHost: https://api.openai.com/
+  context:
+    length: 4

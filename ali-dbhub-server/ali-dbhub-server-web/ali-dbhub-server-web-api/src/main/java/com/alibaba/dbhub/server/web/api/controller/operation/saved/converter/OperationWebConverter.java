@@ -12,6 +12,8 @@ import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.Opera
 import com.alibaba.dbhub.server.web.api.controller.operation.saved.vo.OperationVO;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 /**
  * @author moji
@@ -51,6 +53,9 @@ public abstract class OperationWebConverter {
      * @param ddlDTO
      * @return
      */
+    @Mappings({
+        @Mapping(target = "connectable", expression = "java(ddlDTO.getDataSourceName() != null)"),
+    })
     public abstract OperationVO dto2vo(Operation ddlDTO);
 
     /**

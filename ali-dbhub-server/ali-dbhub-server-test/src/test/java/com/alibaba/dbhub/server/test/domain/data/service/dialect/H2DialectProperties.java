@@ -24,7 +24,7 @@ public class H2DialectProperties implements DialectProperties {
 
     @Override
     public String getUrl() {
-        return "jdbc:h2:mem:ali-dbhub-test;MODE=MYSQL";
+        return "jdbc:h2:~/.dbhub/db/ali_dbhub_dev;MODE=MYSQL";
     }
 
     @Override
@@ -44,7 +44,7 @@ public class H2DialectProperties implements DialectProperties {
 
     @Override
     public String getDatabaseName() {
-        return "PUBLIC";
+        return "ALI_DBHUB_DEV";
     }
 
     @Override

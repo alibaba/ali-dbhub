@@ -1,15 +1,15 @@
 import { extend, ResponseError } from 'umi-request';
-import { message } from 'antd'; 
+import { message } from 'antd';
 
 export type IErrorLevel = 'toast' | 'prompt' | 'critical' | false;
-export interface IOptions{
-  method?: "get" | 'post' | 'put' | 'delete';
+export interface IOptions {
+  method?: 'get' | 'post' | 'put' | 'delete';
   mock?: boolean;
   errorLevel?: 'toast' | 'prompt' | 'critical' | false;
 }
 
 // TODO:
-const codeMessage:{[errorCode:number]:string} = {
+const codeMessage: { [errorCode: number]: string } = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
   202: '一个请求已经进入后台排队（异步任务）。',
@@ -27,28 +27,41 @@ const codeMessage:{[errorCode:number]:string} = {
   504: '网关超时。',
 };
 
+enum ErrorCode {
+  /** 需要登录 */
+  NEED_LOGGED_IN = 'NEED_LOGGED_IN',
+}
+
+const noNeedToastErrorCode = [ErrorCode.NEED_LOGGED_IN];
+
 const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
 const onLineServiceUrl = 'http://127.0.0.1:10824';
 const localServiceUrl = 'http://127.0.0.1:7001';
+// const localServiceUrl = 'http://38.55.129.58';
 
-const baseURL = location.href.indexOf('dist/index.html') > -1 ? onLineServiceUrl : localServiceUrl;
-console.log(baseURL)
-const errorHandler = (error: ResponseError,errorLevel:IErrorLevel) => {
+const baseURL =
+  location.href.indexOf('dist/index.html') > -1
+    ? onLineServiceUrl
+    : localServiceUrl;
+
+const errorHandler = (error: ResponseError, errorLevel: IErrorLevel) => {
+  console.log('errorHandler==>', error, errorLevel);
   const { response } = error;
-  if(!response) return
-  const errortext = codeMessage[response.status] || response.statusText;
+  if (!response) return;
+  const errorText = codeMessage[response.status] || response.statusText;
   const { status } = response;
-  if(errorLevel === 'toast'){
-    message.error(`${status}: ${errortext}`)
+  if (errorLevel === 'toast') {
+    message.error(`${status}: ${errorText}`);
   }
 };
 
 const request = extend({
   // prefix: '/api',
   credentials: 'include', // 默认请求是否带上cookie
-  headers:{
-    'Content-Type': 'application/json' 
-  }
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
 });
 
 request.interceptors.request.use((url, options) => {
@@ -59,22 +72,30 @@ request.interceptors.request.use((url, options) => {
   };
 });
 
-// request.interceptors.response.use(async response => {
-//   const res = await response.clone().json();
-//   const { code, message } = res;
-//   if (code !== 0) {
-//     message.error(`${code}: ${message}`)
-//     return response;
-//   }
-//   return res;
-// });
+request.interceptors.response.use(async (response, options) => {
+  const res = await response.clone().json();
 
-export default function createRequest<P = void, R = {}>(url:string, options:IOptions){
-  const {method = 'get', mock = false,errorLevel = 'toast'} = options;
+  const { errorCode, codeMessage } = res;
+  if (errorCode === ErrorCode.NEED_LOGGED_IN) {
+    // window.location.href = '#/login?callback=' + window.location.hash.substr(1);
+    const callback = window.location.hash.substr(1).split('?')[0];
+    window.location.href =
+      '#/login?' + (callback === '/login' ? '' : `callback=${callback}`);
+  }
+
+  return response;
+});
+
+export default function createRequest<P = void, R = {}>(
+  url: string,
+  options: IOptions,
+) {
+  // mock
+  const { method = 'get', mock = false, errorLevel = 'toast' } = options;
   const _baseURL = mock ? mockUrl : baseURL;
-  return function(params: P){
+  return function (params: P) {
     const paramsInUrl: string[] = [];
-    const _url = url.replace(/:(.+?)\b/, (_, name:string) => {
+    const _url = url.replace(/:(.+?)\b/, (_, name: string) => {
       const value = params[name];
       paramsInUrl.push(name);
       return `${value}`;
@@ -87,14 +108,14 @@ export default function createRequest<P = void, R = {}>(url:string, options:IOpt
     }
 
     return new Promise<R>((resolve, reject) => {
-      let dataName = ''
-      switch (method) { 
+      let dataName = '';
+      switch (method) {
         case 'get':
           dataName = 'params';
-          break
+          break;
         case 'delete':
           dataName = 'params';
-          break
+          break;
         case 'post':
           dataName = 'data';
           break;
@@ -102,21 +123,26 @@ export default function createRequest<P = void, R = {}>(url:string, options:IOpt
           dataName = 'data';
           break;
       }
-      
-      request[method](`${_baseURL}${_url}`,{[dataName]: params})
-      .then(res=>{
-        if(!res) return
-        const {success, errorCode, errorMessage, data} = res
-        if(!success && errorLevel === 'toast'){
-          message.error(`${errorCode}: ${errorMessage}`)
-          reject(`${errorCode}: ${errorMessage}`)
-        }
-        resolve(data)
-      })
-      .catch(error=>{
-        errorHandler(error, errorLevel)
-        reject(error)
-      })
-    }) 
-  } 
+
+      request[method](`${_baseURL}${_url}`, { [dataName]: params })
+        .then((res) => {
+          if (!res) return;
+          const { success, errorCode, errorMessage, data } = res;
+          if (
+            !success &&
+            errorLevel === 'toast' &&
+            !noNeedToastErrorCode.includes(errorCode)
+          ) {
+            message.error(`${errorCode}: ${errorMessage}`);
+            reject(`${errorCode}: ${errorMessage}`);
+          }
+          resolve(data);
+        })
+        .catch((error) => {
+          console.log('catch error', error);
+          errorHandler(error, errorLevel);
+          reject(error);
+        });
+    });
+  };
 }

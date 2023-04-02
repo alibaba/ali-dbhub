@@ -2,7 +2,10 @@ package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
 
 import com.alibaba.dbhub.server.domain.support.enums.ColumnTypeEnum;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * @author moji
@@ -10,6 +13,9 @@ import lombok.Data;
  * @date 2022/09/16
  */
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ColumnVO {
     /**
      * 名称

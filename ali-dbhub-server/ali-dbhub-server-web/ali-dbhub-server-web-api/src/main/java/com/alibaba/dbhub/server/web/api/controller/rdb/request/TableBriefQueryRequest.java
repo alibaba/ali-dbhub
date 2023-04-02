@@ -24,12 +24,16 @@ public class TableBriefQueryRequest extends PageQueryRequest implements DataSour
      */
     @NotNull
     private Long dataSourceId;
-
     /**
      * DB名称
      */
     @NotNull
     private String databaseName;
+
+    /**
+     * 表所在空间，pg,oracle需要，mysql不需要
+     */
+    private String schemaName;
 
     /**
      * 模糊搜索词

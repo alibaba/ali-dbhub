@@ -5,14 +5,15 @@ import java.util.List;
 import com.alibaba.dbhub.server.domain.api.param.DlExecuteParam;
 import com.alibaba.dbhub.server.domain.support.model.Cell;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
+import com.alibaba.dbhub.server.domain.support.model.Schema;
 import com.alibaba.dbhub.server.domain.support.model.Sql;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
-import com.alibaba.dbhub.server.domain.support.param.table.DropParam;
-import com.alibaba.dbhub.server.domain.support.param.table.ShowCreateTableParam;
-import com.alibaba.dbhub.server.domain.support.param.table.TablePageQueryParam;
-import com.alibaba.dbhub.server.domain.support.param.table.TableQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.DropParam;
+import com.alibaba.dbhub.server.domain.api.param.ShowCreateTableParam;
+import com.alibaba.dbhub.server.domain.api.param.TablePageQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.TableQueryParam;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DdlExportRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DdlRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DmlRequest;
@@ -24,6 +25,7 @@ import com.alibaba.dbhub.server.web.api.controller.rdb.vo.CellVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ColumnVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.IndexVO;
+import com.alibaba.dbhub.server.web.api.controller.rdb.vo.SchemaVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.SqlVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.TableVO;
 
@@ -189,4 +191,18 @@ public abstract class RdbWebConverter {
      * @return
      */
     public abstract List<TableVO> tableDto2vo(List<Table> dtos);
+
+    /**
+     * 模型转换
+     * @param tableColumns
+     * @return
+     */
+    public abstract List<SchemaVO> schemaDto2vo(List<Schema> tableColumns);
+
+    /**
+     * 模型转换
+     * @param dto
+     * @return
+     */
+    public abstract SchemaVO schemaDto2vo(Schema dto);
 }

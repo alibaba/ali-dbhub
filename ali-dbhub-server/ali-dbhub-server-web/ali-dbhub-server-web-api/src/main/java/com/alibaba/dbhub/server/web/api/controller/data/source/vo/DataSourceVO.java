@@ -31,11 +31,6 @@ public class DataSourceVO {
     private String user;
 
     /**
-     * 密码
-     */
-    private String password;
-
-    /**
      * 连接类型
      */
     private String type;

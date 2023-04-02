@@ -9,26 +9,39 @@ import java.util.List;
 import javax.validation.constraints.NotEmpty;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.model.Function;
+import com.alibaba.dbhub.server.domain.support.model.Procedure;
+import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
+import com.alibaba.dbhub.server.domain.support.model.Trigger;
 
 /**
  * @author jipengfei
  * @version : MetaSchemaManager.java, v 0.1 2022年12月14日 16:26 jipengfei Exp $
  */
-public interface MetaSchema<T> {
+public interface MetaSchema<T extends BaseMapper> {
     /**
      * 支持的数据库类型
      *
      * @return
      */
-    DbTypeEnum supportDbType();
+    DbTypeEnum dbType();
 
     /**
      * 查询所有的DATABASE
+     *
      * @return
      */
-    List<String> showDatabases();
+    List<String> databases();
+
+    /**
+     * 查询 DB 下schemas
+     * @param databaseName
+     * @return
+     */
+    List<String> schemas(String databaseName);
+
     /**
      * 展示建表语句
      *
@@ -36,7 +49,7 @@ public interface MetaSchema<T> {
      * @param tableName
      * @return
      */
-    String showCreateTable(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName);
+    String tableDDL(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName);
 
     /**
      * 删除表结构
@@ -45,16 +58,7 @@ public interface MetaSchema<T> {
      * @param tableName
      * @return
      */
-    void dropTable(@NotEmpty String databaseName, String schemaName,
-        @NotEmpty String tableName);
-
-    /**
-     * 查询数据库表的数量
-     *
-     * @param databaseName
-     * @return
-     */
-    int queryTableCount(@NotEmpty String databaseName, String schemaName);
+    void dropTable(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName);
 
     /**
      * 分页查询表信息
@@ -62,34 +66,76 @@ public interface MetaSchema<T> {
      * @param databaseName
      * @return
      */
-    List<T> queryTableList( @NotEmpty String databaseName, String tableName, int pageNo, int pageSize);
+    List<Table> tables(@NotEmpty String databaseName, String schemaName,String tableName);
 
     /**
+     * 查询所有视图
+     *
+     * @param databaseName
+     * @param schemaName
+     * @return
+     */
+    List<? extends Table> views(@NotEmpty String databaseName, String schemaName);
+
+    /**
+     * 查询所有的函数
+     *
+     * @param databaseName
+     * @param schemaName
+     * @return
+     */
+    List<Function> functions(@NotEmpty String databaseName, String schemaName);
+
+    /**
+     * 查询所有触发器
+     *
+     * @param databaseName
+     * @param schemaName
+     * @return
+     */
+    List<Trigger> triggers(@NotEmpty String databaseName, String schemaName);
+
+    /**
+     * 查询所有存储过程
+     *
+     * @param databaseName
+     * @param schemaName
+     * @return
+     */
+    List<Procedure> procedures(@NotEmpty String databaseName, String schemaName);
+
+    /**
+     * 查询列的信息
+     *
      * @param databaseName
      * @param tableName
      * @return
      */
-    T queryTable( @NotEmpty String databaseName, String schemaName,
+    List<? extends TableColumn> columns(@NotEmpty String databaseName, String schemaName,
         @NotEmpty String tableName);
 
+
     /**
-     * 查询列的信息
+     * 查询database下所有的列信息
      *
      * @param databaseName
-     * @param tableNames
+     * @param schemaName
+     * @param tableName
+     * @param columnName
      * @return
      */
-    List<? extends TableColumn> queryColumnList( @NotEmpty String databaseName,
-        String schemaName, @NotEmpty List<String> tableNames);
+    List<? extends TableColumn> columns(@NotEmpty String databaseName, String schemaName,String tableName, String columnName);
 
     /**
      * 查询列的信息
      *
      * @param databaseName
-     * @param tableNames   * @return
+     * @param tableName    * @return
      */
-    List<? extends TableIndex> queryIndexList( @NotEmpty String databaseName,
-        String schemaName, @NotEmpty List<String> tableNames);
+    List<? extends TableIndex> indexes(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName);
 
+
+
+    T  getMapper();
 
 }

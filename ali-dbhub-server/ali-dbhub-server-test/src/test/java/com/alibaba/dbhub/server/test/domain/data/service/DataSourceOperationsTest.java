@@ -4,15 +4,15 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
+import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
-import com.alibaba.dbhub.server.domain.support.operations.DataSourceOperations;
-import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCloseParam;
-import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceCreateParam;
-import com.alibaba.dbhub.server.domain.support.param.datasource.DataSourceTestParam;
 import com.alibaba.dbhub.server.test.common.BaseTest;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dbhub.server.test.domain.data.utils.TestUtils;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.fastjson2.JSON;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class DataSourceOperationsTest extends BaseTest {
     @Resource
-    private DataSourceOperations dataSourceOperations;
+    private DataSourceService dataSourceService;
     @Autowired
     private List<DialectProperties> dialectPropertiesList;
 
@@ -41,20 +41,18 @@ public class DataSourceOperationsTest extends BaseTest {
             Long dataSourceId = TestUtils.nextLong();
             TestUtils.buildContext(dialectProperties, dataSourceId, null);
             // 创建
-            DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
-            dataSourceCreateParam.setDataSourceId(dataSourceId);
-            dataSourceCreateParam.setDbType(dbTypeEnum.getCode());
+            DataSourcePreConnectParam dataSourceCreateParam = new DataSourcePreConnectParam();
+
+            dataSourceCreateParam.setType(dbTypeEnum.getCode());
             dataSourceCreateParam.setUrl(dialectProperties.getUrl());
-            dataSourceCreateParam.setUsername(dialectProperties.getUsername());
+            dataSourceCreateParam.setUser(dialectProperties.getUsername());
             dataSourceCreateParam.setPassword(dialectProperties.getPassword());
-            DataSourceConnect dataSourceConnect = dataSourceOperations.create(dataSourceCreateParam);
+            ActionResult dataSourceConnect = dataSourceService.preConnect(dataSourceCreateParam);
             Assertions.assertTrue(dataSourceConnect.getSuccess(), "创建数据库连接池失败");
             // Assertions.assertTrue(DataCenterUtils.JDBC_ACCESSOR_MAP.containsKey(dataSourceId), "创建数据库连接池失败");
 
             // 关闭
-            DataSourceCloseParam dataSourceCloseParam = new DataSourceCloseParam();
-            dataSourceCloseParam.setDataSourceId(dataSourceId);
-            dataSourceOperations.close(dataSourceCloseParam);
+            dataSourceService.close(dataSourceId);
             TestUtils.remove();
         }
     }
@@ -66,15 +64,37 @@ public class DataSourceOperationsTest extends BaseTest {
             DbTypeEnum dbTypeEnum = dialectProperties.getDbType();
 
             // 创建
-            DataSourceTestParam dataSourceTestParam = new DataSourceTestParam();
-            dataSourceTestParam.setDbType(dbTypeEnum.getCode());
-            dataSourceTestParam.setUrl(dialectProperties.getErrorUrl());
-            dataSourceTestParam.setUsername(dialectProperties.getUsername());
-            dataSourceTestParam.setPassword(dialectProperties.getPassword());
-            DataSourceConnect dataSourceConnect = dataSourceOperations.test(dataSourceTestParam);
+            DataSourcePreConnectParam dataSourceCreateParam = new DataSourcePreConnectParam();
+
+            dataSourceCreateParam.setType(dbTypeEnum.getCode());
+            dataSourceCreateParam.setUrl(dialectProperties.getErrorUrl());
+            dataSourceCreateParam.setUser(dialectProperties.getUsername());
+            dataSourceCreateParam.setPassword(dialectProperties.getPassword());
+            ActionResult dataSourceConnect = dataSourceService.preConnect(dataSourceCreateParam);
             log.info("创建数据库返回:{}", JSON.toJSONString(dataSourceConnect));
             Assertions.assertFalse(dataSourceConnect.getSuccess(), "创建数据库失败错误");
-            Assertions.assertNotNull(dataSourceConnect.getMessage(), "创建数据库失败错误");
+        }
+    }
+    @Test
+    @Order(3)
+    public void createDataSource(){
+        for (DialectProperties dialectProperties : dialectPropertiesList) {
+            if(!dialectProperties.getDbType().equals(DbTypeEnum.SQLITE)){
+                continue;
+            }
+            DbTypeEnum dbTypeEnum = dialectProperties.getDbType();
+            Long dataSourceId = TestUtils.nextLong();
+            TestUtils.buildContext(dialectProperties, dataSourceId, null);
+            // 创建
+            DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
+            dataSourceCreateParam.setAlias(dialectProperties.getDbType()+"_unittest_"+dialectProperties.getDbType());
+            dataSourceCreateParam.setType(dbTypeEnum.getCode());
+            dataSourceCreateParam.setUrl(dialectProperties.getUrl());
+            dataSourceCreateParam.setUserName(dialectProperties.getUsername());
+            dataSourceCreateParam.setPassword(dialectProperties.getPassword());
+            DataResult<Long> dataSourceConnect = dataSourceService.create(dataSourceCreateParam);
+            Assertions.assertTrue(dataSourceConnect.getSuccess(), "创建数据库连接池失败");
+            // Assertions.assertTrue(DataCenterUtils.JDBC_ACCESSOR_MAP.containsKey(dataSourceId), "创建数据库连接池失败");
         }
     }
 

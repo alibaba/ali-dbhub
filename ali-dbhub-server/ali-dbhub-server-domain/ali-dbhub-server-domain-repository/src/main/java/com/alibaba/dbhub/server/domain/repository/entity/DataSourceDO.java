@@ -40,7 +40,7 @@ public class DataSourceDO implements Serializable {
     private LocalDateTime gmtModified;
 
     /**
-     * 别名
+     * 数据源名称
      */
     private String alias;
 

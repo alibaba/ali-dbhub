@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState, useContext } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { Dropdown, Modal, Button, message } from 'antd';
@@ -8,6 +8,8 @@ import mysqlServer from '@/service/mysql';
 import { DatabaseTypeCode, WindowTabStatus } from '@/utils/constants';
 import historyServer from '@/service/history';
 import { format } from 'sql-formatter';
+import { DatabaseContext } from '@/context/database';
+import { TreeNodeType } from '@/utils/constants';
 
 
 export interface IOperationData {
@@ -20,21 +22,29 @@ export interface IOperationData {
 
 export interface IOperationTableModalProps {
   className?: string;
-  operationData: IOperationData;
-  setOperationData: Function;
+  // operationData: IOperationData;
+  // setOperationData: Function;
 }
 
 export default memo<IOperationTableModalProps>(function OperationTableModal(props) {
-  const { className, operationData, setOperationData } = props;
+
+  const { className } = props;
+  const { model, setOperationDataDialog, setNeedRefreshNodeTree } = useContext(DatabaseContext);
+  const { operationData } = model;
+
   const monacoEditor = useRef();
   const [consoleId, setConsoleId] = useState<string>();
-  useEffect(() => {
-    addWindowTab()
-  }, [])
+
+  // useEffect(() => {
+  //   addWindowTab();
+  // }, [operationData])
 
   useEffect(() => {
+    if (!operationData) {
+      return
+    }
     if (operationData.type == 'new') {
-      mysqlServer.createTableExample({ dbType: operationData.database?.databaseType! }).then(res => {
+      mysqlServer.createTableExample({ dbType: operationData.nodeData?.dataType }).then(res => {
         setMonacoEditorValue(monacoEditor.current, res)
       })
     }
@@ -46,53 +56,66 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
     if (operationData.type == 'export') {
       let p = {
         tableName: operationData.nodeData?.name!,
-        dataSourceId: operationData.connectionDetaile?.id!,
-        databaseName: operationData.database?.name!,
+        dataSourceId: operationData.nodeData?.dataSourceId,
+        databaseName: operationData.nodeData?.databaseName,
       }
       mysqlServer.exportCreateTableSql(p).then(res => {
         setMonacoEditorValue(monacoEditor.current, res)
       })
     }
-  }, [])
+  }, [operationData])
 
-  const addWindowTab = () => {
-    let p = {
-      name: '弹窗',
-      type: operationData.database?.databaseType!,
-      dataSourceId: operationData.connectionDetaile?.id!,
-      databaseName: operationData.database?.name!,
-      status: WindowTabStatus.DRAFT,
-      tabOpened: 'n',
-      ddl: ''
-    }
-    historyServer.saveWindowTab(p).then(res => {
-      setConsoleId(res)
-    })
-  };
+  // const addWindowTab = () => {
+  //   if (!operationData) {
+  //     return
+  //   }
+  //   let p = {
+  //     name: '弹窗',
+  //     type: operationData.nodeData?.dataType,
+  //     dataSourceId: operationData.nodeData?.dataSourceId,
+  //     databaseName: operationData.nodeData?.databaseName,
+  //     status: WindowTabStatus.DRAFT,
+  //     tabOpened: 'n',
+  //     ddl: ''
+  //   }
+  //   historyServer.saveWindowTab(p).then(res => {
+  //     setConsoleId(res)
+  //   })
+  // };
 
   function handleOk() {
+    if (!operationData) {
+      return
+    }
     if (operationData.type == 'new' || operationData.type == 'edit') {
       let p: any = {
         consoleId,
         sql: getMonacoEditorValue(monacoEditor.current),
-        dataSourceId: operationData.connectionDetaile?.id!,
-        databaseName: operationData.database?.name!,
+        dataSourceId: operationData.nodeData?.dataSourceId,
+        databaseName: operationData.nodeData?.databaseName,
       }
       if (operationData.type == 'edit') {
         p.tableName = operationData.nodeData?.name
       }
       mysqlServer.executeTable(p).then(res => {
-        message.success('更新成功')
-        operationData.callback && operationData.callback(operationData.database)
-        setOperationData(null)
+        message.success('更新成功');
+        setNeedRefreshNodeTree({
+          databaseName: operationData.nodeData?.databaseName,
+          dataSourceId: operationData.nodeData?.dataSourceId,
+          nodeType: TreeNodeType.TABLES
+        })
+        setTimeout(() => {
+          setOperationDataDialog(false);
+        }, 0);
+        // operationData.callback && operationData.callback(operationData.database)
       })
     } else {
-      setOperationData(null)
+      setOperationDataDialog(false)
     }
   }
 
   function handleCancel() {
-    setOperationData(null)
+    setOperationDataDialog(false)
   }
 
   function setMonacoEditorValue(monacoEditor: any, value: string) {
@@ -112,6 +135,7 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
   }
 
   function renderTitle() {
+    if (!operationData) { return }
     if (operationData.type == 'new') {
       return '新建表'
     }
@@ -124,6 +148,9 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
   }
 
   function renderOkText() {
+    if (!operationData) {
+      return
+    }
     switch (operationData.type) {
       case 'edit':
         return '修改';
@@ -134,6 +161,10 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
       default:
         return '确定'
     }
+  }
+
+  if (!operationData) {
+    return <></>
   }
 
   return <Modal

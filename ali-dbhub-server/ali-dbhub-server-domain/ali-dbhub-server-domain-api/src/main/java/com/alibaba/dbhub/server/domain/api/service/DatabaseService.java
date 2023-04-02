@@ -1,7 +1,9 @@
 package com.alibaba.dbhub.server.domain.api.service;
 
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.support.param.database.DatabaseQueryAllParam;
+import com.alibaba.dbhub.server.domain.support.model.Schema;
+import com.alibaba.dbhub.server.domain.api.param.DatabaseQueryAllParam;
+import com.alibaba.dbhub.server.domain.api.param.SchemaQueryParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 
 /**
@@ -21,4 +23,10 @@ public interface DatabaseService {
      */
     ListResult<Database> queryAll(DatabaseQueryAllParam param);
 
+    /**
+     * 查询某个database下的schema
+     * @param param
+     * @return
+     */
+    ListResult<Schema> querySchema(SchemaQueryParam param);
 }

@@ -15,7 +15,7 @@ import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.domain.api.service.ConsoleService;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.support.param.console.ConsoleCloseParam;
+import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
@@ -141,6 +141,9 @@ public class DataSourceController {
         List<DataSourceVO> dataSourceVOS = dataSourceWebConverter.dto2vo(result.getData());
         return WebPageResult.of(dataSourceVOS, result.getTotal(), result.getPageNo(), result.getPageSize());
     }
+
+
+
 
     /**
      * 获取连接内容

@@ -2,8 +2,8 @@ import React, { memo, useEffect, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import connectionServer from '@/service/connection'
-import { IConnectionBase } from '@/types'
-import { databaseTypeList, databaseType, DatabaseTypeCode, envType } from '@/utils/constants'
+import { IConnectionBase, ITreeNode } from '@/types'
+import { databaseTypeList, databaseType, DatabaseTypeCode, EnvType, TreeNodeType } from '@/utils/constants'
 import {
   Select,
   Button,
@@ -17,19 +17,19 @@ import {
 
 const { Option } = Select;
 
-interface IProps {
-  className?: string;
-  isModalVisible: boolean;
-  setIsModalVisible: Function;
-  rowData: any;
-  getConnectionList: Function;
-  closeModal: Function;
-}
-
-enum submitType {
+export enum submitType {
   UPDATE = 'update',
   SAVE = 'save',
   TEST = 'test'
+}
+
+interface IProps {
+  className?: string;
+  rowData?: any;
+  openModal: boolean;
+  dataSourceType?: DatabaseTypeCode;
+  submitCallback?: (data: ITreeNode) => void;
+  onCancel?: () => void;
 }
 
 const authenticationConfig = [
@@ -57,6 +57,7 @@ const oracelDriven = [
     value: 'oci8',
   },
 ]
+
 const h2Driven = [
   {
     label: 'tcp',
@@ -73,12 +74,12 @@ const h2Driven = [
 ]
 
 const envOptions = [
-  { label: '日常', value: envType.DAILY },
-  { label: '线上', value: envType.PRODUCT },
+  { label: '日常', value: EnvType.DAILY },
+  { label: '线上', value: EnvType.PRODUCT },
 ];
 
 export default memo<IProps>(function ConnectionDialog(props) {
-  const { isModalVisible, className, setIsModalVisible, rowData, getConnectionList, closeModal } = props
+  const { className, rowData, onCancel, submitCallback, openModal, dataSourceType } = props;
   const [authentication, setAuthentication] = useState(1);
   const [currentDBType, setCurrentDBType] = useState(DatabaseTypeCode.MYSQL);
 
@@ -91,7 +92,7 @@ export default memo<IProps>(function ConnectionDialog(props) {
         authentication: 1,
         url: 'jdbc:mysql://localhost:3306',
         alias: `localhost[1]`,
-        envType: envType.DAILY
+        EnvType: EnvType.DAILY
 
       });
     } else {
@@ -142,41 +143,49 @@ export default memo<IProps>(function ConnectionDialog(props) {
     }
   }, [currentDBType])
 
+  useEffect(() => {
+    if (dataSourceType) {
+      setCurrentDBType(dataSourceType)
+      form.setFieldValue('type', dataSourceType);
+    }
+  }, [dataSourceType])
+
   const [form] = Form.useForm();
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(true);
-  };
 
   // 测试、保存、修改连接
   const saveConnection = (values: IConnectionBase, type: submitType) => {
-    let p = values
+    let p = values;
+
     if (type === submitType.UPDATE) {
-      p.id = rowData?.id
+      p.id = rowData?.id;
     }
+
     connectionServer[type](p).then(res => {
       if (type === submitType.TEST) {
-        message.success(res === false ? '测试连接失败' : '测试连接成功')
+        message.success(res === false ? '测试连接失败' : '测试连接成功');
       } else {
-        getConnectionList()
-        closeModal();
+        const dataSource: ITreeNode = {
+          name: p.alias,
+          key: res || p.id,
+          nodeType: TreeNodeType.DATASOURCE,
+          dataSourceId: res || p.id,
+          dataType: currentDBType,
+        }
+        submitCallback?.(dataSource);
       }
     })
-  };
+  }
 
   const submitConnection = (type: submitType) => {
     form.validateFields().then(res => {
-      saveConnection(res, type)
+      saveConnection(res, type);
     })
   }
 
   function onChangeForm(type: string) {
-    const newForm: any = form
-    const formData = newForm.getFieldValue()
+    const newForm: any = form;
+    const formData = newForm.getFieldValue();
+
     if (type === 'port' || type === 'hostComputer') {
       form.setFieldsValue({
         ...formData,
@@ -201,8 +210,8 @@ export default memo<IProps>(function ConnectionDialog(props) {
 
     if (type === 'url') {
       try {
-        const arr = formData.url.split(':')
-        const type: DatabaseTypeCode = arr[1]?.toUpperCase()
+        const arr = formData.url.split(':');
+        const type: DatabaseTypeCode = arr[1]?.toUpperCase();
         if (currentDBType === DatabaseTypeCode.ORACLE) {
           form.setFieldsValue({
             ...formData,
@@ -237,7 +246,7 @@ export default memo<IProps>(function ConnectionDialog(props) {
     }
 
     if (type === 'type') {
-      setCurrentDBType(formData.type)
+      setCurrentDBType(formData.type);
     }
 
     if (type == 'driven') {
@@ -257,9 +266,8 @@ export default memo<IProps>(function ConnectionDialog(props) {
 
   return <Modal
     title="连接数据库"
-    open={isModalVisible}
-    onOk={handleOk}
-    onCancel={handleCancel}
+    open={openModal}
+    onCancel={onCancel}
     footer={false}
   >
     <Form
@@ -272,7 +280,7 @@ export default memo<IProps>(function ConnectionDialog(props) {
         label="连接类型"
         name="type"
       >
-        <Select onChange={(value) => { onChangeForm('type') }}>
+        <Select value={currentDBType} onChange={(value) => { onChangeForm('type') }}>
           {
             databaseTypeList.map(item => {
               return <Option key={item.code} value={item.code}>{item.name}</Option>
@@ -360,14 +368,15 @@ export default memo<IProps>(function ConnectionDialog(props) {
             label="用户名"
             name="user"
           >
-            <Input />
+            <Input id='user' />
           </Form.Item>
           <Form.Item
+            id='password'
             label="密码"
             name="password"
           // rules={[{ required: true, message: '密码不可为空！' }]}
           >
-            <Input.Password />
+            <Input.Password id='password' />
           </Form.Item>
         </div>
       }
@@ -388,36 +397,33 @@ export default memo<IProps>(function ConnectionDialog(props) {
       </Form.Item>
       <Form.Item
         label="环境"
-        name="envType"
+        name="EnvType"
       >
         <Radio.Group options={envOptions} />
       </Form.Item>
-
-      <Form.Item wrapperCol={{ offset: 0 }}>
-        <div className={styles.formFooter}>
-          <div className={styles.test}>
-            {
-              !rowData &&
-              <Button
-                size='small'
-                onClick={submitConnection.bind(null, submitType.TEST)}
-                className={styles.test}>
-                测试连接
-              </Button>
-            }
-          </div>
-          <div className={styles.rightButton}>
-            <Button size='small' onClick={() => { closeModal() }} className={styles.cancel}>
-              取消
+      <div className={styles.formFooter}>
+        <div className={styles.test}>
+          {
+            !rowData &&
+            <Button
+              size='small'
+              onClick={submitConnection.bind(null, submitType.TEST)}
+              className={styles.test}>
+              测试连接
             </Button>
-            <Button className={styles.save} size='small' type="primary" onClick={submitConnection.bind(null, rowData ? submitType.UPDATE : submitType.SAVE)}>
-              {
-                rowData ? '修改' : '连接'
-              }
-            </Button>
-          </div>
+          }
         </div>
-      </Form.Item>
+        <div className={styles.rightButton}>
+          <Button size='small' onClick={onCancel} className={styles.cancel}>
+            取消
+          </Button>
+          <Button className={styles.save} size='small' type="primary" onClick={submitConnection.bind(null, rowData ? submitType.UPDATE : submitType.SAVE)}>
+            {
+              rowData ? '修改' : '连接'
+            }
+          </Button>
+        </div>
+      </div>
     </Form>
   </Modal >
 })

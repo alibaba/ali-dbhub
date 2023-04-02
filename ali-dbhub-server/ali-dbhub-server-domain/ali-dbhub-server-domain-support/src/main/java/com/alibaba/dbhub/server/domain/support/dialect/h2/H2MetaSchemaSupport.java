@@ -4,109 +4,118 @@
  */
 package com.alibaba.dbhub.server.domain.support.dialect.h2;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+import javax.validation.constraints.NotEmpty;
+
+import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.h2.mapper.H2MetaSchemaMapper;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.model.ShowDatabaseResult;
-import com.alibaba.dbhub.server.domain.support.model.Table;
-import com.alibaba.dbhub.server.domain.support.model.TableColumn;
-import com.alibaba.dbhub.server.domain.support.model.TableIndex;
-import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
-import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.exceptions.PersistenceException;
-import org.springframework.util.CollectionUtils;
 
 /**
  * @author jipengfei
  * @version : H2MetaSchemaSupport.java
  */
 @Slf4j
-public class H2MetaSchemaSupport implements MetaSchema<Table> {
-
-
-    @Override
-    public List<String> showDatabases() {
-        return EasyCollectionUtils.toList(getMapper().showDatabases(), ShowDatabaseResult::getDatabase);
-    }
+public class H2MetaSchemaSupport extends BaseMetaSchemaSupport implements MetaSchema {
 
     @Override
-    public DbTypeEnum supportDbType() {
+    public DbTypeEnum dbType() {
         return DbTypeEnum.H2;
 
     }
 
     @Override
-    public String showCreateTable(String databaseName, String schemaName, String tableName) {
-        try {
-            return getMapper().showCreateTable(databaseName, tableName);
-        } catch (PersistenceException e) {
-            // 这里有个坑 就是 h2的内存模式无法获取建表语句
-            // 报错直接返回空
-            // 想办法看看能不能解决
-            log.warn("h2查询建表语句失败", e);
-            return null;
-        }
+    public String tableDDL(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName) {
+        return getDDL(databaseName, schemaName, tableName);
     }
 
     @Override
-    public void dropTable(String databaseName, String schemaName, String tableName) {
-        getMapper().dropTable(databaseName, tableName);
+    public List<String> schemas(String databaseName) {
+        return getMapper().schemas(databaseName);
     }
 
     @Override
-    public int queryTableCount(String databaseName, String schemaName) {
-        return getMapper().selectTableCount(databaseName).intValue();
-    }
-
-    @Override
-    public List<Table> queryTableList(String databaseName, String tableName, int pageNo,
-        int pageSize) {
-        return getMapper().selectTables(databaseName, pageSize, pageNo <= 1 ? 0 : (pageNo - 1) * pageSize);
-    }
-
-    @Override
-    public Table queryTable(String databaseName, String schemaName, String tableName) {
-        return null;
-    }
-
-    @Override
-    public List<TableColumn> queryColumnList(String databaseName, String schemaName,
-        List<String> tableNames) {
-        return tableNames.stream().map(tableName -> getMapper().selectColumns(databaseName, tableName))
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TableIndex> queryIndexList(String databaseName, String schemaName,
-        List<String> tableNames) {
-        List<TableIndex> indexList = new ArrayList<>();
-        H2MetaSchemaMapper mapper = getMapper();
-        for (String tableName : tableNames) {
-            List<TableIndex> tableIndexList = mapper.selectTableIndexes(databaseName, tableName);
-            if (!CollectionUtils.isEmpty(tableIndexList)) {
-                List<TableIndexColumn> columnList = mapper.selectTableIndexColumns(databaseName, tableName);
-                Map<String, List<TableIndexColumn>> columnMap = EasyCollectionUtils.stream(columnList)
-                    .collect(Collectors.groupingBy(TableIndexColumn::getIndexName));
-                for (TableIndex tableIndex : tableIndexList) {
-                    tableIndex.setColumnList(columnMap.get(tableIndex.getName()));
-                }
-                indexList.addAll(tableIndexList);
-            }
-        }
-        return indexList;
-    }
-
-    private H2MetaSchemaMapper getMapper() {
+    public H2MetaSchemaMapper getMapper() {
         return DbhubDataSource.getInstance().getMapper(H2MetaSchemaMapper.class);
+    }
+
+    private String getDDL(String databaseName, String schemaName, String tableName) {
+        try {
+            Connection connection = DbhubDataSource.getInstance().getConnection();
+            // 查询表结构信息
+            ResultSet columns = connection.getMetaData().getColumns(databaseName, schemaName, tableName, null);
+            List<String> columnDefinitions = new ArrayList<>();
+            while (columns.next()) {
+                String columnName = columns.getString("COLUMN_NAME");
+                String columnType = columns.getString("TYPE_NAME");
+                int columnSize = columns.getInt("COLUMN_SIZE");
+                String remarks = columns.getString("REMARKS");
+                String defaultValue = columns.getString("COLUMN_DEF");
+                String nullable = columns.getInt("NULLABLE") == ResultSetMetaData.columnNullable ? "NULL" : "NOT NULL";
+                StringBuilder columnDefinition = new StringBuilder();
+                columnDefinition.append(columnName).append(" ").append(columnType);
+                if (columnSize != 0) {
+                    columnDefinition.append("(").append(columnSize).append(")");
+                }
+                columnDefinition.append(" ").append(nullable);
+                if (defaultValue != null) {
+                    columnDefinition.append(" DEFAULT ").append(defaultValue);
+                }
+                if (remarks != null) {
+                    columnDefinition.append(" COMMENT '").append(remarks).append("'");
+                }
+                columnDefinitions.add(columnDefinition.toString());
+            }
+
+            // 查询表索引信息
+            ResultSet indexes = connection.getMetaData().getIndexInfo(databaseName, schemaName, tableName, false,
+                false);
+            Map<String, List<String>> indexMap = new HashMap<>();
+            while (indexes.next()) {
+                String indexName = indexes.getString("INDEX_NAME");
+                String columnName = indexes.getString("COLUMN_NAME");
+                if (indexName != null) {
+                    if (!indexMap.containsKey(indexName)) {
+                        indexMap.put(indexName, new ArrayList<>());
+                    }
+                    indexMap.get(indexName).add(columnName);
+                }
+            }
+            StringBuilder createTableDDL = new StringBuilder("CREATE TABLE ");
+            createTableDDL.append(tableName).append(" (\n");
+            createTableDDL.append(String.join(",\n", columnDefinitions));
+            createTableDDL.append("\n);\n");
+
+            System.out.println("DDL建表语句：");
+            System.out.println(createTableDDL.toString());
+
+            // 输出索引信息
+            System.out.println("\nDDL索引语句：");
+            for (Map.Entry<String, List<String>> entry : indexMap.entrySet()) {
+                String indexName = entry.getKey();
+                List<String> columnList = entry.getValue();
+                String indexColumns = String.join(", ", columnList);
+                String createIndexDDL = String.format("CREATE INDEX %s ON %s (%s);", indexName, tableName,
+                    indexColumns);
+                System.out.println(createIndexDDL);
+                createTableDDL.append(createIndexDDL);
+            }
+            return createTableDDL.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

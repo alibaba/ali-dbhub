@@ -8,9 +8,7 @@ import Setting from '@/components/Setting';
 import BrandLogo from '@/components/BrandLogo';
 import i18n from '@/i18n';
 
-interface Iprops {
-
-}
+interface Iprops { }
 
 interface INavItem {
   title: string;
@@ -23,37 +21,53 @@ const LNKConfig: INavItem[] = [
   {
     title: i18n('home.nav.database'),
     icon: '\uec57',
-    path: '/connection',
+    path: '/'
   },
   {
     title: i18n('home.nav.myHistory'),
     icon: '\ue610',
-    path: '/sql-history',
+    path: '/sql-history'
+  },
+  {
+    title: 'chatRobot',
+    icon: "\ue70e",
+    path: '/chat'
+  },
+  {
+    title: '后台管理',
+    icon: "\ue66d",
+    path: '/manage'
   },
   {
     title: i18n('home.nav.github'),
     icon: '\ue885',
     path: 'https://github.com/alibaba/ali-dbhub',
     openBrowser: true
-  },
+  }
 ];
 
 export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
-  const [activeNav, setActiveNav] = useState<string>(LNKConfig[0].path);
+  const [activeNav, setActiveNav] = useState<INavItem>(LNKConfig[0]);
 
-  useEffect(() => { }, []);
+  useEffect(() => {
+    LNKConfig.map(item => {
+      if (window.location.hash.indexOf(item.path) === 1) {
+        setActiveNav(item);
+      }
+    })
+  }, []);
 
   function switchingNav(item: INavItem) {
     if (item.openBrowser) {
-      window.open(item.path)
+      window.open(item.path);
     } else {
       history.push(item.path);
-      setActiveNav(item.path);
+      setActiveNav(item);
     }
   }
 
   function jumpHome() {
-    history.push('/')
+    history.push('/');
   }
 
   return (
@@ -66,7 +80,7 @@ export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
               <li
                 key={item.path}
                 className={classnames({
-                  [styles.activeNav]: item.path == activeNav,
+                  [styles.activeNav]: item.path == activeNav.path,
                 })}
                 onClick={switchingNav.bind(null, item)}
               >
@@ -81,9 +95,7 @@ export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
         </div>
       </div>
       <div className={styles.layoutRight}>
-        <div className={styles.main}>
-          {children}
-        </div>
+        <div className={styles.main}>{children}</div>
       </div>
     </div>
   );

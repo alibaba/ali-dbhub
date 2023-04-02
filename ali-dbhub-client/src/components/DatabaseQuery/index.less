@@ -1,0 +1,86 @@
+@import '../../var.less';
+
+.databaseQuery {
+  opacity: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.operatingArea {
+  height: 30px;
+  background-color: var(--color-bg-200);
+  border-bottom: 1px solid var(--color-bg-100);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .left {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    button {
+      height: 20px;
+      line-height: 20px;
+      font-size: 12px;
+      border: 0;
+      padding: 0px 5px;
+      margin: 0px 5px;
+    }
+    div {
+      margin: 0px 2px;
+      padding: 0 3px;
+      height: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 2px;
+      &:hover {
+        filter: brightness(1.1);
+        background-color: var(--color-bg-hover);
+        cursor: pointer;
+      }
+    }
+    .icon {
+      font-size: 16px;
+      color: var(--custom-primary-color);
+    }
+  }
+  .right {
+    flex: 1;
+    width: 0px;
+    .f-single-line();
+    display: flex;
+    justify-content: flex-end;
+    span {
+      margin: 0px 20px;
+    }
+  }
+}
+
+.inputHub {
+  display: flex;
+  height: 50%;
+  .traditionSql {
+    height: 100%;
+    width: 50%;
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    .monacoEditor {
+      flex: 1;
+    }
+  }
+  .chatBox {
+    position: relative;
+    flex: 1;
+  }
+}
+
+.searchResult {
+  height: 0;
+  flex: 1;
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg-100);
+  overflow: hidden;
+}
