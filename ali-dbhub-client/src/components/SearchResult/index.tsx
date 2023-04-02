@@ -138,7 +138,7 @@ export function TableBox(props: ITableProps) {
       }
       return data
     })
-    columns.unshift({
+    columns?.unshift({
       title: '序号',
       dataIndex: 'aliDBHub_table_index',
       key: 'aliDBHub_table_index',
