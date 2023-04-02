@@ -27,7 +27,9 @@ export interface IUpdateWindowParams {
   databaseName: string;
 }
 
-const saveWindowTab = createRequest<ISaveConsole, number>('/api/operation/saved/create',{method: 'post'});
+const saveWindowTab = createRequest<ISaveConsole, number>('/api/operation/saved/create', { method: 'post' });
+
+const getWindowTab = createRequest<ISaveConsole, number>('/api/operation/saved/:id',{method: 'get'});
 
 const updateWindowTab = createRequest<IUpdateWindowParams, number>('/api/operation/saved/update',{method: 'put'});
 
@@ -45,5 +47,6 @@ export default {
   getHistoryList,
   saveWindowTab,
   deleteWindowTab,
-  createHistory
+  createHistory,
+  getWindowTab
 }
