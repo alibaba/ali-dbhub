@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState, useRef, createContext } from 'react';
 import { IOperationData } from '@/components/OperationTableModal';
+import { ITreeNode } from '@/types';
 
 export type ICreateConsoleDialog = false | {
   dataSourceId: number;
@@ -12,6 +13,7 @@ export interface IModel {
   createConsoleDialog: ICreateConsoleDialog;
   operationData: IOperationDataDialog;
   needRefreshNodeTree: any;
+  dblclickNodeData: ITreeNode | null;
 }
 
 export interface IContext {
@@ -19,12 +21,14 @@ export interface IContext {
   setcreateConsoleDialog: (value: ICreateConsoleDialog) => void;
   setOperationDataDialog: (value: IOperationDataDialog) => void;
   setNeedRefreshNodeTree: (value: any) => void;
+  setDblclickNodeData: (value: ITreeNode | null) => void;
 }
 
 const initDatabaseValue: IModel = {
   createConsoleDialog: false,
   operationData: false,
-  needRefreshNodeTree: {}
+  needRefreshNodeTree: {},
+  dblclickNodeData: null,
 }
 
 export const DatabaseContext = createContext<IContext>({} as any);
@@ -44,6 +48,13 @@ export default function DatabaseContextProvider({ children }: { children: React.
       operationData
     })
   }
+  const setDblclickNodeData = (dblclickNodeData: ITreeNode | null) => {
+    setStateModel({
+      ...model,
+      dblclickNodeData
+    })
+  }
+
   const setNeedRefreshNodeTree = (needRefreshNodeTree: any) => {
     setStateModel({
       ...model,
@@ -55,7 +66,8 @@ export default function DatabaseContextProvider({ children }: { children: React.
     model,
     setcreateConsoleDialog,
     setOperationDataDialog,
-    setNeedRefreshNodeTree
+    setNeedRefreshNodeTree,
+    setDblclickNodeData
   }}>
     {children}
   </DatabaseContext.Provider>

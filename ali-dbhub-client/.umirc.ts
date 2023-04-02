@@ -31,34 +31,22 @@ export default defineConfig({
       path: '/',
       component: '@/components/AppContainer',
       routes: [
-        { path: '/chat', exact: true, component: '@/pages/chat-ai' },
         { path: '/login', exact: true, component: '@/pages/login' },
         { path: '/error', component: '@/pages/error' },
         { path: '/demo', exact: true, component: '@/pages/demo' },
         {
-          path: '/database',
+          path: '/',
           component: '@/layouts/BaseLayout',
           routes: [
             {
               exact: true,
-              path: '/database',
+              path: '/',
               component: '@/pages/database',
             },
-          ],
-        },
-        {
-          path: '/',
-          component: '@/layouts/HomeLayout',
-          routes: [
             {
-              path: '/',
               exact: true,
-              component: '@/pages/connection',
-            },
-            {
-              path: '/connection',
-              exact: true,
-              component: '@/pages/connection',
+              path: '/database',
+              component: '@/pages/database',
             },
             {
               path: '/sql-history',
@@ -71,10 +59,15 @@ export default defineConfig({
               component: '@/pages/manage',
             },
             {
-              redirect: '/error',
+              path: '/chat',
+              exact: true,
+              component: '@/pages/chat-ai'
             },
-          ],
-        },
+            {
+              redirect: '/error',
+            }
+          ]
+        }
       ],
     },
   ],

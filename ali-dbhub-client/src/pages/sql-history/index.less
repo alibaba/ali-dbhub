@@ -1,8 +1,8 @@
 @import '../../var.less';
 
-.box{
+.box {
   flex: 1;
-  padding-right: 10px;
+  padding: 0px 20px 20px 20px;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 56px);
@@ -24,52 +24,55 @@
   display: flex;
   align-items: center;
 }
-.select{
+.select {
   width: 20%;
   margin: 0px 10px;
 }
 
 .searchInput {
+  width: 30%;
+  min-width: 300px;
 }
 
-.sqlListBox{
+.sqlListBox {
   flex: 1;
   overflow: scroll;
 }
 
-.sqlList{
+.sqlList {
   min-height: 100%;
   position: relative;
   overflow: hidden;
 }
 
-.sqlList .cardItem:nth-last-child(1){
+.sqlList .cardItem:nth-last-child(1) {
   border: 0;
 }
 
-.tips{
-    margin-top: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text-75);
-    font-size: 16px;
-    height: 24px;
-    font-family: 'Times New Roman', Times, serif;
-    font-style: italic;
-    margin-bottom: 36px;
-    &::before, &::after {
-      content: '';
-      display: block;
-      width: 100px;
-      height: 1px;
-      flex: 0 1 100px;
-      margin: 0 8px;
-      background: linear-gradient(to left, var(--color-border) 50%, transparent);
-    }
-    &::after {
-      background: linear-gradient(to right, var(--color-border) 50%, transparent);
-    }
+.tips {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-75);
+  font-size: 16px;
+  height: 24px;
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  margin-bottom: 36px;
+  &::before,
+  &::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 1px;
+    flex: 0 1 100px;
+    margin: 0 8px;
+    background: linear-gradient(to left, var(--color-border) 50%, transparent);
+  }
+  &::after {
+    background: linear-gradient(to right, var(--color-border) 50%, transparent);
+  }
 }
 
 .cardItem {
@@ -79,34 +82,35 @@
   padding: 6px 15px;
   cursor: pointer;
   border-bottom: 1px solid var(--color-border);
-  &:hover{
+  &:hover {
     background-color: var(--color-bg-hover);
-    .arrows{
+    .arrows {
       animation: shake-to-right 1s;
     }
   }
-  .ddlType{
+  .ddlType {
     width: 26px;
     height: 26px;
     background-size: cover;
     background-repeat: no-repeat;
-    img{
+    img {
       width: 100%;
       height: 100%;
     }
   }
-  .name,.databaseName{
+  .name,
+  .databaseName {
     flex: 1;
-    padding: 0 30px;
+    padding: 0 10px;
     .f-single-line();
   }
-  .arrows{
+  .arrows {
     display: flex;
     align-items: center;
     height: 24px;
 
     transform: translateX(0);
-    i{
+    i {
       color: var(--custom-primary-color);
       font-size: 24px;
     }
@@ -114,7 +118,15 @@
 }
 
 @keyframes shake-to-right {
-  0%,20%,40%,60%{ transform: translateX(0); }
-  10%,30%,50%{ transform: translateX(5px); }
+  0%,
+  20%,
+  40%,
+  60% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50% {
+    transform: translateX(5px);
+  }
 }
-

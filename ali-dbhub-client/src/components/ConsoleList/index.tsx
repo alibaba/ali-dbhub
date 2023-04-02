@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import ModifyTable from '@/components/ModifyTable/ModifyTable';
 import DatabaseQuery from '@/components/DatabaseQuery';
 import AppHeader from '@/components/AppHeader';
+import { qs } from '@/utils'
 
 import historyService from '@/service/history';
 
@@ -23,9 +24,10 @@ interface Iprops {
 }
 
 export default memo<Iprops>(function ConsoleList(props) {
-  const { setcreateConsoleDialog } = useContext(DatabaseContext);
+  const { consoleId } = qs<{ consoleId: string }>()
+  const { model, setcreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
-  const [activeKey, setActiveKey] = useState<string>();
+  const [activeKey, setActiveKey] = useState<string>(consoleId);
 
   useEffect(() => {
     getConsoleList();
@@ -39,25 +41,30 @@ export default memo<Iprops>(function ConsoleList(props) {
     };
 
     historyService.getSaveList(p).then((res) => {
-      setWindowList(
-        res.data?.map((item, index) => {
-          if (index === 0) {
-            setActiveKey(item.id + '');
-          }
-          return {
-            consoleId: item.id,
-            ddl: item.ddl,
-            name: item.name,
-            key: item.id + '',
-            DBType: item.type,
-            type: ConsoleType.SQLQ,
-            status: item.status,
-            databaseName: item.databaseName,
-            databaseSource: item?.dataSourceName,
-            dataSourceId: item.dataSourceId,
-          };
-        }),
-      );
+      let flag = false;
+      const newWindowList = res.data?.map((item, index) => {
+        if (!consoleId && index === 0) {
+          setActiveKey(item.id + '');
+        } else if (item.id === +consoleId) {
+          flag = true
+        }
+        return {
+          consoleId: item.id,
+          ddl: item.ddl,
+          name: item.name,
+          key: item.id + '',
+          DBType: item.type,
+          type: ConsoleType.SQLQ,
+          status: item.status,
+          databaseName: item.databaseName,
+          dataSourceName: item?.dataSourceName,
+          dataSourceId: item.dataSourceId
+        };
+      })
+      if (!flag) {
+        // newWindowList.push({})
+      }
+      setWindowList(newWindowList);
     });
   }
 
@@ -66,16 +73,7 @@ export default memo<Iprops>(function ConsoleList(props) {
       return <ModifyTable data={i as IEditTableConsole}></ModifyTable>;
     } else {
       return (
-        // <DatabaseQuery
-        //   // treeNodeClickMessage={treeNodeClickMessage}
-        //   // setTreeNodeClickMessage={setTreeNodeClickMessage}
-        //   windowTab={i as ISQLQueryConsole}
-        //   key={i.key}
-        //   activeTabKey={activeKey!}
-        // />
         <DatabaseQuery
-          // treeNodeClickMessage={treeNodeClickMessage}
-          // setTreeNodeClickMessage={setTreeNodeClickMessage}
           windowTab={i as ISQLQueryConsole}
           key={i.key}
           activeTabKey={activeKey!}
@@ -94,7 +92,6 @@ export default memo<Iprops>(function ConsoleList(props) {
     // } else {
     //   closeWindowTab(targetKey);
     // }
-    console.log(window)
     if (action === 'remove') {
       closeWindowTab(targetKey, window);
     }
