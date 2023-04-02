@@ -27,6 +27,14 @@ const RoleType: Record<IRole, string> = {
   normal: '普通用户',
 };
 
+const initUser = {
+  userName: '',
+  nickName: '',
+  password: '123',
+  password2: '123',
+  email: '',
+};
+
 export default function Manage() {
   const [visible, setVisible] = useState(false);
   const [pageNo, setPageNo] = useState(1);
@@ -43,12 +51,14 @@ export default function Manage() {
       pageNo,
       pageSize: 10,
     });
-    console.log('queryUserList', res);
     setListData(res?.data);
     setTotal(res?.total);
   }, [pageNo]);
 
-  const onOpen = useCallback(() => setVisible(true), []);
+  const onOpen = useCallback(() => {
+    setVisible(true);
+    setFormData(initUser);
+  }, []);
   const onClose = useCallback(() => {
     setFormData(undefined);
     setVisible(false);
@@ -57,8 +67,6 @@ export default function Manage() {
   /** 新增、编辑用户信息 */
   const addOrUpdateUser = async () => {
     if (!formData) return;
-
-    console.log('addOrUpdateUser', formData);
     let res;
     if (formData?.id) {
       res = await updateUser(formData);
@@ -84,12 +92,12 @@ export default function Manage() {
       {
         title: '邮箱',
         dataIndex: 'email',
-        key: 'email'
+        key: 'email',
       },
       {
         title: '角色',
         dataIndex: 'role',
-        key:'role',
+        key: 'role',
         render: (role?: IRole) =>
           role && (
             <Tag color={role === 'admin' ? 'lime' : 'blue'}>
@@ -106,7 +114,7 @@ export default function Manage() {
               type="link"
               onClick={() => {
                 console.log('edit', item, record);
-                setFormData(item);
+                setFormData({ ...item, password: undefined });
                 onOpen();
               }}
             >
@@ -155,8 +163,8 @@ export default function Manage() {
           closable={false}
           onClose={onClose}
           open={visible}
-          width={560}
-          className="add-user-drawer"
+          width={640}
+          className={styles['add-user-drawer']}
           extra={
             <Space>
               <Button onClick={onClose}>取消</Button>
@@ -169,79 +177,112 @@ export default function Manage() {
           <Form
             size="large"
             layout="horizontal"
+            labelCol={{ span: 4 }}
+            wrapperCol={{ span: 20 }}
             initialValues={formData}
             onValuesChange={(_: any, newData: IUser) =>
               setFormData({ ...formData, ...newData })
             }
+            scrollToFirstError
           >
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="用户名"
-                  name="userName"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input your user name!',
-                      whitespace: true,
-                    },
-                  ]}
-                >
-                  <Input placeholder="请输入" />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="昵称"
-                  name="nickName"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input your nickname!',
-                      whitespace: true,
-                    },
-                  ]}
-                >
-                  <Input placeholder="请输入" />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="邮箱"
-                  name="email"
-                  rules={[
-                    {
-                      type: 'email',
-                      message: 'The input is not valid E-mail!',
-                    },
-                    {
-                      required: true,
-                      message: 'Please input your E-mail!',
-                    },
-                  ]}
-                >
-                  <Input placeholder="请输入" />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item label="角色" name="role" required>
-                  <Select
-                    style={{ width: '100%' }}
-                    placeholder="请选择"
-                    options={[
-                      { label: '管理员', value: 'admin' },
-                      { label: '用户', value: 'user' },
-                    ]}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
+            <Form.Item
+              label="用户名"
+              name="userName"
+              rules={[
+                {
+                  required: true,
+                  message: '请输入用户名!',
+                  whitespace: true,
+                },
+              ]}
+            >
+              <Input placeholder="请输入" />
+            </Form.Item>
+
+            <Form.Item
+              label="昵称"
+              name="nickName"
+              rules={[
+                {
+                  required: true,
+                  message: '请输入昵称!',
+                  whitespace: true,
+                },
+              ]}
+            >
+              <Input placeholder="请输入" />
+            </Form.Item>
+
+            <Form.Item
+              label="邮箱"
+              name="email"
+              rules={[
+                {
+                  type: 'email',
+                  message: '请输入正确邮箱地址!',
+                },
+                {
+                  required: true,
+                  message: '请输入邮箱地址!',
+                },
+              ]}
+            >
+              <Input placeholder="请输入" />
+            </Form.Item>
+
+            <Form.Item
+              label="密码"
+              name={'password'}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入密码!',
+                },
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+            <Form.Item
+              label="确认密码"
+              name={'password2'}
+              rules={[
+                {
+                  required: true,
+                  message: '请确认密码!',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value: any) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('两次密码不一致'));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+              label="角色"
+              name="role"
+              rules={[
+                {
+                  required: true,
+                  message: '请选择用户角色!',
+                },
+              ]}
+            >
+              <Select
+                size="large"
+                placeholder="请选择"
+                defaultValue={'user'}
+                options={[
+                  { label: '管理员', value: 'admin' },
+                  { label: '用户', value: 'user' },
+                ]}
+              />
+            </Form.Item>
           </Form>
         </Drawer>
       )}
