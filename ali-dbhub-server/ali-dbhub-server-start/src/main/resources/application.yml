@@ -52,3 +52,5 @@ sa-token:
 chatgpt:
   apiKey: sk-xxxx
   apiHost: https://api.openai.com/
+  context:
+    length: 4
