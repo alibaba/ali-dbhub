@@ -49,6 +49,8 @@ interface IChatAIProps {
   /** 被使用形式 */
   type: 'page' | 'embed';
   classNames: string;
+
+  onClickImport?: (answer: string) => void;
 }
 
 function formatParams(obj: { [key: string]: any }) {
@@ -109,6 +111,7 @@ function ChatAI(props: IChatAIProps) {
     eventSource.onmessage = (event) => {
       if (event.data == '[DONE]') {
         setIsChatting(false);
+        console.log('xx=>', messages[curMessageIndex.current]?.answer);
         curMessageIndex.current++;
         if (curSourceTarget?.current) {
           curSourceTarget?.current?.close();
@@ -176,10 +179,23 @@ function ChatAI(props: IChatAIProps) {
         {(messages || []).map((item) => (
           <div className={styles.chatItem} key={item.key}>
             <div className={styles.title}>问题：{item.question}</div>
-            <div
-              className={styles.content}
-              dangerouslySetInnerHTML={{ __html: md.render(item.answer) }}
-            />
+            <div className={styles.contentWrapper}>
+              <div
+                className={styles.content}
+                dangerouslySetInnerHTML={{ __html: md.render(item.answer) }}
+              ></div>
+
+              {isChatting ? null : (
+                <div
+                  onClick={() =>
+                    props?.onClickImport && props?.onClickImport(item.answer)
+                  }
+                  className={styles.importBtn}
+                >
+                  一键导入
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>

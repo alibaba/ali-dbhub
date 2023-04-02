@@ -45,9 +45,26 @@
   padding: 10px;
 }
 
-.content {
+.contentWrapper {
+  position: relative;
   background-color: var(--color-content);
+  padding: 20px 0;
+}
+
+.content {
   padding: 0 10px;
+}
+
+.importBtn {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--color-text-45);
+  &:hover{
+    color: var(--color-text-85);
+  }
 }
 
 .chatBtnBlock {
