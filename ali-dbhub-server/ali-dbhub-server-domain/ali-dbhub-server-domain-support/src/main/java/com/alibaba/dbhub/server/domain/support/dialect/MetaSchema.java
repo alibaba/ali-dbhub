@@ -114,6 +114,18 @@ public interface MetaSchema<T extends BaseMapper> {
     List<? extends TableColumn> columns(@NotEmpty String databaseName, String schemaName,
         @NotEmpty String tableName);
 
+
+    /**
+     * 查询database下所有的列信息
+     *
+     * @param databaseName
+     * @param schemaName
+     * @param tableName
+     * @param columnName
+     * @return
+     */
+    List<? extends TableColumn> columns(@NotEmpty String databaseName, String schemaName,String tableName, String columnName);
+
     /**
      * 查询列的信息
      *
