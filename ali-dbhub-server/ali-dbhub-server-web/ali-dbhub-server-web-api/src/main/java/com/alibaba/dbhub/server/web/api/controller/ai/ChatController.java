@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -60,6 +61,9 @@ public class ChatController {
     @Autowired
     private ChatConverter chatConverter;
 
+    @Value("${chatgpt.context.length}")
+    private Integer contextLength;
+
     public ChatController(OpenAiStreamClient openAiStreamClient) {
         this.openAiStreamClient = openAiStreamClient;
     }
@@ -77,7 +81,7 @@ public class ChatController {
     public SseEmitter chat(@RequestParam("message") String msg, @RequestHeader Map<String, String> headers)
         throws IOException {
         //默认30秒超时,设置为0L则永不超时
-        SseEmitter sseEmitter = new SseEmitter(0l);
+        SseEmitter sseEmitter = new SseEmitter(0L);
         String uid = headers.get("uid");
         if (StrUtil.isBlank(uid)) {
             throw new BaseException(CommonError.SYS_ERROR);
@@ -143,16 +147,16 @@ public class ChatController {
         }
 
         String messageContext = (String)LocalCache.CACHE.get(uid);
-        List<String> messages = new ArrayList<>();
+        String msg = queryRequest.getMessage();
+        Message currentMessage = Message.builder().content(msg).role(Message.Role.USER).build();
+        List<Message> messages = new ArrayList<>();
         if (StrUtil.isNotBlank(messageContext)) {
-            messages = JSONUtil.toList(messageContext, String.class);
-            if (messages.size() >= 10) {
-                messages = messages.subList(1, 10);
+            messages = JSONUtil.toList(messageContext, Message.class);
+            if (messages.size() >= contextLength) {
+                messages = messages.subList(1, contextLength);
             }
-            messages.add(queryRequest.getMessage());
-        } else {
-            messages.add(queryRequest.getMessage());
         }
+        messages.add(currentMessage);
         sseEmitter.send(SseEmitter.event().id(uid).name("连接成功！！！！").data(LocalDateTime.now()).reconnectTime(3000));
         sseEmitter.onCompletion(() -> {
             log.info(LocalDateTime.now() + ", uid#" + uid + ", on completion");
@@ -180,16 +184,17 @@ public class ChatController {
                 entry.getValue().stream().map(TableColumn::getName).collect(
                     Collectors.joining(", ")))).collect(Collectors.toList());
         String properties = String.join("\n#", tableSchemas);
-        String message = String.join("\n# ", messages);
         String prompt = CollectionUtils.isNotEmpty(tableSchemas) ? String.format(
             "### %s SQL tables, with their properties:\n#\n# %s\n#\n### %s", dataSourceType, properties,
-            message) : String.format("### %s", message);
+            msg) : String.format("### %s", msg);
+        currentMessage.setContent(prompt);
 
         // 获取返回结果
         OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
         Completion completion = Completion.builder().model("text-davinci-003").maxTokens(150).stream(true).stop(
-            Lists.newArrayList("#", ";")).user(uid).prompt(prompt).build();
+            Lists.newArrayList("#", ";")).user(uid).prompt(JSONUtil.toJsonStr(messages)).build();
         openAiStreamClient.streamCompletions(completion, openAIEventSourceListener);
+        messages.get(messages.size() - 1).setContent(msg);
         LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
         return sseEmitter;
 
