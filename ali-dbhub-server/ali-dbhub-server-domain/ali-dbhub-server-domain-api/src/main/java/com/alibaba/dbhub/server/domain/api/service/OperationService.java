@@ -36,6 +36,14 @@ public interface OperationService {
     ActionResult update(OperationUpdateParam param);
 
     /**
+     * 根据id查询
+     *
+     * @param id
+     * @return
+     */
+    DataResult<Operation> find(@NotNull Long id);
+
+    /**
      * 删除
      *
      * @param id
