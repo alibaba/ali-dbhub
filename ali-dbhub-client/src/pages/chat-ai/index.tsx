@@ -6,24 +6,9 @@ import mila from 'markdown-it-link-attributes';
 import mdKatex from '@traptitech/markdown-it-katex';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import 'katex/dist/katex.min.css';
-// import 'github-markdown-css/github-markdown-light.css'
-// import 'highlight.js/styles/base16'
 import './hljs.css';
 import styles from './index.less';
-
-function uuid() {
-  var s = [];
-  var hexDigits = '0123456789abcdef';
-  for (var i = 0; i < 36; i++) {
-    s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-  }
-  s[14] = '4'; // bits 12-15 of the time_hi_and_version field to 0010
-  s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
-  s[8] = s[13] = s[18] = s[23] = '-';
-
-  var uuid = s.join('');
-  return uuid;
-}
+import { uuid } from '@/utils/common';
 
 const md = new MarkdownIt({
   linkify: true,
@@ -52,7 +37,14 @@ md.use(mdKatex, {
 });
 md.use(mila, { attrs: { target: '_blank', rel: 'noopener' } });
 
-function ChatAI() {
+interface IChatAIProps {
+  /** 数据源id */
+  dataSourceId: number;
+  /** DB名称 */
+  databaseName: string;
+}
+
+function ChatAI(props: IChatAIProps) {
   const [messages, setMessages] = useState<
     Array<{ key: string; question: string; answer: string }>
   >([]);
@@ -62,8 +54,9 @@ function ChatAI() {
   const [isChatting, setIsChatting] = useState(false);
   const flowRef = useRef<HTMLDivElement>(null);
   const curSourceTarget = useRef<EventTarget>(null);
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
+
+  const handleInputChange = (event: Event) => {
+    setInputValue(event?.target?.value);
   };
 
   const handleSendMessage = () => {
@@ -92,8 +85,11 @@ function ChatAI() {
     }
 
     let text = '';
+    // dataSourceId number
+    // databaseName string
+    const params = `message=${question}&dataSourceId=${props.dataSourceId}&databaseName=${props.databaseName}`;
     const eventSource = new EventSourcePolyfill(
-      'http://38.55.129.58/api/ai/chat?message=' + question,
+      'http://38.55.129.58/api/ai/chat?' + params,
       {
         headers: {
           uid,
@@ -108,9 +104,12 @@ function ChatAI() {
     eventSource.onmessage = (event) => {
       if (event.data == '[DONE]') {
         setIsChatting(false);
+        console.log('');
         if (curSourceTarget?.current) {
           curSourceTarget?.current?.close();
         }
+        const message = messages.find((i) => i.question === question);
+        console.log('message===>', message?.answer);
         return;
       }
       let json_data = JSON.parse(event.data);
@@ -144,7 +143,8 @@ function ChatAI() {
         console.log('remove eventSource');
       });
     };
-  }, [question]);
+  }, [question, props.dataSourceId, props.databaseName]);
+
   return (
     <div className={styles.chatAI}>
       <div className={styles.chatFlow} ref={flowRef}>
@@ -181,7 +181,7 @@ function ChatAI() {
             style={{ marginLeft: '20px' }}
             onClick={() => {
               curSourceTarget?.current?.close();
-              setIsChatting(false)
+              setIsChatting(false);
             }}
           >
             停止
