@@ -117,10 +117,6 @@ export default memo<Iprops>(function ConsoleList(props) {
     };
 
     historyService.getSaveList(p).then((res) => {
-      if (!res.data?.length) {
-        return
-      }
-
       let flag = false;
 
       const newWindowList = res.data?.map((item, index) => {
@@ -142,7 +138,7 @@ export default memo<Iprops>(function ConsoleList(props) {
           dataSourceId: item.dataSourceId
         };
       })
-      if (!flag) {
+      if (!flag && consoleId) {
         historyService.getWindowTab({ id: consoleId }).then((res: any) => {
           newWindowList.push({
             consoleId: res.id,

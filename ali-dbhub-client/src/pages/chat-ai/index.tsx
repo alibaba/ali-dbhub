@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { Input, Button, message } from 'antd';
 import classnames from 'classnames';
 import MarkdownIt from 'markdown-it';
@@ -10,6 +10,7 @@ import 'katex/dist/katex.min.css';
 import styles from './index.less';
 import { uuid } from '@/utils/common';
 import './hljs.css';
+import { DatabaseContext } from '@/context/database';
 
 const md = new MarkdownIt({
   linkify: true,
@@ -76,6 +77,7 @@ function ChatAI(props: IChatAIProps) {
   const curSourceTarget = useRef<EventTarget>(null);
   const uid = useRef<string>('');
   const curMessageIndex = useRef<number>(0);
+  const { setAiImportSql } = useContext(DatabaseContext);
 
   useEffect(() => {
     if (flowRef?.current && autoScroll) {
@@ -185,17 +187,14 @@ function ChatAI(props: IChatAIProps) {
                 className={styles.content}
                 dangerouslySetInnerHTML={{ __html: md.render(item.answer) }}
               ></div>
-
-              {isChatting ? null : (
+              {(!isChatting && type === 'embed') ? (
                 <div
-                  onClick={() =>
-                    props?.onClickImport && props?.onClickImport(item.answer)
-                  }
+                  onClick={() => setAiImportSql(item.answer)}
                   className={styles.importBtn}
                 >
                   一键导入
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         ))}
