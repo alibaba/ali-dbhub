@@ -195,18 +195,10 @@ function TreeNode(props: TreeNodeIProps) {
     }
   }
 
-  function nodeClick() {
-    if (data.nodeType === TreeNodeType.TABLE || data.nodeType === TreeNodeType.LINE) {
-      handleClick(data);
-    }
-  }
-
-
   return show ? <>
     <Dropdown overlay={renderMenu()} trigger={['contextMenu']}>
       <Tooltip placement="right" title={renderTitle(data)}>
         <div
-          onClick={nodeClick}
           onDoubleClick={nodeDoubleClick}
           className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
           <div className={styles.left}>
