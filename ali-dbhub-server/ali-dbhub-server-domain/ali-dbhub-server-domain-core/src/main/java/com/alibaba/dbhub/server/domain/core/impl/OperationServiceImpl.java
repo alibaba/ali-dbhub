@@ -103,8 +103,9 @@ public class OperationServiceImpl implements OperationService {
         ListResult<DataSource> dataSourceListResult = dataSourceService.queryByIds(dataSourceIds);
         Map<Long, DataSource> dataSourceMap = dataSourceListResult.getData().stream().collect(
             Collectors.toMap(DataSource::getId, Function.identity(), (a, b) -> a));
-        userSavedDdlDOS.stream().forEach(userSavedDdl -> userSavedDdl.setDataSourceName(
-            dataSourceMap.get(userSavedDdl.getDataSourceId()).getAlias()));
+        userSavedDdlDOS.forEach(userSavedDdl -> userSavedDdl.setDataSourceName(
+            dataSourceMap.containsKey(userSavedDdl.getDataSourceId()) ? dataSourceMap.get(
+                userSavedDdl.getDataSourceId()).getAlias() : null));
         return PageResult.of(userSavedDdlDOS, iPage.getTotal(), param);
     }
 }
