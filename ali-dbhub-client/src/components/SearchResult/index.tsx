@@ -138,17 +138,17 @@ export function TableBox(props: ITableProps) {
       }
       return data
     })
-    columns?.unshift({
-      title: '序号',
-      dataIndex: 'aliDBHub_table_index',
-      key: 'aliDBHub_table_index',
-      fixed: 'left',
-      render: (text: any) => (
-        <div className={styles.tableIndex}>
-          {text}
-        </div>
-      ),
-    })
+    // columns?.unshift({
+    //   title: '序号',
+    //   dataIndex: 'aliDBHub_table_index',
+    //   key: 'aliDBHub_table_index',
+    //   fixed: 'left',
+    //   render: (text: any) => (
+    //     <div className={styles.tableIndex}>
+    //       {text}
+    //     </div>
+    //   ),
+    // })
     setColumns(columns)
   }, [headerList])
 
