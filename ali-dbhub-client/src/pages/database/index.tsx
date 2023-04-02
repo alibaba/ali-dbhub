@@ -119,12 +119,12 @@ export default memo<IProps>(function DatabasePage({ className }) {
       <DraggableDivider callback={callback} volatileRef={letfRef} />
       <div className={styles.main}>
         <ConsoleList></ConsoleList>
-        <div className={styles.footer}>
+        {/* <div className={styles.footer}>
           <div className={classnames({ [styles.reversalIconBox]: !isUnfold }, styles.iconBox)} onClick={moveLeftAside}>
             <Iconfont code='&#xeb93;'></Iconfont>
           </div>
           <div></div>
-        </div>
+        </div> */}
       </div>
     </div>
     <OperationTableModal />

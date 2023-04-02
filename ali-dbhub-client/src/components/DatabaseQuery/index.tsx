@@ -8,6 +8,7 @@ import { DatabaseTypeCode, TreeNodeType, WindowTabStatus, OSType } from '@/utils
 import Iconfont from '@/components/Iconfont';
 import MonacoEditor, { setEditorHint, IHintData } from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
+import ChatAI from '../../pages/chat-ai';
 import SearchResult from '@/components/SearchResult';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import mysqlServer from '@/service/mysql';
@@ -199,33 +200,40 @@ export default memo<IProps>(function DatabaseQuery(props) {
 
   return <>
     <div className={classnames(styles.databaseQuery)}>
-      <div className={styles.operatingArea}>
-        <div className={styles.left}>
-          <div>
-            <Tooltip placement="bottom" title="执行">
-              <Iconfont code="&#xe626;" className={styles.icon} onClick={executeSql} />
-            </Tooltip>
+      <div className={styles.inputHub}>
+        <div className={styles.traditionSql}>
+          <div className={styles.operatingArea}>
+            <div className={styles.left}>
+              <div>
+                <Tooltip placement="bottom" title="执行">
+                  <Iconfont code="&#xe626;" className={styles.icon} onClick={executeSql} />
+                </Tooltip>
+              </div>
+              <div>
+                <Tooltip placement="bottom" title={OSnow() === OSType.WIN ? "保存 Ctrl + S" : "保存 CMD + S"} >
+                  <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} />
+                </Tooltip>
+              </div>
+              <div>
+                <Tooltip placement="bottom" title="格式化">
+                  <Iconfont code="&#xe7f8;" className={styles.icon} onClick={formatValue} />
+                </Tooltip>
+              </div>
+            </div>
+            <div className={styles.right}>
+              <span>dataSourceName: {windowTab.dataSourceName}</span>
+              <span>database: {windowTab.databaseName}</span>
+            </div>
           </div>
-          <div>
-            <Tooltip placement="bottom" title={OSnow() === OSType.WIN ? "保存 Ctrl + S" : "保存 CMD + S"} >
-              <Iconfont code="&#xe645;" className={styles.icon} onClick={saveWindowTabTab} />
-            </Tooltip>
-          </div>
-          <div>
-            <Tooltip placement="bottom" title="格式化">
-              <Iconfont code="&#xe7f8;" className={styles.icon} onClick={formatValue} />
-            </Tooltip>
+          <div ref={monacoEditorBox} className={styles.monacoEditor}>
+            {
+              <MonacoEditor onSave={saveWindowTabTab} onChange={monacoEditorChange} id={windowTab.consoleId!} getEditor={getEditor}></MonacoEditor>
+            }
           </div>
         </div>
-        <div className={styles.right}>
-          <span>dataSourceName: {windowTab.dataSourceName}</span>
-          <span>database: {windowTab.databaseName}</span>
+        <div className={styles.chatBox}>
+          <ChatAI classNames={styles.chatAI}></ChatAI>
         </div>
-      </div>
-      <div ref={monacoEditorBox} className={styles.monacoEditor}>
-        {
-          <MonacoEditor onSave={saveWindowTabTab} onChange={monacoEditorChange} id={windowTab.consoleId!} getEditor={getEditor}></MonacoEditor>
-        }
       </div>
       <DraggableDivider callback={callback} direction='row' min={200} volatileRef={monacoEditorBox} />
       <div className={styles.searchResult}>

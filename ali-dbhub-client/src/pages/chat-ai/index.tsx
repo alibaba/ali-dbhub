@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Input, Button } from 'antd';
+import classnames from 'classnames';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
 import mila from 'markdown-it-link-attributes';
@@ -10,6 +11,10 @@ import 'katex/dist/katex.min.css';
 // import 'highlight.js/styles/base16'
 import './hljs.css';
 import styles from './index.less';
+
+interface IProps {
+  classNames: string;
+}
 
 function uuid() {
   var s = [];
@@ -46,13 +51,14 @@ const md = new MarkdownIt({
     return `<pre class="hljs" style="max-width: 50vw; overflow: auto"><code>${content}</code></pre>`;
   },
 });
+
 md.use(mdKatex, {
   blockClass: 'katexmath-block rounded-md p-[10px]',
   errorColor: ' #cc0000',
 });
 md.use(mila, { attrs: { target: '_blank', rel: 'noopener' } });
 
-function ChatAI() {
+function ChatAI({ classNames }: IProps) {
   const [messages, setMessages] = useState<
     Array<{ key: string; question: string; answer: string }>
   >([]);
@@ -146,7 +152,7 @@ function ChatAI() {
     };
   }, [question]);
   return (
-    <div className={styles.chatAI}>
+    <div className={classnames(classNames, styles.chatAI)}>
       <div className={styles.chatFlow} ref={flowRef}>
         {(messages || []).map((item) => (
           <div className={styles.chatItem} key={item.key}>
