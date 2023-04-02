@@ -64,6 +64,18 @@ public class OperationSavedController {
     }
 
     /**
+     * 根据id查询console
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public DataResult<OperationVO> get(@PathVariable("id") Long id) {
+        DataResult<Operation> dtoPageResult = operationService.find(id);
+        return DataResult.of(operationWebConverter.dto2vo(dtoPageResult.getData()));
+    }
+
+    /**
      * 新增我的保存
      *
      * @param request
