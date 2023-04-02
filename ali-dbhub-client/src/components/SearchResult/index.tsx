@@ -137,19 +137,17 @@ export function TableBox(props: ITableProps) {
       }
       return data
     })
-    console.log(columns)
-
-    columns?.unshift({
-      title: '序号',
-      dataIndex: 'aliDBHub_table_index',
-      key: 'aliDBHub_table_index',
-      fixed: 'left',
-      render: (text: any) => (
-        <div className={styles.tableIndex}>
-          {text}
-        </div>
-      ),
-    })
+    // columns?.unshift({
+    //   title: '序号',
+    //   dataIndex: 'aliDBHub_table_index',
+    //   key: 'aliDBHub_table_index',
+    //   fixed: 'left',
+    //   render: (text: any) => (
+    //     <div className={styles.tableIndex}>
+    //       {text}
+    //     </div>
+    //   ),
+    // })
     setColumns(columns)
   }, [headerList])
 
@@ -160,7 +158,7 @@ export function TableBox(props: ITableProps) {
       item.map((i: ITableCellItem, index: number) => {
         rowData[columns[index].title] = i[TableDataTypeCorresValue[i.type]]
       })
-      rowData.aliDBHub_table_index = index + 1
+      // rowData.aliDBHub_table_index = index + 1
       rowData.key = index
       return rowData
     })
@@ -168,7 +166,13 @@ export function TableBox(props: ITableProps) {
   }, [columns])
 
   return <div {...rest} className={classnames(className, styles.tableBox)}>
-    <Table bordered pagination={false} columns={columns} dataSource={tableData} size="small" />
+    {
+      dataList?.length
+        ?
+        <Table bordered pagination={false} columns={columns} dataSource={tableData} size="small" />
+        :
+        <StateIndicator state='success' text='执行成功'></StateIndicator>
+    }
     <Modal
       title={viewTableCellData?.name}
       open={!!viewTableCellData?.name}
