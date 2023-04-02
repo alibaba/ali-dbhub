@@ -13,7 +13,6 @@ import { ITreeNode } from '@/types';
 import { DatabaseContext } from '@/context/database';
 import connectionServer from '@/service/connection';
 import mysqlServer from '@/service/mysql';
-import { getDataSource } from '@/components/Tree';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -48,14 +47,32 @@ function TreeNodeRightClick(props: Iprops) {
 
   const { getNodeData } = nodeConfig;
 
+  const baseMenu: IMenu<string>[] = [
+    {
+      title: '新建控制台',
+      key: 'newConsole',
+      icon: '\ue631'
+    }
+  ]
+
+  function baseClick(item: IMenu<string>) {
+    if (item.key === 'newConsole') {
+      setcreateConsoleDialog({
+        dataSourceId: data.dataSourceId!,
+        databaseName: data.databaseName!,
+      })
+    }
+  }
+
   const tableMenu: IMenu<string>[] = [
+    ...baseMenu,
     // {
     //   title: '设计表结构',
     //   key: 'edit',
     //   icon: '\ue60f'
     // },
     {
-      title: '导出建表语句',
+      title: '导出ddl',
       key: 'export',
       icon: '\ue613'
     },
@@ -67,11 +84,7 @@ function TreeNodeRightClick(props: Iprops) {
   ]
 
   const dataBaseMenu: IMenu<string>[] = [
-    {
-      title: '新建控制台',
-      key: 'newConsole',
-      icon: '\ue631'
-    },
+    ...baseMenu,
     {
       title: '新建Table',
       key: 'createTable',
@@ -84,11 +97,7 @@ function TreeNodeRightClick(props: Iprops) {
     },
   ]
   const tablesMenu: IMenu<string>[] = [
-    {
-      title: '新建Table',
-      key: 'createTable',
-      icon: '\ue6b6'
-    },
+    ...baseMenu,
     {
       title: '刷新',
       key: 'refresh',
@@ -97,6 +106,7 @@ function TreeNodeRightClick(props: Iprops) {
   ]
 
   const dataSourseMenu: IMenu<string>[] = [
+    ...baseMenu,
     {
       title: '刷新',
       key: 'refresh',
@@ -175,7 +185,9 @@ function TreeNodeRightClick(props: Iprops) {
       refresh()
     } else if (item.key === 'remove') {
       connectionServer.remove({ id: +data.key }).then(res => {
-        getDataSource(setTreeData)
+        treeConfig[TreeNodeType.DATASOURCES]?.getNodeData({} as any).then(res => {
+          setTreeData(res)
+        })
       })
     }
     closeMenu();
@@ -242,6 +254,26 @@ function TreeNodeRightClick(props: Iprops) {
       </Menu>
     </div>
 
+  } else if (
+    data.nodeType == TreeNodeType.COLUMNS ||
+    data.nodeType == TreeNodeType.COLUMN ||
+    data.nodeType == TreeNodeType.INDEXES ||
+    data.nodeType == TreeNodeType.INDEXE ||
+    data.nodeType == TreeNodeType.KEYS ||
+    data.nodeType == TreeNodeType.KEY
+  ) {
+    return <div className={styles.menuBox}>
+      <Menu>
+        {
+          tablesMenu.map(item => {
+            return <MenuItem key={item.key} onClick={baseClick.bind(null, item)}>
+              <Iconfont code={item.icon!}></Iconfont>
+              {item.title}
+            </MenuItem>
+          })
+        }
+      </Menu>
+    </div>
   } else {
     return <span></span>
   }
