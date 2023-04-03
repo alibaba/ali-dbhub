@@ -23,8 +23,7 @@ export default defineConfig({
     type: 'hash',
   },
   base: '/',
-  // publicPath: '/',
-  publicPath: './static/front/',
+  publicPath: process.env.NODE_ENV === 'prod' ? './static/front/' : '/',
   hash: false,
   routes: [
     {

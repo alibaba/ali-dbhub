@@ -37,7 +37,7 @@ function loadData(data: ITreeNode) {
   return treeConfig[data.nodeType]?.getNodeData(data);
 }
 
-function Tree(props: IProps) {
+function Tree(props: IProps,ref: any) {
   const { className, cRef, addTreeData } = props;
   const [treeData, setTreeData] = useState<ITreeNode[] | null>(null);
   const [searchedTreeData, setSearchedTreeData] = useState<ITreeNode[] | null>(null);
