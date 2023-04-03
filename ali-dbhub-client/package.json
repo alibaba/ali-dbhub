@@ -11,7 +11,7 @@
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
     "electron": "electron .",
-    "build2Server": "mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static && rm -rf ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front &&  umi build && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front"
+    "build2Server": "cross-env NODE_ENV=prod webpack --config build/webpack.config.js mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static && rm -rf ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front &&  umi build && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
@@ -53,6 +53,7 @@
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.5.34",
     "classnames": "^2.3.2",
+    "cross-env": "^7.0.3",
     "lint-staged": "^10.0.7",
     "prettier": "^2.2.0",
     "typescript": "^4.1.2",

@@ -4,6 +4,10 @@ import { ITreeNode } from '@/types';
 import querystring from 'query-string';
 
 // TODO: 
+// 我们有的版本
+// 1. 线上dome版本 / 本地jar包运行版本
+// 2. 本地调试版本
+// 3. 桌面端版本
 export const env = (() => {
   const { host } = location;
   // 本地jar包启用的服务
@@ -11,7 +15,7 @@ export const env = (() => {
     return 'jar';
   }
   // 桌面端
-  if (host.indexOf('') > -1) {
+  if (host.indexOf('dist/index.html') > -1) {
     return 'desktop';
   }
 })();
@@ -219,5 +223,6 @@ export function scrollPage(position: number, element?: HTMLElement, timeScale = 
 
 // 获取地址栏 ? 参数 如果换成历史模式需要改这里
 export function qs<T>() {
-  return querystring.parse(location.hash.split('?')[1]) as T
+  const parms:unknown = querystring.parse(location.hash.split('?')[1])
+  return parms as T
 }
