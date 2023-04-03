@@ -222,6 +222,7 @@ function ChatAI(props: IChatAIProps) {
             onClick={() => {
               curSourceTarget?.current?.close();
               setIsChatting(false);
+              curMessageIndex.current++;
             }}
           >
             停止
