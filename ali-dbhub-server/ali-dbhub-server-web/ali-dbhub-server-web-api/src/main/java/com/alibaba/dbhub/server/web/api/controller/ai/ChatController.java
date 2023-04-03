@@ -192,7 +192,7 @@ public class ChatController {
         // 获取返回结果
         OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
         Completion completion = Completion.builder().model("text-davinci-003").maxTokens(150).stream(true).stop(
-            Lists.newArrayList("#", ";")).user(uid).prompt(JSONUtil.toJsonStr(messages)).build();
+            Lists.newArrayList("#", ";")).user(uid).prompt(prompt).build();
         openAiStreamClient.streamCompletions(completion, openAIEventSourceListener);
         messages.get(messages.size() - 1).setContent(msg);
         LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
