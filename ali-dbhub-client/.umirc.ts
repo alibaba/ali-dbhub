@@ -18,7 +18,7 @@ const chainWebpack = (config: any, { webpack }: any) => {
 };
 
 export default defineConfig({
-  title: 'dbHub',
+  title: 'Char2DB',
   history: {
     type: 'hash',
   },
