@@ -136,6 +136,6 @@ public interface MetaSchema<T extends BaseMapper> {
 
 
 
-    T  getMapper();
+    //T  getMapper();
 
 }
