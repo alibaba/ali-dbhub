@@ -37,5 +37,5 @@ public class ShowCreateTableParam {
     /**
      * 表所属schema
      */
-    private String tableSchema;
+    private String schemaName;
 }

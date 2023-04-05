@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Cell;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
+import com.alibaba.dbhub.server.domain.support.model.Procedure;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
@@ -37,6 +38,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Dbhub 统一数据库连接管理
@@ -188,7 +190,9 @@ public class DataSource extends DynamicDataSource {
      */
 
     public <R> R executeSql(String sql, Function<ResultSet, R> function) {
-        Assert.notNull(sql, "SQL must not be null");
+        if(StringUtils.isEmpty(sql)){
+            return null;
+        }
         log.info("execute:{}", sql);
         Statement stmt = null;
         try {
@@ -334,6 +338,7 @@ public class DataSource extends DynamicDataSource {
                 tables.add(resultSet.getString("TABLE_CAT"));
             }
         } catch (SQLException e) {
+            close();
             throw new RuntimeException(e);
         }
         return tables;
@@ -354,6 +359,7 @@ public class DataSource extends DynamicDataSource {
                 schemaList.add(resultSet.getString("TABLE_SCHEM"));
             }
         } catch (SQLException e) {
+            close();
             throw new RuntimeException(e);
         }
         return schemaList;
@@ -372,11 +378,12 @@ public class DataSource extends DynamicDataSource {
         List<Table> tables = Lists.newArrayList();
         try {
             ResultSet resultSet = getConnection().getMetaData().getTables(databaseName, schemaName, tableName,
-                new String[] {"TABLE"});
+                types);
             while (resultSet.next()) {
                 tables.add(buildTable(resultSet));
             }
         } catch (SQLException e) {
+            close();
             throw new RuntimeException(e);
         }
         return tables;
@@ -406,11 +413,11 @@ public class DataSource extends DynamicDataSource {
         try {
             ResultSet resultSet = getConnection().getMetaData().getColumns(databaseName, schemaName, tableName,
                 columnName);
-            List<String> columnDefinitions = new ArrayList<>();
             while (resultSet.next()) {
                 tableColumns.add(buildColumn(resultSet));
             }
         } catch (Exception e) {
+            close();
             throw new RuntimeException(e);
         }
         return tableColumns;
@@ -469,6 +476,7 @@ public class DataSource extends DynamicDataSource {
                     tableIndices.add(tableIndex);
                 });
         } catch (SQLException e) {
+            close();
             throw new RuntimeException(e);
         }
         return tableIndices;
@@ -490,5 +498,76 @@ public class DataSource extends DynamicDataSource {
         tableIndexColumn.setSchemaName(resultSet.getString("TABLE_SCHEM"));
         tableIndexColumn.setTableName(resultSet.getString("TABLE_NAME"));
         return tableIndexColumn;
+    }
+
+    /**
+     * 获取所有的函数
+     * @param databaseName
+     * @param schemaName
+     * @return
+     */
+    public List<com.alibaba.dbhub.server.domain.support.model.Function> functions(String databaseName, String schemaName) {
+        List<com.alibaba.dbhub.server.domain.support.model.Function> functions = Lists.newArrayList();
+        try {
+            ResultSet resultSet = getConnection().getMetaData().getFunctions(databaseName, schemaName, null);
+            while (resultSet.next()) {
+                functions.add(buildFunction(resultSet));
+            }
+        } catch (Exception e) {
+            close();
+            throw new RuntimeException(e);
+        }
+        return functions;
+    }
+
+    /**
+     * 获取所有的存储过程
+     * @param databaseName
+     * @param schemaName
+     * @return
+     */
+    public List<Procedure> procedures(String databaseName, String schemaName) {
+        List<Procedure> procedures = Lists.newArrayList();
+        try {
+            ResultSet resultSet = getConnection().getMetaData().getProcedures(databaseName, schemaName, null);
+            while (resultSet.next()) {
+                procedures.add(buildProcedure(resultSet));
+            }
+        } catch (Exception e) {
+            close();
+            throw new RuntimeException(e);
+        }
+        return procedures;
+    }
+
+    private Procedure buildProcedure(ResultSet resultSet) {
+        Procedure procedure = new Procedure();
+        try {
+            procedure.setDatabaseName(resultSet.getString("PROCEDURE_CAT"));
+            procedure.setSchemaName(resultSet.getString("PROCEDURE_SCHEM"));
+            procedure.setProcedureName(resultSet.getString("PROCEDURE_NAME"));
+            procedure.setRemarks(resultSet.getString("REMARKS"));
+            procedure.setProcedureType(resultSet.getShort("PROCEDURE_TYPE"));
+            procedure.setSpecificName(resultSet.getString("SPECIFIC_NAME"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return procedure;
+    }
+
+    private com.alibaba.dbhub.server.domain.support.model.Function buildFunction(ResultSet resultSet) {
+        com.alibaba.dbhub.server.domain.support.model.Function function
+            = new com.alibaba.dbhub.server.domain.support.model.Function();
+        try {
+            function.setDatabaseName(resultSet.getString("FUNCTION_CAT"));
+            function.setSchemaName(resultSet.getString("FUNCTION_SCHEM"));
+            function.setFunctionName(resultSet.getString("FUNCTION_NAME"));
+            function.setRemarks(resultSet.getString("REMARKS"));
+            function.setFunctionType(resultSet.getShort("FUNCTION_TYPE"));
+            function.setSpecificName(resultSet.getString("SPECIFIC_NAME"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return function;
     }
 }
