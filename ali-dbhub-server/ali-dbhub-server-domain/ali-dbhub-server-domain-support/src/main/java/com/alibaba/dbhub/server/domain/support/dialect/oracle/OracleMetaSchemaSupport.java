@@ -23,6 +23,7 @@ public class OracleMetaSchemaSupport extends BaseMetaSchema implements MetaSchem
         return DbTypeEnum.ORACLE;
     }
 
+
     @Override
     public String tableDDL(String databaseName, String schemaName, String tableName) {
         String sql = "select dbms_metadata.get_ddl('TABLE','"+tableName+"') as sql from dual,"

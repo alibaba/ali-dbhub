@@ -20,17 +20,17 @@ import lombok.extern.slf4j.Slf4j;
  * @version : MysqlMetaSchemaSupport.java, v 0.1 2022年12月14日 22:44 jipengfei Exp $
  */
 @Slf4j
-public class MysqlMetaSchemaSupport  extends BaseMetaSchema implements MetaSchema {
-
+public class MysqlMetaSchemaSupport extends BaseMetaSchema implements MetaSchema {
 
     @Override
     public DbTypeEnum dbType() {
         return DbTypeEnum.MYSQL;
     }
 
+
     @Override
-    public String tableDDL(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName){
-        String sql = "SHOW CREATE TABLE " + databaseName+"."+tableName;
+    public String tableDDL(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName) {
+        String sql = "SHOW CREATE TABLE " + databaseName + "." + tableName;
         return DataSource.getInstance().executeSql(sql, resultSet -> {
             try {
                 if (resultSet.next()) {
