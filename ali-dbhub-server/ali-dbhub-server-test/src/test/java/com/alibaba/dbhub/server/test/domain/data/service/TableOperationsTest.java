@@ -107,7 +107,7 @@ public class TableOperationsTest extends BaseTest {
                 .tableName(dialectProperties.toCase(TABLE_NAME))
                 .build();
             if (dialectProperties.getDbType() == DbTypeEnum.POSTGRESQL) {
-                showCreateTableParam.setTableSchema("public");
+                showCreateTableParam.setSchemaName("public");
             }
 
             DataResult<String> createTable = tableService.showCreateTable(showCreateTableParam);

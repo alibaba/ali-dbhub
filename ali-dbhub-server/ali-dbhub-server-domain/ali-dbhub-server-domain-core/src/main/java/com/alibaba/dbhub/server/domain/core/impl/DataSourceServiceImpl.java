@@ -19,7 +19,6 @@ import com.alibaba.dbhub.server.domain.support.model.Database;
 import com.alibaba.dbhub.server.domain.api.param.DatabaseQueryAllParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceCloseParam;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
-import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
 import com.alibaba.dbhub.server.domain.support.util.JdbcUtils;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
@@ -135,7 +134,7 @@ public class DataSourceServiceImpl implements DataSourceService {
     public ActionResult close(Long id) {
         DataSourceCloseParam closeParam = new DataSourceCloseParam();
         closeParam.setDataSourceId(id);
-        DbhubDataSource.getInstance().close();
+        com.alibaba.dbhub.server.domain.support.sql.DataSource.getInstance().close();
         return ActionResult.isSuccess();
     }
 
