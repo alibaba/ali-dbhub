@@ -22,6 +22,8 @@ export enum DatabaseTypeCode {
   REDIS = 'REDIS',
   H2 = 'H2',
   POSTGRESQL = 'POSTGRESQL',
+  SQLSERVER = 'SQLSERVER',
+  SQLITE = 'SQLITE',
 }
 
 export const databaseType: {

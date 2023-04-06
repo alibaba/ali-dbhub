@@ -37,7 +37,7 @@ function loadData(data: ITreeNode) {
   return treeConfig[data.nodeType]?.getNodeData(data);
 }
 
-function Tree(props: IProps,ref: any) {
+function Tree(props: IProps, ref: any) {
   const { className, cRef, addTreeData } = props;
   const [treeData, setTreeData] = useState<ITreeNode[] | null>(null);
   const [searchedTreeData, setSearchedTreeData] = useState<ITreeNode[] | null>(null);
@@ -90,10 +90,10 @@ function Tree(props: IProps,ref: any) {
   return <div className={classnames(className, styles.box)}>
     <LoadingContent data={treeData} handleEmpty>
       {
-        (searchedTreeData || treeData)?.map((item) => {
+        (searchedTreeData || treeData)?.map((item, index) => {
           return <TreeNode
             setTreeData={setTreeData}
-            key={item.name}
+            key={item.name + index}
             show={true}
             level={0}
             data={item}
