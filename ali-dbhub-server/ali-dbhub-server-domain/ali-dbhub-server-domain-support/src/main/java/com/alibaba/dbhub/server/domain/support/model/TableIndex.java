@@ -53,6 +53,11 @@ public class TableIndex {
     private String schemaName;
 
     /**
+     * 数据库名
+     */
+    private String databaseName;
+
+    /**
      * 索引包含的列
      */
     private List<TableIndexColumn> columnList;

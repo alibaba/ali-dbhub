@@ -79,7 +79,7 @@ public class DataSourceOperationsTest extends BaseTest {
     @Order(3)
     public void createDataSource(){
         for (DialectProperties dialectProperties : dialectPropertiesList) {
-            if(!dialectProperties.getDbType().equals(DbTypeEnum.SQLITE)){
+            if(!dialectProperties.getDbType().equals(DbTypeEnum.ORACLE)){
                 continue;
             }
             DbTypeEnum dbTypeEnum = dialectProperties.getDbType();
