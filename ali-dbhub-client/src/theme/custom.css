@@ -14024,6 +14024,11 @@ _:-ms-fullscreen
   transition: all 0.3s;
   /* stylelint-disable-next-line selector-no-vendor-prefix */
   display: inline-flex;
+ 
+}
+.custom-input-affix-wrapper input[type='password'] {
+  height: 22px;
+  line-height: 22px;
 }
 .custom-input-affix-wrapper::-moz-placeholder {
   opacity: 1;

@@ -6,7 +6,8 @@ import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { IDatabase, ITreeNode } from '@/types'
 import { databaseType, DatabaseTypeCode } from '@/utils/constants';
-import ConnectionDialog, { submitType } from '@/components/ConnectionDialog';
+import ConnectionDialog from '@/components/ConnectionDialog';
+import CreateConnection from '@/components/CreateConnection';
 
 interface Iprops {
   className?: string;
@@ -35,7 +36,7 @@ function getItem(
 }
 
 const newDataSourceChildren = Object.keys(databaseType).map(t => {
-  const source: IDatabase = databaseType[t]
+  const source: IDatabase = databaseType[t];
   return getItem(source.name, source.code, <Iconfont className={styles.databaseTypeIcon} code={source.icon} />)
 })
 
@@ -58,7 +59,7 @@ const globalAddMenuList: IGlobalAddMenuItem[] = [
   },
 ]
 
-const items: MenuItem[] = globalAddMenuList.map(t => getItem(t.label, t.key, t.icon, t.children))
+const items: MenuItem[] = newDataSourceChildren
 
 export default memo<Iprops>(function GlobalAddMenu(props) {
   const { className, getAddTreeNode } = props;
@@ -66,11 +67,8 @@ export default memo<Iprops>(function GlobalAddMenu(props) {
   const [dataSourceType, setDataSourceType] = useState<DatabaseTypeCode>();
 
   const onClickMenuNode: MenuProps['onClick'] = (e) => {
-    console.log(e)
-    if (e.keyPath[1] === 'newDataSource') {
-      setDataSourceType(e.keyPath[0] as DatabaseTypeCode)
-      setIsModalVisible(true);
-    }
+    setDataSourceType(e.keyPath[0] as DatabaseTypeCode);
+    setIsModalVisible(true);
   };
 
   function submitCallback(data: ITreeNode) {
@@ -80,11 +78,17 @@ export default memo<Iprops>(function GlobalAddMenu(props) {
 
   return <div className={classnames(styles.box, className)}>
     <Menu onClick={onClickMenuNode} mode="vertical" items={items as any} />
-    <ConnectionDialog
+    {!!dataSourceType && <CreateConnection
       submitCallback={submitCallback}
       dataSourceType={dataSourceType}
       onCancel={() => { setIsModalVisible(false) }}
       openModal={isModalVisible}
-    />
+    />}
+    {/* <ConnectionDialog
+      submitCallback={submitCallback}
+      dataSourceType={dataSourceType}
+      onCancel={() => { setIsModalVisible(false) }}
+      openModal={isModalVisible}
+    /> */}
   </div>
 })

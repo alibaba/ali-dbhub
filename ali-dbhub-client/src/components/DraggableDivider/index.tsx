@@ -20,17 +20,19 @@ export default memo<IProps>(function DraggableDivider({ className, volatileRef, 
     if (DividerRef.current) {
 
       DividerRef.current.onmouseover = e => {
-        if (DividerRef.current && DividerLine.current) {
-          DividerRef.current.style.backgroundColor = 'var(--custom-primary-color)';
-          DividerRef.current.style.cursor = direction == 'line' ? 'col-resize' : 'row-resize';
-        }
+        setDragging(true)
+        // if (DividerRef.current && DividerLine.current) {
+        //   DividerRef.current.style.backgroundColor = 'var(--custom-primary-color)';
+        //   DividerRef.current.style.cursor = direction == 'line' ? 'col-resize' : 'row-resize';
+        // }
       }
 
       DividerRef.current.onmouseout = e => {
-        if (DividerRef.current && DividerLine.current && !dragging) {
-          DividerRef.current.style.backgroundColor = 'transparent';
-          DividerRef.current.style.cursor = 'default';
-        }
+        setDragging(false)
+        // if (DividerRef.current && DividerLine.current && !dragging) {
+        //   DividerRef.current.style.backgroundColor = 'transparent';
+        //   DividerRef.current.style.cursor = 'default';
+        // }
       }
 
       DividerRef.current.onmousedown = e => {
