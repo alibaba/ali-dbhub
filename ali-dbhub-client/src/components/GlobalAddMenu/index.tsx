@@ -78,11 +78,10 @@ export default memo<Iprops>(function GlobalAddMenu(props) {
 
   return <div className={classnames(styles.box, className)}>
     <Menu onClick={onClickMenuNode} mode="vertical" items={items as any} />
-    {!!dataSourceType && <CreateConnection
+    {!!dataSourceType && isModalVisible && <CreateConnection
       submitCallback={submitCallback}
       dataSourceType={dataSourceType}
       onCancel={() => { setIsModalVisible(false) }}
-      openModal={isModalVisible}
     />}
     {/* <ConnectionDialog
       submitCallback={submitCallback}
