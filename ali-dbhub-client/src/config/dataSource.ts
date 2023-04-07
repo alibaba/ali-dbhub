@@ -336,7 +336,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         "width": 50
       },
       {
-        "defaultValue": "jdbc:oracle:thin://localhost:3306:XE",
+        "defaultValue": "jdbc:oracle:thin://localhost:1521:XE",
         "inputType": InputType.INPUT,
         "labelNameCN": "URL",
         "labelNameEN": "URL",
