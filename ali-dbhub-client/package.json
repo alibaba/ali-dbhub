@@ -5,13 +5,13 @@
   "main": "main.js",
   "scripts": {
     "start": "umi dev",
-    "build:test": "umi build",
+    "build": "umi build",
     "postinstall": "umi generate tmp",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
     "electron": "electron .",
-    "build": "mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static && rm -rf ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front && UMI_ENV=prod umi build && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front"
+    "build2Server": "mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static && rm -rf ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front && UMI_ENV=prod umi build && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
