@@ -14026,7 +14026,7 @@ _:-ms-fullscreen
   display: inline-flex;
  
 }
-.custom-input-affix-wrapper input[type='password'] {
+.custom-input-password input {
   height: 22px;
   line-height: 22px;
 }

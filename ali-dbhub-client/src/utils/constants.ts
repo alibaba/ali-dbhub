@@ -62,6 +62,20 @@ export const databaseType: {
     port: 5432,
     icon: '\uec5d'
   },
+  [DatabaseTypeCode.SQLSERVER]: {
+    name: 'SQLServer',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.SQLSERVER,
+    port: 1521,
+    icon: '\ue664'
+  },
+  [DatabaseTypeCode.SQLITE]: {
+    name: 'SQLite',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.SQLITE,
+    port: 5432,
+    icon: '\ue65a'
+  },
 };
 
 export const databaseTypeList = Object.keys(databaseType).map((keys) => {

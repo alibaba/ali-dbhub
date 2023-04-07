@@ -6,36 +6,45 @@ export enum InputType {
   SELECT = 'select'
 }
 
+export enum AuthenticationType {
+  USERANDPASSWORD = 1,
+  NONE = 2,
+}
+
 export type ISelect = {
   selected: boolean;
-  value: string;
+  value?: AuthenticationType | string;
+  label?: string;
   items?: IFormItem[];
 }
 
 export interface IFormItem  {
-  defaultValue: string;
+  defaultValue: any;
   inputType: InputType;
   labelNameCN: string;
   labelNameEN: string;
   name: string;
   required: boolean;
   width: number;
-  pattern?: string;
-  template?: string;
   selects?: ISelect[];
+  labelTextAlign?: 'right';
 }
 
 // 配置链接数据源表单 Json
 export type IDataSourceForm = {
   type: DatabaseTypeCode;
-  items: IFormItem[]
+  items: IFormItem[];
+  pattern: RegExp;
+  template: string;
 }
 
-export const dataSourceFormConfigs:IDataSourceForm[] = [
+
+export const dataSourceFormConfigs: IDataSourceForm[] = [
+  // MYSQL
   {
     "items": [
       {
-        "defaultValue": "@loclhost",
+        "defaultValue": "@localhost",
         "inputType": InputType.INPUT,
         "labelNameCN": "名称",
         "labelNameEN": "Name",
@@ -44,7 +53,7 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "width": 100
       },
       {
-        "defaultValue": "loclhost",
+        "defaultValue": "localhost",
         "inputType": InputType.INPUT,
         "labelNameCN": "主机",
         "labelNameEN": "Host",
@@ -58,15 +67,16 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "labelNameCN": "端口",
         "labelNameEN": "Port",
         "name": "port",
+        "labelTextAlign": "right",
         "required": true,
         "width": 30
       },
       {
-        "defaultValue": "User&Password",
+        "defaultValue": AuthenticationType.USERANDPASSWORD,
         "inputType": InputType.SELECT,
         "labelNameCN": "身份验证",
         "labelNameEN": "Authentication",
-        "name": "auth",
+        "name": "authentication",
         "required": true,
         "selects": [
           {
@@ -76,7 +86,7 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
                 "inputType": InputType.INPUT,
                 "labelNameCN": "用户名",
                 "labelNameEN": "User",
-                "name": "userName",
+                "name": "user",
                 "required": true,
                 "width": 100
               },
@@ -91,11 +101,13 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
               }
             ],
             "selected": true,
-            "value": "User&Password"
+            "label": "User&Password",
+            "value": AuthenticationType.USERANDPASSWORD,
           },
           {
             "selected": false,
-            "value": "NONE"
+            "label": "NONE",
+            "value": AuthenticationType.NONE,
           }
         ],
         "width": 50
@@ -117,16 +129,17 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "name": "url",
         "required": true,
         "width": 100,
-        "pattern": "jdbc:mysql://(.*):(.*)/(.*)",
-        "template": "jdbc:mysql://${host}:${port}/${database}"
       }
     ],
-    "type": DatabaseTypeCode.MYSQL
+    "type": DatabaseTypeCode.MYSQL,
+    "pattern": /jdbc:mysql:\/\/(.*):(\d+)(\/(\w+))?/,
+    "template": "jdbc:mysql://{host}:{port}/{database}"
   },
+  // POSTGRESQL
   {
     "items": [
       {
-        "defaultValue": "@loclhost",
+        "defaultValue": "@localhost",
         "inputType": InputType.INPUT,
         "labelNameCN": "名称",
         "labelNameEN": "Name",
@@ -135,7 +148,7 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "width": 100
       },
       {
-        "defaultValue": "loclhost",
+        "defaultValue": "localhost",
         "inputType": InputType.INPUT,
         "labelNameCN": "主机",
         "labelNameEN": "Host",
@@ -149,15 +162,16 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "labelNameCN": "端口",
         "labelNameEN": "Port",
         "name": "port",
+        "labelTextAlign": "right",
         "required": true,
         "width": 30
       },
       {
-        "defaultValue": "User&Password",
+        "defaultValue": AuthenticationType.USERANDPASSWORD,
         "inputType": InputType.SELECT,
         "labelNameCN": "身份验证",
         "labelNameEN": "Authentication",
-        "name": "auth",
+        "name": "authenticationentication",
         "required": true,
         "selects": [
           {
@@ -167,7 +181,7 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
                 "inputType": InputType.INPUT,
                 "labelNameCN": "用户名",
                 "labelNameEN": "User",
-                "name": "userName",
+                "name": "user",
                 "required": true,
                 "width": 100
               },
@@ -182,11 +196,13 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
               }
             ],
             "selected": true,
-            "value": "User&Password"
+            "label": "User&Password",
+            "value": AuthenticationType.USERANDPASSWORD,
           },
           {
             "selected": false,
-            "value": "NONE"
+            "label": "NONE",
+            "value": AuthenticationType.NONE,
           }
         ],
         "width": 50
@@ -208,16 +224,17 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "name": "url",
         "required": true,
         "width": 100,
-        "pattern": "jdbc:mysql://(.*):(.*)/(.*)",
-        "template": "jdbc:mysql://${host}:${port}/${database}"
       }
     ],
-    "type": DatabaseTypeCode.POSTGRESQL
+    "type": DatabaseTypeCode.POSTGRESQL,
+    "pattern": /jdbc:postgresql:\/\/(.*):(\d+)(\/(\w+))?/,
+    "template": "jdbc:postgresql://{host}:{port}/{database}"
   },
+  // ORACLE
   {
     "items": [
       {
-        "defaultValue": "@loclhost",
+        "defaultValue": "@localhost",
         "inputType": InputType.INPUT,
         "labelNameCN": "名称",
         "labelNameEN": "Name",
@@ -226,7 +243,7 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "width": 100
       },
       {
-        "defaultValue": "loclhost",
+        "defaultValue": "localhost",
         "inputType": InputType.INPUT,
         "labelNameCN": "主机",
         "labelNameEN": "Host",
@@ -240,6 +257,7 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "labelNameCN": "端口",
         "labelNameEN": "Port",
         "name": "port",
+        "labelTextAlign": "right",
         "required": true,
         "width": 30
       },
@@ -259,6 +277,7 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "labelNameEN": "Driver",
         "name": "driver",
         "required": true,
+        "labelTextAlign": "right",
         "selects": [
           {
             "selected": true,
@@ -276,11 +295,11 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "width": 30
       },
       {
-        "defaultValue": "User&Password",
+        "defaultValue": AuthenticationType.USERANDPASSWORD,
         "inputType": InputType.SELECT,
         "labelNameCN": "身份验证",
         "labelNameEN": "Authentication",
-        "name": "auth",
+        "name": "authentication",
         "required": true,
         "selects": [
           {
@@ -290,7 +309,7 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
                 "inputType": InputType.INPUT,
                 "labelNameCN": "用户名",
                 "labelNameEN": "User",
-                "name": "userName",
+                "name": "user",
                 "required": true,
                 "width": 100
               },
@@ -305,11 +324,13 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
               }
             ],
             "selected": true,
-            "value": "User&Password"
+            "label": "User&Password",
+            "value": AuthenticationType.USERANDPASSWORD,
           },
           {
             "selected": false,
-            "value": "NONE"
+            "label": "NONE",
+            "value": AuthenticationType.NONE,
           }
         ],
         "width": 50
@@ -322,16 +343,17 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "name": "url",
         "required": true,
         "width": 100,
-        "pattern": "jdbc:mysql://(.*):(.*)/(.*)",
-        "template": "jdbc:mysql://${host}:${port}/${database}"
       }
     ],
-    "type": DatabaseTypeCode.ORACLE
+    "type": DatabaseTypeCode.ORACLE,
+    "pattern": /jdbc:oracle:(.*):\/\/(.*):(\d+):(.*)/,
+    "template": "jdbc:oracle:{driver}://{host}:{port}:{sid}"
   },
+  // H2
   {
     "items": [
       {
-        "defaultValue": "@loclhost",
+        "defaultValue": "@localhost",
         "inputType": InputType.INPUT,
         "labelNameCN": "名称",
         "labelNameEN": "Name",
@@ -340,107 +362,7 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "width": 100
       },
       {
-        "defaultValue": "loclhost",
-        "inputType": InputType.INPUT,
-        "labelNameCN": "主机",
-        "labelNameEN": "Host",
-        "name": "host",
-        "required": true,
-        "width": 70
-      },
-      {
-        "defaultValue": "1433",
-        "inputType": InputType.INPUT,
-        "labelNameCN": "端口",
-        "labelNameEN": "Port",
-        "name": "port",
-        "required": true,
-        "width": 30
-      },
-      {
-        "defaultValue": "",
-        "inputType": InputType.INPUT,
-        "labelNameCN": "Instance",
-        "labelNameEN": "Instance",
-        "name": "instance",
-        "required": false,
-        "width": 100
-      },
-      {
-        "defaultValue": "User&Password",
-        "inputType": InputType.SELECT,
-        "labelNameCN": "身份验证",
-        "labelNameEN": "Authentication",
-        "name": "auth",
-        "required": true,
-        "selects": [
-          {
-            "items": [
-              {
-                "defaultValue": "root",
-                "inputType": InputType.INPUT,
-                "labelNameCN": "用户名",
-                "labelNameEN": "User",
-                "name": "userName",
-                "required": true,
-                "width": 100
-              },
-              {
-                "defaultValue": "",
-                "inputType": InputType.PASSWORD,
-                "labelNameCN": "密码",
-                "labelNameEN": "Password",
-                "name": "password",
-                "required": true,
-                "width": 100
-              }
-            ],
-            "selected": true,
-            "value": "User&Password"
-          },
-          {
-            "selected": false,
-            "value": "NONE"
-          }
-        ],
-        "width": 50
-      },
-      {
-        "defaultValue": "",
-        "inputType": InputType.INPUT,
-        "labelNameCN": "数据库",
-        "labelNameEN": "Database",
-        "name": "database",
-        "required": false,
-        "width": 100
-      },
-      {
-        "defaultValue": "jdbc:sqlserver://localhost:1433",
-        "inputType": InputType.INPUT,
-        "labelNameCN": "URL",
-        "labelNameEN": "URL",
-        "name": "url",
-        "required": true,
-        "width": 100,
-        "pattern": "jdbc:mysql://(.*):(.*)/(.*)",
-        "template": "jdbc:mysql://${host}:${port}/${database}"
-      }
-    ],
-    "type": DatabaseTypeCode.SQLSERVER
-  },
-  {
-    "items": [
-      {
-        "defaultValue": "@loclhost",
-        "inputType": InputType.INPUT,
-        "labelNameCN": "名称",
-        "labelNameEN": "Name",
-        "name": "alias",
-        "required": true,
-        "width": 100
-      },
-      {
-        "defaultValue": "loclhost",
+        "defaultValue": "localhost",
         "inputType": InputType.INPUT,
         "labelNameCN": "主机",
         "labelNameEN": "Host",
@@ -454,15 +376,16 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "labelNameCN": "端口",
         "labelNameEN": "Port",
         "name": "port",
+        "labelTextAlign": "right",
         "required": true,
         "width": 30
       },
       {
-        "defaultValue": "User&Password",
+        "defaultValue": AuthenticationType.USERANDPASSWORD,
         "inputType": InputType.SELECT,
         "labelNameCN": "身份验证",
         "labelNameEN": "Authentication",
-        "name": "auth",
+        "name": "authentication",
         "required": true,
         "selects": [
           {
@@ -472,7 +395,7 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
                 "inputType": InputType.INPUT,
                 "labelNameCN": "用户名",
                 "labelNameEN": "User",
-                "name": "userName",
+                "name": "user",
                 "required": true,
                 "width": 100
               },
@@ -487,11 +410,13 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
               }
             ],
             "selected": true,
-            "value": "User&Password"
+            "label": "User&Password",
+            "value": AuthenticationType.USERANDPASSWORD,
           },
           {
             "selected": false,
-            "value": "NONE"
+            "label": "NONE",
+            "value": AuthenticationType.NONE,
           }
         ],
         "width": 50
@@ -513,16 +438,121 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "name": "url",
         "required": true,
         "width": 100,
-        "pattern": "jdbc:mysql://(.*):(.*)/(.*)",
-        "template": "jdbc:mysql://${host}:${port}/${database}"
       }
     ],
-    "type": DatabaseTypeCode.H2
+    "type": DatabaseTypeCode.H2,
+    "pattern": /jdbc:h2:tcp:\/\/(.*):(\d+)(\/(\w+))?/,
+    "template": "jdbc:h2:tcp://{host}:{port}/{database}"
   },
+    // SQLSERVER
+    {
+      "items": [
+        {
+          "defaultValue": "@localhost",
+          "inputType": InputType.INPUT,
+          "labelNameCN": "名称",
+          "labelNameEN": "Name",
+          "name": "alias",
+          "required": true,
+          "width": 100
+        },
+        {
+          "defaultValue": "localhost",
+          "inputType": InputType.INPUT,
+          "labelNameCN": "主机",
+          "labelNameEN": "Host",
+          "name": "host",
+          "required": true,
+          "width": 70
+        },
+        {
+          "defaultValue": "1433",
+          "inputType": InputType.INPUT,
+          "labelNameCN": "端口",
+          "labelNameEN": "Port",
+          "name": "port",
+          "labelTextAlign": "right",
+          "required": true,
+          "width": 30
+        },
+        {
+          "defaultValue": "",
+          "inputType": InputType.INPUT,
+          "labelNameCN": "Instance",
+          "labelNameEN": "Instance",
+          "name": "instance",
+          "required": false,
+          "width": 100
+        },
+        {
+          "defaultValue": AuthenticationType.USERANDPASSWORD,
+          "inputType": InputType.SELECT,
+          "labelNameCN": "身份验证",
+          "labelNameEN": "Authentication",
+          "name": "authentication",
+          "required": true,
+          "selects": [
+            {
+              "items": [
+                {
+                  "defaultValue": "root",
+                  "inputType": InputType.INPUT,
+                  "labelNameCN": "用户名",
+                  "labelNameEN": "User",
+                  "name": "user",
+                  "required": true,
+                  "width": 100
+                },
+                {
+                  "defaultValue": "",
+                  "inputType": InputType.PASSWORD,
+                  "labelNameCN": "密码",
+                  "labelNameEN": "Password",
+                  "name": "password",
+                  "required": true,
+                  "width": 100
+                }
+              ],
+              "selected": true,
+              "label": "User&Password",
+              "value": AuthenticationType.USERANDPASSWORD,
+            },
+            {
+              "selected": false,
+              "label": "NONE",
+              "value": AuthenticationType.NONE,
+            }
+          ],
+          "width": 50
+        },
+        {
+          "defaultValue": "",
+          "inputType": InputType.INPUT,
+          "labelNameCN": "数据库",
+          "labelNameEN": "Database",
+          "name": "database",
+          "required": false,
+          "width": 100
+        },
+        {
+          "defaultValue": "jdbc:sqlserver://localhost:1433",
+          "inputType": InputType.INPUT,
+          "labelNameCN": "URL",
+          "labelNameEN": "URL",
+          "name": "url",
+          "required": true,
+          "width": 100,
+        }
+      ],
+      "type": DatabaseTypeCode.SQLSERVER,
+      "pattern": /jdbc:sqlserver/,
+      "template": "jdbc:sqlserver://{host}:{port}/{database}"
+    },
+  // SQLITE
   {
     "items": [
       {
-        "defaultValue": "@loclhost",
+        "defaultValue": "@localhost",
         "inputType": InputType.INPUT,
         "labelNameCN": "名称",
         "labelNameEN": "Name",
@@ -547,10 +577,10 @@ export const dataSourceFormConfigs:IDataSourceForm[] = [
         "name": "url",
         "required": true,
         "width": 100,
-        "pattern": "jdbc:mysql://(.*):(.*)/(.*)",
-        "template": "jdbc:mysql://${host}:${port}/${database}"
       }
     ],
-    "type": DatabaseTypeCode.SQLITE
+    "type": DatabaseTypeCode.SQLITE,
+    "pattern": /jdbc:sqlite/,
+    "template": "jdbc:sqlite://{host}:{port}/{database}"
   }
 ]
