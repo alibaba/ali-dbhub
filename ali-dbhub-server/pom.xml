@@ -182,6 +182,13 @@
                 <version>1.34.0</version>
             </dependency>
 
+            <!-- ehcache -->
+            <dependency>
+                <groupId>org.ehcache</groupId>
+                <artifactId>ehcache</artifactId>
+                <version>3.10.8</version>
+            </dependency>
+
             <!-- 数据库版本管理 -->
             <dependency>
                 <groupId>org.flywaydb</groupId>

@@ -10,7 +10,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 数据源连接表
+ * 数据库连接环境
  * </p>
  *
  * @author ali-dbhub
@@ -18,8 +18,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName("DATA_SOURCE")
-public class DataSourceDO implements Serializable {
+@TableName("ENVIRONMENT")
+public class EnvironmentDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,42 +40,27 @@ public class DataSourceDO implements Serializable {
     private LocalDateTime gmtModified;
 
     /**
-     * 别名
+     * 创建人用户id
      */
-    private String alias;
+    private Long createUserId;
 
     /**
-     * 连接地址
+     * 修改人用户id
      */
-    private String url;
+    private Long modifiedUserId;
 
     /**
-     * 用户名
+     * 环境名称
      */
-    private String userName;
+    private String name;
 
     /**
-     * 密码
+     * 环境缩写
      */
-    private String password;
+    private String shortName;
 
     /**
-     * 数据库类型
+     * 样式类型
      */
-    private String type;
-
-    /**
-     * 环境类型
-     */
-    private String envType;
-
-    /**
-     * 用户id
-     */
-    private Long userId;
-
-    /**
-     * 环境id
-     */
-    private Long environmentId;
+    private String style;
 }

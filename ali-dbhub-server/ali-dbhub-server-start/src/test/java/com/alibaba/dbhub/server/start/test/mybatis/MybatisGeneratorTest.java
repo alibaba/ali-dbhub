@@ -33,7 +33,8 @@ public class MybatisGeneratorTest extends BaseTest {
         //doGenerator(Lists.newArrayList("data_source"));
         //doGenerator(Lists.newArrayList("operation_log"));
         //doGenerator(Lists.newArrayList("operation_saved"));
-        doGenerator(Lists.newArrayList("dbhub_user"));
+        //doGenerator(Lists.newArrayList("dbhub_user"));
+        doGenerator(Lists.newArrayList("environment","data_source","team","team_permission","dbhub_user_team","data_source_access"));
     }
 
     private void doGenerator(List<String> tableList) {
