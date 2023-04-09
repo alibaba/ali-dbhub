@@ -29,8 +29,7 @@ interface IProps {
 
 export default memo<IProps>(function ConsoleList(props) {
   const { consoleId } = qs<{ consoleId: string }>();
-  const { model, setCreateConsoleDialog, setDblclickNodeData } =
-    useContext(DatabaseContext);
+  const { model, setCreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [activeKey, setActiveKey] = useState<string>(consoleId);
   const { dblclickNodeData, createConsoleDialog } = model;
@@ -127,40 +126,50 @@ export default memo<IProps>(function ConsoleList(props) {
     historyService.getSaveList(p).then((res) => {
       let flag = false;
 
-      const newWindowList = res.data?.map((item, index) => {
+      const newWindowList: any = []
+      res.data?.map((item, index) => {
+        if (item.connectable) {
+          newWindowList.push({
+            consoleId: item.id,
+            ddl: item.ddl,
+            name: item.name,
+            key: item.id + '',
+            DBType: item.type,
+            type: ConsoleType.SQLQ,
+            status: item.status,
+            databaseName: item.databaseName,
+            dataSourceName: item?.dataSourceName,
+            dataSourceId: item.dataSourceId,
+          });
+        }
+      });
+
+      newWindowList.map((item: any, index: number) => {
         if (!consoleId && index === 0) {
-          setActiveKey(item.id + '');
+          setActiveKey(item.key + '');
         } else if (item.id === +consoleId) {
           flag = true;
         }
-        return {
-          consoleId: item.id,
-          ddl: item.ddl,
-          name: item.name,
-          key: item.id + '',
-          DBType: item.type,
-          type: ConsoleType.SQLQ,
-          status: item.status,
-          databaseName: item.databaseName,
-          dataSourceName: item?.dataSourceName,
-          dataSourceId: item.dataSourceId,
-        };
-      });
+      })
+
       if (!flag && consoleId) {
         historyService.getWindowTab({ id: consoleId }).then((res: any) => {
-          newWindowList.push({
-            consoleId: res.id,
-            ddl: res.ddl,
-            name: res.name,
-            key: res.id + '',
-            DBType: res.type,
-            type: ConsoleType.SQLQ,
-            status: res.status,
-            databaseName: res.databaseName,
-            dataSourceName: res?.dataSourceName,
-            dataSourceId: res.dataSourceId,
-          });
-          setWindowList(newWindowList);
+          if (res.connectable) {
+            newWindowList.push({
+              consoleId: res.id,
+              ddl: res.ddl,
+              name: res.name,
+              key: res.id + '',
+              DBType: res.type,
+              type: ConsoleType.SQLQ,
+              status: res.status,
+              databaseName: res.databaseName,
+              dataSourceName: res?.dataSourceName,
+              dataSourceId: res.dataSourceId,
+            });
+            setActiveKey(res.id + '');
+            setWindowList(newWindowList);
+          }
         });
       } else {
         setWindowList(newWindowList);

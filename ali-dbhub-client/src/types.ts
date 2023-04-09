@@ -45,6 +45,7 @@ export interface IHistoryRecord {
   type: DatabaseTypeCode;
   dataSourceName: string;
   ddl: string;
+  connectable: boolean;
 }
 export interface ITableColumn {
   name: string;
@@ -155,4 +156,5 @@ export interface ISavedConsole {
   dataSourceName: string;
   type: DatabaseTypeCode;
   status: string;
+  connectable: boolean;
 }
