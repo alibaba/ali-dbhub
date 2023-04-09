@@ -20,13 +20,13 @@ import { TabOpened, ConsoleType, ConsoleStatus, DatabaseTypeCode } from '@/utils
 import { DatabaseContext } from '@/context/database'
 import { MenuItem } from '../Menu';
 
-interface Iprops {
+interface IProps {
   className?: string;
 }
 
-export default memo<Iprops>(function ConsoleList(props) {
+export default memo<IProps>(function ConsoleList(props) {
   const { consoleId } = qs<{ consoleId: string }>()
-  const { model, setcreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
+  const { model, setCreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [activeKey, setActiveKey] = useState<string>(consoleId);
   const { dblclickNodeData, createConsoleDialog } = model;
@@ -180,7 +180,7 @@ export default memo<Iprops>(function ConsoleList(props) {
 
   const onEdit = (targetKey: any, action: 'add' | 'remove', window: any) => {
     // if (action === 'add') {
-    //   setcreateConsoleDialog(true)
+    //   setCreateConsoleDialog(true)
     // } else {
     //   closeWindowTab(targetKey);
     // }

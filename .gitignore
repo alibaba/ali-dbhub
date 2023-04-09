@@ -17,3 +17,4 @@
 
 ### Mac
 .DS_Store
+/ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front/*
