@@ -33,9 +33,6 @@ interface TreeNodeIProps {
   showAllChildrenPenetrate?: boolean;
 }
 
-function loadData(data: ITreeNode) {
-  return treeConfig[data.nodeType]?.getNodeData(data);
-}
 
 function Tree(props: IProps, ref: any) {
   const { className, cRef, addTreeData } = props;
@@ -115,6 +112,23 @@ function TreeNode(props: TreeNodeIProps) {
 
   const treeNodeClick = useCanDoubleClick();
 
+  function loadData(data: ITreeNode) {
+    treeConfig[data.nodeType]?.getNodeData(data).then(res => {
+      if (res.length) {
+        setTimeout(() => {
+          data.children = res;
+          setIsLoading(false);
+          setShowChildren(true);
+        }, 200);
+      } else {
+        if (treeConfig[data.nodeType]?.next) {
+          data.nodeType = treeConfig[data.nodeType]?.next!
+          loadData(data)
+        }
+      }
+    });
+  }
+
   useEffect(() => {
     if (data?.dataSourceId === needRefreshNodeTree?.dataSourceId &&
       data?.databaseName === needRefreshNodeTree?.databaseName &&
@@ -122,13 +136,7 @@ function TreeNode(props: TreeNodeIProps) {
       setIsLoading(true);
       setNeedRefreshNodeTree(false);
       data.children = [];
-      loadData(data)?.then(res => {
-        setTimeout(() => {
-          data.children = res;
-          setIsLoading(false);
-          setShowChildren(true);
-        }, 200);
-      })
+      loadData(data)
     }
   }, [needRefreshNodeTree])
 
@@ -143,15 +151,7 @@ function TreeNode(props: TreeNodeIProps) {
     }
 
     if (treeConfig[data.nodeType] && !data.children) {
-      loadData(data)?.then((res: ITreeNode[]) => {
-        setTimeout(() => {
-          data.children = res;
-          setIsLoading(false);
-          setTimeout(() => {
-            setShowChildren(!showChildren);
-          }, 0);
-        }, 300);
-      })
+      loadData(data)
     } else {
       if (level === 0) {
         setShowAllChildren(!showAllChildren);
