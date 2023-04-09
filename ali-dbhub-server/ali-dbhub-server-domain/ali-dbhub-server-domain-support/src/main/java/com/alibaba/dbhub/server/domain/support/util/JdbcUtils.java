@@ -38,22 +38,10 @@ public class JdbcUtils {
      * @return
      */
     public static DbType parse2DruidDbType(DbTypeEnum dbType) {
-        switch (dbType) {
-            case H2:
-                return DbType.h2;
-            case MYSQL:
-                return DbType.mysql;
-            case ORACLE:
-                return DbType.oracle;
-            case SQLITE:
-                return DbType.sqlite;
-            case POSTGRESQL:
-                return DbType.postgresql;
-            case SQLSERVER:
-                return DbType.sqlserver;
-            default:
-                throw new SystemException(CommonErrorEnum.PARAM_ERROR);
+        if (dbType == null) {
+            return null;
         }
+        return DbType.valueOf(dbType.getCode().toLowerCase());
     }
 
     /**
@@ -148,7 +136,6 @@ public class JdbcUtils {
      * @param password 密码
      * @param dbType   数据库类型
      * @return
-     *
      */
     public static DataSourceConnect testConnect(String url, String userName, String password, String dbType) {
         DbTypeEnum dbTypeEnum = EasyEnumUtils.getEnum(DbTypeEnum.class, dbType);
