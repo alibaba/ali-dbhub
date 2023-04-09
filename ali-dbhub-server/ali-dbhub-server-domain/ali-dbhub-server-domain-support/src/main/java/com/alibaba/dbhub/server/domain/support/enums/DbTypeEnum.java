@@ -4,6 +4,7 @@ import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiExample;
 import com.alibaba.dbhub.server.domain.support.dialect.h2.H2MetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.mysql.MysqlMetaSchemaSupport;
+import com.alibaba.dbhub.server.domain.support.dialect.oceanbase.OceanBaseMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.oracle.OracleMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.postgresql.PostgresqlMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.sqlite.SQLiteMetaSchemaSupport;
@@ -58,8 +59,30 @@ public enum DbTypeEnum implements BaseEnum<String> {
      */
     H2("H2", "org.h2.Driver"),
 
+    /**
+     * ADB MySQL
+     */
     ADB_POSTGRESQL("PostgreSQL", "org.postgresql.Driver"),
-    ;
+
+    /**
+     * ClickHouse
+     */
+    CLICKHOUSE("ClickHouse", "ru.yandex.clickhouse.ClickHouseDriver"),
+
+    /**
+     * OceanBase
+     */
+    OCEANBASE("OceanBase", "com.alipay.oceanbase.jdbc.Driver"),
+
+    /**
+     * DB2
+     */
+    DB2("DB2", "com.ibm.db2.jcc.DB2Driver"),
+
+    /**
+     * MMARIADB
+     */
+    MARIADB("MariaDB", "org.mariadb.jdbc.Driver");
 
     final String description;
     final String className;
@@ -110,6 +133,16 @@ public enum DbTypeEnum implements BaseEnum<String> {
             case SQLITE:
                 metaSchema = new SQLiteMetaSchemaSupport();
                 break;
+            case OCEANBASE:
+                metaSchema = new OceanBaseMetaSchemaSupport();
+                break;
+            case MARIADB:
+                metaSchema = new MysqlMetaSchemaSupport();
+                break;
+            case CLICKHOUSE:
+                metaSchema = new MysqlMetaSchemaSupport();
+                break;
+
             default:
         }
         return metaSchema;

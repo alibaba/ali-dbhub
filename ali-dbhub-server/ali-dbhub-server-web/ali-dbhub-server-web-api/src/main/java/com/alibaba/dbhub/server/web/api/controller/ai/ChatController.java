@@ -232,6 +232,5 @@ public class ChatController {
             System.out.println(choice.getText());
         });
 
-
     }
 }
