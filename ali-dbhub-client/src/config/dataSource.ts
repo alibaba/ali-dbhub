@@ -545,7 +545,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         }
       ],
       "type": DatabaseTypeCode.SQLSERVER,
-      "pattern": /jdbc:sqlserver/,
+      "pattern": /jdbc:sqlserver:\/\/(.*):(\d+)(\/(\w+))?/,
       "template": "jdbc:sqlserver://{host}:{port}/{database}"
     },
   // SQLITE
@@ -582,5 +582,99 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     "type": DatabaseTypeCode.SQLITE,
     "pattern": /jdbc:sqlite/,
     "template": "jdbc:sqlite://{host}:{port}/{database}"
-  }
+  },
+  {
+      "items": [
+        {
+          "defaultValue": "@localhost",
+          "inputType": InputType.INPUT,
+          "labelNameCN": "名称",
+          "labelNameEN": "Name",
+          "name": "alias",
+          "required": true,
+          "width": 100
+        },
+        {
+          "defaultValue": "localhost",
+          "inputType": InputType.INPUT,
+          "labelNameCN": "主机",
+          "labelNameEN": "Host",
+          "name": "host",
+          "required": true,
+          "width": 70
+        },
+        {
+          "defaultValue": "3306",
+          "inputType": InputType.INPUT,
+          "labelNameCN": "端口",
+          "labelNameEN": "Port",
+          "name": "port",
+          "labelTextAlign": "right",
+          "required": true,
+          "width": 30
+        },
+        {
+          "defaultValue": AuthenticationType.USERANDPASSWORD,
+          "inputType": InputType.SELECT,
+          "labelNameCN": "身份验证",
+          "labelNameEN": "Authentication",
+          "name": "authentication",
+          "required": true,
+          "selects": [
+            {
+              "items": [
+                {
+                  "defaultValue": "root",
+                  "inputType": InputType.INPUT,
+                  "labelNameCN": "用户名",
+                  "labelNameEN": "User",
+                  "name": "user",
+                  "required": true,
+                  "width": 100
+                },
+                {
+                  "defaultValue": "",
+                  "inputType": InputType.PASSWORD,
+                  "labelNameCN": "密码",
+                  "labelNameEN": "Password",
+                  "name": "password",
+                  "required": true,
+                  "width": 100
+                }
+              ],
+              "selected": true,
+              "label": "User&Password",
+              "value": AuthenticationType.USERANDPASSWORD,
+            },
+            {
+              "selected": false,
+              "label": "NONE",
+              "value": AuthenticationType.NONE,
+            }
+          ],
+          "width": 50
+        },
+        {
+          "defaultValue": "",
+          "inputType": InputType.INPUT,
+          "labelNameCN": "数据库",
+          "labelNameEN": "Database",
+          "name": "database",
+          "required": false,
+          "width": 100
+        },
+        {
+          "defaultValue": "jdbc:mariadb://localhost:3306",
+          "inputType": InputType.INPUT,
+          "labelNameCN": "URL",
+          "labelNameEN": "URL",
+          "name": "url",
+          "required": true,
+          "width": 100,
+        }
+      ],
+      "type": DatabaseTypeCode.MARIADB,
+      "pattern": /jdbc:mariadb:\/\/(.*):(\d+)(\/(\w+))?/,
+      "template": "jdbc:mariadb://{host}:{port}/{database}"
+    }
 ]
