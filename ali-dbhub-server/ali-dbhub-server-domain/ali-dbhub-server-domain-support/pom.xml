@@ -64,7 +64,7 @@
             <artifactId>mssql-jdbc</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alipay.oceanbase</groupId>
+            <groupId>com.oceanbase</groupId>
             <artifactId>oceanbase-client</artifactId>
         </dependency>
         <dependency>
