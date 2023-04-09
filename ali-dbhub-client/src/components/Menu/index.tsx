@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import Iconfont from '@/components/Iconfont';
+import Iconfont from '@/components/IconFont';
 
 export interface IMenu<T> {
   title: string;
