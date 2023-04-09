@@ -8,7 +8,7 @@ import Setting from '@/components/Setting';
 import BrandLogo from '@/components/BrandLogo';
 import i18n from '@/i18n';
 
-interface Iprops { }
+interface IProps { }
 
 interface INavItem {
   title: string;
@@ -46,7 +46,7 @@ const LNKConfig: INavItem[] = [
   }
 ];
 
-export default function BaseLayout({ children }: PropsWithChildren<Iprops>) {
+export default function BaseLayout({ children }: PropsWithChildren<IProps>) {
   const [activeNav, setActiveNav] = useState<INavItem>(LNKConfig[0]);
 
   useEffect(() => {

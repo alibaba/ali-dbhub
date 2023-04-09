@@ -6,11 +6,11 @@ import connectionService from '@/service/connection';
 import { TreeNodeType } from '@/utils/constants'
 import { ITreeNode } from '@/types';
 
-interface Iprops {
+interface IProps {
   className?: string;
 }
 
-export default memo<Iprops>(function NewConsole(props) {
+export default memo<IProps>(function NewConsole(props) {
   const { className } = props;
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [windowName, setWindowName] = useState<string>('console_1');
