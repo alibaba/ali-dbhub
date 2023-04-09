@@ -1,13 +1,15 @@
-import React, { memo, useEffect, useState, useRef, createContext } from 'react';
+import React, { useState, createContext } from 'react';
 import { IOperationData } from '@/components/OperationTableModal';
 import { ITreeNode } from '@/types';
 
-export type ICreateConsoleDialog = false | {
-  dataSourceId: number;
-  databaseName: string;
-}
+export type ICreateConsoleDialog =
+  | false
+  | {
+      dataSourceId: number;
+      databaseName: string;
+    };
 
-export type IOperationDataDialog = false | IOperationData
+export type IOperationDataDialog = false | IOperationData;
 
 export interface IModel {
   createConsoleDialog: ICreateConsoleDialog;
@@ -32,54 +34,64 @@ const initDatabaseValue: IModel = {
   needRefreshNodeTree: {},
   dblclickNodeData: null,
   aiImportSql: '',
-}
+};
 
 export const DatabaseContext = createContext<IContext>({} as any);
 
-export default function DatabaseContextProvider({ children }: { children: React.ReactNode }) {
+export default function DatabaseContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [model, setStateModel] = useState<IModel>(initDatabaseValue);
 
-  const setCreateConsoleDialog = (createConsoleDialog: ICreateConsoleDialog) => {
+  const setCreateConsoleDialog = (
+    createConsoleDialog: ICreateConsoleDialog,
+  ) => {
     setStateModel({
       ...model,
-      createConsoleDialog
-    })
-  }
+      createConsoleDialog,
+    });
+  };
   const setOperationDataDialog = (operationData: IOperationDataDialog) => {
     setStateModel({
       ...model,
-      operationData
-    })
-  }
+      operationData,
+    });
+  };
   const setDblclickNodeData = (dblclickNodeData: ITreeNode | null) => {
     setStateModel({
       ...model,
-      dblclickNodeData
-    })
-  }
+      dblclickNodeData,
+    });
+  };
 
   const setNeedRefreshNodeTree = (needRefreshNodeTree: any) => {
     setStateModel({
       ...model,
-      needRefreshNodeTree
-    })
-  }
+      needRefreshNodeTree,
+    });
+  };
 
   const setAiImportSql = (aiImportSql: any) => {
     setStateModel({
       ...model,
-      aiImportSql
-    })
-  }
+      aiImportSql,
+    });
+  };
 
-  return <DatabaseContext.Provider value={{
-    model,
-    setCreateConsoleDialog,
-    setOperationDataDialog,
-    setNeedRefreshNodeTree,
-    setDblclickNodeData,
-    setAiImportSql
-  }}>
-    {children}
-  </DatabaseContext.Provider>
+  return (
+    <DatabaseContext.Provider
+      value={{
+        model,
+        setCreateConsoleDialog,
+        setOperationDataDialog,
+        setNeedRefreshNodeTree,
+        setDblclickNodeData,
+        setAiImportSql,
+      }}
+    >
+      {children}
+    </DatabaseContext.Provider>
+  );
 }

@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import { formatNaturalDate } from '@/utils/index';
-import Iconfont from '@/components/Iconfont';
+import Iconfont from '@/components/IconFont';
 import ScrollLoading from '@/components/ScrollLoading';
 import StateIndicator from '@/components/StateIndicator';
 import LoadingContent from '@/components/Loading/LoadingContent';

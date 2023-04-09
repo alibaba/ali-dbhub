@@ -1,6 +1,6 @@
 import React, { memo, useState, PropsWithChildren } from 'react';
 import BrandLogo from '@/components/BrandLogo';
-import Iconfont from '@/components/Iconfont';
+import Iconfont from '@/components/IconFont';
 import AppHeader from '@/components/AppHeader';
 import Setting from '@/components/Setting';
 import i18n from '@/i18n';

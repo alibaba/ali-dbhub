@@ -1,44 +1,51 @@
 import React, { memo, useEffect, useState, useContext } from 'react';
-import styles from './index.less';
 import classnames from 'classnames';
 import ModifyTable from '@/components/ModifyTable/ModifyTable';
 import DatabaseQuery from '@/components/DatabaseQuery';
 import AppHeader from '@/components/AppHeader';
-import { qs } from '@/utils'
+import { qs } from '@/utils';
+import { Tabs } from 'antd';
 
 import historyService from '@/service/history';
 
-import { Tabs, Modal, Button, Input } from 'antd';
 import {
   ISavedConsole,
   IConsole,
   IEditTableConsole,
   ISQLQueryConsole,
 } from '@/types';
-import { TabOpened, ConsoleType, ConsoleStatus, DatabaseTypeCode } from '@/utils/constants';
-
-import { DatabaseContext } from '@/context/database'
-import { MenuItem } from '../Menu';
+import {
+  TabOpened,
+  ConsoleType,
+  ConsoleStatus,
+  DatabaseTypeCode,
+} from '@/utils/constants';
+import { DatabaseContext } from '@/context/database';
+import styles from './index.less';
 
 interface IProps {
   className?: string;
 }
 
 export default memo<IProps>(function ConsoleList(props) {
-  const { consoleId } = qs<{ consoleId: string }>()
-  const { model, setCreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
+  const { consoleId } = qs<{ consoleId: string }>();
+  const { model, setCreateConsoleDialog, setDblclickNodeData } =
+    useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [activeKey, setActiveKey] = useState<string>(consoleId);
   const { dblclickNodeData, createConsoleDialog } = model;
 
   useEffect(() => {
     if (dblclickNodeData) {
-      let flag = false
-      windowList.map(i => {
-        if (i.databaseName === dblclickNodeData.databaseName && i.dataSourceId === dblclickNodeData.dataSourceId) {
-          flag = true
+      let flag = false;
+      windowList.map((i) => {
+        if (
+          i.databaseName === dblclickNodeData.databaseName &&
+          i.dataSourceId === dblclickNodeData.dataSourceId
+        ) {
+          flag = true;
         }
-      })
+      });
       if (!flag) {
         let p = {
           name: `${dblclickNodeData?.databaseName}-console`,
@@ -61,22 +68,22 @@ export default memo<IProps>(function ConsoleList(props) {
             consoleId: res,
             ddl: 'SELECT * FROM',
           };
-          setActiveKey(newConsole.key)
-          setWindowList([...windowList, newConsole])
+          setActiveKey(newConsole.key);
+          setWindowList([...windowList, newConsole]);
         });
       }
     }
-  }, [dblclickNodeData])
+  }, [dblclickNodeData]);
 
   useEffect(() => {
     if (createConsoleDialog) {
-      createConsole()
+      createConsole();
     }
-  }, [createConsoleDialog])
+  }, [createConsoleDialog]);
 
   function createConsole() {
     if (!createConsoleDialog) {
-      return
+      return;
     }
 
     let p = {
@@ -100,8 +107,8 @@ export default memo<IProps>(function ConsoleList(props) {
         consoleId: res,
         ddl: 'SELECT * FROM',
       };
-      setActiveKey(newConsole.key)
-      setWindowList([...windowList, newConsole])
+      setActiveKey(newConsole.key);
+      setWindowList([...windowList, newConsole]);
     });
   }
 
@@ -123,7 +130,7 @@ export default memo<IProps>(function ConsoleList(props) {
         if (!consoleId && index === 0) {
           setActiveKey(item.id + '');
         } else if (item.id === +consoleId) {
-          flag = true
+          flag = true;
         }
         return {
           consoleId: item.id,
@@ -135,9 +142,9 @@ export default memo<IProps>(function ConsoleList(props) {
           status: item.status,
           databaseName: item.databaseName,
           dataSourceName: item?.dataSourceName,
-          dataSourceId: item.dataSourceId
+          dataSourceId: item.dataSourceId,
         };
-      })
+      });
       if (!flag && consoleId) {
         historyService.getWindowTab({ id: consoleId }).then((res: any) => {
           newWindowList.push({
@@ -150,10 +157,10 @@ export default memo<IProps>(function ConsoleList(props) {
             status: res.status,
             databaseName: res.databaseName,
             dataSourceName: res?.dataSourceName,
-            dataSourceId: res.dataSourceId
-          })
+            dataSourceId: res.dataSourceId,
+          });
           setWindowList(newWindowList);
-        })
+        });
       } else {
         setWindowList(newWindowList);
       }
@@ -213,47 +220,49 @@ export default memo<IProps>(function ConsoleList(props) {
     };
 
     if (window.status === 'DRAFT') {
-      historyService.deleteWindowTab({ id: window.id })
+      historyService.deleteWindowTab({ id: window.id });
     } else {
       historyService.updateWindowTab(p);
     }
   };
 
-  return <div className={styles.box}>
-    <AppHeader className={styles.appHeader} showRight={false}>
-      <div className={styles.tabsBox}>
-        {
-          !!windowList.length &&
-          <Tabs
-            hideAdd
-            type="editable-card"
-            onChange={onChangeTab}
-            activeKey={activeKey}
-            onEdit={(targetKey: any, action: 'add' | 'remove') => { onEdit(targetKey, action, window) }}
-            items={windowList.map(t => {
-              return {
-                key: t.key,
-                label: t.name
-              }
-            })}
-          ></Tabs>
-        }
+  return (
+    <div className={styles.box}>
+      <AppHeader className={styles.appHeader} showRight={false}>
+        <div className={styles.tabsBox}>
+          {!!windowList.length && (
+            <Tabs
+              hideAdd
+              type="editable-card"
+              onChange={onChangeTab}
+              activeKey={activeKey}
+              onEdit={(targetKey: any, action: 'add' | 'remove') => {
+                onEdit(targetKey, action, window);
+              }}
+              items={windowList.map((t) => {
+                return {
+                  key: t.key,
+                  label: t.name,
+                };
+              })}
+            ></Tabs>
+          )}
+        </div>
+      </AppHeader>
+      <div className={styles.databaseQueryBox}>
+        {windowList?.map((i: IConsole, index: number) => {
+          return (
+            <div
+              key={index}
+              className={classnames(styles.windowContent, {
+                [styles.concealTab]: activeKey !== i.key,
+              })}
+            >
+              {renderCurrentTab(i)}
+            </div>
+          );
+        })}
       </div>
-    </AppHeader>
-    <div className={styles.databaseQueryBox}>
-      {windowList?.map((i: IConsole, index: number) => {
-        return (
-          <div
-            key={index}
-            className={classnames(styles.windowContent, {
-              [styles.concealTab]: activeKey !== i.key,
-            })}
-          >
-            {renderCurrentTab(i)}
-          </div>
-        );
-      })}
     </div>
-  </div>
+  );
 });
-

@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import Iconfont from '../Iconfont';
+import Iconfont from '../IconFont';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { IDatabase, ITreeNode } from '@/types'

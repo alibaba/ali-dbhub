@@ -57,7 +57,7 @@ export default memo<IProps>(function DraggableDivider({ className, volatileRef, 
     }
   }, [])
 
-  const moveHandle = (nowClientXY: any, letfDom: any, clientStart: any, volatileBoxXY: any) => {
+  const moveHandle = (nowClientXY: any, leftDom: any, clientStart: any, volatileBoxXY: any) => {
 
     let computedXY = nowClientXY - clientStart;
     let changeLength = volatileBoxXY + computedXY;
@@ -65,9 +65,9 @@ export default memo<IProps>(function DraggableDivider({ className, volatileRef, 
       return
     }
     if (direction == 'line') {
-      letfDom.style.width = changeLength + "px";
+      leftDom.style.width = changeLength + "px";
     } else {
-      letfDom.style.height = changeLength + "px";
+      leftDom.style.height = changeLength + "px";
     }
     callback && callback(changeLength)
   }

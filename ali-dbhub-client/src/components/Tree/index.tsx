@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useRef, useContext, useState, forwardRef, useImperativeHandle } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import Iconfont from '../Iconfont';
+import Iconfont from '../IconFont';
 import { Dropdown, Modal, Tooltip } from 'antd';
 import { ITreeNode } from '@/types';
 import { callVar, approximateTreeNode } from '@/utils';
