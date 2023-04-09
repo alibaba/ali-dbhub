@@ -6,13 +6,14 @@ package com.alibaba.dbhub.server.domain.support.dialect.mariadb;
 
 import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
+import com.alibaba.dbhub.server.domain.support.dialect.mysql.MysqlMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 
 /**
  * @author jipengfei
  * @version : MariaDBMetaSchemaSupport.java
  */
-public class MariaDBMetaSchemaSupport extends BaseMetaSchema implements MetaSchema {
+public class MariaDBMetaSchemaSupport extends MysqlMetaSchemaSupport implements MetaSchema {
     @Override
     public DbTypeEnum dbType() {
         return DbTypeEnum.MARIADB;
