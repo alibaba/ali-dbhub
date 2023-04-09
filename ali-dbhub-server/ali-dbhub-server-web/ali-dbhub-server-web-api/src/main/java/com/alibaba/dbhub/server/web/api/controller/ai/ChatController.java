@@ -217,7 +217,7 @@ public class ChatController {
 
 
     public static void main(String[] args) {
-        OpenAiService openAiService = new OpenAiService("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");
+        OpenAiService openAiService = new OpenAiService("XXXXX");
 
 
         CompletionRequest completionRequest = CompletionRequest.builder()
