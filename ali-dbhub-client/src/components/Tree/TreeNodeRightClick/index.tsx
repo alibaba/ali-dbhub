@@ -30,7 +30,6 @@ export interface IOperationColumnConfigItem {
   handle: () => void;
 }
 
-
 function TreeNodeRightClick(props: IProps) {
   const { className, setTreeData, data, setIsLoading } = props;
   const { setCreateConsoleDialog, setOperationDataDialog, setNeedRefreshNodeTree } = useContext(DatabaseContext);
@@ -129,126 +128,12 @@ function TreeNodeRightClick(props: IProps) {
     })
   }
 
-  const baseMenu: IMenu<string>[] = [
-    {
-      title: '新建控制台',
-      key: 'newConsole',
-      icon: '\ue631'
-    }
-  ]
-
-  function baseClick(item: IMenu<string>) {
-    if (item.key === 'newConsole') {
-      setCreateConsoleDialog({
-        dataSourceId: data.dataSourceId!,
-        databaseName: data.databaseName!,
-        schemaName: data.schemaName!,
-      })
-    }
-    closeMenu();
-  }
-
-  const tableMenu: IMenu<string>[] = [
-    ...baseMenu,
-    // {
-    //   title: '设计表结构',
-    //   key: 'edit',
-    //   icon: '\ue60f'
-    // },
-    {
-      title: '导出ddl',
-      key: 'export',
-      icon: '\ue613'
-    },
-    {
-      title: '删除表',
-      key: 'delete',
-      icon: '\ue6a7'
-    }
-  ]
-
-  const dataBaseMenu: IMenu<string>[] = [
-    ...baseMenu,
-    {
-      title: '新建Table',
-      key: 'createTable',
-      icon: '\ue6b6'
-    },
-    {
-      title: '刷新',
-      key: 'refresh',
-      icon: '\uec08'
-    },
-  ]
-
-  const tablesMenu: IMenu<string>[] = [
-    ...baseMenu,
-    {
-      title: '刷新',
-      key: 'refresh',
-      icon: '\uec08'
-    },
-  ]
-
-  const dataSourseMenu: IMenu<string>[] = [
-    {
-      title: '刷新',
-      key: 'refresh',
-      icon: '\uec08'
-    },
-    {
-      title: '移出',
-      key: 'remove',
-      icon: '\ue6a7'
-    },
-  ]
-
   function closeMenu() {
     // TODO: 关闭下拉弹窗 有木有更好的方法
     const customDropdown: any = document.getElementsByClassName('custom-dropdown');
     for (let i = 0; i < customDropdown.length; i++) {
       customDropdown[i].classList.add('custom-dropdown-hidden')
     }
-  }
-
-  function tableClick(item: IMenu<string>) {
-    if (item.key === 'export') {
-      const operationData: IOperationData = {
-        type: item.key,
-        nodeData: data
-      }
-      if (operationData.type === 'export') {
-        setOperationDataDialog(operationData);
-      }
-    } else if (item.key === 'delete') {
-      setVerifyDialog(true)
-    } else if (item.key === 'newConsole') {
-      setCreateConsoleDialog({
-        dataSourceId: data.dataSourceId!,
-        databaseName: data.databaseName!,
-        schemaName: data.schemaName!,
-      })
-    }
-    closeMenu();
-  }
-
-  function dataBaseClick(item: IMenu<string>) {
-    if (item.key === 'newConsole') {
-      setCreateConsoleDialog({
-        dataSourceId: data.dataSourceId!,
-        databaseName: data.databaseName!,
-        schemaName: data.schemaName!,
-      })
-    } else if (item.key === 'refresh') {
-      refresh()
-    } else if (item.key === 'createTable') {
-      const operationData: IOperationData = {
-        type: 'new',
-        nodeData: data
-      }
-      setOperationDataDialog(operationData)
-    }
-    closeMenu();
   }
 
   function handleOk() {
@@ -270,104 +155,6 @@ function TreeNodeRightClick(props: IProps) {
       message.error('输入的表名与要删除的表名不一致，请再次确认')
     }
   }
-
-  function dataSourceClick(item: IMenu<string>) {
-    if (item.key === 'refresh') {
-      refresh()
-    } else if (item.key === 'remove') {
-      connectionServer.remove({ id: +data.key }).then(res => {
-        treeConfig[TreeNodeType.DATASOURCES]?.getChildren!({} as any).then(res => {
-          setTreeData(res)
-        })
-      })
-    }
-    closeMenu();
-  }
-
-  // if (data.nodeType == TreeNodeType.TABLE) {
-  //   return <div className={styles.menuBox}>
-  //     <Modal
-  //       title="删除确认"
-  //       open={verifyDialog}
-  //       onOk={handleOk}
-  //       width={400}
-  //       onCancel={(() => { setVerifyDialog(false) })}>
-  //       <Input placeholder='请输入你要删除的表名' value={verifyTableName} onChange={(e) => { setVerifyTableName(e.target.value) }}></Input>
-  //     </Modal>
-  //     <Menu>
-  //       {
-  //         tableMenu.map(item => {
-  //           return <MenuItem key={item.key} onClick={tableClick.bind(null, item)}>
-  //             <Iconfont code={item.icon!}></Iconfont>
-  //             {item.title}
-  //           </MenuItem>
-  //         })
-  //       }
-  //     </Menu>
-  //   </div>
-  // } else if (data.nodeType == TreeNodeType.DATABASE) {
-  //   return <div className={styles.menuBox}>
-  //     <Menu>
-  //       {
-  //         dataBaseMenu.map(item => {
-  //           return <MenuItem key={item.key} onClick={dataBaseClick.bind(null, item)}>
-  //             <Iconfont code={item.icon!}></Iconfont>
-  //             {item.title}
-  //           </MenuItem>
-  //         })
-  //       }
-  //     </Menu>
-  //   </div>
-  // } else if (data.nodeType == TreeNodeType.DATASOURCE) {
-  //   return <div className={styles.menuBox}>
-  //     <Menu>
-  //       {
-  //         dataSourseMenu.map(item => {
-  //           return <MenuItem key={item.key} onClick={dataSourceClick.bind(null, item)}>
-  //             <Iconfont code={item.icon!}></Iconfont>
-  //             {item.title}
-  //           </MenuItem>
-  //         })
-  //       }
-  //     </Menu>
-  //   </div>
-  // } else if (data.nodeType == TreeNodeType.TABLES) {
-  //   return <div className={styles.menuBox}>
-  //     <Menu>
-  //       {
-  //         tablesMenu.map(item => {
-  //           return <MenuItem key={item.key} onClick={dataBaseClick.bind(null, item)}>
-  //             <Iconfont code={item.icon!}></Iconfont>
-  //             {item.title}
-  //           </MenuItem>
-  //         })
-  //       }
-  //     </Menu>
-  //   </div>
-
-  // } else if (
-  //   data.nodeType == TreeNodeType.COLUMN ||
-  //   data.nodeType == TreeNodeType.COLUMNS ||
-  //   data.nodeType == TreeNodeType.INDEXES ||
-  //   data.nodeType == TreeNodeType.INDEX ||
-  //   data.nodeType == TreeNodeType.KEYS ||
-  //   data.nodeType == TreeNodeType.KEY
-  // ) {
-  //   return <div className={styles.menuBox}>
-  //     <Menu>
-  //       {
-  //         baseMenu.map(item => {
-  //           return <MenuItem key={item.key} onClick={baseClick.bind(null, item)}>
-  //             <Iconfont code={item.icon!}></Iconfont>
-  //             {item.title}
-  //           </MenuItem>
-  //         })
-  //       }
-  //     </Menu>
-  //   </div>
-  // } else {
-  //   return <span></span>
-  // }
 
   return <>
     <div className={styles.menuBox}>
@@ -392,8 +179,6 @@ function TreeNodeRightClick(props: IProps) {
       <Input placeholder='请输入你要删除的表名' value={verifyTableName} onChange={(e) => { setVerifyTableName(e.target.value) }}></Input>
     </Modal>
   </>
-
-
 }
 
 export default memo(TreeNodeRightClick)
