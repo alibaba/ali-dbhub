@@ -1,13 +1,13 @@
 import React, { memo, useEffect, useMemo, useState, Fragment } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
+import Button from '@/components/Button';
 import { DatabaseTypeCode, databaseTypeList, TreeNodeType, EnvType } from '@/utils/constants';
 import { ITreeNode, IConnectionBase } from '@/types';
 import connectionServer from '@/service/connection'
 import { dataSourceFormConfigs, IDataSourceForm, InputType, IFormItem, ISelect } from '@/config/dataSource';
 import {
   Select,
-  Button,
   Modal,
   Form,
   Input,
@@ -201,7 +201,7 @@ export default memo<IProps>(function CreateConnection(props) {
   function onFieldsChange(data: any, datas: any) {
     const { template } = dataSourceFormConfig
     const formData = form.getFieldsValue();
-    let newData = {}
+    let newData: any = {}
 
     // 改变url上边动
     const keyName = data[0].name[0];
@@ -221,9 +221,7 @@ export default memo<IProps>(function CreateConnection(props) {
       }
     }
     if (keyName === 'host' && !aliasChanged) {
-      newData = {
-        alias: '@' + keyValue
-      }
+      newData.alias = '@' + keyValue
     }
 
     form.setFieldsValue({
@@ -252,7 +250,6 @@ export default memo<IProps>(function CreateConnection(props) {
             {
               !rowData &&
               <Button
-                size='small'
                 onClick={submitConnection.bind(null, submitType.TEST)}
                 className={styles.test}>
                 测试连接
@@ -260,10 +257,10 @@ export default memo<IProps>(function CreateConnection(props) {
             }
           </div>
           <div className={styles.rightButton}>
-            <Button size='small' onClick={onCancel} className={styles.cancel}>
+            <Button onClick={onCancel} className={styles.cancel}>
               取消
             </Button>
-            <Button className={styles.save} size='small' type="primary" onClick={submitConnection.bind(null, rowData ? submitType.UPDATE : submitType.SAVE)}>
+            <Button className={styles.save} theme="primary" onClick={submitConnection.bind(null, rowData ? submitType.UPDATE : submitType.SAVE)}>
               {
                 rowData ? '修改' : '连接'
               }

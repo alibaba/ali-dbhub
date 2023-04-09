@@ -5,6 +5,7 @@ import mysqlServer from '@/service/mysql';
 
 export type ITreeConfigItem = {
   getNodeData: (data: ITreeNode) => Promise<ITreeNode[]>;
+  next?: TreeNodeType;
 }
 
 export type ITreeConfig = Partial<{ [key in TreeNodeType]: ITreeConfigItem }>;
@@ -56,6 +57,7 @@ export const treeConfig: ITreeConfig = {
         })
       })
     },
+    next: TreeNodeType.DATABASE
   },
 
   [TreeNodeType.DATABASE]: {
@@ -66,35 +68,23 @@ export const treeConfig: ITreeConfig = {
           databaseName: parentData.databaseName!
         }
         mysqlServer.getSchemaList(p).then(res => {
-          if (res.length) {
-            const data: ITreeNode[] = res.map(t => {
-              return {
-                key: t.name,
-                name: t.name,
-                nodeType: TreeNodeType.SCHEMAS,
-                dataType: parentData.dataType,
-                schemaName: t.name,
-                dataSourceId: parentData.dataSourceId!,
-                databaseName: parentData.databaseName!
-              }
-            })
-            r(data);
-          } else {
-            let data = [
-              {
-                key: parentData.name + 'tables',
-                name: 'tables',
-                nodeType: TreeNodeType.TABLES,
-                dataSourceId: parentData.dataSourceId,
-                databaseName: parentData.databaseName,
-                dataType: parentData.dataType,
-              }
-            ]
-            r(data);
-          }
+          const data: ITreeNode[] = res.map(t => {
+            return {
+              key: t.name,
+              name: t.name,
+              nodeType: TreeNodeType.SCHEMAS,
+              dataType: parentData.dataType,
+              schemaName: t.name,
+              dataSourceId: parentData.dataSourceId!,
+              databaseName: parentData.databaseName!
+            }
+          })
+          r(data);
+
         })
       })
     },
+    next: TreeNodeType.SCHEMAS
   },
 
   [TreeNodeType.SCHEMAS]: {
@@ -150,7 +140,6 @@ export const treeConfig: ITreeConfig = {
 
   [TreeNodeType.TABLE]: {
     getNodeData: (parentData: ITreeNode) => {
-      console.log(parentData)
 
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         const tableList = [
@@ -283,6 +272,17 @@ export const treeConfig: ITreeConfig = {
           r(tableList);
         })
       })
+    }
+  }
+}
+
+export const treeGetDataLinkedList = {
+  nodeType: TreeNodeType.DATABASE,
+  next: {
+    nodeType: TreeNodeType.SCHEMAS,
+    next: {
+      nodeType: TreeNodeType.TABLES,
+      next: false
     }
   }
 }
