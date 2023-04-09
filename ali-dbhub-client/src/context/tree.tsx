@@ -1,46 +1,46 @@
-import React, { memo, useEffect, useState, useRef, createContext } from 'react';
+// import React, { memo, useEffect, useState, useRef, createContext } from 'react';
 
-export type ICreateConsoleDialog = false | {
-  dataSourceId: number;
-  databaseName: string;
-}
+// export type ICreateConsoleDialog = false | {
+//   dataSourceId: number;
+//   databaseName: string;
+// }
 
 
-export interface IModel {
-  createConsoleDialog: ICreateConsoleDialog;
-}
+// export interface IModel {
+//   createConsoleDialog: ICreateConsoleDialog;
+// }
 
-export interface IContext {
-  model: IModel;
-  setcreateConsoleDialog: (value: ICreateConsoleDialog) => void;
-}
+// export interface IContext {
+//   model: IModel;
+//   setCreateConsoleDialog: (value: ICreateConsoleDialog) => void;
+// }
 
-const initDatabaseValue: IModel = {
-  createConsoleDialog: false,
-}
+// const initDatabaseValue: IModel = {
+//   createConsoleDialog: false,
+// }
 
-export const TreeContext = createContext<IContext>({} as any);
+// export const TreeContext = createContext<IContext>({} as any);
 
-export default function DatabaseContextProvider({ children }: { children: React.ReactNode }) {
-  const [model, setStateModel] = useState<IModel>(initDatabaseValue);
+// export default function DatabaseContextProvider({ children }: { children: React.ReactNode }) {
+//   const [model, setStateModel] = useState<IModel>(initDatabaseValue);
 
-  const setcreateConsoleDialog = (createConsoleDialog: ICreateConsoleDialog) => {
-    setStateModel({
-      ...model,
-      createConsoleDialog
-    })
-  }
-  const setOperationDataDialog = (operationData: IOperationDataDialog) => {
-    setStateModel({
-      ...model,
-      operationData
-    })
-  }
+//   const setCreateConsoleDialog = (createConsoleDialog: ICreateConsoleDialog) => {
+//     setStateModel({
+//       ...model,
+//       createConsoleDialog
+//     })
+//   }
+//   const setOperationDataDialog = (operationData: IOperationDataDialog) => {
+//     setStateModel({
+//       ...model,
+//       operationData
+//     })
+//   }
 
-  return <TreeContext.Provider value={{
-    model,
-    setcreateConsoleDialog,
-  }}>
-    {children}
-  </TreeContext.Provider>
-}
+//   return <TreeContext.Provider value={{
+//     model,
+//     setCreateConsoleDialog,
+//   }}>
+//     {children}
+//   </TreeContext.Provider>
+// }

@@ -1,5 +1,4 @@
 import React, { memo, useEffect, useRef, useContext, useState, forwardRef, useImperativeHandle } from 'react';
-import globalStyle from '@/global.less';
 import styles from './index.less';
 import classnames from 'classnames';
 import Iconfont from '../Iconfont';
@@ -7,13 +6,10 @@ import { Dropdown, Modal, Tooltip } from 'antd';
 import { ITreeNode } from '@/types';
 import { callVar, approximateTreeNode } from '@/utils';
 import { TreeNodeType } from '@/utils/constants';
-import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import StateIndicator from '@/components/StateIndicator';
 import LoadingContent from '../Loading/LoadingContent';
 import { useCanDoubleClick, useUpdateEffect } from '@/utils/hooks';
-import { IOperationData } from '@/components/OperationTableModal';
 import connectionService from '@/service/connection';
-import mysqlServer from '@/service/mysql';
 import TreeNodeRightClick from './TreeNodeRightClick';
 import { treeConfig, switchIcon } from './treeConfig'
 import { databaseType } from '@/utils/constants'
@@ -32,7 +28,6 @@ interface TreeNodeIProps {
   setTreeData: Function;
   showAllChildrenPenetrate?: boolean;
 }
-
 
 function Tree(props: IProps, ref: any) {
   const { className, cRef, addTreeData } = props;
@@ -104,7 +99,6 @@ function Tree(props: IProps, ref: any) {
 function TreeNode(props: TreeNodeIProps) {
   const { setTreeData, data, level, show = false, showAllChildrenPenetrate = false } = props;
   const [showChildren, setShowChildren] = useState(false);
-  const [showAllChildren, setShowAllChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const indentArr = new Array(level).fill('indent');
   const { model, setNeedRefreshNodeTree, setDblclickNodeData } = useContext(DatabaseContext);
@@ -117,13 +111,17 @@ function TreeNode(props: TreeNodeIProps) {
       if (res.length) {
         setTimeout(() => {
           data.children = res;
-          setIsLoading(false);
           setShowChildren(true);
+          setIsLoading(false);
         }, 200);
       } else {
         if (treeConfig[data.nodeType]?.next) {
           data.nodeType = treeConfig[data.nodeType]?.next!
-          loadData(data)
+          loadData(data);
+        } else {
+          data.children = [];
+          setShowChildren(true);
+          setIsLoading(false);
         }
       }
     });
@@ -153,9 +151,6 @@ function TreeNode(props: TreeNodeIProps) {
     if (treeConfig[data.nodeType] && !data.children) {
       loadData(data)
     } else {
-      if (level === 0) {
-        setShowAllChildren(!showAllChildren);
-      }
       setShowChildren(!showChildren);
     }
   };
@@ -212,7 +207,7 @@ function TreeNode(props: TreeNodeIProps) {
             {
               !data.isLeaf &&
               <div onClick={handleClick.bind(null, data)} className={styles.arrows}>
-                {/* {
+                {
                   isLoading
                     ?
                     <div className={styles.loadingIcon}>
@@ -220,8 +215,8 @@ function TreeNode(props: TreeNodeIProps) {
                     </div>
                     :
                     <Iconfont className={classnames(styles.arrowsIcon, { [styles.rotateArrowsIcon]: showChildren })} code='&#xe608;' />
-                } */}
-                <Iconfont className={classnames(styles.arrowsIcon, { [styles.rotateArrowsIcon]: showChildren })} code='&#xe608;' />
+                }
+                {/* <Iconfont className={classnames(styles.arrowsIcon, { [styles.rotateArrowsIcon]: showChildren })} code='&#xe608;' /> */}
               </div>
             }
             <div className={styles.typeIcon}>
@@ -242,7 +237,7 @@ function TreeNode(props: TreeNodeIProps) {
           data={item}
           level={level + 1}
           setTreeData={setTreeData}
-          showAllChildrenPenetrate={showAllChildrenPenetrate || showAllChildren}
+          showAllChildrenPenetrate={showAllChildrenPenetrate}
           show={(showChildren && show)}
         />
       })

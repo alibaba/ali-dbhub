@@ -248,10 +248,10 @@ export default memo<IProps>(function DatabaseQuery(props) {
             }
           </div>
         </div>
-        {/* <DraggableDivider direction='line' min={200} volatileRef={traditionSql} />
+        <DraggableDivider direction='line' min={200} volatileRef={traditionSql} />
         <div className={styles.chatBox}>
           <ChatAI type='embed' consoleId={windowTab.consoleId} databaseName={windowTab.databaseName} dataSourceId={windowTab.dataSourceId} classNames={styles.chatAI}></ChatAI>
-        </div> */}
+        </div>
       </div>
       <DraggableDivider callback={callback} direction='row' min={200} volatileRef={inputHub} />
       <div className={styles.searchResult}>

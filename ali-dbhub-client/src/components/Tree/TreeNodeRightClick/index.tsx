@@ -16,7 +16,7 @@ import mysqlServer from '@/service/mysql';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-export type Iprops = {
+export type IProps = {
   className?: string;
   setIsLoading: (value: boolean) => void;
   data: ITreeNode;
@@ -24,9 +24,9 @@ export type Iprops = {
   nodeConfig: ITreeConfigItem | undefined;
 }
 
-function TreeNodeRightClick(props: Iprops) {
+function TreeNodeRightClick(props: IProps) {
   const { className, setTreeData, data, nodeConfig, setIsLoading } = props;
-  const { setcreateConsoleDialog, setOperationDataDialog, setNeedRefreshNodeTree } = useContext(DatabaseContext);
+  const { setCreateConsoleDialog, setOperationDataDialog, setNeedRefreshNodeTree } = useContext(DatabaseContext);
   const [verifyDialog, setVerifyDialog] = useState<boolean>();
   const [verifyTableName, setVerifyTableName] = useState<string>('');
   const getNodeData = nodeConfig?.getNodeData;
@@ -52,7 +52,7 @@ function TreeNodeRightClick(props: Iprops) {
 
   function baseClick(item: IMenu<string>) {
     if (item.key === 'newConsole') {
-      setcreateConsoleDialog({
+      setCreateConsoleDialog({
         dataSourceId: data.dataSourceId!,
         databaseName: data.databaseName!,
       })
@@ -135,7 +135,7 @@ function TreeNodeRightClick(props: Iprops) {
     } else if (item.key === 'delete') {
       setVerifyDialog(true)
     } else if (item.key === 'newConsole') {
-      setcreateConsoleDialog({
+      setCreateConsoleDialog({
         dataSourceId: data.dataSourceId!,
         databaseName: data.databaseName!,
       })
@@ -145,7 +145,7 @@ function TreeNodeRightClick(props: Iprops) {
 
   function dataBaseClick(item: IMenu<string>) {
     if (item.key === 'newConsole') {
-      setcreateConsoleDialog({
+      setCreateConsoleDialog({
         dataSourceId: data.dataSourceId!,
         databaseName: data.databaseName!,
       })
