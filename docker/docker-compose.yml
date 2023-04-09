@@ -61,7 +61,7 @@ services:
       MYSQL_ROOT_PASSWORD: "ali_dbhub"
       TZ: "Asia/Shanghai"
     ports:
-      - "3303:3303"
+      - "3304:3304"
 
   clickhouse-server:
     # image：指定镜像，可以为镜像名称或镜像id，如果本地没有该镜像，compose会尝试pull该镜像
