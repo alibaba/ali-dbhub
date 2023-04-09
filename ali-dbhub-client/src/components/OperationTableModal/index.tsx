@@ -63,6 +63,8 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(
         tableName: operationData.nodeData?.name!,
         dataSourceId: operationData.nodeData?.dataSourceId,
         databaseName: operationData.nodeData?.databaseName,
+        schemaName: operationData.nodeData?.schemaName
+
       };
       mysqlServer.exportCreateTableSql(p).then((res) => {
         setMonacoEditorValue(monacoEditor.current, res);

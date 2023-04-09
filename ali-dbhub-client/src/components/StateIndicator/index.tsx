@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import Loading from '../Loading/Loading';
-import Iconfont from '../IconFont';
+import Iconfont from '../Iconfont';
 
 interface IProps {
   className?: string;

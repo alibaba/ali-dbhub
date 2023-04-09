@@ -5,9 +5,10 @@ import { ITreeNode } from '@/types';
 export type ICreateConsoleDialog =
   | false
   | {
-      dataSourceId: number;
-      databaseName: string;
-    };
+    dataSourceId: number;
+    databaseName: string;
+    schemaName: string;
+  };
 
 export type IOperationDataDialog = false | IOperationData;
 

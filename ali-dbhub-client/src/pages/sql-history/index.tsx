@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import i18n from '@/i18n';
 import AppHeader from '@/components/AppHeader';
 import Tabs, { ITab } from '@/components/Tabs';
-import Iconfont from '@/components/IconFont';
+import Iconfont from '@/components/Iconfont';
 import SearchInput from '@/components/SearchInput';
 import StateIndicator from '@/components/StateIndicator';
 import ScrollLoading from '@/components/ScrollLoading';

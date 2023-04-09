@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from 'antd';
 import i18n from '@/i18n';
-import IconFont from '@/components/IconFont';
+import Iconfont from '@/components/Iconfont';
 import Tree from '@/components/Tree';
 import MonacoEditor, {
   setEditorHint,
@@ -117,7 +117,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
                   className={classnames(styles.refresh, styles.button)}
                   onClick={refresh}
                 >
-                  <IconFont code="&#xec08;" />
+                  <Iconfont code="&#xec08;" />
                 </div>
                 <Dropdown
                   overlay={<GlobalAddMenu getAddTreeNode={getAddTreeNode} />}
@@ -127,13 +127,13 @@ export default memo<IProps>(function DatabasePage({ className }) {
                     onClick={() => setOpenDropdown(true)}
                     className={classnames(styles.create, styles.button)}
                   >
-                    <IconFont code="&#xe631;" />
+                    <Iconfont code="&#xe631;" />
                   </div>
                 </Dropdown>
               </div>
             </div>
             <div className={styles.overview}>
-              <IconFont code="&#xe63d;" />
+              <Iconfont code="&#xe63d;" />
               <span>{i18n('connection.button.overview')}</span>
             </div>
             <Tree

@@ -44,6 +44,7 @@ export default memo<IProps>(function ConsoleList(props) {
           i.dataSourceId === dblclickNodeData.dataSourceId
         ) {
           flag = true;
+          setActiveKey(i.key);
         }
       });
       if (!flag) {

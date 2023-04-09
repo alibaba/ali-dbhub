@@ -1,7 +1,7 @@
 import React, { memo, useContext, useState } from 'react';
 import classnames from 'classnames';
 import styles from './index.less';
-import Iconfont from '../../IconFont';
+import Iconfont from '../../Iconfont';
 import { MenuProps, message } from 'antd';
 import { Modal, Input } from 'antd';
 // import { Menu } from 'antd';
@@ -13,6 +13,7 @@ import { ITreeNode } from '@/types';
 import { DatabaseContext } from '@/context/database';
 import connectionServer from '@/service/connection';
 import mysqlServer from '@/service/mysql';
+import { OperationColumn } from '../treeConfig'
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -21,23 +22,109 @@ export type IProps = {
   setIsLoading: (value: boolean) => void;
   data: ITreeNode;
   setTreeData: Function;
-  nodeConfig: ITreeConfigItem | undefined;
 }
 
+export interface IOperationColumnConfigItem {
+  text: string;
+  icon: string;
+  handle: () => void;
+}
+
+
 function TreeNodeRightClick(props: IProps) {
-  const { className, setTreeData, data, nodeConfig, setIsLoading } = props;
+  const { className, setTreeData, data, setIsLoading } = props;
   const { setCreateConsoleDialog, setOperationDataDialog, setNeedRefreshNodeTree } = useContext(DatabaseContext);
   const [verifyDialog, setVerifyDialog] = useState<boolean>();
   const [verifyTableName, setVerifyTableName] = useState<string>('');
-  const getNodeData = nodeConfig?.getNodeData;
+  const treeNodeConfig: ITreeConfigItem = treeConfig[data.nodeType]
+  const { getChildren, operationColumn } = treeNodeConfig;
+
+  const OperationColumnConfig: { [key in OperationColumn]: (data: ITreeNode) => IOperationColumnConfigItem } = {
+    [OperationColumn.REFRESH]: (data) => {
+      return {
+        text: '刷新',
+        icon: '\uec08',
+        handle: () => {
+          refresh();
+        }
+      }
+    },
+    [OperationColumn.ExportDDL]: (data) => {
+      return {
+        text: '导出ddl',
+        icon: '\ue613',
+        handle: () => {
+          const operationData: IOperationData = {
+            type: 'export',
+            nodeData: data
+          }
+          if (operationData.type === 'export') {
+            setOperationDataDialog(operationData);
+          }
+        }
+      }
+    },
+    [OperationColumn.ShiftOut]: (data) => {
+      return {
+        text: '移出',
+        icon: '\ue62a',
+        handle: () => {
+          connectionServer.remove({ id: +data.key }).then(res => {
+            treeConfig[TreeNodeType.DATASOURCES]?.getChildren!({} as any).then(res => {
+              setTreeData(res);
+            })
+          })
+        }
+      }
+    },
+    [OperationColumn.CreateTable]: (data) => {
+      return {
+        text: '新建表',
+        icon: '\ue6b6',
+        handle: () => {
+          const operationData: IOperationData = {
+            type: 'new',
+            nodeData: data
+          }
+          setOperationDataDialog(operationData)
+        }
+      }
+    },
+    [OperationColumn.CreateConsole]: (data) => {
+      return {
+        text: '新建查询',
+        icon: '\ue619',
+        handle: () => {
+          setCreateConsoleDialog({
+            dataSourceId: data.dataSourceId!,
+            databaseName: data.databaseName!,
+            schemaName: data.schemaName!
+          })
+        }
+      }
+    },
+    [OperationColumn.DeleteTable]: (data) => {
+      return {
+        text: '删除表',
+        icon: '\ue6a7',
+        handle: () => {
+          setCreateConsoleDialog({
+            dataSourceId: data.dataSourceId!,
+            databaseName: data.databaseName!,
+            schemaName: data.schemaName!
+          })
+        }
+      }
+    }
+  }
 
   function refresh() {
-    data.children = []
-    setIsLoading(true)
-    getNodeData?.(data).then(res => {
+    data.children = [];
+    setIsLoading(true);
+    getChildren?.(data).then(res => {
       setTimeout(() => {
         data.children = res;
-        setIsLoading(false)
+        setIsLoading(false);
       }, 200);
     })
   }
@@ -55,6 +142,7 @@ function TreeNodeRightClick(props: IProps) {
       setCreateConsoleDialog({
         dataSourceId: data.dataSourceId!,
         databaseName: data.databaseName!,
+        schemaName: data.schemaName!,
       })
     }
     closeMenu();
@@ -109,7 +197,7 @@ function TreeNodeRightClick(props: IProps) {
       icon: '\uec08'
     },
     {
-      title: '移除',
+      title: '移出',
       key: 'remove',
       icon: '\ue6a7'
     },
@@ -138,6 +226,7 @@ function TreeNodeRightClick(props: IProps) {
       setCreateConsoleDialog({
         dataSourceId: data.dataSourceId!,
         databaseName: data.databaseName!,
+        schemaName: data.schemaName!,
       })
     }
     closeMenu();
@@ -148,6 +237,7 @@ function TreeNodeRightClick(props: IProps) {
       setCreateConsoleDialog({
         dataSourceId: data.dataSourceId!,
         databaseName: data.databaseName!,
+        schemaName: data.schemaName!,
       })
     } else if (item.key === 'refresh') {
       refresh()
@@ -181,12 +271,12 @@ function TreeNodeRightClick(props: IProps) {
     }
   }
 
-  function dataSourseClick(item: IMenu<string>) {
+  function dataSourceClick(item: IMenu<string>) {
     if (item.key === 'refresh') {
       refresh()
     } else if (item.key === 'remove') {
       connectionServer.remove({ id: +data.key }).then(res => {
-        treeConfig[TreeNodeType.DATASOURCES]?.getNodeData({} as any).then(res => {
+        treeConfig[TreeNodeType.DATASOURCES]?.getChildren!({} as any).then(res => {
           setTreeData(res)
         })
       })
@@ -194,91 +284,116 @@ function TreeNodeRightClick(props: IProps) {
     closeMenu();
   }
 
-  if (data.nodeType == TreeNodeType.TABLE) {
-    return <div className={styles.menuBox}>
-      <Modal
-        title="删除确认"
-        open={verifyDialog}
-        onOk={handleOk}
-        width={400}
-        onCancel={(() => { setVerifyDialog(false) })}>
-        <Input placeholder='请输入你要删除的表名' value={verifyTableName} onChange={(e) => { setVerifyTableName(e.target.value) }}></Input>
-      </Modal>
-      <Menu>
-        {
-          tableMenu.map(item => {
-            return <MenuItem key={item.key} onClick={tableClick.bind(null, item)}>
-              <Iconfont code={item.icon!}></Iconfont>
-              {item.title}
-            </MenuItem>
-          })
-        }
-      </Menu>
-    </div>
-  } else if (data.nodeType == TreeNodeType.DATABASE) {
-    return <div className={styles.menuBox}>
-      <Menu>
-        {
-          dataBaseMenu.map(item => {
-            return <MenuItem key={item.key} onClick={dataBaseClick.bind(null, item)}>
-              <Iconfont code={item.icon!}></Iconfont>
-              {item.title}
-            </MenuItem>
-          })
-        }
-      </Menu>
-    </div>
-  } else if (data.nodeType == TreeNodeType.DATASOURCE) {
-    return <div className={styles.menuBox}>
-      <Menu>
-        {
-          dataSourseMenu.map(item => {
-            return <MenuItem key={item.key} onClick={dataSourseClick.bind(null, item)}>
-              <Iconfont code={item.icon!}></Iconfont>
-              {item.title}
-            </MenuItem>
-          })
-        }
-      </Menu>
-    </div>
-  } else if (data.nodeType == TreeNodeType.TABLES) {
-    return <div className={styles.menuBox}>
-      <Menu>
-        {
-          tablesMenu.map(item => {
-            return <MenuItem key={item.key} onClick={dataBaseClick.bind(null, item)}>
-              <Iconfont code={item.icon!}></Iconfont>
-              {item.title}
-            </MenuItem>
-          })
-        }
-      </Menu>
-    </div>
+  // if (data.nodeType == TreeNodeType.TABLE) {
+  //   return <div className={styles.menuBox}>
+  //     <Modal
+  //       title="删除确认"
+  //       open={verifyDialog}
+  //       onOk={handleOk}
+  //       width={400}
+  //       onCancel={(() => { setVerifyDialog(false) })}>
+  //       <Input placeholder='请输入你要删除的表名' value={verifyTableName} onChange={(e) => { setVerifyTableName(e.target.value) }}></Input>
+  //     </Modal>
+  //     <Menu>
+  //       {
+  //         tableMenu.map(item => {
+  //           return <MenuItem key={item.key} onClick={tableClick.bind(null, item)}>
+  //             <Iconfont code={item.icon!}></Iconfont>
+  //             {item.title}
+  //           </MenuItem>
+  //         })
+  //       }
+  //     </Menu>
+  //   </div>
+  // } else if (data.nodeType == TreeNodeType.DATABASE) {
+  //   return <div className={styles.menuBox}>
+  //     <Menu>
+  //       {
+  //         dataBaseMenu.map(item => {
+  //           return <MenuItem key={item.key} onClick={dataBaseClick.bind(null, item)}>
+  //             <Iconfont code={item.icon!}></Iconfont>
+  //             {item.title}
+  //           </MenuItem>
+  //         })
+  //       }
+  //     </Menu>
+  //   </div>
+  // } else if (data.nodeType == TreeNodeType.DATASOURCE) {
+  //   return <div className={styles.menuBox}>
+  //     <Menu>
+  //       {
+  //         dataSourseMenu.map(item => {
+  //           return <MenuItem key={item.key} onClick={dataSourceClick.bind(null, item)}>
+  //             <Iconfont code={item.icon!}></Iconfont>
+  //             {item.title}
+  //           </MenuItem>
+  //         })
+  //       }
+  //     </Menu>
+  //   </div>
+  // } else if (data.nodeType == TreeNodeType.TABLES) {
+  //   return <div className={styles.menuBox}>
+  //     <Menu>
+  //       {
+  //         tablesMenu.map(item => {
+  //           return <MenuItem key={item.key} onClick={dataBaseClick.bind(null, item)}>
+  //             <Iconfont code={item.icon!}></Iconfont>
+  //             {item.title}
+  //           </MenuItem>
+  //         })
+  //       }
+  //     </Menu>
+  //   </div>
 
-  } else if (
-    data.nodeType == TreeNodeType.COLUMN ||
-    data.nodeType == TreeNodeType.COLUMNS ||
-    data.nodeType == TreeNodeType.INDEXES ||
-    data.nodeType == TreeNodeType.INDEXE ||
-    data.nodeType == TreeNodeType.KEYS ||
-    data.nodeType == TreeNodeType.KEY
-  ) {
-    console.log(data)
-    return <div className={styles.menuBox}>
+  // } else if (
+  //   data.nodeType == TreeNodeType.COLUMN ||
+  //   data.nodeType == TreeNodeType.COLUMNS ||
+  //   data.nodeType == TreeNodeType.INDEXES ||
+  //   data.nodeType == TreeNodeType.INDEX ||
+  //   data.nodeType == TreeNodeType.KEYS ||
+  //   data.nodeType == TreeNodeType.KEY
+  // ) {
+  //   return <div className={styles.menuBox}>
+  //     <Menu>
+  //       {
+  //         baseMenu.map(item => {
+  //           return <MenuItem key={item.key} onClick={baseClick.bind(null, item)}>
+  //             <Iconfont code={item.icon!}></Iconfont>
+  //             {item.title}
+  //           </MenuItem>
+  //         })
+  //       }
+  //     </Menu>
+  //   </div>
+  // } else {
+  //   return <span></span>
+  // }
+
+  return <>
+    <div className={styles.menuBox}>
       <Menu>
         {
-          baseMenu.map(item => {
-            return <MenuItem key={item.key} onClick={baseClick.bind(null, item)}>
-              <Iconfont code={item.icon!}></Iconfont>
-              {item.title}
+          operationColumn?.map((item, index) => {
+            const concrete = OperationColumnConfig[item](data);
+            return <MenuItem key={index} onClick={() => { closeMenu(); concrete.handle(); }}>
+              {concrete.text}
+              <Iconfont code={concrete.icon} />
             </MenuItem>
           })
         }
       </Menu>
     </div>
-  } else {
-    return <span></span>
-  }
+    <Modal
+      title="删除确认"
+      open={verifyDialog}
+      onOk={handleOk}
+      width={400}
+      onCancel={(() => { setVerifyDialog(false) })}>
+      <Input placeholder='请输入你要删除的表名' value={verifyTableName} onChange={(e) => { setVerifyTableName(e.target.value) }}></Input>
+    </Modal>
+  </>
+
+
 }
 
 export default memo(TreeNodeRightClick)

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import classnames from 'classnames'
 import styles from './index.less'
-import Iconfont from '../IconFont'
+import Iconfont from '../Iconfont'
 
 
 export type IProps = {

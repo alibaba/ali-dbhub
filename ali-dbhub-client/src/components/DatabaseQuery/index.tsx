@@ -4,7 +4,7 @@ import { useParams } from 'umi';
 import { ISQLQueryConsole } from '@/types';
 import { Divider, message, Tooltip } from 'antd';
 import { TreeNodeType, WindowTabStatus, OSType } from '@/utils/constants';
-import IconFont from '@/components/IconFont';
+import Iconfont from '@/components/Iconfont';
 import MonacoEditor, { setEditorHint } from '@/components/MonacoEditor';
 import DraggableDivider from '@/components/DraggableDivider';
 import SearchResult from '@/components/SearchResult';
@@ -129,7 +129,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
         myEditorHintData[item.name] = [];
       });
       monacoHint.current = setEditorHint(myEditorHintData);
-    } catch {}
+    } catch { }
   };
 
   const getEditor = (editor: any) => {
@@ -140,8 +140,8 @@ export default memo<IProps>(function DatabaseQuery(props) {
       localStorage.getItem(
         `window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.consoleId}`,
       ) ||
-        windowTab.ddl ||
-        '',
+      windowTab.ddl ||
+      '',
     );
   };
 
@@ -272,7 +272,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
       const optList = optBtn.current[i];
       const tmpDom = (optList || []).map((item: any) => (
         <Tooltip placement="bottom" title={item.name}>
-          <IconFont
+          <Iconfont
             code={item.icon}
             className={styles.icon}
             onClick={item.onClick}

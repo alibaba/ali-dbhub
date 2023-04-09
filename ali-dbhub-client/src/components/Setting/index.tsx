@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import Iconfont from '@/components/IconFont';
+import Iconfont from '@/components/Iconfont';
 import { Modal, Button, Radio } from 'antd';
 import i18n from '@/i18n';
 
