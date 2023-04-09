@@ -2,7 +2,15 @@ package com.alibaba.dbhub.server.web.api.controller.rdb;
 
 import java.util.List;
 
+import com.alibaba.dbhub.server.domain.api.param.DatabaseOperationParam;
 import com.alibaba.dbhub.server.domain.api.param.DlExecuteParam;
+import com.alibaba.dbhub.server.domain.api.param.DropParam;
+import com.alibaba.dbhub.server.domain.api.param.SchemaOperationParam;
+import com.alibaba.dbhub.server.domain.api.param.SchemaQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.ShowCreateTableParam;
+import com.alibaba.dbhub.server.domain.api.param.TablePageQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.TableQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.TableSelector;
 import com.alibaba.dbhub.server.domain.api.service.DatabaseService;
 import com.alibaba.dbhub.server.domain.api.service.DlTemplateService;
 import com.alibaba.dbhub.server.domain.api.service.TableService;
@@ -10,12 +18,6 @@ import com.alibaba.dbhub.server.domain.support.model.Schema;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
-import com.alibaba.dbhub.server.domain.api.param.SchemaQueryParam;
-import com.alibaba.dbhub.server.domain.api.param.DropParam;
-import com.alibaba.dbhub.server.domain.api.param.ShowCreateTableParam;
-import com.alibaba.dbhub.server.domain.api.param.TablePageQueryParam;
-import com.alibaba.dbhub.server.domain.api.param.TableQueryParam;
-import com.alibaba.dbhub.server.domain.api.param.TableSelector;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
@@ -33,6 +35,8 @@ import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDeleteReques
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableModifySqlRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableUpdateDdlQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.rdb.request.UpdateDatabaseRequest;
+import com.alibaba.dbhub.server.web.api.controller.rdb.request.UpdateSchemaRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ColumnVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.IndexVO;
@@ -71,10 +75,8 @@ public class RdbDdlController {
     @Autowired
     private RdbWebConverter rdbWebConverter;
 
-
     @Autowired
     private DatabaseService databaseService;
-
 
     /**
      * 查询当前DB下的表列表
@@ -97,6 +99,7 @@ public class RdbDdlController {
 
     /**
      * 查询数据库里包含的schema_list
+     *
      * @param request
      * @return
      */
@@ -108,10 +111,87 @@ public class RdbDdlController {
         return ListResult.of(tableVOS);
     }
 
+    /**
+     * 删除数据库
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/delete_database")
+    public ActionResult deleteDatabase(@RequestBody DataSourceBaseRequest request) {
+        DatabaseOperationParam param = DatabaseOperationParam.builder().databaseName(request.getDatabaseName()).build();
+        return databaseService.deleteDatabase(param);
+    }
+
+    /**
+     * 创建database
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/create_database")
+    public ActionResult createDatabase(@RequestBody DataSourceBaseRequest request) {
+        DatabaseOperationParam param = DatabaseOperationParam.builder().databaseName(request.getDatabaseName()).build();
+        return databaseService.createDatabase(param);
+    }
+
+    /**
+     * 创建database
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/modify_database")
+    public ActionResult modifyDatabase(@RequestBody UpdateDatabaseRequest request) {
+        DatabaseOperationParam param = DatabaseOperationParam.builder().databaseName(request.getDatabaseName())
+            .newDatabaseName(request.getNewDatabaseName()).build();
+        return databaseService.modifyDatabase(param);
+    }
+
+    /**
+     * 删除schema
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/delete_schema")
+    public ActionResult deleteSchema(@RequestBody DataSourceBaseRequest request) {
+        SchemaOperationParam param = SchemaOperationParam.builder().databaseName(request.getDatabaseName())
+            .schemaName(request.getSchemaName()).build();
+        return databaseService.deleteSchema(param);
+    }
+
+    /**
+     * 创建schema
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/create_schema")
+    public ActionResult createSchema(@RequestBody DataSourceBaseRequest request) {
+        SchemaOperationParam param = SchemaOperationParam.builder().databaseName(request.getDatabaseName())
+            .schemaName(request.getSchemaName()).build();
+        return databaseService.createSchema(param);
+    }
+
+    /**
+     * 创建database
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/modify_schema")
+    public ActionResult modifySchema(@RequestBody UpdateSchemaRequest request) {
+        SchemaOperationParam param = SchemaOperationParam.builder().databaseName(request.getDatabaseName())
+            .schemaName(request.getSchemaName()).newSchemaName(request.getNewSchemaName()).build();
+        return databaseService.modifySchema(param);
+    }
+
 
     /**
      * 查询当前DB下的表columns
-     *d
+     * d
+     *
      * @param request
      * @return
      */
@@ -148,7 +228,6 @@ public class RdbDdlController {
         // TODO 增加查询key实现
         return ListResult.of(Lists.newArrayList());
     }
-
 
     /**
      * 导出建表语句
