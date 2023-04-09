@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useRef, useContext, useState, forwardRef, useImperativeHandle } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import Iconfont from '../IconFont';
+import Iconfont from '../Iconfont';
 import { Dropdown, Modal, Tooltip } from 'antd';
 import { ITreeNode } from '@/types';
 import { callVar, approximateTreeNode } from '@/utils';
@@ -11,7 +11,7 @@ import LoadingContent from '../Loading/LoadingContent';
 import { useCanDoubleClick, useUpdateEffect } from '@/utils/hooks';
 import connectionService from '@/service/connection';
 import TreeNodeRightClick from './TreeNodeRightClick';
-import { treeConfig, switchIcon } from './treeConfig'
+import { treeConfig, switchIcon, ITreeConfigItem } from './treeConfig'
 import { databaseType } from '@/utils/constants'
 import { DatabaseContext } from '@/context/database';
 
@@ -107,16 +107,18 @@ function TreeNode(props: TreeNodeIProps) {
   const treeNodeClick = useCanDoubleClick();
 
   function loadData(data: ITreeNode) {
-    treeConfig[data.nodeType]?.getNodeData(data).then(res => {
+    const treeNodeConfig: ITreeConfigItem = treeConfig[data.nodeType];
+    treeNodeConfig.getChildren?.(data).then(res => {
       if (res.length) {
+        console.log(res)
         setTimeout(() => {
           data.children = res;
           setShowChildren(true);
           setIsLoading(false);
         }, 200);
       } else {
-        if (treeConfig[data.nodeType]?.next) {
-          data.nodeType = treeConfig[data.nodeType]?.next!
+        if (treeNodeConfig.next) {
+          data.nodeType = treeNodeConfig.next;
           loadData(data);
         } else {
           data.children = [];
@@ -160,7 +162,6 @@ function TreeNode(props: TreeNodeIProps) {
       data={data}
       setTreeData={setTreeData}
       setIsLoading={setIsLoading}
-      nodeConfig={treeConfig[data.nodeType]}
     />
   }
 

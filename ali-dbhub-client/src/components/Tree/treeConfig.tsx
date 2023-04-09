@@ -3,17 +3,75 @@ import { TreeNodeType } from '@/utils/constants';
 import connectionService from '@/service/connection';
 import mysqlServer from '@/service/mysql';
 
-export type ITreeConfigItem = {
-  getNodeData: (data: ITreeNode) => Promise<ITreeNode[]>;
-  next?: TreeNodeType;
-}
-
 export type ITreeConfig = Partial<{ [key in TreeNodeType]: ITreeConfigItem }>;
 
-export const treeConfig: ITreeConfig = {
+export const switchIcon: Partial<{ [key in TreeNodeType]: { icon: string } }> = {
+  [TreeNodeType.DATABASE]: {
+    icon: '\ue62c'
+  },
+  [TreeNodeType.SCHEMAS]: {
+    icon: '\ue696'
+  },
+  [TreeNodeType.TABLE]: {
+    icon: '\ue63e'
+  },
+  [TreeNodeType.TABLES]: {
+    icon: '\ueac5'
+  },
+  [TreeNodeType.COLUMNS]: {
+    icon: '\ueac5'
+  },
+  [TreeNodeType.COLUMN]: {
+    icon: '\ue611'
+  },
+  [TreeNodeType.KEYS]: {
+    icon: '\ueac5'
+  },
+  [TreeNodeType.KEY]: {
+    icon: '\ue775'
+  },
+  [TreeNodeType.INDEXES]: {
+    icon: '\ueac5'
+  },
+  [TreeNodeType.INDEX]: {
+    icon: '\ue65b'
+  },
+  // [TreeNodeType.SEARCH]: {
+  //   icon: '\uec4c'
+  // },
+  // [TreeNodeType.LINE]: {
+  //   icon: '\ue611'
+  // },
+  // [TreeNodeType.LINETOTAL]: {
+  //   icon: '\ue611'
+  // },
+  // [TreeNodeType.SAVE]: {
+  //   icon: '\ue936'
+  // },
+  // [TreeNodeType.INDEXESTOTAL]: {
+  //   icon: '\ue648'
+  // }
+}
 
+export enum OperationColumn {
+  REFRESH = 'refresh',
+  ShiftOut = 'shiftOut',
+  CreateTable = 'createTable',
+  CreateConsole = 'createConsole',
+  DeleteTable = 'deleteTable',
+  ExportDDL = 'exportDDL'
+}
+
+export interface ITreeConfigItem {
+  icon?: string;
+  getChildren?: (data: ITreeNode) => Promise<ITreeNode[]>;
+  next?: TreeNodeType;
+  operationColumn?: OperationColumn[]
+}
+
+export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
   [TreeNodeType.DATASOURCES]: {
-    getNodeData: () => {
+    getChildren: () => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let p = {
           pageNo: 1,
@@ -35,9 +93,8 @@ export const treeConfig: ITreeConfig = {
       })
     },
   },
-
   [TreeNodeType.DATASOURCE]: {
-    getNodeData: (parentData: ITreeNode) => {
+    getChildren: (parentData: ITreeNode) => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let p = {
           id: parentData.dataSourceId!
@@ -57,11 +114,14 @@ export const treeConfig: ITreeConfig = {
         })
       })
     },
+    operationColumn: [
+      OperationColumn.REFRESH, OperationColumn.ShiftOut
+    ],
     next: TreeNodeType.DATABASE
   },
-
   [TreeNodeType.DATABASE]: {
-    getNodeData: (parentData: ITreeNode) => {
+    icon: '\ue62c',
+    getChildren: (parentData: ITreeNode) => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let p = {
           dataSourceId: parentData.dataSourceId!,
@@ -84,11 +144,14 @@ export const treeConfig: ITreeConfig = {
         })
       })
     },
+    operationColumn: [
+      OperationColumn.CreateConsole, OperationColumn.CreateTable, OperationColumn.REFRESH
+    ],
     next: TreeNodeType.SCHEMAS
   },
-
   [TreeNodeType.SCHEMAS]: {
-    getNodeData: (parentData: ITreeNode) => {
+    icon: '\ue696',
+    getChildren: (parentData: ITreeNode) => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let data = [
           {
@@ -104,12 +167,13 @@ export const treeConfig: ITreeConfig = {
         r(data);
       })
     },
+    operationColumn: [
+      OperationColumn.CreateConsole, OperationColumn.CreateTable, OperationColumn.REFRESH
+    ],
   },
-
   [TreeNodeType.TABLES]: {
-    getNodeData: (parentData: ITreeNode) => {
-      console.log(parentData)
-
+    icon: '\ueac5',
+    getChildren: (parentData: ITreeNode) => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let p = {
           dataSourceId: parentData.dataSourceId!,
@@ -135,12 +199,14 @@ export const treeConfig: ITreeConfig = {
           r(tableList);
         })
       })
-    }
+    },
+    operationColumn: [
+      OperationColumn.CreateConsole, OperationColumn.CreateTable, OperationColumn.REFRESH
+    ],
   },
-
   [TreeNodeType.TABLE]: {
-    getNodeData: (parentData: ITreeNode) => {
-
+    icon: '\ue63e',
+    getChildren: (parentData: ITreeNode) => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         const tableList = [
           {
@@ -177,13 +243,14 @@ export const treeConfig: ITreeConfig = {
 
         r(tableList);
       })
-    }
+    },
+    operationColumn: [
+      OperationColumn.CreateConsole, OperationColumn.ExportDDL, OperationColumn.DeleteTable
+    ],
   },
-
   [TreeNodeType.COLUMNS]: {
-    getNodeData: (parentData: ITreeNode) => {
-      console.log('COLUMNS', parentData)
-
+    icon: '\ueac5',
+    getChildren: (parentData: ITreeNode) => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let p = {
           dataSourceId: parentData.dataSourceId!,
@@ -213,39 +280,12 @@ export const treeConfig: ITreeConfig = {
       })
     }
   },
-
-  [TreeNodeType.INDEXES]: {
-    getNodeData: (parentData: ITreeNode) => {
-      return new Promise((r: (value: ITreeNode[]) => void, j) => {
-        let p = {
-          dataSourceId: parentData.dataSourceId!,
-          databaseName: parentData.databaseName!,
-          tableName: parentData.tableName!,
-          schemaName: parentData.schemaName,
-        }
-
-        mysqlServer.getIndexList(p).then(res => {
-          const tableList: ITreeNode[] = res?.map(item => {
-            return {
-              name: item.name,
-              nodeType: TreeNodeType.INDEXE,
-              key: item.name,
-              isLeaf: true,
-              dataSourceId: parentData.dataSourceId!,
-              databaseName: parentData.databaseName!,
-              tableName: parentData.tableName!,
-              dataType: parentData.dataType,
-              schemaName: parentData.schemaName,
-            }
-          })
-          r(tableList);
-        })
-      })
-    }
+  [TreeNodeType.COLUMN]: {
+    icon: '\ue611'
   },
-
   [TreeNodeType.KEYS]: {
-    getNodeData: (parentData: ITreeNode) => {
+    icon: '\ueac5',
+    getChildren: (parentData: ITreeNode) => {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let p = {
           dataSourceId: parentData.dataSourceId!,
@@ -273,64 +313,57 @@ export const treeConfig: ITreeConfig = {
         })
       })
     }
-  }
-}
 
-export const treeGetDataLinkedList = {
-  nodeType: TreeNodeType.DATABASE,
-  next: {
-    nodeType: TreeNodeType.SCHEMAS,
-    next: {
-      nodeType: TreeNodeType.TABLES,
-      next: false
-    }
-  }
-}
-
-export const switchIcon: Partial<{ [key in TreeNodeType]: { icon: string } }> = {
-  [TreeNodeType.DATABASE]: {
-    icon: '\ue62c'
-  },
-  [TreeNodeType.SCHEMAS]: {
-    icon: '\ue696'
-  },
-  [TreeNodeType.TABLE]: {
-    icon: '\ue63e'
-  },
-  [TreeNodeType.TABLES]: {
-    icon: '\ueac5'
-  },
-  [TreeNodeType.COLUMNS]: {
-    icon: '\ueac5'
-  },
-  [TreeNodeType.COLUMN]: {
-    icon: '\ue611'
-  },
-  [TreeNodeType.KEYS]: {
-    icon: '\ueac5'
   },
   [TreeNodeType.KEY]: {
     icon: '\ue775'
   },
   [TreeNodeType.INDEXES]: {
-    icon: '\ueac5'
+    icon: '\ueac5',
+    getChildren: (parentData: ITreeNode) => {
+      return new Promise((r: (value: ITreeNode[]) => void, j) => {
+        let p = {
+          dataSourceId: parentData.dataSourceId!,
+          databaseName: parentData.databaseName!,
+          tableName: parentData.tableName!,
+          schemaName: parentData.schemaName,
+        }
+
+        mysqlServer.getIndexList(p).then(res => {
+          const tableList: ITreeNode[] = res?.map(item => {
+            return {
+              name: item.name,
+              nodeType: TreeNodeType.INDEX,
+              key: item.name,
+              isLeaf: true,
+              dataSourceId: parentData.dataSourceId!,
+              databaseName: parentData.databaseName!,
+              tableName: parentData.tableName!,
+              dataType: parentData.dataType,
+              schemaName: parentData.schemaName,
+            }
+          })
+          r(tableList);
+        })
+      })
+    }
   },
-  [TreeNodeType.INDEXE]: {
+  [TreeNodeType.INDEX]: {
     icon: '\ue65b'
   },
-  [TreeNodeType.SEARCH]: {
-    icon: '\uec4c'
-  },
-  [TreeNodeType.LINE]: {
-    icon: '\ue611'
-  },
-  [TreeNodeType.LINETOTAL]: {
-    icon: '\ue611'
-  },
-  [TreeNodeType.SAVE]: {
-    icon: '\ue936'
-  },
-  [TreeNodeType.INDEXESTOTAL]: {
-    icon: '\ue648'
-  }
+  // [TreeNodeType.SEARCH]: {
+  //   icon: '\uec4c'
+  // },
+  // [TreeNodeType.LINE]: {
+  //   icon: '\ue611'
+  // },
+  // [TreeNodeType.LINETOTAL]: {
+  //   icon: '\ue611'
+  // },
+  // [TreeNodeType.SAVE]: {
+  //   icon: '\ue936'
+  // },
+  // [TreeNodeType.INDEXESTOTAL]: {
+  //   icon: '\ue648'
+  // }
 }
