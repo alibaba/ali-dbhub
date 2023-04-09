@@ -19,7 +19,7 @@ export interface IModel {
 
 export interface IContext {
   model: IModel;
-  setcreateConsoleDialog: (value: ICreateConsoleDialog) => void;
+  setCreateConsoleDialog: (value: ICreateConsoleDialog) => void;
   setOperationDataDialog: (value: IOperationDataDialog) => void;
   setNeedRefreshNodeTree: (value: any) => void;
   setDblclickNodeData: (value: ITreeNode | null) => void;
@@ -39,7 +39,7 @@ export const DatabaseContext = createContext<IContext>({} as any);
 export default function DatabaseContextProvider({ children }: { children: React.ReactNode }) {
   const [model, setStateModel] = useState<IModel>(initDatabaseValue);
 
-  const setcreateConsoleDialog = (createConsoleDialog: ICreateConsoleDialog) => {
+  const setCreateConsoleDialog = (createConsoleDialog: ICreateConsoleDialog) => {
     setStateModel({
       ...model,
       createConsoleDialog
@@ -74,7 +74,7 @@ export default function DatabaseContextProvider({ children }: { children: React.
 
   return <DatabaseContext.Provider value={{
     model,
-    setcreateConsoleDialog,
+    setCreateConsoleDialog,
     setOperationDataDialog,
     setNeedRefreshNodeTree,
     setDblclickNodeData,

@@ -34,7 +34,7 @@ interface IEditTableConslo {
 let monacoEditorExternalList: any = {}
 
 export default memo<IProps>(function DatabasePage({ className }) {
-  const letfRef = useRef<HTMLDivElement | null>(null);
+  const leftRef = useRef<HTMLDivElement | null>(null);
   const [activeKey, setActiveKey] = useState<string>();
   const [openDropdown, setOpenDropdown] = useState(false);
   const [treeNodeClickMessage, setTreeNodeClickMessage] = useState<ITreeNode | null>(null);
@@ -90,7 +90,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
 
   return <DatabaseContextProvider>
     <div className={classnames(className, styles.box)}>
-      <div ref={letfRef} className={styles.asideBox} id="database-left-aside">
+      <div ref={leftRef} className={styles.asideBox} id="database-left-aside">
         <div className={styles.aside}>
           <div className={styles.header}>
             <div className={styles.searchBox}>
@@ -116,7 +116,7 @@ export default memo<IProps>(function DatabasePage({ className }) {
           />
         </div>
       </div>
-      <DraggableDivider callback={callback} volatileRef={letfRef} />
+      <DraggableDivider callback={callback} volatileRef={leftRef} />
       <div className={styles.main}>
         <ConsoleList></ConsoleList>
         {/* <div className={styles.footer}>

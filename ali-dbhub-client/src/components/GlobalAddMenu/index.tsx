@@ -9,7 +9,7 @@ import { databaseType, DatabaseTypeCode } from '@/utils/constants';
 import ConnectionDialog from '@/components/ConnectionDialog';
 import CreateConnection from '@/components/CreateConnection';
 
-interface Iprops {
+interface IProps {
   className?: string;
   getAddTreeNode: (data: ITreeNode) => void;
 }
@@ -61,7 +61,7 @@ const globalAddMenuList: IGlobalAddMenuItem[] = [
 
 const items: MenuItem[] = newDataSourceChildren
 
-export default memo<Iprops>(function GlobalAddMenu(props) {
+export default memo<IProps>(function GlobalAddMenu(props) {
   const { className, getAddTreeNode } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [dataSourceType, setDataSourceType] = useState<DatabaseTypeCode>();
