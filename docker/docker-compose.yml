@@ -80,7 +80,3 @@ services:
     expose:
       - 9009
     # volumes：数据卷挂载路径设置，类似于docker run --volumn=hostdir:containerDir，也可指定文件权限
-    volumes:
-      - ./data:/var/lib/clickhouse
-      - ./log/:/var/log/clickhouse-server/
-      - ./etc/:/etc/clickhouse-server/
