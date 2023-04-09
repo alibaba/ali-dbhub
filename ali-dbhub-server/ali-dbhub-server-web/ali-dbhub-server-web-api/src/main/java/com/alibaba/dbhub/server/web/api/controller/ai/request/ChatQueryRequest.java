@@ -1,5 +1,7 @@
 package com.alibaba.dbhub.server.web.api.controller.ai.request;
 
+import java.util.List;
+
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
 
 import lombok.Data;
@@ -18,4 +20,21 @@ public class ChatQueryRequest extends DataSourceBaseRequest {
      * 输入消息
      */
     private String message;
+
+    /**
+     * SQL功能类型
+     * @see com.alibaba.dbhub.server.web.api.controller.ai.enums.PromptType
+     */
+    private String promptType;
+
+    /**
+     * 表名列表
+     */
+    private List<String> tableNames;
+
+    /**
+     * 目标SQL数据类型
+     * @see com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum
+     */
+    private String destSqlType;
 }
