@@ -5,7 +5,9 @@ import Button from '@/components/Button';
 import { DatabaseTypeCode, databaseTypeList, TreeNodeType, EnvType } from '@/utils/constants';
 import { ITreeNode, IConnectionBase } from '@/types';
 import connectionServer from '@/service/connection'
-import { dataSourceFormConfigs, IDataSourceForm, InputType, IFormItem, ISelect } from '@/config/dataSource';
+import { dataSourceFormConfigs } from '@/config/dataSource';
+import { IDataSourceForm, IFormItem, ISelect } from '@/config/types';
+import { InputType } from '@/config/enum';
 import {
   Select,
   Modal,
