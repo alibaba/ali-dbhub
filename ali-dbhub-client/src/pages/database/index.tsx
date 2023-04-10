@@ -1,26 +1,11 @@
-import React, { memo, useEffect, useState, useRef } from 'react';
+import React, { memo, useEffect, useState, useRef, useContext } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import { history, useParams } from 'umi';
-import {
-  Button,
-  DatePicker,
-  Input,
-  Table,
-  Modal,
-  Tabs,
-  Dropdown,
-  message,
-  Tooltip,
-} from 'antd';
+import { Dropdown } from 'antd';
 import i18n from '@/i18n';
 import Iconfont from '@/components/Iconfont';
 import Tree from '@/components/Tree';
-import MonacoEditor, {
-  setEditorHint,
-  IHintData,
-} from '@/components/MonacoEditor';
-import DraggableDivider from '@/components/DraggableDivider';
+import DraggableContainer from '@/components/DraggableContainer';
 import OperationTableModal, {
   IOperationData,
 } from '@/components/OperationTableModal';
@@ -32,6 +17,7 @@ const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
 const { keywords } = language;
 import DatabaseContextProvider from '@/context/database';
+import { DatabaseContext } from '@/context/database';
 
 interface IProps {
   className?: any;
@@ -48,15 +34,16 @@ interface IEditTableConsole {
 
 let monacoEditorExternalList: any = {};
 
-export default memo<IProps>(function DatabasePage({ className }) {
-  const leftRef = useRef<HTMLDivElement | null>(null);
+
+function DatabasePage({ className }: IProps) {
+  const { model, setShowSearchResult } = useContext(DatabaseContext);
+  const { showSearchResult } = model;
   const [activeKey, setActiveKey] = useState<string>();
   const [openDropdown, setOpenDropdown] = useState(false);
-  const [treeNodeClickMessage, setTreeNodeClickMessage] =
-    useState<ITreeNode | null>(null);
   const [isUnfold, setIsUnfold] = useState(true);
   const [addTreeNode, setAddTreeNode] = useState<ITreeNode[]>();
   const treeRef = useRef<any>();
+  const volatileRef = useRef<any>();
 
   const closeDropdownFn = () => {
     setOpenDropdown(false);
@@ -72,30 +59,24 @@ export default memo<IProps>(function DatabasePage({ className }) {
   }, [openDropdown]);
 
   const moveLeftAside = () => {
-    const databaseLeftAside = document.getElementById('database-left-aside');
-    if (databaseLeftAside) {
-      if (databaseLeftAside.offsetWidth === 0) {
-        databaseLeftAside.style.width = '250px';
+    if (volatileRef.current) {
+      if (volatileRef.current.offsetWidth === 0) {
+        volatileRef.current.style.width = '250px';
         setIsUnfold(true);
       } else {
-        databaseLeftAside.style.width = '0px';
+        volatileRef.current.style.width = '0px';
         setIsUnfold(false);
       }
     }
   };
 
   const callback = () => {
-    monacoEditorExternalList[activeKey!] &&
-      monacoEditorExternalList[activeKey!].layout();
+    monacoEditorExternalList[activeKey!] && monacoEditorExternalList[activeKey!].layout();
   };
 
   const searchTable = (value: string) => {
     treeRef.current?.filtrationDataTree(value);
   };
-
-  function nodeDoubleClick(data: ITreeNode) {
-    setTreeNodeClickMessage(data);
-  }
 
   function refresh() {
     treeRef.current?.getDataSource();
@@ -105,50 +86,62 @@ export default memo<IProps>(function DatabasePage({ className }) {
     setAddTreeNode([data]);
   }
 
-  return (
-    <DatabaseContextProvider>
-      <div className={classnames(className, styles.box)}>
-        <div ref={leftRef} className={styles.asideBox} id="database-left-aside">
-          <div className={styles.aside}>
-            <div className={styles.header}>
-              <div className={styles.searchBox}>
-                <SearchInput onChange={searchTable} placeholder="搜索数据源" />
-                <div
-                  className={classnames(styles.refresh, styles.button)}
-                  onClick={refresh}
-                >
-                  <Iconfont code="&#xec08;" />
-                </div>
-                <Dropdown
-                  overlay={<GlobalAddMenu getAddTreeNode={getAddTreeNode} />}
-                  trigger={['click']}
-                >
-                  <div
-                    onClick={() => setOpenDropdown(true)}
-                    className={classnames(styles.create, styles.button)}
-                  >
-                    <Iconfont code="&#xe631;" />
-                  </div>
-                </Dropdown>
+  return <>
+    <DraggableContainer className={classnames(className, styles.box)} callback={callback} volatileRef={volatileRef} >
+      <div ref={volatileRef} className={styles.asideBox}>
+        <div className={styles.aside}>
+          <div className={styles.header}>
+            <div className={styles.searchBox}>
+              <SearchInput onChange={searchTable} placeholder="搜索数据源" />
+              <div
+                className={classnames(styles.refresh, styles.button)}
+                onClick={refresh}
+              >
+                <Iconfont code="&#xec08;" />
               </div>
+              <Dropdown
+                overlay={<GlobalAddMenu getAddTreeNode={getAddTreeNode} />}
+                trigger={['click']}
+              >
+                <div
+                  onClick={() => setOpenDropdown(true)}
+                  className={classnames(styles.create, styles.button)}
+                >
+                  <Iconfont code="&#xe631;" />
+                </div>
+              </Dropdown>
             </div>
-            <div className={styles.overview}>
-              <Iconfont code="&#xe63d;" />
-              <span>{i18n('connection.button.overview')}</span>
-            </div>
-            <Tree
-              cRef={treeRef}
-              className={styles.tree}
-              addTreeData={addTreeNode}
-            />
           </div>
-        </div>
-        <DraggableDivider callback={callback} volatileRef={leftRef} />
-        <div className={styles.main}>
-          <ConsoleList />
+          <div className={styles.overview}>
+            <Iconfont code="&#xe63d;" />
+            <span>{i18n('connection.button.overview')}</span>
+          </div>
+          <Tree
+            cRef={treeRef}
+            className={styles.tree}
+            addTreeData={addTreeNode}
+          />
         </div>
       </div>
-      <OperationTableModal />
-    </DatabaseContextProvider>
-  );
-});
+      <div className={styles.main}>
+        <ConsoleList />
+        <div className={styles.footer}>
+          <div className={classnames({ [styles.reversalIconBox]: !isUnfold }, styles.iconBox)} onClick={moveLeftAside}>
+            <Iconfont code='&#xeb93;' />
+          </div>
+          <div onClick={() => { setShowSearchResult(!showSearchResult) }} className={classnames(styles.commandSearchResult, { [styles.unfoldSearchResult]: showSearchResult })}>
+            查询结果
+            <Iconfont code='&#xeb93;' />
+          </div>
+        </div>
+      </div>
+    </DraggableContainer>
+    <OperationTableModal />
+  </>
+};
+
+export default function () {
+  return <DatabaseContextProvider>
+    <DatabasePage />
+  </DatabaseContextProvider>
+} 

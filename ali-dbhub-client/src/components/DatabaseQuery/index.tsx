@@ -6,7 +6,7 @@ import { Divider, message, Tooltip } from 'antd';
 import { TreeNodeType, WindowTabStatus, OSType } from '@/utils/constants';
 import Iconfont from '@/components/Iconfont';
 import MonacoEditor, { setEditorHint } from '@/components/MonacoEditor';
-import DraggableDivider from '@/components/DraggableDivider';
+import DraggableContainer from '@/components/DraggableContainer';
 import SearchResult from '@/components/SearchResult';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import mysqlServer from '@/service/mysql';
@@ -30,16 +30,16 @@ interface IProps extends IDatabaseQueryProps {
 let monacoEditorExternalList: any = {};
 
 export default memo<IProps>(function DatabaseQuery(props) {
-  const { model, setDblclickNodeData, setAiImportSql } =
-    useContext(DatabaseContext);
+  const { model, setDblclickNodeData, setAiImportSql } = useContext(DatabaseContext);
   const { activeTabKey, windowTab } = props;
   const params: { id: string; type: string } = useParams();
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
 
   const consoleRef = useRef<HTMLDivElement>(null);
   const monacoEditor = useRef<any>(null);
+  const volatileRef = useRef<any>(null);
   const monacoHint = useRef<any>(null);
-  const { dblclickNodeData, aiImportSql } = model;
+  const { dblclickNodeData, aiImportSql, showSearchResult } = model;
 
   useEffect(() => {
     if (windowTab.consoleId !== +activeTabKey) {
@@ -270,8 +270,8 @@ export default memo<IProps>(function DatabaseQuery(props) {
     let dom = [];
     for (let i = 0; i < optBtn.current.length; i++) {
       const optList = optBtn.current[i];
-      const tmpDom = (optList || []).map((item: any) => (
-        <Tooltip placement="bottom" title={item.name}>
+      const tmpDom = (optList || []).map((item: any, index) => (
+        <Tooltip key={index} placement="bottom" title={item.name}>
           <Iconfont
             code={item.icon}
             className={styles.icon}
@@ -279,15 +279,20 @@ export default memo<IProps>(function DatabaseQuery(props) {
           />
         </Tooltip>
       ));
-      tmpDom.push(<Divider type="vertical" />);
+      tmpDom.push(<Divider key={'divider'} type="vertical" />);
       dom.push([...tmpDom]);
     }
     return dom;
   };
 
   return (
-    <div className={classnames(styles.databaseQuery)}>
-      <div ref={consoleRef} className={styles.console}>
+    <DraggableContainer
+      className={classnames(styles.databaseQuery)}
+      callback={callback}
+      direction="row"
+      volatileRef={volatileRef}
+    >
+      <div ref={volatileRef} className={styles.console}>
         <div className={styles.operatingArea}>
           <div className={styles.left}>{renderOptBtn()}</div>
           <div className={styles.right}>
@@ -304,17 +309,13 @@ export default memo<IProps>(function DatabaseQuery(props) {
           />
         </div>
       </div>
-      <DraggableDivider
-        callback={callback}
-        direction="row"
-        min={200}
-        volatileRef={consoleRef}
-      />
-      <div className={styles.searchResult}>
-        <LoadingContent data={manageResultDataList} handleEmpty>
-          <SearchResult manageResultDataList={manageResultDataList} />
-        </LoadingContent>
-      </div>
-    </div>
+      {
+        showSearchResult && <div className={styles.searchResult}>
+          <LoadingContent data={manageResultDataList} handleEmpty>
+            <SearchResult manageResultDataList={manageResultDataList} />
+          </LoadingContent>
+        </div>
+      }
+    </DraggableContainer >
   );
 });

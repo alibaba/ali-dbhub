@@ -67,7 +67,8 @@ export interface ITreeNode {
   key: string;
   name: string;
   nodeType: TreeNodeType;
-  dataType?: DatabaseTypeCode;
+  dataType?: string;
+  databaseType?: DatabaseTypeCode;
   isLeaf?: boolean;
   children?: ITreeNode[];
   parent?: ITreeNode;
@@ -75,7 +76,7 @@ export interface ITreeNode {
   databaseName?: string;
   tableName?: string;
   schemaName?: string;
-  // columnType: string;
+  columnType?: string;
 }
 export interface IDB {
   name: string;

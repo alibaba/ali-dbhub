@@ -1,6 +1,7 @@
 import React, { useState, createContext } from 'react';
 import { IOperationData } from '@/components/OperationTableModal';
 import { ITreeNode } from '@/types';
+import Database from '@/pages/database';
 
 export type ICreateConsoleDialog =
   | false
@@ -18,6 +19,7 @@ export interface IModel {
   needRefreshNodeTree: any;
   dblclickNodeData: ITreeNode | null;
   aiImportSql: string;
+  showSearchResult: boolean;
 }
 
 export interface IContext {
@@ -27,6 +29,7 @@ export interface IContext {
   setNeedRefreshNodeTree: (value: any) => void;
   setDblclickNodeData: (value: ITreeNode | null) => void;
   setAiImportSql: (value: string) => void;
+  setShowSearchResult: (value: boolean) => void;
 }
 
 const initDatabaseValue: IModel = {
@@ -35,6 +38,7 @@ const initDatabaseValue: IModel = {
   needRefreshNodeTree: {},
   dblclickNodeData: null,
   aiImportSql: '',
+  showSearchResult: false,
 };
 
 export const DatabaseContext = createContext<IContext>({} as any);
@@ -80,6 +84,12 @@ export default function DatabaseContextProvider({
       aiImportSql,
     });
   };
+  const setShowSearchResult = (showSearchResult: boolean) => {
+    setStateModel({
+      ...model,
+      showSearchResult,
+    });
+  };
 
   return (
     <DatabaseContext.Provider
@@ -90,6 +100,7 @@ export default function DatabaseContextProvider({
         setNeedRefreshNodeTree,
         setDblclickNodeData,
         setAiImportSql,
+        setShowSearchResult
       }}
     >
       {children}
