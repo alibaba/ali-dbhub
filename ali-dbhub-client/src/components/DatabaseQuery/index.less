@@ -7,10 +7,8 @@
   flex-direction: column;
 }
 
-
-
 .console {
-  height: 50%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -26,6 +24,7 @@
 }
 
 .operatingArea {
+  flex-shrink: 0;
   height: 30px;
   background-color: var(--color-bg-200);
   border-bottom: 1px solid var(--color-bg-100);
@@ -78,8 +77,7 @@
 }
 
 .searchResult {
-  height: 0;
-  flex: 1;
+  height: 50%;
   border-top: 1px solid var(--color-border);
   background-color: var(--color-bg-100);
   overflow: hidden;

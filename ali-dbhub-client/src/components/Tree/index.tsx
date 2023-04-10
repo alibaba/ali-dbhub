@@ -177,8 +177,8 @@ function TreeNode(props: TreeNodeIProps) {
     return <>
       <span>{data.name}</span>
       {
-        data.dataType &&
-        <span style={{ color: callVar('--custom-primary-color') }}>（{data.dataType}）</span>
+        data.columnType && data.nodeType === TreeNodeType.COLUMN &&
+        <span style={{ color: callVar('--custom-primary-color') }}>（{data.columnType}）</span>
       }
     </>
   }
@@ -195,7 +195,6 @@ function TreeNode(props: TreeNodeIProps) {
     <Dropdown overlay={renderMenu()} trigger={['contextMenu']}>
       <Tooltip placement="right" title={renderTitle(data)}>
         <div
-          onDoubleClick={nodeDoubleClick}
           className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
           <div className={styles.left}>
             {
@@ -220,12 +219,14 @@ function TreeNode(props: TreeNodeIProps) {
                 {/* <Iconfont className={classnames(styles.arrowsIcon, { [styles.rotateArrowsIcon]: showChildren })} code='&#xe608;' /> */}
               </div>
             }
-            <div className={styles.typeIcon}>
-              <Iconfont code={recognizeIcon(data.nodeType)!}></Iconfont>
-            </div>
-            <div className={styles.contentText} >
-              <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
-              {/* <div className={styles.type}>{data.dataType}</div> */}
+            <div className={styles.dblclickArea} onDoubleClick={nodeDoubleClick}>
+              <div className={styles.typeIcon}>
+                <Iconfont code={recognizeIcon(data.nodeType)!}></Iconfont>
+              </div>
+              <div className={styles.contentText} >
+                <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
+                {data.nodeType === TreeNodeType.COLUMN && <div className={styles.type}>{data.columnType}</div>}
+              </div>
             </div>
           </div>
         </div>

@@ -85,7 +85,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
               key: t.id!.toString(),
               nodeType: TreeNodeType.DATASOURCE,
               dataSourceId: t.id,
-              dataType: t.type
+              dataType: t.type,
             }
           })
           r(data);
@@ -268,6 +268,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
               nodeType: TreeNodeType.COLUMN,
               key: item.name,
               isLeaf: true,
+              columnType: item.columnType,
               dataSourceId: parentData.dataSourceId!,
               databaseName: parentData.databaseName!,
               tableName: parentData.tableName!,
