@@ -30,7 +30,7 @@ interface IProps extends IDatabaseQueryProps {
 let monacoEditorExternalList: any = {};
 
 export default memo<IProps>(function DatabaseQuery(props) {
-  const { model, setDblclickNodeData, setAiImportSql } = useContext(DatabaseContext);
+  const { model, setDblclickNodeData, setAiImportSql, setShowSearchResult } = useContext(DatabaseContext);
   const { activeTabKey, windowTab } = props;
   const params: { id: string; type: string } = useParams();
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
@@ -174,6 +174,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
   };
 
   const executeSql = () => {
+    setShowSearchResult(true)
     const sql = getSelectionVal() || getMonacoEditorValue();
     if (!sql) {
       message.warning('请输入SQL语句');

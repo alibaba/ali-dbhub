@@ -13,7 +13,10 @@ import { ITreeNode } from '@/types';
 import { DatabaseContext } from '@/context/database';
 import connectionServer from '@/service/connection';
 import mysqlServer from '@/service/mysql';
-import { OperationColumn } from '../treeConfig'
+import { OperationColumn } from '../treeConfig';
+import { dataSourceFormConfigs } from '@/config/dataSource';
+import { IDataSourceForm } from '@/config/types';
+
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -37,6 +40,9 @@ function TreeNodeRightClick(props: IProps) {
   const [verifyTableName, setVerifyTableName] = useState<string>('');
   const treeNodeConfig: ITreeConfigItem = treeConfig[data.nodeType]
   const { getChildren, operationColumn } = treeNodeConfig;
+  const dataSourceFormConfig = dataSourceFormConfigs.find((t: IDataSourceForm) => {
+    return t.type === data.dataType
+  })!
 
   const OperationColumnConfig: { [key in OperationColumn]: (data: ITreeNode) => IOperationColumnConfigItem } = {
     [OperationColumn.REFRESH]: (data) => {
@@ -156,11 +162,28 @@ function TreeNodeRightClick(props: IProps) {
     }
   }
 
+  function excludeSomeOperation() {
+    const excludes = dataSourceFormConfig.excludes
+    const newOperationColumn: OperationColumn[] = []
+    operationColumn?.map((item: OperationColumn) => {
+      let flag = false
+      excludes?.map(t => {
+        if (item === t) {
+          flag = true
+        }
+      })
+      if (!flag) {
+        newOperationColumn.push(item)
+      }
+    })
+    return newOperationColumn
+  }
+
   return <>
     <div className={styles.menuBox}>
       <Menu>
         {
-          operationColumn?.map((item, index) => {
+          excludeSomeOperation()?.map((item, index) => {
             const concrete = OperationColumnConfig[item](data);
             return <MenuItem key={index} onClick={() => { closeMenu(); concrete.handle(); }}>
               {concrete.text}

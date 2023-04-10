@@ -25,6 +25,7 @@ export enum DatabaseTypeCode {
   SQLSERVER = 'SQLSERVER',
   SQLITE = 'SQLITE',
   MARIADB = 'MARIADB',
+  CLICKHOUSE = 'CLICKHOUSE',
 }
 
 export const databaseType: {
@@ -37,11 +38,6 @@ export const databaseType: {
     port: 3306,
     icon: '\uec6d'
   },
-  // [DatabaseTypeCode.REDIS]:{
-  //   name: 'Redis',
-  //   img: redisLogo,
-  //   code: DatabaseTypeCode.REDIS
-  // },
   [DatabaseTypeCode.H2]: {
     name: 'H2',
     img: h2Logo,
@@ -83,6 +79,13 @@ export const databaseType: {
     code: DatabaseTypeCode.MARIADB,
     port: 3306,
     icon: '\ue6f5'
+  },
+  [DatabaseTypeCode.CLICKHOUSE]: {
+    name: 'clickHouse',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.CLICKHOUSE,
+    port: 8123,
+    icon: '\ue8f4'
   },
 };
 

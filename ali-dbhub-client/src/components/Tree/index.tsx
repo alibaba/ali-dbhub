@@ -107,7 +107,7 @@ function TreeNode(props: TreeNodeIProps) {
   const treeNodeClick = useCanDoubleClick();
 
   function loadData(data: ITreeNode) {
-    const treeNodeConfig: ITreeConfigItem = treeConfig[data.nodeType];
+    const treeNodeConfig: ITreeConfigItem = treeConfig[data.pretendNodeType || data.nodeType];
     treeNodeConfig.getChildren?.(data).then(res => {
       if (res.length) {
         console.log(res)
@@ -118,7 +118,7 @@ function TreeNode(props: TreeNodeIProps) {
         }, 200);
       } else {
         if (treeNodeConfig.next) {
-          data.nodeType = treeNodeConfig.next;
+          data.pretendNodeType = treeNodeConfig.next;
           loadData(data);
         } else {
           data.children = [];

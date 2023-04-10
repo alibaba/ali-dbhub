@@ -77,6 +77,7 @@ export interface ITreeNode {
   tableName?: string;
   schemaName?: string;
   columnType?: string;
+  pretendNodeType?: TreeNodeType;
 }
 export interface IDB {
   name: string;
