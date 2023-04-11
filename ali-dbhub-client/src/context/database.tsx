@@ -38,7 +38,7 @@ const initDatabaseValue: IModel = {
   needRefreshNodeTree: {},
   dblclickNodeData: null,
   aiImportSql: '',
-  showSearchResult: false,
+  showSearchResult: localStorage.getItem('showSearchResultBox') === 'true',
 };
 
 export const DatabaseContext = createContext<IContext>({} as any);
@@ -84,11 +84,13 @@ export default function DatabaseContextProvider({
       aiImportSql,
     });
   };
+
   const setShowSearchResult = (showSearchResult: boolean) => {
     setStateModel({
       ...model,
       showSearchResult,
     });
+    localStorage.setItem('showSearchResultBox', showSearchResult.toString())
   };
 
   return (

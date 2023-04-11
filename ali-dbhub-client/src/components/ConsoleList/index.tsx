@@ -25,14 +25,20 @@ import styles from './index.less';
 
 interface IProps {
   className?: string;
+  windowListChange: (value: IConsole[]) => void;
 }
 
 export default memo<IProps>(function ConsoleList(props) {
+  const { windowListChange } = props;
   const { consoleId } = qs<{ consoleId: string }>();
   const { model, setCreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [activeKey, setActiveKey] = useState<string>(consoleId);
   const { dblclickNodeData, createConsoleDialog } = model;
+
+  useEffect(() => {
+    windowListChange(windowList)
+  }, [windowList])
 
   useEffect(() => {
     if (dblclickNodeData) {

@@ -5,18 +5,20 @@ import classnames from 'classnames';
 interface IProps {
   className?: string;
   children: React.ReactNode[];
-  volatileRef: any; // TODO：如何直接返回一个ref 这个ref的类型是什么
+  volatileDom: {
+    volatileRef: any;
+    volatileIndex: 1 | 2;
+  }
   min?: number;
   direction?: 'row' | 'line';
   callback?: Function;
 }
 
-export default memo<IProps>(function DraggableContainer({ children, callback, min, className, direction = 'line', volatileRef }) {
+export default memo<IProps>(function DraggableContainer({ children, callback, min, className, direction = 'line', volatileDom }) {
+  const { volatileRef, volatileIndex } = volatileDom
 
   const DividerRef = useRef<HTMLDivElement | null>(null);
   const DividerLine = useRef<HTMLDivElement | null>(null);
-  const beforeTheLine = useRef<HTMLDivElement | null>(null);
-  const afterTheLine = useRef<HTMLDivElement | null>(null);
   const [dragging, setDragging] = useState(false)
   useEffect(() => {
     if (DividerRef.current) {
@@ -51,7 +53,13 @@ export default memo<IProps>(function DraggableContainer({ children, callback, mi
 
   const moveHandle = (nowClientXY: any, leftDom: any, clientStart: any, volatileBoxXY: any) => {
     let computedXY = nowClientXY - clientStart;
-    let changeLength = volatileBoxXY + computedXY;
+    let changeLength = 0
+    if (volatileIndex == 1) {
+      changeLength = volatileBoxXY + computedXY;
+    } else {
+      changeLength = volatileBoxXY - computedXY;
+    }
+
     if (min && changeLength < min) {
       return
     }

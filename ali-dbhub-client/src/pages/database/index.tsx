@@ -44,6 +44,7 @@ function DatabasePage({ className }: IProps) {
   const [addTreeNode, setAddTreeNode] = useState<ITreeNode[]>();
   const treeRef = useRef<any>();
   const volatileRef = useRef<any>();
+  const [windowList, setWindowList] = useState<IConsole[]>([]);
 
   const closeDropdownFn = () => {
     setOpenDropdown(false);
@@ -86,8 +87,12 @@ function DatabasePage({ className }: IProps) {
     setAddTreeNode([data]);
   }
 
+  function windowListChange(value: IConsole[]) {
+    setWindowList(value)
+  }
+
   return <>
-    <DraggableContainer className={classnames(className, styles.box)} callback={callback} volatileRef={volatileRef} >
+    <DraggableContainer className={classnames(className, styles.box)} callback={callback} volatileDom={{ volatileRef, volatileIndex: 1 }} >
       <div ref={volatileRef} className={styles.asideBox}>
         <div className={styles.aside}>
           <div className={styles.header}>
@@ -124,15 +129,19 @@ function DatabasePage({ className }: IProps) {
         </div>
       </div>
       <div className={styles.main}>
-        <ConsoleList />
+        <ConsoleList windowListChange={windowListChange} />
         <div className={styles.footer}>
           <div className={classnames({ [styles.reversalIconBox]: !isUnfold }, styles.iconBox)} onClick={moveLeftAside}>
             <Iconfont code='&#xeb93;' />
           </div>
-          <div onClick={() => { setShowSearchResult(!showSearchResult) }} className={classnames(styles.commandSearchResult, { [styles.unfoldSearchResult]: showSearchResult })}>
-            查询结果
-            <Iconfont code='&#xeb93;' />
-          </div>
+          {
+            !!windowList.length &&
+            <div onClick={() => { setShowSearchResult(!showSearchResult) }} className={classnames(styles.commandSearchResult, { [styles.unfoldSearchResult]: showSearchResult })}>
+              查询结果
+              <Iconfont code='&#xeb93;' />
+            </div>
+          }
+
         </div>
       </div>
     </DraggableContainer>

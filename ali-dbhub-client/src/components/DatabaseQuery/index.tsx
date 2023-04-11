@@ -291,9 +291,12 @@ export default memo<IProps>(function DatabaseQuery(props) {
       className={classnames(styles.databaseQuery)}
       callback={callback}
       direction="row"
-      volatileRef={volatileRef}
+      volatileDom={{
+        volatileRef: volatileRef,
+        volatileIndex: 2
+      }}
     >
-      <div ref={volatileRef} className={styles.console}>
+      <div className={styles.console}>
         <div className={styles.operatingArea}>
           <div className={styles.left}>{renderOptBtn()}</div>
           <div className={styles.right}>
@@ -310,13 +313,11 @@ export default memo<IProps>(function DatabaseQuery(props) {
           />
         </div>
       </div>
-      {
-        showSearchResult && <div className={styles.searchResult}>
-          <LoadingContent data={manageResultDataList} handleEmpty>
-            <SearchResult manageResultDataList={manageResultDataList} />
-          </LoadingContent>
-        </div>
-      }
+      <div ref={volatileRef} style={{ display: showSearchResult ? 'block' : 'none' }} className={styles.searchResult}>
+        <LoadingContent data={manageResultDataList} handleEmpty>
+          <SearchResult manageResultDataList={manageResultDataList} />
+        </LoadingContent>
+      </div>
     </DraggableContainer >
   );
 });
