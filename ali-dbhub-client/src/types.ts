@@ -73,6 +73,7 @@ export interface ITreeNode {
   children?: ITreeNode[];
   parent?: ITreeNode;
   dataSourceId?: number;
+  dataSourceName?: string;
   databaseName?: string;
   tableName?: string;
   schemaName?: string;

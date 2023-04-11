@@ -16,5 +16,6 @@ export enum OperationColumn {
   CreateTable = 'createTable', //创建表
   CreateConsole = 'createConsole', // 新建console
   DeleteTable = 'deleteTable', // 删除表
-  ExportDDL = 'exportDDL' //导出ddl
+  ExportDDL = 'exportDDL', // 导出ddl
+  EditSource = 'editSource', // 编辑数据源
 }

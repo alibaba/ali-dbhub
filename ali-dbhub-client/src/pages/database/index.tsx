@@ -18,6 +18,8 @@ import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
 const { keywords } = language;
 import DatabaseContextProvider from '@/context/database';
 import { DatabaseContext } from '@/context/database';
+import CreateConnection from '@/components/CreateConnection';
+
 
 interface IProps {
   className?: any;
@@ -146,6 +148,8 @@ function DatabasePage({ className }: IProps) {
       </div>
     </DraggableContainer>
     <OperationTableModal />
+    // 创建/修改连接
+    <CreateConnection />
   </>
 };
 

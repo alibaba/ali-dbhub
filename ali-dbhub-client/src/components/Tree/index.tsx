@@ -33,6 +33,9 @@ function Tree(props: IProps, ref: any) {
   const { className, cRef, addTreeData } = props;
   const [treeData, setTreeData] = useState<ITreeNode[] | null>(null);
   const [searchedTreeData, setSearchedTreeData] = useState<ITreeNode[] | null>(null);
+  const { model } = useContext(DatabaseContext);
+  const { refreshTreeNum } = model;
+
 
   useUpdateEffect(() => {
     setTreeData([...(treeData || []), ...(addTreeData || [])]);
@@ -61,7 +64,7 @@ function Tree(props: IProps, ref: any) {
           key: t.id!.toString(),
           nodeType: TreeNodeType.DATASOURCE,
           dataSourceId: t.id,
-          dataType: t.type
+          dataType: t.type,
         }
       })
       setTimeout(() => {
@@ -77,7 +80,7 @@ function Tree(props: IProps, ref: any) {
 
   useEffect(() => {
     getDataSource();
-  }, [])
+  }, [refreshTreeNum])
 
   return <div className={classnames(className, styles.box)}>
     <LoadingContent data={treeData} handleEmpty>

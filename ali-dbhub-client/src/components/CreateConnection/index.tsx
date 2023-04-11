@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState, Fragment } from 'react';
+import React, { memo, useEffect, useMemo, useState, Fragment, useContext } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import Button from '@/components/Button';
@@ -7,7 +7,9 @@ import { ITreeNode, IConnectionBase } from '@/types';
 import connectionServer from '@/service/connection'
 import { dataSourceFormConfigs } from '@/config/dataSource';
 import { IDataSourceForm, IFormItem, ISelect } from '@/config/types';
+import { DatabaseContext } from '@/context/database';
 import { InputType } from '@/config/enum';
+import { deepClone } from '@/utils'
 import {
   Select,
   Modal,
@@ -26,48 +28,115 @@ export enum submitType {
   TEST = 'test'
 }
 
+export interface IEditDataSourceData {
+  dataType: DatabaseTypeCode,
+  id?: number
+}
+
 interface IProps {
   className?: string;
-  rowData?: any;
-  dataSourceType?: DatabaseTypeCode;
   submitCallback?: (data: ITreeNode) => void;
-  onCancel?: () => void;
 }
 
-function initialFormData(dataSourceFormConfig: IFormItem[] | undefined) {
-  let initValue: any = {}
-  dataSourceFormConfig?.map(t => {
-    initValue[t.name] = t.defaultValue
-    if (t.selects?.length) {
-      t.selects?.map(t => {
-        if (t.selected) {
-          initValue = {
-            ...initValue,
-            ...initialFormData(t.items)
-          }
-        }
-      })
-    }
-  })
-  return initValue
-}
-
-export default memo<IProps>(function CreateConnection(props) {
-  const { className, rowData, onCancel, submitCallback, dataSourceType } = props;
+function VisiblyCreateConnection(props: IProps) {
+  const { className, submitCallback } = props;
+  const { model, setEditDataSourceData, setRefreshTreeNum, setModel } = useContext(DatabaseContext);
+  const editDataSourceData: IEditDataSourceData = model.editDataSourceData as IEditDataSourceData
+  const dataSourceId = editDataSourceData.id;
+  const dataSourceType = editDataSourceData.dataType;
   const [form] = Form.useForm();
   let aliasChanged = false;
 
   const [dataSourceFormConfig, setDataSourceFormConfig] = useState<IDataSourceForm>(
-    dataSourceFormConfigs.find((t: IDataSourceForm) => {
+    // 不深拷贝这里回影响dataSourceFormConfigs
+    deepClone(dataSourceFormConfigs).find((t: IDataSourceForm) => {
       return t.type === dataSourceType
     })!
   );
 
   const [initialValues] = useState(initialFormData(dataSourceFormConfig.items));
 
+  function initialFormData(dataSourceFormConfig: IFormItem[] | undefined) {
+    let initValue: any = {}
+    if (dataSourceId) {
+      connectionServer.getDetails({ id: dataSourceId + '' }).then((res: any) => {
+        // TODO: authentication类型
+        if (res.user) {
+          res.authentication = 1
+        } else {
+          res.authentication = 2
+        }
+        regEXFormatting({ url: res.url }, res)
+      })
+    } else {
+      dataSourceFormConfig?.map(t => {
+        initValue[t.name] = t.defaultValue
+        if (t.selects?.length) {
+          t.selects?.map(item => {
+            if (item.value === t.selected) {
+              initValue = {
+                ...initValue,
+                ...initialFormData(item.items)
+              }
+            }
+          })
+        }
+      })
+    }
+    return initValue
+  }
+
+  function extractObj(url: any) {
+    const { template, pattern } = dataSourceFormConfig
+    console.log(dataSourceFormConfig)
+    // 提取关键词对应的内容 value
+    const matches = url.match(pattern)!;
+    console.log(matches)
+    // 提取花括号内的关键词 key
+    const reg = /{(.*?)}/g;
+    let match;
+    const arr = [];
+    while ((match = reg.exec(template)) !== null) {
+      arr.push(match[1]);
+    }
+    // key与value一一对应
+    const newExtract: any = {}
+    arr.map((t, i) => {
+      newExtract[t] = t === 'database' ? (matches[i + 2] || '') : matches[i + 1]
+    })
+    return newExtract
+  }
+
+  function regEXFormatting(variableData: { [key: string]: any }, dataObj: { [key: string]: any }) {
+    const { template } = dataSourceFormConfig
+    const keyName = Object.keys(variableData)[0]
+    const keyValue = variableData[Object.keys(variableData)[0]]
+    let newData: any = {}
+    if (keyName === 'url') {
+      newData = extractObj(keyValue)
+    } else if (keyName === 'alias') {
+      aliasChanged = true
+    } else {
+      // 改变上边url动
+      let url = template;
+      Object.keys(dataObj).map(t => {
+        url = url.replace(`{${t}}`, dataObj[t])
+      })
+      newData = {
+        url
+      }
+    }
+    if (keyName === 'host' && !aliasChanged) {
+      newData.alias = '@' + keyValue
+    }
+    console.log(newData)
+    form.setFieldsValue({
+      ...dataObj,
+      ...newData,
+    });
+  }
 
   function renderFormItem(t: IFormItem): React.ReactNode {
-
     const FormItemTypes: { [key in InputType]: () => React.ReactNode } = {
       [InputType.INPUT]: () => <Form.Item
         label={t.labelNameCN}
@@ -90,7 +159,7 @@ export default memo<IProps>(function CreateConnection(props) {
       //   }
       // ]}
       >
-        <Select value={currentSelectValue(t.selects)} onChange={selectChange}>
+        <Select value={t.selected} onChange={selectChange}>
           {t.selects?.map((t: ISelect) => <Option key={t.value} value={t.value}>{t.label}</Option>)}
         </Select>
       </Form.Item>,
@@ -114,21 +183,11 @@ export default memo<IProps>(function CreateConnection(props) {
       dataSourceFormConfig.items.map((j, i) => {
         if (j.name === t.name) {
           j.selects?.map(item => {
-            item.selected = item.value === formData[t.name] ? true : false;
+            j.selected = item.value === formData[t.name] ? true : false;
           })
         }
       })
       setDataSourceFormConfig({ ...dataSourceFormConfig })
-    }
-
-    function currentSelectValue(selects: ISelect[] | undefined) {
-      let value: any = ''
-      selects?.forEach(t => {
-        if (t.selected) {
-          value = t.value
-        }
-      })
-      return value
     }
 
     return <Fragment key={t.name}>
@@ -136,9 +195,9 @@ export default memo<IProps>(function CreateConnection(props) {
         {FormItemTypes[t.inputType]()}
       </div>
       {
-        t.selects?.map(t => {
-          if (t.selected) {
-            return t.items?.map(t => renderFormItem(t))
+        t.selects?.map(item => {
+          if (t.selected === item.value) {
+            return item.items?.map(t => renderFormItem(t))
           }
         })
       }
@@ -162,82 +221,48 @@ export default memo<IProps>(function CreateConnection(props) {
     };
 
     if (type === submitType.UPDATE) {
-      p.id = rowData?.id;
+      p.id = dataSourceId;
     }
 
     connectionServer[type](p).then(res => {
       if (type === submitType.TEST) {
         message.success(res === false ? '测试连接失败' : '测试连接成功');
       } else {
-        const dataSource: ITreeNode = {
-          name: p.alias,
-          key: (res || p.id) as string,
-          nodeType: TreeNodeType.DATASOURCE,
-          dataSourceId: (res || p.id) as number,
-          dataType: dataSourceType,
-        }
-        submitCallback?.(dataSource);
+        setModel({
+          ...model,
+          editDataSourceData: false,
+          refreshTreeNum: new Date().getTime(),
+        })
       }
     })
-  }
-
-  function extractObj(data: any) {
-    const { template, pattern } = dataSourceFormConfig
-    // 提取关键词对应的内容 value
-    const matches = data[0].value.match(pattern);
-    // 提取花括号内的关键词 key
-    const reg = /{(.*?)}/g;
-    let match;
-    const arr = [];
-    while ((match = reg.exec(template)) !== null) {
-      arr.push(match[1]);
-    }
-    // key与value一一对应
-    const extractObj: any = {}
-    arr.map((t, i) => {
-      extractObj[t] = t === 'database' ? matches[i + 2] : matches[i + 1]
-    })
-    return extractObj
   }
 
   function onFieldsChange(data: any, datas: any) {
-    const { template } = dataSourceFormConfig
-    const formData = form.getFieldsValue();
-    let newData: any = {}
-
-    // 改变url上边动
+    // 将antd的格式转换为正常的对象格式
     const keyName = data[0].name[0];
     const keyValue = data[0].value;
-    if (keyName === 'url') {
-      newData = extractObj(data)
-    } else if (keyName === 'alias') {
-      aliasChanged = true
-    } else {
-      // 改变上边url动
-      let url = template;
-      datas.map((t: any) => {
-        url = url.replace(`{${t.name[0]}}`, t.value)
-      })
-      newData = {
-        url
-      }
+    const variableData = {
+      [keyName]: keyValue
     }
-    if (keyName === 'host' && !aliasChanged) {
-      newData.alias = '@' + keyValue
-    }
+    const dataObj: any = {}
+    datas.map((t: any) => {
+      dataObj[t.name[0]] = t.value
+    })
+    // 正则拆分url/组建url
+    regEXFormatting(variableData, dataObj);
+  }
 
-    form.setFieldsValue({
-      ...formData,
-      ...newData,
-    });
+  function onCancel() {
+    setEditDataSourceData(false)
   }
 
   return <div className={classnames(styles.box, className)}>
     <Modal
-      title="连接数据库"
-      open={true}
+      title={dataSourceId ? "修改数据源" : "连接数据源"}
+      open={!!editDataSourceData}
       onCancel={onCancel}
       footer={false}
+      width={560}
     >
       <Form
         form={form}
@@ -250,7 +275,7 @@ export default memo<IProps>(function CreateConnection(props) {
         <div className={styles.formFooter}>
           <div className={styles.test}>
             {
-              !rowData &&
+              !dataSourceId &&
               <Button
                 onClick={submitConnection.bind(null, submitType.TEST)}
                 className={styles.test}>
@@ -262,14 +287,22 @@ export default memo<IProps>(function CreateConnection(props) {
             <Button onClick={onCancel} className={styles.cancel}>
               取消
             </Button>
-            <Button className={styles.save} theme="primary" onClick={submitConnection.bind(null, rowData ? submitType.UPDATE : submitType.SAVE)}>
+            <Button className={styles.save} theme="primary" onClick={submitConnection.bind(null, dataSourceId ? submitType.UPDATE : submitType.SAVE)}>
               {
-                rowData ? '修改' : '连接'
+                dataSourceId ? '修改' : '连接'
               }
             </Button>
           </div>
         </div>
       </Form>
     </Modal>
-  </div>
-})
+  </div >
+}
+
+export default function CreateConnection() {
+  const { model } = useContext(DatabaseContext);
+  const editDataSourceData = model.editDataSourceData
+  return editDataSourceData ? <VisiblyCreateConnection /> : <></>
+}
+
+
