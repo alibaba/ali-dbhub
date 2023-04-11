@@ -37,4 +37,9 @@ public class ChatQueryRequest extends DataSourceBaseRequest {
      * @see com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum
      */
     private String destSqlType;
+
+    /**
+     * 更多备注信息：如要求或限制条件等
+     */
+    private String ext;
 }
