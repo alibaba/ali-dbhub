@@ -35,7 +35,7 @@ export interface IOperationColumnConfigItem {
 
 function TreeNodeRightClick(props: IProps) {
   const { className, setTreeData, data, setIsLoading } = props;
-  const { setCreateConsoleDialog, setOperationDataDialog, setNeedRefreshNodeTree } = useContext(DatabaseContext);
+  const { setCreateConsoleDialog, setOperationDataDialog, setNeedRefreshNodeTree, setEditDataSourceData } = useContext(DatabaseContext);
   const [verifyDialog, setVerifyDialog] = useState<boolean>();
   const [verifyTableName, setVerifyTableName] = useState<string>('');
   const treeNodeConfig: ITreeConfigItem = treeConfig[data.nodeType]
@@ -43,7 +43,6 @@ function TreeNodeRightClick(props: IProps) {
   const dataSourceFormConfig = dataSourceFormConfigs.find((t: IDataSourceForm) => {
     return t.type === data.dataType
   })!
-
   const OperationColumnConfig: { [key in OperationColumn]: (data: ITreeNode) => IOperationColumnConfigItem } = {
     [OperationColumn.REFRESH]: (data) => {
       return {
@@ -117,6 +116,18 @@ function TreeNodeRightClick(props: IProps) {
             dataSourceId: data.dataSourceId!,
             databaseName: data.databaseName!,
             schemaName: data.schemaName!
+          })
+        }
+      }
+    },
+    [OperationColumn.EditSource]: (data) => {
+      return {
+        text: '编辑数据源',
+        icon: '\ue623',
+        handle: () => {
+          setEditDataSourceData({
+            dataType: data.dataType as any,
+            id: +data.key
           })
         }
       }

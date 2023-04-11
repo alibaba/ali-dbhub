@@ -40,6 +40,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
+        selected: AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -63,12 +64,10 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
                 width: 100,
               },
             ],
-            selected: true,
             label: 'User&Password',
             value: AuthenticationType.USERANDPASSWORD,
           },
           {
-            selected: false,
             label: 'NONE',
             value: AuthenticationType.NONE,
           },
@@ -134,7 +133,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         inputType: InputType.SELECT,
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
-        name: 'authenticationentication',
+        name: 'authentication',
+        selected: AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -158,12 +158,11 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
                 width: 100,
               },
             ],
-            selected: true,
             label: 'User&Password',
             value: AuthenticationType.USERANDPASSWORD,
           },
           {
-            selected: false,
+
             label: 'NONE',
             value: AuthenticationType.NONE,
           },
@@ -241,17 +240,17 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         name: 'driver',
         required: true,
         labelTextAlign: 'right',
+        selected: 'thin',
         selects: [
           {
-            selected: true,
             value: 'thin',
           },
           {
-            selected: false,
+
             value: 'oci',
           },
           {
-            selected: false,
+
             value: 'oci8',
           },
         ],
@@ -263,6 +262,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
+        selected:AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -286,12 +286,11 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
                 width: 100,
               },
             ],
-            selected: true,
             label: 'User&Password',
             value: AuthenticationType.USERANDPASSWORD,
           },
           {
-            selected: false,
+
             label: 'NONE',
             value: AuthenticationType.NONE,
           },
@@ -349,6 +348,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
+        selected:AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -372,12 +372,12 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
                 width: 100,
               },
             ],
-            selected: true,
+
             label: 'User&Password',
             value: AuthenticationType.USERANDPASSWORD,
           },
           {
-            selected: false,
+
             label: 'NONE',
             value: AuthenticationType.NONE,
           },
@@ -453,6 +453,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
+        selected:AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -476,12 +477,12 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
                 width: 100,
               },
             ],
-            selected: true,
+
             label: 'User&Password',
             value: AuthenticationType.USERANDPASSWORD,
           },
           {
-            selected: false,
+
             label: 'NONE',
             value: AuthenticationType.NONE,
           },
@@ -583,6 +584,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
+        selected:AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -606,12 +608,12 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
                 width: 100,
               },
             ],
-            selected: true,
+
             label: 'User&Password',
             value: AuthenticationType.USERANDPASSWORD,
           },
           {
-            selected: false,
+
             label: 'NONE',
             value: AuthenticationType.NONE,
           },
@@ -678,6 +680,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
+        selected:AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -701,12 +704,12 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
                 width: 100,
               },
             ],
-            selected: true,
+
             label: 'User&Password',
             value: AuthenticationType.USERANDPASSWORD,
           },
           {
-            selected: false,
+
             label: 'NONE',
             value: AuthenticationType.NONE,
           },

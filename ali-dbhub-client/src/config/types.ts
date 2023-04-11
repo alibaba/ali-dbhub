@@ -3,7 +3,6 @@ import { DatabaseTypeCode } from '@/utils/constants';
 import { OperationColumn } from '@/components/Tree/treeConfig';
 
 export type ISelect = {
-  selected: boolean;
   value?: AuthenticationType | string;
   label?: string;
   items?: IFormItem[];
@@ -17,6 +16,7 @@ export interface IFormItem {
   name: string;
   required: boolean;
   width: number;
+  selected?: any;
   selects?: ISelect[];
   labelTextAlign?: 'right';
 }

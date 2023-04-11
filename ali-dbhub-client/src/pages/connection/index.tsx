@@ -5,7 +5,6 @@ import Iconfont from '@/components/Iconfont';
 import ScrollLoading from '@/components/ScrollLoading';
 import StateIndicator from '@/components/StateIndicator';
 import LoadingContent from '@/components/Loading/LoadingContent';
-import ConnectionDialog from '@/components/ConnectionDialog';
 import CreateConnection from '@/components/CreateConnection';
 import i18n from '@/i18n';
 import { history } from 'umi';
@@ -258,11 +257,7 @@ export default memo<IProps>(function ConnectionPage(props) {
         onCancel={() => { setIsModalVisible(false) }}
         openModal={isModalVisible}
       /> */}
-      {/* <ConnectionDialog
-        submitCallback={submitCallback}
-        onCancel={() => { setIsModalVisible(false) }}
-        openModal={isModalVisible}
-      /> */}
+
     </div>
   );
 });

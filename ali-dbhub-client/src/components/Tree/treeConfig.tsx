@@ -59,7 +59,8 @@ export enum OperationColumn {
   CreateTable = 'createTable',
   CreateConsole = 'createConsole',
   DeleteTable = 'deleteTable',
-  ExportDDL = 'exportDDL'
+  ExportDDL = 'exportDDL',
+  EditSource = 'editSource'
 }
 
 export interface ITreeConfigItem {
@@ -82,6 +83,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
           const data: ITreeNode[] = res.data.map(t => {
             return {
               name: t.alias,
+              url: t.EnvType,
+              user: t.user,
               key: t.id!.toString(),
               nodeType: TreeNodeType.DATASOURCE,
               dataSourceId: t.id,
@@ -115,7 +118,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
       })
     },
     operationColumn: [
-      OperationColumn.REFRESH, OperationColumn.ShiftOut
+      OperationColumn.EditSource, OperationColumn.REFRESH, OperationColumn.ShiftOut
     ],
     next: TreeNodeType.DATABASE
   },
