@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import classnames from 'classnames';
 import styles from './index.less';
 
-export default class IconFont extends PureComponent<{
+export default class Iconfont extends PureComponent<{
   code: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>> {
   render() {

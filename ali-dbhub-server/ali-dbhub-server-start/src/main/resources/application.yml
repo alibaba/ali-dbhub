@@ -52,5 +52,7 @@ sa-token:
 chatgpt:
   apiKey: sk-xxxx
   apiHost: https://api.openai.com/
+  # 可以选择GPT3或GPT35
+  version: GPT35
   context:
-    length: 1
+    length: 4

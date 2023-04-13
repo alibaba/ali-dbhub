@@ -220,9 +220,9 @@
                 <version>0.12.0</version>
             </dependency>
             <dependency>
-                <groupId>com.alipay.oceanbase</groupId>
+                <groupId>com.oceanbase</groupId>
                 <artifactId>oceanbase-client</artifactId>
-                <version>1.0.8</version>
+                <version>2.4.2</version>
             </dependency>
             <dependency>
                 <groupId>org.mariadb.jdbc</groupId>

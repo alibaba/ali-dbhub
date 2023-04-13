@@ -11,7 +11,7 @@ import LoadingContent from '../Loading/LoadingContent';
 import { useCanDoubleClick, useUpdateEffect } from '@/utils/hooks';
 import connectionService from '@/service/connection';
 import TreeNodeRightClick from './TreeNodeRightClick';
-import { treeConfig, switchIcon } from './treeConfig'
+import { treeConfig, switchIcon, ITreeConfigItem } from './treeConfig'
 import { databaseType } from '@/utils/constants'
 import { DatabaseContext } from '@/context/database';
 
@@ -33,6 +33,9 @@ function Tree(props: IProps, ref: any) {
   const { className, cRef, addTreeData } = props;
   const [treeData, setTreeData] = useState<ITreeNode[] | null>(null);
   const [searchedTreeData, setSearchedTreeData] = useState<ITreeNode[] | null>(null);
+  const { model } = useContext(DatabaseContext);
+  const { refreshTreeNum } = model;
+
 
   useUpdateEffect(() => {
     setTreeData([...(treeData || []), ...(addTreeData || [])]);
@@ -61,7 +64,7 @@ function Tree(props: IProps, ref: any) {
           key: t.id!.toString(),
           nodeType: TreeNodeType.DATASOURCE,
           dataSourceId: t.id,
-          dataType: t.type
+          dataType: t.type,
         }
       })
       setTimeout(() => {
@@ -77,7 +80,7 @@ function Tree(props: IProps, ref: any) {
 
   useEffect(() => {
     getDataSource();
-  }, [])
+  }, [refreshTreeNum])
 
   return <div className={classnames(className, styles.box)}>
     <LoadingContent data={treeData} handleEmpty>
@@ -107,16 +110,18 @@ function TreeNode(props: TreeNodeIProps) {
   const treeNodeClick = useCanDoubleClick();
 
   function loadData(data: ITreeNode) {
-    treeConfig[data.nodeType]?.getNodeData(data).then(res => {
+    const treeNodeConfig: ITreeConfigItem = treeConfig[data.pretendNodeType || data.nodeType];
+    treeNodeConfig.getChildren?.(data).then(res => {
       if (res.length) {
+        console.log(res)
         setTimeout(() => {
           data.children = res;
           setShowChildren(true);
           setIsLoading(false);
         }, 200);
       } else {
-        if (treeConfig[data.nodeType]?.next) {
-          data.nodeType = treeConfig[data.nodeType]?.next!
+        if (treeNodeConfig.next) {
+          data.pretendNodeType = treeNodeConfig.next;
           loadData(data);
         } else {
           data.children = [];
@@ -160,7 +165,6 @@ function TreeNode(props: TreeNodeIProps) {
       data={data}
       setTreeData={setTreeData}
       setIsLoading={setIsLoading}
-      nodeConfig={treeConfig[data.nodeType]}
     />
   }
 
@@ -176,8 +180,8 @@ function TreeNode(props: TreeNodeIProps) {
     return <>
       <span>{data.name}</span>
       {
-        data.dataType &&
-        <span style={{ color: callVar('--custom-primary-color') }}>（{data.dataType}）</span>
+        data.columnType && data.nodeType === TreeNodeType.COLUMN &&
+        <span style={{ color: callVar('--custom-primary-color') }}>（{data.columnType}）</span>
       }
     </>
   }
@@ -194,7 +198,6 @@ function TreeNode(props: TreeNodeIProps) {
     <Dropdown overlay={renderMenu()} trigger={['contextMenu']}>
       <Tooltip placement="right" title={renderTitle(data)}>
         <div
-          onDoubleClick={nodeDoubleClick}
           className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
           <div className={styles.left}>
             {
@@ -219,12 +222,14 @@ function TreeNode(props: TreeNodeIProps) {
                 {/* <Iconfont className={classnames(styles.arrowsIcon, { [styles.rotateArrowsIcon]: showChildren })} code='&#xe608;' /> */}
               </div>
             }
-            <div className={styles.typeIcon}>
-              <Iconfont code={recognizeIcon(data.nodeType)!}></Iconfont>
-            </div>
-            <div className={styles.contentText} >
-              <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
-              {/* <div className={styles.type}>{data.dataType}</div> */}
+            <div className={styles.dblclickArea} onDoubleClick={nodeDoubleClick}>
+              <div className={styles.typeIcon}>
+                <Iconfont code={recognizeIcon(data.nodeType)!}></Iconfont>
+              </div>
+              <div className={styles.contentText} >
+                <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
+                {data.nodeType === TreeNodeType.COLUMN && <div className={styles.type}>{data.columnType}</div>}
+              </div>
             </div>
           </div>
         </div>
