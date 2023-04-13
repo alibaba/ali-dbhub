@@ -18130,7 +18130,7 @@ textarea.custom-mentions {
   border-radius: 2px 2px 0 0;
 }
 .custom-modal-body {
-  padding: 12px;
+  padding: 12px 20px 20px 20px;
   font-size: 14px;
   line-height: 1.5715;
   word-wrap: break-word;

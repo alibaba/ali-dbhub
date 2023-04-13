@@ -25,15 +25,15 @@ public class OracleMetaSchemaSupport extends BaseMetaSchema implements MetaSchem
         return DbTypeEnum.ORACLE;
     }
 
-    @Override
-    public List<String> databases() {
-        return super.schemas(null);
-    }
-
-    @Override
-    public List<String> schemas(String databaseName) {
-        return Lists.newArrayList();
-    }
+//    @Override
+//    public List<String> databases() {
+//        return super.schemas(null);
+//    }
+//
+//    @Override
+//    public List<String> schemas(String databaseName) {
+//        return Lists.newArrayList();
+//    }
 
     @Override
     public String tableDDL(String databaseName, String schemaName, String tableName) {
@@ -47,6 +47,7 @@ public class OracleMetaSchemaSupport extends BaseMetaSchema implements MetaSchem
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+
             return null;
         });
     }

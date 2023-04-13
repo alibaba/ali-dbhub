@@ -4,9 +4,9 @@ import { useParams } from 'umi';
 import { ISQLQueryConsole } from '@/types';
 import { Divider, message, Tooltip } from 'antd';
 import { TreeNodeType, WindowTabStatus, OSType } from '@/utils/constants';
-import IconFont from '@/components/Iconfont';
+import Iconfont from '@/components/Iconfont';
 import MonacoEditor, { setEditorHint } from '@/components/MonacoEditor';
-import DraggableDivider from '@/components/DraggableDivider';
+import DraggableContainer from '@/components/DraggableContainer';
 import SearchResult from '@/components/SearchResult';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import mysqlServer from '@/service/mysql';
@@ -47,17 +47,18 @@ interface IProps extends IDatabaseQueryProps {
 let monacoEditorExternalList: any = {};
 
 export default memo<IProps>(function DatabaseQuery(props) {
-  const { activeTabKey, windowTab } = props;
-  const { model, setDblclickNodeData, setAiImportSql } =
+  const { model, setDblclickNodeData, setShowSearchResult } =
     useContext(DatabaseContext);
+  const { activeTabKey, windowTab } = props;
   const params: { id: string; type: string } = useParams();
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
   const [aiAnswer, setAiAnswer] = useState('');
   const uid = useRef<string>(uuid());
   const consoleRef = useRef<HTMLDivElement>(null);
   const monacoEditor = useRef<any>(null);
+  const volatileRef = useRef<any>(null);
   const monacoHint = useRef<any>(null);
-  const { dblclickNodeData } = model;
+  const { dblclickNodeData, showSearchResult } = model;
 
   useEffect(() => {
     if (windowTab.consoleId !== +activeTabKey) {
@@ -184,6 +185,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
   };
 
   const executeSql = () => {
+    setShowSearchResult(true);
     const sql = getSelectionVal() || getMonacoEditorValue();
     if (!sql) {
       message.warning('请输入SQL语句');
@@ -337,24 +339,32 @@ export default memo<IProps>(function DatabaseQuery(props) {
     let dom = [];
     for (let i = 0; i < optBtn.current.length; i++) {
       const optList = optBtn.current[i];
-      const tmpDom = (optList || []).map((item: any) => (
-        <Tooltip placement="bottom" title={item.name}>
-          <IconFont
+      const tmpDom = (optList || []).map((item: any, index) => (
+        <Tooltip key={index} placement="bottom" title={item.name}>
+          <Iconfont
             code={item.icon}
             className={styles.icon}
             onClick={item.onClick}
           />
         </Tooltip>
       ));
-      tmpDom.push(<Divider type="vertical" />);
+      tmpDom.push(<Divider key={'divider'} type="vertical" />);
       dom.push([...tmpDom]);
     }
     return dom;
   };
 
   return (
-    <div className={classnames(styles.databaseQuery)}>
-      <div ref={consoleRef} className={styles.console}>
+    <DraggableContainer
+      className={classnames(styles.databaseQuery)}
+      callback={callback}
+      direction="row"
+      volatileDom={{
+        volatileRef: volatileRef,
+        volatileIndex: 2,
+      }}
+    >
+      <div className={styles.console}>
         <div className={styles.operatingArea}>
           <div className={styles.left}>{renderOptBtn()}</div>
           <div className={styles.right}>
@@ -371,17 +381,15 @@ export default memo<IProps>(function DatabaseQuery(props) {
           />
         </div>
       </div>
-      <DraggableDivider
-        callback={callback}
-        direction="row"
-        min={200}
-        volatileRef={consoleRef}
-      />
-      <div className={styles.searchResult}>
+      <div
+        ref={volatileRef}
+        style={{ display: showSearchResult ? 'block' : 'none' }}
+        className={styles.searchResult}
+      >
         <LoadingContent data={manageResultDataList} handleEmpty>
           <SearchResult manageResultDataList={manageResultDataList} />
         </LoadingContent>
       </div>
-    </div>
+    </DraggableContainer>
   );
 });

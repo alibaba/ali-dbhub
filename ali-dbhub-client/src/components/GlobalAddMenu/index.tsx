@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useContext } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import Iconfont from '../Iconfont';
@@ -6,8 +6,7 @@ import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { IDatabase, ITreeNode } from '@/types'
 import { databaseType, DatabaseTypeCode } from '@/utils/constants';
-import ConnectionDialog from '@/components/ConnectionDialog';
-import CreateConnection from '@/components/CreateConnection';
+import { DatabaseContext } from '@/context/database'
 
 interface IProps {
   className?: string;
@@ -63,31 +62,27 @@ const items: MenuItem[] = newDataSourceChildren
 
 export default memo<IProps>(function GlobalAddMenu(props) {
   const { className, getAddTreeNode } = props;
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [dataSourceType, setDataSourceType] = useState<DatabaseTypeCode>();
+  const { model, setEditDataSourceData } = useContext(DatabaseContext);
 
   const onClickMenuNode: MenuProps['onClick'] = (e) => {
-    setDataSourceType(e.keyPath[0] as DatabaseTypeCode);
-    setIsModalVisible(true);
+    setEditDataSourceData({
+      dataType: e.keyPath[0] as DatabaseTypeCode,
+    })
   };
 
   function submitCallback(data: ITreeNode) {
     getAddTreeNode(data);
-    setIsModalVisible(false);
   }
 
   return <div className={classnames(styles.box, className)}>
     <Menu onClick={onClickMenuNode} mode="vertical" items={items as any} />
-    {!!dataSourceType && isModalVisible && <CreateConnection
-      submitCallback={submitCallback}
-      dataSourceType={dataSourceType}
-      onCancel={() => { setIsModalVisible(false) }}
-    />}
-    {/* <ConnectionDialog
-      submitCallback={submitCallback}
-      dataSourceType={dataSourceType}
-      onCancel={() => { setIsModalVisible(false) }}
-      openModal={isModalVisible}
-    /> */}
+    {/* {((!!dataSourceType && isModalVisible) || editDataSourceData) &&
+      <CreateConnection
+        submitCallback={submitCallback}
+        dataSourceType={editDataSourceData.dataType || dataSourceType}
+        dataSourceData={editDataSourceData}
+        onCancel={onCancel}
+      />
+    } */}
   </div>
 })

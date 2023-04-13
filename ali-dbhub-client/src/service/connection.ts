@@ -12,7 +12,7 @@ const getList = createRequest<
   IPageResponse<IConnectionBase>
 >('/api/connection/datasource/list', {});
 
-const getDetaile = createRequest<{ id: string }, IConnectionBase>(
+const getDetails = createRequest<{ id: string }, IConnectionBase>(
   '/api/connection/datasource/:id',
   {},
 );
@@ -54,7 +54,7 @@ const getDBList = createRequest<{ id: number }, IDB[]>(
 
 export default {
   getList,
-  getDetaile,
+  getDetails,
   save,
   test,
   update,

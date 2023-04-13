@@ -73,8 +73,11 @@ public class OperationLogServiceImpl implements OperationLogService {
         ListResult<DataSource> dataSourceListResult = dataSourceService.queryByIds(dataSourceIds);
         Map<Long, DataSource> dataSourceMap = dataSourceListResult.getData().stream().collect(
             Collectors.toMap(DataSource::getId, Function.identity(), (a, b) -> a));
-        executedDdlDTOS.stream().forEach(executeDdl -> executeDdl.setDataSourceName(
-            dataSourceMap.get(executeDdl.getDataSourceId()).getAlias()));
+        executedDdlDTOS.stream().forEach(executeDdl -> {
+            if (dataSourceMap.containsKey(executeDdl.getDataSourceId())) {
+                executeDdl.setDataSourceName(dataSourceMap.get(executeDdl.getDataSourceId()).getAlias());
+            }
+        });
         return PageResult.of(executedDdlDTOS, executedDdlDOIPage.getTotal(), param);
     }
 }
