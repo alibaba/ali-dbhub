@@ -14,6 +14,9 @@ import historyServer from '@/service/history';
 import { format } from 'sql-formatter';
 import { OSnow } from '@/utils';
 import { DatabaseContext } from '@/context/database';
+import { formatParams, uuid } from '@/utils/common';
+import connectToEventSource from '@/utils/eventSource';
+
 import styles from './index.less';
 
 const monaco = require('monaco-editor/esm/vs/editor/editor.api');
@@ -23,6 +26,20 @@ export interface IDatabaseQueryProps {
   windowTab: ISQLQueryConsole;
 }
 
+enum IPromptType {
+  NL_2_SQL = 'NL_2_SQL',
+  SQL_EXPLAIN = 'SQL_EXPLAIN',
+  SQL_OPTIMIZER = 'SQL_OPTIMIZER',
+  SQL_2_SQL = 'SQL_2_SQL',
+}
+
+enum IPromptTypeText {
+  NL_2_SQL = '自然语言转换',
+  SQL_EXPLAIN = '解释SQL',
+  SQL_OPTIMIZER = 'SQL优化',
+  SQL_2_SQL = 'SQL转换',
+}
+
 interface IProps extends IDatabaseQueryProps {
   className?: string;
 }
@@ -30,16 +47,18 @@ interface IProps extends IDatabaseQueryProps {
 let monacoEditorExternalList: any = {};
 
 export default memo<IProps>(function DatabaseQuery(props) {
-  const { model, setDblclickNodeData, setAiImportSql, setShowSearchResult } = useContext(DatabaseContext);
+  const { model, setDblclickNodeData, setShowSearchResult } =
+    useContext(DatabaseContext);
   const { activeTabKey, windowTab } = props;
   const params: { id: string; type: string } = useParams();
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
-
+  const [aiAnswer, setAiAnswer] = useState('');
+  const uid = useRef<string>(uuid());
   const consoleRef = useRef<HTMLDivElement>(null);
   const monacoEditor = useRef<any>(null);
   const volatileRef = useRef<any>(null);
   const monacoHint = useRef<any>(null);
-  const { dblclickNodeData, aiImportSql, showSearchResult } = model;
+  const { dblclickNodeData, showSearchResult } = model;
 
   useEffect(() => {
     if (windowTab.consoleId !== +activeTabKey) {
@@ -48,15 +67,6 @@ export default memo<IProps>(function DatabaseQuery(props) {
     connectConsole();
     getTableList();
   }, [activeTabKey]);
-
-  useEffect(() => {
-    if (aiImportSql) {
-      const model = monacoEditor.current.getModel(monacoEditor.current);
-      const value = model.getValue();
-      model.setValue(`${value}\n${aiImportSql}`);
-      setAiImportSql('');
-    }
-  }, [aiImportSql]);
 
   useEffect(() => {
     if (!dblclickNodeData) {
@@ -69,10 +79,11 @@ export default memo<IProps>(function DatabaseQuery(props) {
       return;
     }
     const nodeData = dblclickNodeData;
+
     if (nodeData && windowTab.consoleId === +activeTabKey) {
       const model = monacoEditor.current.getModel(monacoEditor.current);
       const value = model.getValue();
-      if (nodeData.nodeType == TreeNodeType.TABLE) {
+      if (nodeData.nodeType === TreeNodeType.TABLE) {
         if (value == 'SELECT * FROM' || value == 'SELECT * FROM ') {
           model.setValue(`SELECT * FROM ${nodeData.name};`);
         } else {
@@ -129,7 +140,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
         myEditorHintData[item.name] = [];
       });
       monacoHint.current = setEditorHint(myEditorHintData);
-    } catch { }
+    } catch {}
   };
 
   const getEditor = (editor: any) => {
@@ -140,8 +151,8 @@ export default memo<IProps>(function DatabaseQuery(props) {
       localStorage.getItem(
         `window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.consoleId}`,
       ) ||
-      windowTab.ddl ||
-      '',
+        windowTab.ddl ||
+        '',
     );
   };
 
@@ -174,7 +185,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
   };
 
   const executeSql = () => {
-    setShowSearchResult(true)
+    setShowSearchResult(true);
     const sql = getSelectionVal() || getMonacoEditorValue();
     if (!sql) {
       message.warning('请输入SQL语句');
@@ -234,15 +245,72 @@ export default memo<IProps>(function DatabaseQuery(props) {
     );
   };
 
-  const lang2SQL = () => {
+  const chat2SQL = (promptType: IPromptType) => {
+    const sentence = getSelectionVal() || getMonacoEditorValue();
+    if (!sentence) {
+      message.warning('请输入SQL语句');
+      return;
+    }
     // TODO: 自然语言转化SQL
-  };
-  const analysisSQL = () => {
-    // TODO: 解析SQL
+    const model = monacoEditor.current.getModel(monacoEditor.current);
+    const preValue = model.getValue();
+    model.setValue(
+      `${preValue}\n\n## 问题:\n ${sentence}\n## ---${IPromptTypeText[promptType]}:--- \n`,
+    );
+
+    const { consoleId, dataSourceId, databaseName } = windowTab || {};
+    const params = formatParams({
+      dataSourceId,
+      databaseName,
+      promptType,
+      message: sentence,
+    });
+
+    const handleMessage = (message: string) => {
+      if (message === '[DONE]') {
+        closeEventSource();
+        const model = monacoEditor.current.getModel(monacoEditor.current);
+        const preValue = model.getValue();
+        model.setValue(`${preValue}\n## ---END--- \n`);
+      }
+      console.log('Message received:', message);
+      const { content } = JSON.parse(message);
+      const model = monacoEditor.current.getModel(monacoEditor.current);
+      const preValue = model.getValue();
+      model.setValue(`${preValue}${content}`);
+    };
+
+    const handleError = (error: any) => {
+      console.error('Error:', error);
+    };
+
+    // 连接到 EventSourcePolyfill 并设置回调函数
+    const closeEventSource = connectToEventSource({
+      url: `/api/ai/chat?${params}`,
+      uid: uid.current,
+      onMessage: handleMessage,
+      onError: handleError,
+    });
   };
 
+  /**
+   * 自然语言转化SQL
+   */
+  const lang2SQL = () => {
+    chat2SQL(IPromptType.NL_2_SQL);
+  };
+  /**
+   * 解释SQL
+   */
+  const explainSQL = () => {
+    chat2SQL(IPromptType.SQL_EXPLAIN);
+  };
+
+  /**
+   * 优化SQL
+   */
   const optimizeSQL = () => {
-    // TODO: 优化SQL
+    chat2SQL(IPromptType.SQL_OPTIMIZER);
   };
 
   const optBtn = useRef([
@@ -257,14 +325,14 @@ export default memo<IProps>(function DatabaseQuery(props) {
       { name: '格式化', icon: '\ue7f8', onClick: formatValue },
     ],
     /** 自然语言转化SQL */
-    // [
-    //   { name: '语言转化SQL', icon: '\ue626', onClick: lang2SQL },
-    //   { name: '语言转化SQL带参数', icon: '\ue626', onClick: lang2SQL },
-    // ],
+    [
+      { name: '语言转化SQL', icon: '\ue626', onClick: lang2SQL },
+      { name: '语言转化SQL带参数', icon: '\ue626', onClick: lang2SQL },
+    ],
     // /** 解释SQL */
-    // [{ name: '解析SQL', icon: '\ue626', onClick: analysisSQL }],
+    [{ name: '解析SQL', icon: '\ue626', onClick: explainSQL }],
     // /** 优化SQL */
-    // [{ name: '优化SQL', icon: '\ue626', onClick: optimizeSQL }],
+    [{ name: '优化SQL', icon: '\ue626', onClick: optimizeSQL }],
   ]);
 
   const renderOptBtn = () => {
@@ -293,7 +361,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
       direction="row"
       volatileDom={{
         volatileRef: volatileRef,
-        volatileIndex: 2
+        volatileIndex: 2,
       }}
     >
       <div className={styles.console}>
@@ -313,11 +381,15 @@ export default memo<IProps>(function DatabaseQuery(props) {
           />
         </div>
       </div>
-      <div ref={volatileRef} style={{ display: showSearchResult ? 'block' : 'none' }} className={styles.searchResult}>
+      <div
+        ref={volatileRef}
+        style={{ display: showSearchResult ? 'block' : 'none' }}
+        className={styles.searchResult}
+      >
         <LoadingContent data={manageResultDataList} handleEmpty>
           <SearchResult manageResultDataList={manageResultDataList} />
         </LoadingContent>
       </div>
-    </DraggableContainer >
+    </DraggableContainer>
   );
 });
