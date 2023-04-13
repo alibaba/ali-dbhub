@@ -3,7 +3,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import Tabs from '@/components/Tabs';
 import type { ColumnsType } from 'antd/es/table';
-import Iconfont from '@/components/IconFont';
+import Iconfont from '@/components/Iconfont';
 import StateIndicator from '@/components/StateIndicator';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import MonacoEditor from '@/components/MonacoEditor';

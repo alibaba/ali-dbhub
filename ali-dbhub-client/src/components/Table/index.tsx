@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState, useRef } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { useOnlyOnceTask } from '@/utils/hooks';
-import Iconfont from '@/components/IconFont';
+import Iconfont from '@/components/Iconfont';
 import { createTableRows, IColumn } from '@/components/TableColumns';
 import { IOptions } from '@/types';
 

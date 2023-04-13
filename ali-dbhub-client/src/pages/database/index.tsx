@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from 'antd';
 import i18n from '@/i18n';
-import IconFont from '@/components/IconFont';
+import IconFont from '@/components/Iconfont';
 import Tree from '@/components/Tree';
 import MonacoEditor, {
   setEditorHint,
