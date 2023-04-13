@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 import classnames from 'classnames';
-import IconFont from '@/components/IconFont'
+import IconFont from '@/components/Iconfont'
 import { Input } from 'antd';
 import i18n from '@/i18n';
 import styles from './index.less';

@@ -1,7 +1,7 @@
 import React, { memo, useContext, useState } from 'react';
 import classnames from 'classnames';
 import styles from './index.less';
-import Iconfont from '../../IconFont';
+import Iconfont from '../../Iconfont';
 import { MenuProps, message } from 'antd';
 import { Modal, Input } from 'antd';
 // import { Menu } from 'antd';

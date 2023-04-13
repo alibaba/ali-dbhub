@@ -3,7 +3,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import { Button, DatePicker, Input, Form, Modal, message, Checkbox, Select } from 'antd';
 import { createTableRows } from '@/components/TableColumns'
-import Iconfont from '@/components/IconFont';
+import Iconfont from '@/components/Iconfont';
 import DraggingRow from '@/components/DraggingRow';
 import { useOnlyOnceTask } from '@/utils/hooks';
 import { mysqlDataType } from '@/data/dataType';

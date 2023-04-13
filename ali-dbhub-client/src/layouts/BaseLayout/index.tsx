@@ -1,7 +1,7 @@
 import React, { Children, useEffect, useState, PropsWithChildren } from 'react';
 import styles from './index.less';
 import { history } from 'umi';
-import Iconfont from '@/components/IconFont';
+import Iconfont from '@/components/Iconfont';
 import classnames from 'classnames';
 import { Button, Menu } from 'antd';
 import Setting from '@/components/Setting';
