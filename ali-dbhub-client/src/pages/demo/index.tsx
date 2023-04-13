@@ -4,21 +4,8 @@ import Iconfont from '@/components/Iconfont'
 import Tabs from '@/components/Tabs';
 
 function DemoPage() {
-  const list = new Array(10).fill('123');
-  const [data, setData] = useState(1);
-  const dataRef = useRef();
-  function task() {
-    console.log(1)
-  }
-
   return <div className={styles.page}>
-    {
-      list.map(item => {
-        <div onClick={task}>
-          {item}
-        </div>
-      })
-    }
+    111111111111
   </div>
 }
 
