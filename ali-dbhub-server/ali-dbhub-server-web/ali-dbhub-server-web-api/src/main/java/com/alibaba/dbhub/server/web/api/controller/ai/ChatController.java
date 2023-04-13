@@ -24,9 +24,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.theokanning.openai.completion.CompletionRequest;
-import com.theokanning.openai.model.Model;
-import com.theokanning.openai.service.OpenAiService;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.entity.chat.Message;
 import com.unfbx.chatgpt.entity.completions.Completion;
@@ -212,25 +209,6 @@ public class ChatController {
         }
         return tableColumns.stream().collect(
             Collectors.groupingBy(TableColumn::getTableName, Collectors.toList()));
-
-    }
-
-
-    public static void main(String[] args) {
-        OpenAiService openAiService = new OpenAiService("XXXXX");
-
-
-        CompletionRequest completionRequest = CompletionRequest.builder()
-            .model("cushman:2020-05-03")
-            .prompt("SELECT * FROM users WHERE age > 18 AND gender = 'female'")
-            .echo(true)
-            .build();
-
-        List<Model> models =  openAiService.listModels();
-        System.out.println(JSON.toJSONString(models));
-        openAiService.createCompletion(completionRequest).getChoices().forEach(choice -> {
-            System.out.println(choice.getText());
-        });
 
     }
 }
