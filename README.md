@@ -6,7 +6,8 @@
 <h1 align="center">Chat2DB</h1>
 
 <div align="center">
-A database client tool under the blessing of AIGC
+
+一个集成了AIGC的数据库客户端工具
 
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/alibaba/ali-dbhub/blob/main/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/alibaba/ali-dbhub)](https://github.com/alibaba/ali-dbhub/releases)
@@ -28,10 +29,10 @@ Chat2DB 是一款有阿里巴巴开源免费的多数据库客户端工具，支
 
 
 ## 🌰 使用Demo
-<a href="document/img1.png"><img src="https://img.alicdn.com/imgextra/i3/O1CN01PlpLYy1hIq5aMugpg_!!6000000004255-0-tps-3446-1750.jpg" width="400"/></a>
-<a href="document/img2.png"><img src="https://img.alicdn.com/imgextra/i2/O1CN01DpzZJL1T7w2Xv9VMl_!!6000000002336-0-tps-3410-1662.jpg" width="400"/></a>
-<a href="document/img3.png"><img src="https://img.alicdn.com/imgextra/i2/O1CN01aidnkx1Oo0LJ1Pdty_!!6000000001751-0-tps-3440-1736.jpg" width="400"/></a>
-<a href="document/img4.png"><img src="https://img.alicdn.com/imgextra/i4/O1CN01iaSXot1W6VeaDFbK2_!!6000000002739-0-tps-3430-1740.jpg" width="400"/></a>
+<a href="document/img1.png"><img src="https://img.alicdn.com/imgextra/i3/O1CN01PlpLYy1hIq5aMugpg_!!6000000004255-0-tps-3446-1750.jpg" width="100%"/></a>
+<a href="document/img2.png"><img src="https://img.alicdn.com/imgextra/i2/O1CN01DpzZJL1T7w2Xv9VMl_!!6000000002336-0-tps-3410-1662.jpg" width="100%"/></a>
+<a href="document/img3.png"><img src="https://img.alicdn.com/imgextra/i2/O1CN01aidnkx1Oo0LJ1Pdty_!!6000000001751-0-tps-3440-1736.jpg" width="100%"/></a>
+<a href="document/img4.png"><img src="https://img.alicdn.com/imgextra/i4/O1CN01iaSXot1W6VeaDFbK2_!!6000000002739-0-tps-3430-1740.jpg" width="100%"/></a>
 
 
 ## ⏬ 下载安装
