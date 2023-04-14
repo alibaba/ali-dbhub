@@ -73,10 +73,7 @@ $ java -jar -Dchatgpt.apiKey=xxxxx ali-dbhub-server-start.jar  # 启动应用 ch
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
 
 ## ☎️ 联系我们
-
-<a>
-<img src="https://gw.alicdn.com/imgextra/i1/O1CN01VBaYST1MFzhUY9QP6_!!6000000001406-0-tps-723-731.jpg "width="30%"/>
-</a>
+<a><img src="https://gw.alicdn.com/imgextra/i1/O1CN01VBaYST1MFzhUY9QP6_!!6000000001406-0-tps-723-731.jpg" width="40%"/></a>
 
 微信：yxccw132  钉钉：9135032392
 
