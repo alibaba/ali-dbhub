@@ -284,7 +284,6 @@ export default function DatabaseQuery(props: IProps) {
 
     const { dataSourceId, databaseName } = windowTab || {};
     const { tableNames: tableList, ext, destSqlType } = extendParams.current;
-    console.log('extendParams==>', tableList, ext);
     const tableNames = tableList
       .map((table) => `tableNames=${table}`)
       .join('&');
@@ -362,6 +361,7 @@ export default function DatabaseQuery(props: IProps) {
         },
         content: (
           <Select
+            key={IPromptType.NL_2_SQL}
             mode="tags"
             style={{ width: '100%' }}
             placeholder="请输入想要查询的表"
@@ -416,6 +416,7 @@ export default function DatabaseQuery(props: IProps) {
         },
         content: (
           <Input
+            key={IPromptType.SQL_EXPLAIN}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               extendParams.current.ext = e.target.value;
             }}
@@ -461,6 +462,7 @@ export default function DatabaseQuery(props: IProps) {
         },
         content: (
           <Input
+            key={IPromptType.SQL_OPTIMIZER}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               extendParams.current.ext = e.target.value;
             }}
@@ -504,6 +506,7 @@ export default function DatabaseQuery(props: IProps) {
         },
         content: (
           <Input
+            key={IPromptType.SQL_2_SQL}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               extendParams.current.destSqlType = e.target.value;
             }}
