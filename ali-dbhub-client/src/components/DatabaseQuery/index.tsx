@@ -140,7 +140,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
         myEditorHintData[item.name] = [];
       });
       monacoHint.current = setEditorHint(myEditorHintData);
-    } catch {}
+    } catch { }
   };
 
   const getEditor = (editor: any) => {
@@ -151,8 +151,8 @@ export default memo<IProps>(function DatabaseQuery(props) {
       localStorage.getItem(
         `window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.consoleId}`,
       ) ||
-        windowTab.ddl ||
-        '',
+      windowTab.ddl ||
+      '',
     );
   };
 

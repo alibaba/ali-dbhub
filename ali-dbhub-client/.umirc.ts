@@ -9,7 +9,7 @@ const chainWebpack = (config: any, { webpack }: any) => {
       languages: ['mysql', 'pgsql', 'sql'],
     },
   ]);
-
+  
   // TODO: Monaco汉化
   // config.module.rules()
   // .test(/\.js/)
