@@ -135,7 +135,7 @@ export default memo(function MonacoEditor(props: IProps) {
     model?.setValue && model.setValue(value);
   };
 
-  const pushValue = (editor:any, value: any) => {
+  const pushValue = (editor: any, value: any) => {
     const v = value.toString();
     const model = editor?.getModel && editor.getModel(editor);
     model?.setValue && model.setValue(`${model.getValue()}${v}`);
@@ -149,8 +149,6 @@ export default memo(function MonacoEditor(props: IProps) {
       return value;
     }
   };
-
-
 
   return (
     <div className={classnames(className, styles.box)}>
