@@ -53,7 +53,13 @@ public class Table {
     /**
      * 数据库名
      */
-    private String dbName;
+    private String databaseName;
+
+    /**
+     * 表类型
+     */
+    private String type;
+
 
 }
 

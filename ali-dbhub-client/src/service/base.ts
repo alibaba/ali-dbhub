@@ -35,14 +35,13 @@ enum ErrorCode {
 const noNeedToastErrorCode = [ErrorCode.NEED_LOGGED_IN];
 
 const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
-const onLineServiceUrl = 'http://127.0.0.1:10824';
-const localServiceUrl = 'http://127.0.0.1:7001';
-// const localServiceUrl = 'http://38.55.129.58';
+const desktopServiceUrl = 'http://127.0.0.1:10824';
+const prodServiceUrl = '';
 
 const baseURL =
   location.href.indexOf('dist/index.html') > -1
-    ? onLineServiceUrl
-    : localServiceUrl;
+    ? desktopServiceUrl
+    : prodServiceUrl;
 
 const errorHandler = (error: ResponseError, errorLevel: IErrorLevel) => {
   console.log('errorHandler==>', error, errorLevel);

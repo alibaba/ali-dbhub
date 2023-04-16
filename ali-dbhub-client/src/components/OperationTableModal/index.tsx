@@ -11,7 +11,6 @@ import { format } from 'sql-formatter';
 import { DatabaseContext } from '@/context/database';
 import { TreeNodeType } from '@/utils/constants';
 
-
 export interface IOperationData {
   type: string;
   nodeData?: ITreeNode;
@@ -26,10 +25,12 @@ export interface IOperationTableModalProps {
   // setOperationData: Function;
 }
 
-export default memo<IOperationTableModalProps>(function OperationTableModal(props) {
-
+export default memo<IOperationTableModalProps>(function OperationTableModal(
+  props,
+) {
   const { className } = props;
-  const { model, setOperationDataDialog, setNeedRefreshNodeTree } = useContext(DatabaseContext);
+  const { model, setOperationDataDialog, setNeedRefreshNodeTree } =
+    useContext(DatabaseContext);
   const { operationData } = model;
 
   const monacoEditor = useRef();
@@ -41,29 +42,35 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
 
   useEffect(() => {
     if (!operationData) {
-      return
+      return;
     }
     if (operationData.type == 'new') {
-      mysqlServer.createTableExample({ dbType: operationData.nodeData?.dataType }).then(res => {
-        setMonacoEditorValue(monacoEditor.current, res)
-      })
+      mysqlServer
+        .createTableExample({ dbType: operationData.nodeData?.dataType })
+        .then((res) => {
+          setMonacoEditorValue(monacoEditor.current, res);
+        });
     }
     if (operationData.type == 'edit') {
-      mysqlServer.updateTableExample({ dbType: operationData.database?.databaseType! }).then(res => {
-        setMonacoEditorValue(monacoEditor.current, res)
-      })
+      mysqlServer
+        .updateTableExample({ dbType: operationData.database?.databaseType! })
+        .then((res) => {
+          setMonacoEditorValue(monacoEditor.current, res);
+        });
     }
     if (operationData.type == 'export') {
       let p = {
         tableName: operationData.nodeData?.name!,
         dataSourceId: operationData.nodeData?.dataSourceId,
         databaseName: operationData.nodeData?.databaseName,
-      }
-      mysqlServer.exportCreateTableSql(p).then(res => {
-        setMonacoEditorValue(monacoEditor.current, res)
-      })
+        schemaName: operationData.nodeData?.schemaName
+
+      };
+      mysqlServer.exportCreateTableSql(p).then((res) => {
+        setMonacoEditorValue(monacoEditor.current, res);
+      });
     }
-  }, [operationData])
+  }, [operationData]);
 
   // const addWindowTab = () => {
   //   if (!operationData) {
@@ -85,7 +92,7 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
 
   function handleOk() {
     if (!operationData) {
-      return
+      return;
     }
     if (operationData.type == 'new' || operationData.type == 'edit') {
       let p: any = {
@@ -93,63 +100,63 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
         sql: getMonacoEditorValue(monacoEditor.current),
         dataSourceId: operationData.nodeData?.dataSourceId,
         databaseName: operationData.nodeData?.databaseName,
-      }
+      };
       if (operationData.type == 'edit') {
-        p.tableName = operationData.nodeData?.name
+        p.tableName = operationData.nodeData?.name;
       }
-      mysqlServer.executeTable(p).then(res => {
+      mysqlServer.executeTable(p).then((res) => {
         message.success('更新成功');
         setNeedRefreshNodeTree({
           databaseName: operationData.nodeData?.databaseName,
           dataSourceId: operationData.nodeData?.dataSourceId,
-          nodeType: TreeNodeType.TABLES
-        })
+          nodeType: TreeNodeType.TABLES,
+        });
         setTimeout(() => {
           setOperationDataDialog(false);
         }, 0);
         // operationData.callback && operationData.callback(operationData.database)
-      })
+      });
     } else {
-      setOperationDataDialog(false)
+      setOperationDataDialog(false);
     }
   }
 
   function handleCancel() {
-    setOperationDataDialog(false)
+    setOperationDataDialog(false);
   }
 
   function setMonacoEditorValue(monacoEditor: any, value: string) {
-    const model = monacoEditor.getModel(monacoEditor)
-    model.setValue(
-      format(value, {})
-    )
+    const model = monacoEditor.getModel(monacoEditor);
+    model.setValue(format(value, {}));
   }
   const getMonacoEditorValue = (monacoEditor: any) => {
-    const model = monacoEditor.getModel(monacoEditor)
-    const value = model.getValue()
-    return value
-  }
+    const model = monacoEditor.getModel(monacoEditor);
+    const value = model.getValue();
+    return value;
+  };
 
   const getEditor = (editor: any) => {
-    monacoEditor.current = editor
-  }
+    monacoEditor.current = editor;
+  };
 
   function renderTitle() {
-    if (!operationData) { return }
+    if (!operationData) {
+      return;
+    }
     if (operationData.type == 'new') {
-      return '新建表'
+      return '新建表';
     }
     if (operationData.type == 'edit') {
-      return '设计表结构'
+      return '设计表结构';
     }
     if (operationData.type == 'export') {
-      return '建表语句'
+      return '建表语句';
     }
   }
 
   function renderOkText() {
     if (!operationData) {
-      return
+      return;
     }
     switch (operationData.type) {
       case 'edit':
@@ -159,37 +166,38 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(prop
       case 'export':
         return '关闭';
       default:
-        return '确定'
+        return '确定';
     }
   }
 
   if (!operationData) {
-    return <></>
+    return <></>;
   }
 
-  return <Modal
-    className={classnames(className, styles.box)}
-    title={renderTitle()}
-    open={true}
-    onOk={handleOk}
-    onCancel={handleCancel}
-    width='60vw'
-    footer={
-      <>
-        {
-          operationData.type !== 'export' &&
-          <Button onClick={handleCancel} className={styles.cancel}>
-            取消
+  return (
+    <Modal
+      className={classnames(className, styles.box)}
+      title={renderTitle()}
+      open={true}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      width="60vw"
+      footer={
+        <>
+          {operationData.type !== 'export' && (
+            <Button onClick={handleCancel} className={styles.cancel}>
+              取消
+            </Button>
+          )}
+          <Button type="primary" onClick={handleOk} className={styles.cancel}>
+            {renderOkText()}
           </Button>
-        }
-        <Button type="primary" onClick={handleOk} className={styles.cancel}>
-          {renderOkText()}
-        </Button>
-      </>
-    }
-  >
-    <div className={styles.monacoEditor}>
-      <MonacoEditor id='edit' getEditor={getEditor}></MonacoEditor>
-    </div>
-  </Modal>
-})
+        </>
+      }
+    >
+      <div className={styles.monacoEditor}>
+        <MonacoEditor id="edit" getEditor={getEditor} />
+      </div>
+    </Modal>
+  );
+});

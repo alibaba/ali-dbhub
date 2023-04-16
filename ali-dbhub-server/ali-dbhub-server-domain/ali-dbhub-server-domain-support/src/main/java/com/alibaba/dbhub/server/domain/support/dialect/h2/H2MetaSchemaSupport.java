@@ -14,11 +14,10 @@ import java.util.Map;
 
 import javax.validation.constraints.NotEmpty;
 
-import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchemaSupport;
+import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
-import com.alibaba.dbhub.server.domain.support.dialect.h2.mapper.H2MetaSchemaMapper;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
+import com.alibaba.dbhub.server.domain.support.sql.DataSource;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version : H2MetaSchemaSupport.java
  */
 @Slf4j
-public class H2MetaSchemaSupport extends BaseMetaSchemaSupport implements MetaSchema {
+public class H2MetaSchemaSupport extends BaseMetaSchema implements MetaSchema {
 
     @Override
     public DbTypeEnum dbType() {
@@ -40,19 +39,10 @@ public class H2MetaSchemaSupport extends BaseMetaSchemaSupport implements MetaSc
         return getDDL(databaseName, schemaName, tableName);
     }
 
-    @Override
-    public List<String> schemas(String databaseName) {
-        return getMapper().schemas(databaseName);
-    }
-
-    @Override
-    public H2MetaSchemaMapper getMapper() {
-        return DbhubDataSource.getInstance().getMapper(H2MetaSchemaMapper.class);
-    }
 
     private String getDDL(String databaseName, String schemaName, String tableName) {
         try {
-            Connection connection = DbhubDataSource.getInstance().getConnection();
+            Connection connection = DataSource.getInstance().getConnection();
             // 查询表结构信息
             ResultSet columns = connection.getMetaData().getColumns(databaseName, schemaName, tableName, null);
             List<String> columnDefinitions = new ArrayList<>();

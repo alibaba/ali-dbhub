@@ -4,13 +4,14 @@
  */
 package com.alibaba.dbhub.server.domain.support.dialect.mysql;
 
+import java.sql.SQLException;
+
 import javax.validation.constraints.NotEmpty;
 
-import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchemaSupport;
+import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
-import com.alibaba.dbhub.server.domain.support.dialect.mysql.mapper.MysqlMetaSchemaMapper;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.sql.DbhubDataSource;
+import com.alibaba.dbhub.server.domain.support.sql.DataSource;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,23 +20,27 @@ import lombok.extern.slf4j.Slf4j;
  * @version : MysqlMetaSchemaSupport.java, v 0.1 2022年12月14日 22:44 jipengfei Exp $
  */
 @Slf4j
-public class MysqlMetaSchemaSupport  extends BaseMetaSchemaSupport implements MetaSchema {
-
+public class MysqlMetaSchemaSupport extends BaseMetaSchema implements MetaSchema {
 
     @Override
     public DbTypeEnum dbType() {
         return DbTypeEnum.MYSQL;
     }
 
-    @Override
-    public String tableDDL(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName){
-        return getMapper().showCreateTable0(databaseName,tableName).getSql();
-    }
-
-
 
     @Override
-    public MysqlMetaSchemaMapper getMapper() {
-        return DbhubDataSource.getInstance().getMapper(MysqlMetaSchemaMapper.class);
+    public String tableDDL(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName) {
+        String sql = "SHOW CREATE TABLE " + databaseName + "." + tableName;
+        return DataSource.getInstance().executeSql(sql, resultSet -> {
+            try {
+                if (resultSet.next()) {
+                    return resultSet.getString("Create Table");
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
     }
+
 }
