@@ -5,7 +5,7 @@ import Iconfont from '@/components/Iconfont';
 import ScrollLoading from '@/components/ScrollLoading';
 import StateIndicator from '@/components/StateIndicator';
 import LoadingContent from '@/components/Loading/LoadingContent';
-import ConnectionDialog from '@/components/ConnectionDialog';
+import CreateConnection from '@/components/CreateConnection';
 import i18n from '@/i18n';
 import { history } from 'umi';
 import connectionServer from '@/service/connection'
@@ -251,11 +251,13 @@ export default memo<IProps>(function ConnectionPage(props) {
         </ScrollLoading>
         {!connectionList?.length && connectionList !== null && <StateIndicator state='empty'></StateIndicator>}
       </div>
-      <ConnectionDialog
+
+      {/* <CreateConnection
         submitCallback={submitCallback}
         onCancel={() => { setIsModalVisible(false) }}
         openModal={isModalVisible}
-      />
+      /> */}
+
     </div>
   );
 });

@@ -1,5 +1,6 @@
 import { defineConfig } from 'umi';
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin');
 
 const chainWebpack = (config: any, { webpack }: any) => {
@@ -18,13 +19,12 @@ const chainWebpack = (config: any, { webpack }: any) => {
 };
 
 export default defineConfig({
-  title: 'dbHub',
+  title: 'Chat2DB',
   history: {
     type: 'hash',
   },
   base: '/',
   publicPath: '/',
-  // publicPath: './static/front/',
   hash: false,
   routes: [
     {
@@ -71,9 +71,11 @@ export default defineConfig({
       ],
     },
   ],
-
   mfsu: {},
   fastRefresh: {},
+  dynamicImport: {
+    loading: '@/components/Loading/LazyLoading'
+  },
   nodeModulesTransform: {
     type: 'none',
   },

@@ -1,5 +1,4 @@
 import React, { memo, useEffect, useRef, useContext, useState, forwardRef, useImperativeHandle } from 'react';
-import globalStyle from '@/global.less';
 import styles from './index.less';
 import classnames from 'classnames';
 import Iconfont from '../Iconfont';
@@ -7,15 +6,12 @@ import { Dropdown, Modal, Tooltip } from 'antd';
 import { ITreeNode } from '@/types';
 import { callVar, approximateTreeNode } from '@/utils';
 import { TreeNodeType } from '@/utils/constants';
-import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import StateIndicator from '@/components/StateIndicator';
 import LoadingContent from '../Loading/LoadingContent';
 import { useCanDoubleClick, useUpdateEffect } from '@/utils/hooks';
-import { IOperationData } from '@/components/OperationTableModal';
 import connectionService from '@/service/connection';
-import mysqlServer from '@/service/mysql';
 import TreeNodeRightClick from './TreeNodeRightClick';
-import { treeConfig, switchIcon } from './treeConfig'
+import { treeConfig, switchIcon, ITreeConfigItem } from './treeConfig'
 import { databaseType } from '@/utils/constants'
 import { DatabaseContext } from '@/context/database';
 
@@ -33,14 +29,13 @@ interface TreeNodeIProps {
   showAllChildrenPenetrate?: boolean;
 }
 
-function loadData(data: ITreeNode) {
-  return treeConfig[data.nodeType]?.getNodeData(data);
-}
-
-function Tree(props: IProps) {
+function Tree(props: IProps, ref: any) {
   const { className, cRef, addTreeData } = props;
   const [treeData, setTreeData] = useState<ITreeNode[] | null>(null);
   const [searchedTreeData, setSearchedTreeData] = useState<ITreeNode[] | null>(null);
+  const { model } = useContext(DatabaseContext);
+  const { refreshTreeNum } = model;
+
 
   useUpdateEffect(() => {
     setTreeData([...(treeData || []), ...(addTreeData || [])]);
@@ -69,7 +64,7 @@ function Tree(props: IProps) {
           key: t.id!.toString(),
           nodeType: TreeNodeType.DATASOURCE,
           dataSourceId: t.id,
-          dataType: t.type
+          dataType: t.type,
         }
       })
       setTimeout(() => {
@@ -85,15 +80,15 @@ function Tree(props: IProps) {
 
   useEffect(() => {
     getDataSource();
-  }, [])
+  }, [refreshTreeNum])
 
   return <div className={classnames(className, styles.box)}>
     <LoadingContent data={treeData} handleEmpty>
       {
-        (searchedTreeData || treeData)?.map((item) => {
+        (searchedTreeData || treeData)?.map((item, index) => {
           return <TreeNode
             setTreeData={setTreeData}
-            key={item.name}
+            key={item.name + index}
             show={true}
             level={0}
             data={item}
@@ -107,13 +102,35 @@ function Tree(props: IProps) {
 function TreeNode(props: TreeNodeIProps) {
   const { setTreeData, data, level, show = false, showAllChildrenPenetrate = false } = props;
   const [showChildren, setShowChildren] = useState(false);
-  const [showAllChildren, setShowAllChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const indentArr = new Array(level).fill('indent');
   const { model, setNeedRefreshNodeTree, setDblclickNodeData } = useContext(DatabaseContext);
   const { needRefreshNodeTree } = model;
 
   const treeNodeClick = useCanDoubleClick();
+
+  function loadData(data: ITreeNode) {
+    const treeNodeConfig: ITreeConfigItem = treeConfig[data.pretendNodeType || data.nodeType];
+    treeNodeConfig.getChildren?.(data).then(res => {
+      if (res.length) {
+        console.log(res)
+        setTimeout(() => {
+          data.children = res;
+          setShowChildren(true);
+          setIsLoading(false);
+        }, 200);
+      } else {
+        if (treeNodeConfig.next) {
+          data.pretendNodeType = treeNodeConfig.next;
+          loadData(data);
+        } else {
+          data.children = [];
+          setShowChildren(true);
+          setIsLoading(false);
+        }
+      }
+    });
+  }
 
   useEffect(() => {
     if (data?.dataSourceId === needRefreshNodeTree?.dataSourceId &&
@@ -122,13 +139,7 @@ function TreeNode(props: TreeNodeIProps) {
       setIsLoading(true);
       setNeedRefreshNodeTree(false);
       data.children = [];
-      loadData(data)?.then(res => {
-        setTimeout(() => {
-          data.children = res;
-          setIsLoading(false);
-          setShowChildren(true);
-        }, 200);
-      })
+      loadData(data)
     }
   }, [needRefreshNodeTree])
 
@@ -143,19 +154,8 @@ function TreeNode(props: TreeNodeIProps) {
     }
 
     if (treeConfig[data.nodeType] && !data.children) {
-      loadData(data)?.then((res: ITreeNode[]) => {
-        setTimeout(() => {
-          data.children = res;
-          setIsLoading(false);
-          setTimeout(() => {
-            setShowChildren(!showChildren);
-          }, 0);
-        }, 300);
-      })
+      loadData(data)
     } else {
-      if (level === 0) {
-        setShowAllChildren(!showAllChildren);
-      }
       setShowChildren(!showChildren);
     }
   };
@@ -165,7 +165,6 @@ function TreeNode(props: TreeNodeIProps) {
       data={data}
       setTreeData={setTreeData}
       setIsLoading={setIsLoading}
-      nodeConfig={treeConfig[data.nodeType]}
     />
   }
 
@@ -181,8 +180,8 @@ function TreeNode(props: TreeNodeIProps) {
     return <>
       <span>{data.name}</span>
       {
-        data.dataType &&
-        <span style={{ color: callVar('--custom-primary-color') }}>（{data.dataType}）</span>
+        data.columnType && data.nodeType === TreeNodeType.COLUMN &&
+        <span style={{ color: callVar('--custom-primary-color') }}>（{data.columnType}）</span>
       }
     </>
   }
@@ -199,7 +198,6 @@ function TreeNode(props: TreeNodeIProps) {
     <Dropdown overlay={renderMenu()} trigger={['contextMenu']}>
       <Tooltip placement="right" title={renderTitle(data)}>
         <div
-          onDoubleClick={nodeDoubleClick}
           className={classnames(styles.treeNode, { [styles.hiddenTreeNode]: !show })} >
           <div className={styles.left}>
             {
@@ -212,7 +210,7 @@ function TreeNode(props: TreeNodeIProps) {
             {
               !data.isLeaf &&
               <div onClick={handleClick.bind(null, data)} className={styles.arrows}>
-                {/* {
+                {
                   isLoading
                     ?
                     <div className={styles.loadingIcon}>
@@ -220,16 +218,18 @@ function TreeNode(props: TreeNodeIProps) {
                     </div>
                     :
                     <Iconfont className={classnames(styles.arrowsIcon, { [styles.rotateArrowsIcon]: showChildren })} code='&#xe608;' />
-                } */}
-                <Iconfont className={classnames(styles.arrowsIcon, { [styles.rotateArrowsIcon]: showChildren })} code='&#xe608;' />
+                }
+                {/* <Iconfont className={classnames(styles.arrowsIcon, { [styles.rotateArrowsIcon]: showChildren })} code='&#xe608;' /> */}
               </div>
             }
-            <div className={styles.typeIcon}>
-              <Iconfont code={recognizeIcon(data.nodeType)!}></Iconfont>
-            </div>
-            <div className={styles.contentText} >
-              <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
-              {/* <div className={styles.type}>{data.dataType}</div> */}
+            <div className={styles.dblclickArea} onDoubleClick={nodeDoubleClick}>
+              <div className={styles.typeIcon}>
+                <Iconfont code={recognizeIcon(data.nodeType)!}></Iconfont>
+              </div>
+              <div className={styles.contentText} >
+                <div className={styles.name} dangerouslySetInnerHTML={{ __html: data.name }}></div>
+                {data.nodeType === TreeNodeType.COLUMN && <div className={styles.type}>{data.columnType}</div>}
+              </div>
             </div>
           </div>
         </div>
@@ -242,7 +242,7 @@ function TreeNode(props: TreeNodeIProps) {
           data={item}
           level={level + 1}
           setTreeData={setTreeData}
-          showAllChildrenPenetrate={showAllChildrenPenetrate || showAllChildren}
+          showAllChildrenPenetrate={showAllChildrenPenetrate}
           show={(showChildren && show)}
         />
       })

@@ -1,9 +1,12 @@
 package com.alibaba.dbhub.server.domain.api.service;
 
+import com.alibaba.dbhub.server.domain.api.param.DatabaseOperationParam;
+import com.alibaba.dbhub.server.domain.api.param.DatabaseQueryAllParam;
+import com.alibaba.dbhub.server.domain.api.param.SchemaOperationParam;
+import com.alibaba.dbhub.server.domain.api.param.SchemaQueryParam;
 import com.alibaba.dbhub.server.domain.support.model.Database;
 import com.alibaba.dbhub.server.domain.support.model.Schema;
-import com.alibaba.dbhub.server.domain.api.param.DatabaseQueryAllParam;
-import com.alibaba.dbhub.server.domain.api.param.SchemaQueryParam;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 
 /**
@@ -29,4 +32,53 @@ public interface DatabaseService {
      * @return
      */
     ListResult<Schema> querySchema(SchemaQueryParam param);
+
+
+
+    /**
+     * 删除数据库
+     *
+     * @param param
+     * @return
+     */
+    public ActionResult deleteDatabase(DatabaseOperationParam param);
+
+    /**
+     * 创建database
+     *
+     * @param param
+     * @return
+     */
+    public ActionResult createDatabase(DatabaseOperationParam param);
+
+    /**
+     * 修改database
+     *
+     * @return
+     */
+    public ActionResult modifyDatabase( DatabaseOperationParam param) ;
+
+    /**
+     * 删除schema
+     *
+     * @param param
+     * @return
+     */
+    public ActionResult deleteSchema(SchemaOperationParam param) ;
+
+    /**
+     * 创建schema
+     *
+     * @param param
+     * @return
+     */
+    public ActionResult createSchema( SchemaOperationParam param);
+
+    /**
+     * 修改schema
+     *
+     * @param request
+     * @return
+     */
+    public ActionResult modifySchema( SchemaOperationParam request);
 }

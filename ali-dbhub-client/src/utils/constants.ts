@@ -22,6 +22,10 @@ export enum DatabaseTypeCode {
   REDIS = 'REDIS',
   H2 = 'H2',
   POSTGRESQL = 'POSTGRESQL',
+  SQLSERVER = 'SQLSERVER',
+  SQLITE = 'SQLITE',
+  MARIADB = 'MARIADB',
+  CLICKHOUSE = 'CLICKHOUSE',
 }
 
 export const databaseType: {
@@ -34,11 +38,6 @@ export const databaseType: {
     port: 3306,
     icon: '\uec6d'
   },
-  // [DatabaseTypeCode.REDIS]:{
-  //   name: 'Redis',
-  //   img: redisLogo,
-  //   code: DatabaseTypeCode.REDIS
-  // },
   [DatabaseTypeCode.H2]: {
     name: 'H2',
     img: h2Logo,
@@ -60,6 +59,34 @@ export const databaseType: {
     port: 5432,
     icon: '\uec5d'
   },
+  [DatabaseTypeCode.SQLSERVER]: {
+    name: 'SQLServer',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.SQLSERVER,
+    port: 1521,
+    icon: '\ue664'
+  },
+  [DatabaseTypeCode.SQLITE]: {
+    name: 'SQLite',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.SQLITE,
+    port: 5432,
+    icon: '\ue65a'
+  },
+  [DatabaseTypeCode.MARIADB]: {
+    name: 'mariadb',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.MARIADB,
+    port: 3306,
+    icon: '\ue6f5'
+  },
+  [DatabaseTypeCode.CLICKHOUSE]: {
+    name: 'clickHouse',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.CLICKHOUSE,
+    port: 8123,
+    icon: '\ue8f4'
+  },
 };
 
 export const databaseTypeList = Object.keys(databaseType).map((keys) => {
@@ -78,12 +105,12 @@ export enum TreeNodeType {
   KEYS = 'keys',
   KEY = 'key',
   INDEXES = 'indexes',
-  INDEXE = 'indexe',
-  SEARCH = 'search',
-  LINE = 'line',
-  LINETOTAL = 'lineTotal',
-  SAVE = 'save',
-  INDEXESTOTAL = 'indexesTotal',
+  INDEX = 'index',
+  // SEARCH = 'search',
+  // LINE = 'line',
+  // LINETOTAL = 'lineTotal',
+  // SAVE = 'save',
+  // INDEXESTOTAL = 'indexesTotal',
 }
 
 export enum WindowTabStatus {
@@ -131,5 +158,7 @@ export enum  TabOpened {
   IS_OPEN = 'y',
   NOT_OPEN = 'n'
 }
+
+
 
 

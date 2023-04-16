@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useContext } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import Iconfont from '../Iconfont';
@@ -6,9 +6,9 @@ import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { IDatabase, ITreeNode } from '@/types'
 import { databaseType, DatabaseTypeCode } from '@/utils/constants';
-import ConnectionDialog, { submitType } from '@/components/ConnectionDialog';
+import { DatabaseContext } from '@/context/database'
 
-interface Iprops {
+interface IProps {
   className?: string;
   getAddTreeNode: (data: ITreeNode) => void;
 }
@@ -35,7 +35,7 @@ function getItem(
 }
 
 const newDataSourceChildren = Object.keys(databaseType).map(t => {
-  const source: IDatabase = databaseType[t]
+  const source: IDatabase = databaseType[t];
   return getItem(source.name, source.code, <Iconfont className={styles.databaseTypeIcon} code={source.icon} />)
 })
 
@@ -58,33 +58,31 @@ const globalAddMenuList: IGlobalAddMenuItem[] = [
   },
 ]
 
-const items: MenuItem[] = globalAddMenuList.map(t => getItem(t.label, t.key, t.icon, t.children))
+const items: MenuItem[] = newDataSourceChildren
 
-export default memo<Iprops>(function GlobalAddMenu(props) {
+export default memo<IProps>(function GlobalAddMenu(props) {
   const { className, getAddTreeNode } = props;
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [dataSourceType, setDataSourceType] = useState<DatabaseTypeCode>();
+  const { model, setEditDataSourceData } = useContext(DatabaseContext);
 
   const onClickMenuNode: MenuProps['onClick'] = (e) => {
-    console.log(e)
-    if (e.keyPath[1] === 'newDataSource') {
-      setDataSourceType(e.keyPath[0] as DatabaseTypeCode)
-      setIsModalVisible(true);
-    }
+    setEditDataSourceData({
+      dataType: e.keyPath[0] as DatabaseTypeCode,
+    })
   };
 
   function submitCallback(data: ITreeNode) {
     getAddTreeNode(data);
-    setIsModalVisible(false);
   }
 
   return <div className={classnames(styles.box, className)}>
     <Menu onClick={onClickMenuNode} mode="vertical" items={items as any} />
-    <ConnectionDialog
-      submitCallback={submitCallback}
-      dataSourceType={dataSourceType}
-      onCancel={() => { setIsModalVisible(false) }}
-      openModal={isModalVisible}
-    />
+    {/* {((!!dataSourceType && isModalVisible) || editDataSourceData) &&
+      <CreateConnection
+        submitCallback={submitCallback}
+        dataSourceType={editDataSourceData.dataType || dataSourceType}
+        dataSourceData={editDataSourceData}
+        onCancel={onCancel}
+      />
+    } */}
   </div>
 })

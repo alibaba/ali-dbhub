@@ -45,6 +45,7 @@ export interface IHistoryRecord {
   type: DatabaseTypeCode;
   dataSourceName: string;
   ddl: string;
+  connectable: boolean;
 }
 export interface ITableColumn {
   name: string;
@@ -66,15 +67,18 @@ export interface ITreeNode {
   key: string;
   name: string;
   nodeType: TreeNodeType;
-  dataType?: DatabaseTypeCode;
+  dataType?: string;
+  databaseType?: DatabaseTypeCode;
   isLeaf?: boolean;
   children?: ITreeNode[];
   parent?: ITreeNode;
   dataSourceId?: number;
+  dataSourceName?: string;
   databaseName?: string;
   tableName?: string;
   schemaName?: string;
-  // columnType: string;
+  columnType?: string;
+  pretendNodeType?: TreeNodeType;
 }
 export interface IDB {
   name: string;
@@ -155,4 +159,5 @@ export interface ISavedConsole {
   dataSourceName: string;
   type: DatabaseTypeCode;
   status: string;
+  connectable: boolean;
 }

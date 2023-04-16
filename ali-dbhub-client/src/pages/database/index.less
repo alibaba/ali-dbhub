@@ -38,6 +38,7 @@
 }
 
 .main {
+  width: 0px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -166,9 +167,10 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  padding: 0px 10px;
+  justify-content: space-between;
+  padding: 0px 10px 0px 0px;
   border-top: 1px solid var(--color-border);
-  height: 50px;
+  height: 30px;
   background-color: var(--color-bg-200);
 }
 
@@ -177,10 +179,39 @@
 }
 
 .iconBox {
-  padding: 4px 10px;
-  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  font-size: 13px;
+  height: 24px;
+  width: 24px;
   &:hover {
     cursor: pointer;
     background-color: var(--color-bg-hover);
+  }
+}
+
+.commandSearchResult {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  height: 24px;
+  user-select: none;
+  i {
+    font-size: 13px;
+    margin-left: 4px;
+    transform: rotate(270deg);
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: var(--color-bg-hover);
+  }
+}
+
+.unfoldSearchResult {
+  i {
+    transform: rotate(90deg);
   }
 }
