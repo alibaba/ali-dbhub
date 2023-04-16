@@ -1,0 +1,40 @@
+version: '3'
+services:
+  nginx:
+    restart: always
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - /root/data/nginx/conf.d:/etc/nginx/conf.d
+      - /root/data/nginx/log:/var/log/nginx
+      - /root/data/nginx/www:/var/www
+  # 连接地址：jdbc:mysql://localhost:3306 用户名：root  密码：ali_dbhub 端口：3306 默认数据库：ali_dbhub_test
+  mysql:
+    image: mysql:latest
+    restart: always
+    container_name: mysql-latest
+    volumes:
+      - /root/data/mysql/mysql:/var/lib/mysql
+      - /root/data/mysql/config/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: ali_dbhub
+      MYSQL_DATABASE: ali_dbhub_test
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+  # 连接地址：jdbc:postgresql://localhost:5432/ali_dbhub_test, 用户名:ali_dbhub, 密码:ali_dbhub 端口：5432 默认数据库：ali_dbhub_test
+  postgres:
+    image: postgres:12-alpine
+    restart: always
+    container_name: postgres-alpine
+    environment:
+      POSTGRES_USER: ali_dbhub
+      POSTGRES_PASSWORD: ali_dbhub
+      POSTGRES_DB: ali_dbhub_test
+      TZ: Asia/Shanghai
+    ports:
+      - "5432:5432"
