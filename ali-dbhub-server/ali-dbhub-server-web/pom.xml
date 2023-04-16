@@ -14,6 +14,7 @@
 
     <modules>
         <module>ali-dbhub-server-web-api</module>
+        <module>ali-dbhub-server-admin-api</module>
     </modules>
 
 </project>

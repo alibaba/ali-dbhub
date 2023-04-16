@@ -121,7 +121,8 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
             .addPathPatterns("/**")
             // 前端需要放行的链接
             .excludePathPatterns(FRONT_PERMIT_ALL)
-            // _a结尾的统一放行
-            .excludePathPatterns("/**/*_a");
+            // _a、-a结尾的统一放行
+            .excludePathPatterns("/**/*_a")
+            .excludePathPatterns("/**/*-a");
     }
 }
