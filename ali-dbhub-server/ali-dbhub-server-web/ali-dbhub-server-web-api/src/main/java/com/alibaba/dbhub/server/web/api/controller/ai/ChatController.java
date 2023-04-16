@@ -160,8 +160,6 @@ public class ChatController {
             throw new BusinessException(CommonErrorEnum.PARAM_ERROR);
         }
 
-        log.info(prompt);
-
         GptVersionType modelType = EasyEnumUtils.getEnum(GptVersionType.class, gptVersion);
         switch (modelType) {
             case GPT3:
