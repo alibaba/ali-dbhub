@@ -48,11 +48,15 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")//项目中的所有接口都支持跨域
-            .allowedOriginPatterns("*")//所有地址都可以访问，也可以配置具体地址
+        //项目中的所有接口都支持跨域
+        registry.addMapping("/**")
+            //所有地址都可以访问，也可以配置具体地址
+            .allowedOriginPatterns("*")
             .allowCredentials(true)
-            .allowedMethods("*")//"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"
-            .maxAge(3600);// 跨域允许时间
+            //"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"
+            .allowedMethods("*")
+            // 跨域允许时间
+            .maxAge(3600);
     }
 
     @Override
@@ -66,7 +70,9 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                     String userIdString = (String)StpUtil.getLoginIdDefaultNull();
                     // 未登录
                     if (!StringUtils.isNumeric(userIdString)) {
-                        return true;
+                        // TODO 这个版本默认放开登录 不管用户是否登录 都算登录，下个版本做权限
+                        userIdString = "1";
+                        //return true;
                     }
                     // 已经登录 查询用户信息
                     Long userId = Long.parseLong(userIdString);
