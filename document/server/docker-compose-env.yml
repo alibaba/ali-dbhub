@@ -31,6 +31,8 @@ services:
     image: postgres:12-alpine
     restart: always
     container_name: postgres-alpine
+    volumes:
+      - /root/data/postgresql/data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ali_dbhub
       POSTGRES_PASSWORD: ali_dbhub

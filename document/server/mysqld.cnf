@@ -1,0 +1,7 @@
+[mysqld]
+performance_schema_max_table_instances=400
+table_definition_cache=400
+performance_schema=off
+table_open_cache=64
+innodb_buffer_pool_chunk_size=32M
+innodb_buffer_pool_size=32M
