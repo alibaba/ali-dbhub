@@ -512,7 +512,7 @@ export default function DatabaseQuery(props: IProps) {
               style={{ marginBottom: 10 }}
             />
             <Input
-              addonBefore="其他附加条件"
+              addonBefore="其他附加条件 "
               key={IPromptType.SQL_2_SQL + 'ext'}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 extendParams.current.ext = e.target.value;
