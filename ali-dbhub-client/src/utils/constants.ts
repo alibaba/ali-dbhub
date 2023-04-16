@@ -36,56 +36,56 @@ export const databaseType: {
     img: mysqlLogo,
     code: DatabaseTypeCode.MYSQL,
     port: 3306,
-    icon: '\uec6d'
+    icon: '\uec6d',
   },
   [DatabaseTypeCode.H2]: {
     name: 'H2',
     img: h2Logo,
     code: DatabaseTypeCode.H2,
     port: 9092,
-    icon: '\ue61c'
+    icon: '\ue61c',
   },
   [DatabaseTypeCode.ORACLE]: {
     name: 'Oracle',
     img: moreDBLogo,
     code: DatabaseTypeCode.ORACLE,
     port: 1521,
-    icon: '\uec48'
+    icon: '\uec48',
   },
   [DatabaseTypeCode.POSTGRESQL]: {
     name: 'PostgreSql',
     img: moreDBLogo,
     code: DatabaseTypeCode.POSTGRESQL,
     port: 5432,
-    icon: '\uec5d'
+    icon: '\uec5d',
   },
   [DatabaseTypeCode.SQLSERVER]: {
     name: 'SQLServer',
     img: moreDBLogo,
     code: DatabaseTypeCode.SQLSERVER,
     port: 1521,
-    icon: '\ue664'
+    icon: '\ue664',
   },
   [DatabaseTypeCode.SQLITE]: {
     name: 'SQLite',
     img: moreDBLogo,
     code: DatabaseTypeCode.SQLITE,
     port: 5432,
-    icon: '\ue65a'
+    icon: '\ue65a',
   },
   [DatabaseTypeCode.MARIADB]: {
     name: 'mariadb',
     img: moreDBLogo,
     code: DatabaseTypeCode.MARIADB,
     port: 3306,
-    icon: '\ue6f5'
+    icon: '\ue6f5',
   },
   [DatabaseTypeCode.CLICKHOUSE]: {
     name: 'clickHouse',
     img: moreDBLogo,
     code: DatabaseTypeCode.CLICKHOUSE,
     port: 8123,
-    icon: '\ue8f4'
+    icon: '\ue8f4',
   },
 };
 
@@ -154,11 +154,28 @@ export enum ConsoleType {
   EDITTABLE = 'editTable',
 }
 
-export enum  TabOpened {
+export enum TabOpened {
   IS_OPEN = 'y',
-  NOT_OPEN = 'n'
+  NOT_OPEN = 'n',
 }
 
-
-
-
+/** console顶部注释 */
+export const consoleTopComment = `--Chat2DB进阶功能使用说明
+--********************************************************************--
+--自然语言转SQL
+##例如: 查询列出在过去三个月内雇用了超过10名员工的部门名称，选中执行则会返回相应的SQL
+--带参数自然语言转SQL
+##例如: 查询列出在过去三个月内雇用了超过10名员工的部门名称，选中执行并传入查询相关的表结构信息，则会返回相应的SQL
+--SQL解释
+##例如: SELECT department_name FROM departments WHERE department_id IN (SELECT department_id FROM employees GROUP BY department_id HAVING COUNT(*) > 10)，选中执行则会返回此条SQL执行的内容和目标等
+--带参数SQL解释
+##例如: SELECT department_name FROM departments WHERE department_id IN (SELECT department_id FROM employees GROUP BY department_id HAVING COUNT(*) > 10)，选中执行并传入附加信息，则会返回此条SQL附加信息相关的解释
+--SQL优化
+##例如: SELECT * FROM department ORDER BY gmt_create DESC，选中执行则会返回此条SQL相关的多种类型优化建议
+--带参数SQL优化
+##例如: SELECT * FROM department ORDER BY gmt_create DESC，选中执行并传入优化附加信息，则会返回此条SQL附加信息相关的优化建议
+--SQL转换
+##例如: SELECT IFNULL(NULL, "W3Schools.com")，选中执行则会转换为当前数据库的查询语言
+--带参数SQL转换
+##例如: SELECT IFNULL(NULL, "W3Schools.com")，选中执行并传入目标SQL类型，则会目标SQL类型相应的SQL语言
+--********************************************************************--\n\n\n`;

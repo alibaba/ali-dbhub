@@ -33,11 +33,11 @@ const LNKConfig: INavItem[] = [
     icon: "\ue70e",
     path: '/chat'
   },
-  {
-    title: '后台管理',
-    icon: "\ue66d",
-    path: '/manage'
-  },
+  // {
+  //   title: '后台管理',
+  //   icon: "\ue66d",
+  //   path: '/manage'
+  // },
   {
     title: i18n('home.nav.github'),
     icon: '\ue885',
