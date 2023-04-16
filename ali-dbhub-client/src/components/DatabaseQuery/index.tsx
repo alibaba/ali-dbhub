@@ -287,15 +287,15 @@ export default function DatabaseQuery(props: IProps) {
     const tableNames = tableList
       .map((table) => `tableNames=${table}`)
       .join('&');
-    const params = formatParams({
-      dataSourceId,
-      databaseName,
-      promptType,
-      message: sentence,
-      tableNames,
-      ext,
-      destSqlType,
-    });
+    const params =
+      formatParams({
+        dataSourceId,
+        databaseName,
+        promptType,
+        message: sentence,
+        ext,
+        destSqlType,
+      }) + tableNames;
 
     const handleMessage = (message: string) => {
       const isEOF = message === '[DONE]';
