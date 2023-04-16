@@ -41,9 +41,11 @@ export default memo<IProps>(function AppContainer({ className, children }) {
 
   function detectionService() {
     setServiceFail(false);
-    let flag = 1;
+    let flag = 0;
     const time = setInterval(() => {
-      flag++;
+      if(flag === 2){
+        setServiceStart(false)
+      }
       miscService.testService().then(() => {
         clearInterval(time);
         setServiceStart(true);
@@ -52,6 +54,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         setServiceFail(true);
         clearInterval(time);
       }
+      flag++;
     }, 300);
   }
 
