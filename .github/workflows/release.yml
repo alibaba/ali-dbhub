@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, windows-latest ]
+        os: [macos-latest, windows-latest]
 
     steps:
       - name: Check out git repository
@@ -26,9 +26,9 @@ jobs:
       - name: Install Java and Maven
         uses: actions/setup-java@main
         with:
-          java-version: '17'
-          distribution: 'adopt'
-          cache: 'maven'
+          java-version: "17"
+          distribution: "adopt"
+          cache: "maven"
 
       # 编译服务端java版本
       - name: Build Java
@@ -54,7 +54,6 @@ jobs:
 
       # - name: change directory ali-dbhub-client
 
-    
       # - name: Install UNM dependencies for macOS
       #   if: runner.os == 'Windows'
       #   run: |
@@ -65,7 +64,7 @@ jobs:
         run: |
           cd ali-dbhub-client
           npm install 
-          npm run build
+          npm run build:desktop
 
       - name: npm install electron
         run: |
