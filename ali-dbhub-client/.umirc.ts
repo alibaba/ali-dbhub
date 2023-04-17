@@ -2,6 +2,7 @@ import { defineConfig } from 'umi';
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin');
+const UMI_ENV = process.env.UMI_ENV || 'local'; 
 
 const chainWebpack = (config: any, { webpack }: any) => {
   config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
@@ -9,13 +10,6 @@ const chainWebpack = (config: any, { webpack }: any) => {
       languages: ['mysql', 'pgsql', 'sql'],
     },
   ]);
-  
-  // TODO: Monaco汉化
-  // config.module.rules()
-  // .test(/\.js/)
-  // .use(MonacoWebpackPlugin.loader)
-  // .loader(MonacoWebpackPlugin.loader)
-  // .options({name: /node_modules[\\\/]monaco-editor[\\\/]esm/ ,esModule: false});
 };
 
 export default defineConfig({
@@ -84,4 +78,7 @@ export default defineConfig({
     port: 8001,
     host: '127.0.0.1',
   },
+  define: {
+    'process.env.UMI_ENV': UMI_ENV,
+  }
 });
