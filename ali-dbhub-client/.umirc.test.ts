@@ -8,16 +8,18 @@ const chainWebpack = (config: any, { webpack }: any) => {
       languages: ['mysql', 'pgsql', 'sql'],
     },
   ]);
+
   config.plugin("umi-webpack-bundle-analyzer").use(new BundleAnalyzerPlugin({
     analyzerMode: 'static',
     reportFilename: 'bundle-report.html',
     defaultSizes: 'gzip',
     openAnalyzer: true,
   }));
+
 };
 
 export default defineConfig({
-  publicPath: './static/front/',
+  publicPath: './',
   chainWebpack,
   dynamicImport: false,
 });
