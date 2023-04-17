@@ -50,10 +50,22 @@ export default function BaseLayout({ children }: PropsWithChildren<IProps>) {
   const [activeNav, setActiveNav] = useState<INavItem>(LNKConfig[0]);
 
   useEffect(() => {
+    // TODO:需要优化
     LNKConfig.map(item => {
       if (window.location.hash.indexOf(item.path) === 1) {
         setActiveNav(item);
       }
+    })
+    history.listen((location) => {
+      if (location.pathname.indexOf('/database') === 0) {
+        setActiveNav(LNKConfig[0])
+        return
+      }
+      LNKConfig.map(item => {
+        if (item.path === location.pathname) {
+          setActiveNav(item)
+        }
+      })
     })
   }, []);
 
