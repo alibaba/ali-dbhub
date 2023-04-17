@@ -163,7 +163,7 @@ export default function DatabaseQuery(props: IProps) {
         myEditorHintData[item.name] = [];
       });
       monacoHint.current = setEditorHint(myEditorHintData);
-    } catch {}
+    } catch { }
   };
 
   const getEditor = (editor: any) => {
@@ -174,8 +174,8 @@ export default function DatabaseQuery(props: IProps) {
       localStorage.getItem(
         `window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.consoleId}`,
       ) ||
-        windowTab.ddl ||
-        '',
+      windowTab.ddl ||
+      '',
     );
   };
 
@@ -605,6 +605,7 @@ export default function DatabaseQuery(props: IProps) {
       } else {
         tmpDom = (optList || []).map((item: any, index) => (
           <Button
+            key={index}
             type="link"
             onClick={item.onClick}
             className={styles['ai-btn']}

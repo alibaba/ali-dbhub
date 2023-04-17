@@ -1,9 +1,9 @@
 {
-  "name": "ali-dbhub-client",
+  "name": "chat2db",
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "0.0.23",
+  "version": "0.0.26",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
@@ -22,12 +22,13 @@
     "electron-builder": "^23.3.3",
     "electron-is-dev": "^2.0.0"
   },
-  "icon": "logo/chatLogo.png",
+  "icon": "logo/logo.png",
   "build": {
     "appId": "com.ali-dbhub",
     "directories": {
       "output": "../electron-build"
     },
+    "productName": "Chat2DB",
     "asar": false,
     "files": [
       "dist/**/*",
@@ -38,7 +39,7 @@
       "my.bat"
     ],
     "mac": {
-      "icon": "logo/dbhub.icns",
+      "icon": "logo/logo.icns",
       "target": [
         {
           "target": "dmg",
@@ -60,7 +61,7 @@
         }
       ],
       "publisherName": "AliDBHub",
-      "icon": "logo/chatLogo.png"
+      "icon": "logo/logo.png"
     }
   }
 }
