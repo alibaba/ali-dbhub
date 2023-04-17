@@ -239,6 +239,10 @@ function VisiblyCreateConnection(props: IProps) {
 
   function onFieldsChange(data: any, datas: any) {
     // 将antd的格式转换为正常的对象格式
+    if(!data.length){
+      return
+    }
+
     const keyName = data[0].name[0];
     const keyValue = data[0].value;
     const variableData = {

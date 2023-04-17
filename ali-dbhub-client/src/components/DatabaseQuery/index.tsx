@@ -1,8 +1,15 @@
-import React, { memo, useState, useRef, useEffect, useContext } from 'react';
+import React, {
+  memo,
+  useState,
+  useRef,
+  useEffect,
+  useContext,
+  useMemo,
+} from 'react';
 import classnames from 'classnames';
 import { useParams } from 'umi';
 import { ISQLQueryConsole } from '@/types';
-import { Divider, message, Tooltip } from 'antd';
+import { Button, Divider, Input, message, Modal, Select, Tooltip } from 'antd';
 import { TreeNodeType, WindowTabStatus, OSType } from '@/utils/constants';
 import Iconfont from '@/components/Iconfont';
 import MonacoEditor, { setEditorHint } from '@/components/MonacoEditor';
@@ -18,7 +25,7 @@ import { formatParams, uuid } from '@/utils/common';
 import connectToEventSource from '@/utils/eventSource';
 
 import styles from './index.less';
-
+const { Option } = Select;
 const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 
 export interface IDatabaseQueryProps {
@@ -44,21 +51,37 @@ interface IProps extends IDatabaseQueryProps {
   className?: string;
 }
 
+type IParams = { tableNames: string[]; ext: string; destSqlType: string };
+
 let monacoEditorExternalList: any = {};
 
-export default memo<IProps>(function DatabaseQuery(props) {
+const initModal = {
+  open: false,
+  title: '',
+  handleOk: () => {},
+  handleCancel: () => {},
+  content: <></>,
+};
+export default function DatabaseQuery(props: IProps) {
   const { model, setDblclickNodeData, setShowSearchResult } =
     useContext(DatabaseContext);
   const { activeTabKey, windowTab } = props;
   const params: { id: string; type: string } = useParams();
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);
-  const [aiAnswer, setAiAnswer] = useState('');
+
+  const tableListRef = useRef<Array<{ label: string; value: string }>>([]);
   const uid = useRef<string>(uuid());
-  const consoleRef = useRef<HTMLDivElement>(null);
   const monacoEditor = useRef<any>(null);
   const volatileRef = useRef<any>(null);
   const monacoHint = useRef<any>(null);
   const { dblclickNodeData, showSearchResult } = model;
+  const extendParams = useRef<IParams>({
+    tableNames: [],
+    ext: '',
+    destSqlType: '',
+  });
+  const [modalConfig, setModalConfig] = useState(initModal);
+  // const [aiDropVisible, setAiDropVisible] = useState(false);
 
   useEffect(() => {
     if (windowTab.consoleId !== +activeTabKey) {
@@ -82,7 +105,7 @@ export default memo<IProps>(function DatabaseQuery(props) {
 
     if (nodeData && windowTab.consoleId === +activeTabKey) {
       const model = monacoEditor.current.getModel(monacoEditor.current);
-      const value = model.getValue();
+      let value = model.getValue();
       if (nodeData.nodeType === TreeNodeType.TABLE) {
         if (value == 'SELECT * FROM' || value == 'SELECT * FROM ') {
           model.setValue(`SELECT * FROM ${nodeData.name};`);
@@ -246,38 +269,54 @@ export default memo<IProps>(function DatabaseQuery(props) {
   };
 
   const chat2SQL = (promptType: IPromptType) => {
-    const sentence = getSelectionVal() || getMonacoEditorValue();
-    if (!sentence) {
-      message.warning('请输入SQL语句');
-      return;
-    }
+    const sentence = getSelectionVal();
+
     // TODO: 自然语言转化SQL
     const model = monacoEditor.current.getModel(monacoEditor.current);
     const preValue = model.getValue();
+
     model.setValue(
-      `${preValue}\n\n## 问题:\n ${sentence}\n## ---${IPromptTypeText[promptType]}:--- \n`,
+      `${preValue}\n\n## ---BEGIN---\n## ${sentence}\n## ---${IPromptTypeText[promptType]}:---\n`,
     );
 
-    const { consoleId, dataSourceId, databaseName } = windowTab || {};
-    const params = formatParams({
-      dataSourceId,
-      databaseName,
-      promptType,
-      message: sentence,
-    });
+    const { dataSourceId, databaseName } = windowTab || {};
+    const { tableNames: tableList, ext, destSqlType } = extendParams.current;
+    const tableNames = tableList
+      .map((table) => `tableNames=${table}`)
+      .join('&');
+    const params =
+      formatParams({
+        dataSourceId,
+        databaseName,
+        promptType,
+        message: sentence,
+        ext,
+        destSqlType,
+      }) + tableNames;
 
     const handleMessage = (message: string) => {
-      if (message === '[DONE]') {
+      const isEOF = message === '[DONE]';
+
+      // 获取当前编辑器的model
+      const model = monacoEditor.current.getModel();
+      // 获取model的行数
+      const lineCount = model.getLineCount();
+      // 在文档的末尾添加内容
+      model.applyEdits([
+        {
+          range: new monaco.Range(
+            lineCount,
+            model.getLineMaxColumn(lineCount),
+            lineCount,
+            model.getLineMaxColumn(lineCount),
+          ),
+          text: isEOF ? '\n## --- END --- \n' : JSON.parse(message).content,
+        },
+      ]);
+
+      if (isEOF) {
         closeEventSource();
-        const model = monacoEditor.current.getModel(monacoEditor.current);
-        const preValue = model.getValue();
-        model.setValue(`${preValue}\n## ---END--- \n`);
       }
-      console.log('Message received:', message);
-      const { content } = JSON.parse(message);
-      const model = monacoEditor.current.getModel(monacoEditor.current);
-      const preValue = model.getValue();
-      model.setValue(`${preValue}${content}`);
     };
 
     const handleError = (error: any) => {
@@ -291,29 +330,215 @@ export default memo<IProps>(function DatabaseQuery(props) {
       onMessage: handleMessage,
       onError: handleError,
     });
+    extendParams.current = { tableNames: [], ext: '', destSqlType: '' };
   };
 
   /**
    * 自然语言转化SQL
    */
-  const lang2SQL = () => {
-    chat2SQL(IPromptType.NL_2_SQL);
+  const lang2SQL = async (type?: 'withParams') => {
+    const sentence = getSelectionVal();
+    if (!sentence) {
+      message.warning('请选择输入信息');
+      return;
+    }
+
+    if (!type) {
+      chat2SQL(IPromptType.NL_2_SQL);
+    } else {
+      // ---拉取下数据库表----
+      const p = {
+        dataSourceId: windowTab.dataSourceId!,
+        databaseName: windowTab.databaseName!,
+        pageNo: 1,
+        pageSize: 999,
+      };
+      let res = await mysqlServer.getList(p);
+      tableListRef.current = res.data?.map((item) => ({
+        label: item.name,
+        value: item.name,
+      }));
+      // --------
+
+      setModalConfig({
+        open: true,
+        title: '请选择表',
+        handleOk: () => {
+          chat2SQL(IPromptType.NL_2_SQL);
+          setModalConfig(initModal);
+        },
+        handleCancel: () => {
+          setModalConfig(initModal);
+        },
+        content: (
+          <Select
+            key={IPromptType.NL_2_SQL}
+            mode="tags"
+            style={{ width: '100%' }}
+            placeholder="请输入想要查询的表"
+            onChange={(values) => {
+              extendParams.current.tableNames = values;
+            }}
+            options={tableListRef.current}
+          />
+        ),
+      });
+    }
   };
   /**
    * 解释SQL
    */
-  const explainSQL = () => {
-    chat2SQL(IPromptType.SQL_EXPLAIN);
+  const explainSQL = (type?: 'withParams') => {
+    const sentence = getSelectionVal();
+    if (!sentence) {
+      message.warning('请选择输入信息');
+      return;
+    }
+
+    if (!type) {
+      chat2SQL(IPromptType.SQL_EXPLAIN);
+    } else {
+      setModalConfig({
+        open: true,
+        title: '请输入其他附加信息',
+        handleOk: () => {
+          chat2SQL(IPromptType.SQL_EXPLAIN);
+          setModalConfig(initModal);
+        },
+        handleCancel: () => {
+          setModalConfig(initModal);
+        },
+        content: (
+          <Input
+            key={IPromptType.SQL_EXPLAIN}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              extendParams.current.ext = e.target.value;
+            }}
+            placeholder="例如：解释SQL查询的目的"
+          />
+        ),
+      });
+      // Modal.confirm({
+      //   title: '输入额外参数信息',
+      //   content: (
+      //     <Input
+      //       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+      //         extendParams.current.ext = e.target.value;
+      //       }}
+      //     />
+      //   ),
+      //   onOk: () => chat2SQL(IPromptType.SQL_EXPLAIN),
+      // });
+    }
   };
 
   /**
    * 优化SQL
    */
-  const optimizeSQL = () => {
-    chat2SQL(IPromptType.SQL_OPTIMIZER);
+  const optimizeSQL = (type?: 'withParams') => {
+    const sentence = getSelectionVal();
+    if (!sentence) {
+      message.warning('请选择输入信息');
+      return;
+    }
+
+    if (!type) {
+      chat2SQL(IPromptType.SQL_OPTIMIZER);
+    } else {
+      setModalConfig({
+        open: true,
+        title: '请输入其他附加信息',
+        handleOk: () => {
+          chat2SQL(IPromptType.SQL_OPTIMIZER);
+          setModalConfig(initModal);
+        },
+        handleCancel: () => {
+          setModalConfig(initModal);
+        },
+        content: (
+          <Input
+            key={IPromptType.SQL_OPTIMIZER}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              extendParams.current.ext = e.target.value;
+            }}
+            placeholder="例如：提供索引优化建议"
+          />
+        ),
+      });
+      // Modal.confirm({
+      //   title: '输入额外参数信息',
+      //   content: (
+      //     <Input
+      //       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+      //         extendParams.current.ext = e.target.value;
+      //       }}
+      //     />
+      //   ),
+      //   onOk: () => {
+      //     chat2SQL(IPromptType.SQL_OPTIMIZER);
+      //   },
+      // });
+    }
   };
 
-  const optBtn = useRef([
+  const changeSQL = (type?: 'withParams') => {
+    const sentence = getSelectionVal();
+    if (!sentence) {
+      message.warning('请选择输入信息');
+      return;
+    }
+    if (!type) {
+      chat2SQL(IPromptType.SQL_2_SQL);
+    } else {
+      setModalConfig({
+        open: true,
+        title: '请输入其他附加信息',
+        handleOk: () => {
+          chat2SQL(IPromptType.SQL_2_SQL);
+          setModalConfig(initModal);
+        },
+        handleCancel: () => {
+          setModalConfig(initModal);
+        },
+        content: (
+          <>
+            <Input
+              addonBefore="目标数据库类型"
+              key={IPromptType.SQL_2_SQL}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                extendParams.current.destSqlType = e.target.value;
+              }}
+              placeholder="例如: MySQL"
+              style={{ marginBottom: 10 }}
+            />
+            <Input
+              addonBefore="其他附加条件 "
+              key={IPromptType.SQL_2_SQL + 'ext'}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                extendParams.current.ext = e.target.value;
+              }}
+              placeholder="例如：使用On Conflict语法来替代的Merge Into"
+            />
+          </>
+        ),
+      });
+      // Modal.confirm({
+      //   title: '请填写对应的数据库名',
+      //   content: (
+      //     <Input
+      //       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+      //         extendParams.current.destSqlType = e.target.value;
+      //       }}
+      //     />
+      //   ),
+      //   onOk: () => {
+      //     chat2SQL(IPromptType.SQL_2_SQL);
+      //   },
+      // });
+    }
+  };
+
+  const optBtn = [
     /** 基础SQL命令 */
     [
       { name: '执行', icon: '\ue626', onClick: executeSql },
@@ -326,70 +551,135 @@ export default memo<IProps>(function DatabaseQuery(props) {
     ],
     /** 自然语言转化SQL */
     [
-      { name: '语言转化SQL', icon: '\ue626', onClick: lang2SQL },
-      { name: '语言转化SQL带参数', icon: '\ue626', onClick: lang2SQL },
+      { name: '自然语言转SQL', icon: '\ue626', onClick: () => lang2SQL() },
+      {
+        name: '带参数自然语言转SQL',
+        icon: '\ue626',
+        onClick: () => lang2SQL('withParams'),
+      },
     ],
     // /** 解释SQL */
-    [{ name: '解析SQL', icon: '\ue626', onClick: explainSQL }],
+    [
+      { name: 'SQL解释', icon: '\ue626', onClick: () => explainSQL() },
+      {
+        name: '带参数SQL解释',
+        icon: '\ue626',
+        onClick: () => explainSQL('withParams'),
+      },
+    ],
     // /** 优化SQL */
-    [{ name: '优化SQL', icon: '\ue626', onClick: optimizeSQL }],
-  ]);
+    [
+      { name: 'SQL优化', icon: '\ue626', onClick: () => optimizeSQL() },
+      {
+        name: '带参数SQL优化',
+        icon: '\ue626',
+        onClick: () => optimizeSQL('withParams'),
+      },
+    ],
+    // /** SQL转化 */
+    [
+      { name: 'SQL转化', icon: '\ue626', onClick: () => changeSQL() },
+      {
+        name: '带参数SQL转换',
+        icon: '\ue626',
+        onClick: () => changeSQL('withParams'),
+      },
+    ],
+  ];
 
   const renderOptBtn = () => {
     let dom = [];
-    for (let i = 0; i < optBtn.current.length; i++) {
-      const optList = optBtn.current[i];
-      const tmpDom = (optList || []).map((item: any, index) => (
-        <Tooltip key={index} placement="bottom" title={item.name}>
-          <Iconfont
-            code={item.icon}
-            className={styles.icon}
+    for (let i = 0; i < optBtn.length; i++) {
+      const optList = optBtn[i];
+      let tmpDom: Array<React.ReactNode> = [];
+      if (i === 0) {
+        tmpDom = (optList || []).map((item: any, index) => (
+          <Tooltip key={index} placement="bottom" title={item.name}>
+            <Iconfont
+              code={item.icon}
+              className={styles.icon}
+              onClick={item.onClick}
+            />
+          </Tooltip>
+        ));
+      } else {
+        tmpDom = (optList || []).map((item: any, index) => (
+          <Button
+            type="link"
             onClick={item.onClick}
-          />
-        </Tooltip>
-      ));
+            className={styles['ai-btn']}
+          >
+            {item.name}
+          </Button>
+        ));
+      }
       tmpDom.push(<Divider key={'divider'} type="vertical" />);
       dom.push([...tmpDom]);
     }
+    // dom.push(
+    //   <Select
+    //     onMouseEnter={()=>{setAiDropVisible(true)}}
+    //     onMouseLeave={()=>{setAiDropVisible(false)}}
+    //     dropdownVisible={aiDropVisible}
+    //     dropdownMatchSelectWidth={false}
+    //     dropdownRender={() => <></>}
+    //   >
+    //     <Option value="1">Option 1</Option>
+    //     <Option value="2">Option 2</Option>
+    //     <Option value="3">Option 3</Option>
+    //   </Select>,
+    // );
     return dom;
+    // return <Select />;
   };
 
   return (
-    <DraggableContainer
-      className={classnames(styles.databaseQuery)}
-      callback={callback}
-      direction="row"
-      volatileDom={{
-        volatileRef: volatileRef,
-        volatileIndex: 2,
-      }}
-    >
-      <div className={styles.console}>
-        <div className={styles.operatingArea}>
-          <div className={styles.left}>{renderOptBtn()}</div>
-          <div className={styles.right}>
-            <span>dataSourceName: {windowTab.dataSourceName}</span>
-            <span>database: {windowTab.databaseName}</span>
+    <>
+      <DraggableContainer
+        className={classnames(styles.databaseQuery)}
+        callback={callback}
+        direction="row"
+        volatileDom={{
+          volatileRef: volatileRef,
+          volatileIndex: 2,
+        }}
+      >
+        <div className={styles.console}>
+          <div className={styles.operatingArea}>
+            <div className={styles.left}>{renderOptBtn()}</div>
+            <div className={styles.right}>
+              <span>dataSourceName: {windowTab.dataSourceName}</span>
+              <span>database: {windowTab.databaseName}</span>
+            </div>
+          </div>
+          <div className={styles.monacoEditor}>
+            <MonacoEditor
+              onSave={saveWindowTabTab}
+              onChange={monacoEditorChange}
+              id={windowTab.consoleId!}
+              getEditor={getEditor}
+            />
           </div>
         </div>
-        <div className={styles.monacoEditor}>
-          <MonacoEditor
-            onSave={saveWindowTabTab}
-            onChange={monacoEditorChange}
-            id={windowTab.consoleId!}
-            getEditor={getEditor}
-          />
+        <div
+          ref={volatileRef}
+          style={{ display: showSearchResult ? 'block' : 'none' }}
+          className={styles.searchResult}
+        >
+          <LoadingContent data={manageResultDataList} handleEmpty>
+            <SearchResult manageResultDataList={manageResultDataList} />
+          </LoadingContent>
         </div>
-      </div>
-      <div
-        ref={volatileRef}
-        style={{ display: showSearchResult ? 'block' : 'none' }}
-        className={styles.searchResult}
+      </DraggableContainer>
+
+      <Modal
+        title={modalConfig.title}
+        open={modalConfig.open}
+        onOk={modalConfig.handleOk}
+        onCancel={modalConfig.handleCancel}
       >
-        <LoadingContent data={manageResultDataList} handleEmpty>
-          <SearchResult manageResultDataList={manageResultDataList} />
-        </LoadingContent>
-      </div>
-    </DraggableContainer>
+        {modalConfig.content}
+      </Modal>
+    </>
   );
-});
+}

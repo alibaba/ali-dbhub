@@ -14453,7 +14453,7 @@ textarea.custom-input {
   font-weight: normal;
   font-size: 14px;
   text-align: center;
-  background-color: #fafafa;
+  background-color: var(--color-bg-100);
   border: 1px solid var(--color-border);
   border-radius: 4px;
   transition: all 0.3s;
@@ -28336,3 +28336,5 @@ div.custom-typography-edit-content.custom-typography-rtl {
   margin: 8px 0 0;
   padding: 0;
 }
+
+/*  var(--color-bg-300) */

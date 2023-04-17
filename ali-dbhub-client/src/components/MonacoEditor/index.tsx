@@ -139,7 +139,7 @@ export default memo(function MonacoEditor(props: IProps) {
     const v = value.toString();
     const model = editor?.getModel && editor.getModel(editor);
     model?.setValue && model.setValue(`${model.getValue()}${v}`);
-  }
+  };
 
   // 获取编辑器的值
   const getValue = () => {

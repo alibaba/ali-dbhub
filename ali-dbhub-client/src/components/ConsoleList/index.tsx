@@ -19,6 +19,7 @@ import {
   ConsoleType,
   ConsoleStatus,
   DatabaseTypeCode,
+  consoleTopComment,
 } from '@/utils/constants';
 import { DatabaseContext } from '@/context/database';
 import styles from './index.less';
@@ -31,14 +32,15 @@ interface IProps {
 export default memo<IProps>(function ConsoleList(props) {
   const { windowListChange } = props;
   const { consoleId } = qs<{ consoleId: string }>();
-  const { model, setCreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
+  const { model, setCreateConsoleDialog, setDblclickNodeData } =
+    useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [activeKey, setActiveKey] = useState<string>(consoleId);
   const { dblclickNodeData, createConsoleDialog } = model;
 
   useEffect(() => {
-    windowListChange(windowList)
-  }, [windowList])
+    windowListChange(windowList);
+  }, [windowList]);
 
   useEffect(() => {
     if (dblclickNodeData) {
@@ -59,7 +61,7 @@ export default memo<IProps>(function ConsoleList(props) {
           dataSourceId: dblclickNodeData.dataSourceId!,
           databaseName: dblclickNodeData?.databaseName!,
           status: ConsoleStatus.DRAFT,
-          ddl: 'SELECT * FROM',
+          ddl: `${consoleTopComment}SELECT * FROM`,
           tabOpened: TabOpened.IS_OPEN,
         };
 
@@ -72,7 +74,7 @@ export default memo<IProps>(function ConsoleList(props) {
             databaseName: dblclickNodeData.databaseName!,
             dataSourceId: dblclickNodeData.dataSourceId!,
             consoleId: res,
-            ddl: 'SELECT * FROM',
+            ddl: `${consoleTopComment}SELECT * FROM`,
           };
           setActiveKey(newConsole.key);
           setWindowList([...windowList, newConsole]);
@@ -98,7 +100,7 @@ export default memo<IProps>(function ConsoleList(props) {
       dataSourceId: createConsoleDialog.dataSourceId,
       databaseName: createConsoleDialog?.databaseName,
       status: ConsoleStatus.DRAFT,
-      ddl: 'SELECT * FROM',
+      ddl: `${consoleTopComment}SELECT * FROM`,
       tabOpened: TabOpened.IS_OPEN,
     };
 
@@ -111,7 +113,7 @@ export default memo<IProps>(function ConsoleList(props) {
         databaseName: createConsoleDialog.databaseName,
         dataSourceId: createConsoleDialog.dataSourceId,
         consoleId: res,
-        ddl: 'SELECT * FROM',
+        ddl: `${consoleTopComment}SELECT * FROM`,
       };
       setActiveKey(newConsole.key);
       setWindowList([...windowList, newConsole]);
@@ -132,7 +134,7 @@ export default memo<IProps>(function ConsoleList(props) {
     historyService.getSaveList(p).then((res) => {
       let flag = false;
 
-      const newWindowList: any = []
+      const newWindowList: any = [];
       res.data?.map((item, index) => {
         if (item.connectable) {
           newWindowList.push({
@@ -156,7 +158,7 @@ export default memo<IProps>(function ConsoleList(props) {
         } else if (item.id === +consoleId) {
           flag = true;
         }
-      })
+      });
 
       if (!flag && consoleId) {
         historyService.getWindowTab({ id: consoleId }).then((res: any) => {
@@ -266,12 +268,7 @@ export default memo<IProps>(function ConsoleList(props) {
         </div>
       </AppHeader>
       <div className={styles.databaseQueryBox}>
-        {
-          !windowList.length &&
-          <div className={styles.ears}>
-            Chat-DB
-          </div>
-        }
+        {!windowList.length && <div className={styles.ears}>Chat-DB</div>}
         {windowList?.map((i: IConsole, index: number) => {
           return (
             <div
@@ -284,7 +281,6 @@ export default memo<IProps>(function ConsoleList(props) {
             </div>
           );
         })}
-
       </div>
     </div>
   );
