@@ -17,7 +17,15 @@ interface IProps {
 /** 重启次数 */
 const restartCount = 30;
 
+declare global {
+  interface Window {
+    _ENV: string;
+  }
+}
+
 export default memo<IProps>(function AppContainer({ className, children }) {
+
+  window._ENV = process.env.UMI_ENV!
   const [startSchedule, setStartSchedule] = useState(0); // 0 初始状态 1 服务启动报错 2 启动成功
   const [serviceFail, setServiceFail] = useState(false);
   const [serviceStart, setServiceStart] = useState(true);
@@ -41,9 +49,11 @@ export default memo<IProps>(function AppContainer({ className, children }) {
 
   function detectionService() {
     setServiceFail(false);
-    let flag = 1;
+    let flag = 0;
     const time = setInterval(() => {
-      flag++;
+      if (flag === 2) {
+        setServiceStart(false)
+      }
       miscService.testService().then(() => {
         clearInterval(time);
         setServiceStart(true);
@@ -52,6 +62,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         setServiceFail(true);
         clearInterval(time);
       }
+      flag++;
     }, 300);
   }
 
