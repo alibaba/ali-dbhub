@@ -94,5 +94,5 @@ export const mysqlDataType = [
   {
     name: 'LONGTEXT',
     type: 'string'
-  },
+  }
 ]

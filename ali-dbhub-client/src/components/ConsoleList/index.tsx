@@ -159,7 +159,6 @@ export default memo<IProps>(function ConsoleList(props) {
           flag = true;
         }
       });
-
       if (!flag && consoleId) {
         historyService.getWindowTab({ id: consoleId }).then((res: any) => {
           if (res.connectable) {

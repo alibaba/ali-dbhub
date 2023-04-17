@@ -148,7 +148,7 @@ function DatabasePage({ className }: IProps) {
       </div>
     </DraggableContainer>
     <OperationTableModal />
-    // 创建/修改连接
+    // 创建修改连接
     <CreateConnection />
   </>
 };
