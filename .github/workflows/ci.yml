@@ -1,8 +1,6 @@
  name: Java CI
 
- on:
-   release:
-     types: [created]
+ on: [ push, pull_request ]
 
  jobs:
    test:
