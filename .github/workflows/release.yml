@@ -2,11 +2,12 @@
 name: Build Client
 
 # Workflow's trigger
-# on: [push, pull_request]
+# 在创建标签的时候触发打包
+# main 分支打包release的
+# 其他分支统一打包test的
 on:
-  push:
-    tags:
-      - v*
+  release:
+    types: [created]
 
 # Workflow's jobs
 jobs:
@@ -84,7 +85,7 @@ jobs:
           # release the app after building
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          release: true
 
       - name: upload artifacts mac
         uses: actions/upload-artifact@main
