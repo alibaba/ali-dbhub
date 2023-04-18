@@ -108,3 +108,13 @@ jobs:
           name: ali-dbhub-web
           path: ali-dbhub-client/dist
           if-no-files-found: ignore
+
+      # 把文件上传到OSS 方便下载
+      - name: Set up oss utils
+        uses: manyuanrong/setup-ossutil@v2.0
+        with:
+          endpoint: "oss-cn-zhangjiakou.aliyuncs.com"
+          access-key-id: ${{ secrets.OSS_ACCESS_KEY_ID }}
+          access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
+      - name: Upload to oss
+        run: ossutil cp -rf ali-dbhub-client/electron-build/ oss://chat2db/release/
