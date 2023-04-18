@@ -7,7 +7,7 @@ name: Build Client
 # 其他分支统一打包test的
 on:
   release:
-    types: [created]
+    types: [published]
 
 # Workflow's jobs
 jobs:
