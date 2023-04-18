@@ -6,8 +6,9 @@ name: Build Client
 # main 分支打包release的
 # 其他分支统一打包test的
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - v*
 
 # Workflow's jobs
 jobs:
@@ -81,12 +82,12 @@ jobs:
           # (No need to define this secret in the repo settings)
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
          # args: "--c.extraMetadata.appId=com.dbhub --c.extraMetadata.productName=Chat"
-          release: false
+          # If the commit is tagged with a version (e.g. "v1.0.0"),
+          # release the app after building
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
       - name: upload artifacts mac
         uses: actions/upload-artifact@main
