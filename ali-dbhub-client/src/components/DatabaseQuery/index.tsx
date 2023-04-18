@@ -25,7 +25,7 @@ import { formatParams, uuid } from '@/utils/common';
 import connectToEventSource from '@/utils/eventSource';
 
 import styles from './index.less';
-
+const { Option } = Select;
 const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 
 export interface IDatabaseQueryProps {
@@ -81,6 +81,7 @@ export default function DatabaseQuery(props: IProps) {
     destSqlType: '',
   });
   const [modalConfig, setModalConfig] = useState(initModal);
+  // const [aiDropVisible, setAiDropVisible] = useState(false);
 
   useEffect(() => {
     if (windowTab.consoleId !== +activeTabKey) {
@@ -104,7 +105,7 @@ export default function DatabaseQuery(props: IProps) {
 
     if (nodeData && windowTab.consoleId === +activeTabKey) {
       const model = monacoEditor.current.getModel(monacoEditor.current);
-      const value = model.getValue();
+      let value = model.getValue();
       if (nodeData.nodeType === TreeNodeType.TABLE) {
         if (value == 'SELECT * FROM' || value == 'SELECT * FROM ') {
           model.setValue(`SELECT * FROM ${nodeData.name};`);
@@ -150,10 +151,6 @@ export default function DatabaseQuery(props: IProps) {
           key: item.name,
         };
       });
-      tableListRef.current = res.data?.map((item) => ({
-        label: item.name,
-        value: item.name,
-      }));
       disposalEditorHintData(tableList);
     });
   };
@@ -287,15 +284,15 @@ export default function DatabaseQuery(props: IProps) {
     const tableNames = tableList
       .map((table) => `tableNames=${table}`)
       .join('&');
-    const params = formatParams({
-      dataSourceId,
-      databaseName,
-      promptType,
-      message: sentence,
-      tableNames,
-      ext,
-      destSqlType,
-    });
+    const params =
+      formatParams({
+        dataSourceId,
+        databaseName,
+        promptType,
+        message: sentence,
+        ext,
+        destSqlType,
+      }) + tableNames;
 
     const handleMessage = (message: string) => {
       const isEOF = message === '[DONE]';
@@ -339,7 +336,7 @@ export default function DatabaseQuery(props: IProps) {
   /**
    * 自然语言转化SQL
    */
-  const lang2SQL = (type?: 'withParams') => {
+  const lang2SQL = async (type?: 'withParams') => {
     const sentence = getSelectionVal();
     if (!sentence) {
       message.warning('请选择输入信息');
@@ -349,6 +346,20 @@ export default function DatabaseQuery(props: IProps) {
     if (!type) {
       chat2SQL(IPromptType.NL_2_SQL);
     } else {
+      // ---拉取下数据库表----
+      const p = {
+        dataSourceId: windowTab.dataSourceId!,
+        databaseName: windowTab.databaseName!,
+        pageNo: 1,
+        pageSize: 999,
+      };
+      let res = await mysqlServer.getList(p);
+      tableListRef.current = res.data?.map((item) => ({
+        label: item.name,
+        value: item.name,
+      }));
+      // --------
+
       setModalConfig({
         open: true,
         title: '请选择表',
@@ -372,23 +383,6 @@ export default function DatabaseQuery(props: IProps) {
           />
         ),
       });
-      // Modal.confirm({
-      //   title: '请选择表',
-      //   content: (
-      //     <Select
-      //       mode="tags"
-      //       style={{ width: '100%' }}
-      //       placeholder="请输入想要查询的表"
-      //       onChange={(values) => {
-      //         extendParams.current.tableNames = values;
-      //       }}
-      //       options={tableListRef.current}
-      //     />
-      //   ),
-      //   onOk: () => {
-      //     chat2SQL(IPromptType.NL_2_SQL);
-      //   },
-      // });
     }
   };
   /**
@@ -406,7 +400,7 @@ export default function DatabaseQuery(props: IProps) {
     } else {
       setModalConfig({
         open: true,
-        title: '输入额外参数信息',
+        title: '请输入其他附加信息',
         handleOk: () => {
           chat2SQL(IPromptType.SQL_EXPLAIN);
           setModalConfig(initModal);
@@ -420,6 +414,7 @@ export default function DatabaseQuery(props: IProps) {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               extendParams.current.ext = e.target.value;
             }}
+            placeholder="例如：解释SQL查询的目的"
           />
         ),
       });
@@ -452,7 +447,7 @@ export default function DatabaseQuery(props: IProps) {
     } else {
       setModalConfig({
         open: true,
-        title: '输入额外参数信息',
+        title: '请输入其他附加信息',
         handleOk: () => {
           chat2SQL(IPromptType.SQL_OPTIMIZER);
           setModalConfig(initModal);
@@ -466,6 +461,7 @@ export default function DatabaseQuery(props: IProps) {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               extendParams.current.ext = e.target.value;
             }}
+            placeholder="例如：提供索引优化建议"
           />
         ),
       });
@@ -496,7 +492,7 @@ export default function DatabaseQuery(props: IProps) {
     } else {
       setModalConfig({
         open: true,
-        title: '请填写对应的数据库名',
+        title: '请输入其他附加信息',
         handleOk: () => {
           chat2SQL(IPromptType.SQL_2_SQL);
           setModalConfig(initModal);
@@ -505,12 +501,25 @@ export default function DatabaseQuery(props: IProps) {
           setModalConfig(initModal);
         },
         content: (
-          <Input
-            key={IPromptType.SQL_2_SQL}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              extendParams.current.destSqlType = e.target.value;
-            }}
-          />
+          <>
+            <Input
+              addonBefore="目标数据库类型"
+              key={IPromptType.SQL_2_SQL}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                extendParams.current.destSqlType = e.target.value;
+              }}
+              placeholder="例如: MySQL"
+              style={{ marginBottom: 10 }}
+            />
+            <Input
+              addonBefore="其他附加条件 "
+              key={IPromptType.SQL_2_SQL + 'ext'}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                extendParams.current.ext = e.target.value;
+              }}
+              placeholder="例如：使用On Conflict语法来替代的Merge Into"
+            />
+          </>
         ),
       });
       // Modal.confirm({
@@ -542,36 +551,36 @@ export default function DatabaseQuery(props: IProps) {
     ],
     /** 自然语言转化SQL */
     [
-      { name: '自然语言转SQL', icon: '\ue626', onClick: () => lang2SQL() },
+      // { name: '自然语言转SQL', icon: '\ue626', onClick: () => lang2SQL() },
       {
-        name: '带参数自然语言转SQL',
+        name: '自然语言转SQL',
         icon: '\ue626',
         onClick: () => lang2SQL('withParams'),
       },
     ],
     // /** 解释SQL */
     [
-      { name: 'SQL解释', icon: '\ue626', onClick: () => explainSQL() },
+      // { name: 'SQL解释', icon: '\ue626', onClick: () => explainSQL() },
       {
-        name: '带参数SQL解释',
+        name: 'SQL解释',
         icon: '\ue626',
         onClick: () => explainSQL('withParams'),
       },
     ],
     // /** 优化SQL */
     [
-      { name: 'SQL优化', icon: '\ue626', onClick: () => optimizeSQL() },
+      // { name: 'SQL优化', icon: '\ue626', onClick: () => optimizeSQL() },
       {
-        name: '带参数SQL优化',
+        name: 'SQL优化',
         icon: '\ue626',
         onClick: () => optimizeSQL('withParams'),
       },
     ],
     // /** SQL转化 */
     [
-      { name: 'SQL转化', icon: '\ue626', onClick: () => changeSQL() },
+      // { name: 'SQL转化', icon: '\ue626', onClick: () => changeSQL() },
       {
-        name: '带参数SQL转换',
+        name: 'SQL转化',
         icon: '\ue626',
         onClick: () => changeSQL('withParams'),
       },
@@ -582,19 +591,47 @@ export default function DatabaseQuery(props: IProps) {
     let dom = [];
     for (let i = 0; i < optBtn.length; i++) {
       const optList = optBtn[i];
-      const tmpDom = (optList || []).map((item: any, index) => (
-        <Tooltip key={index} placement="bottom" title={item.name}>
-          <Iconfont
-            code={item.icon}
-            className={styles.icon}
+      let tmpDom: Array<React.ReactNode> = [];
+      if (i === 0) {
+        tmpDom = (optList || []).map((item: any, index) => (
+          <Tooltip key={index} placement="bottom" title={item.name}>
+            <Iconfont
+              code={item.icon}
+              className={styles.icon}
+              onClick={item.onClick}
+            />
+          </Tooltip>
+        ));
+      } else {
+        tmpDom = (optList || []).map((item: any, index) => (
+          <Button
+            key={index}
+            type="link"
             onClick={item.onClick}
-          />
-        </Tooltip>
-      ));
+            className={styles['ai-btn']}
+          >
+            {item.name}
+          </Button>
+        ));
+      }
       tmpDom.push(<Divider key={'divider'} type="vertical" />);
       dom.push([...tmpDom]);
     }
+    // dom.push(
+    //   <Select
+    //     onMouseEnter={()=>{setAiDropVisible(true)}}
+    //     onMouseLeave={()=>{setAiDropVisible(false)}}
+    //     dropdownVisible={aiDropVisible}
+    //     dropdownMatchSelectWidth={false}
+    //     dropdownRender={() => <></>}
+    //   >
+    //     <Option value="1">Option 1</Option>
+    //     <Option value="2">Option 2</Option>
+    //     <Option value="3">Option 3</Option>
+    //   </Select>,
+    // );
     return dom;
+    // return <Select />;
   };
 
   return (
