@@ -117,4 +117,4 @@ jobs:
           access-key-id: ${{ secrets.OSS_ACCESS_KEY_ID }}
           access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
       - name: Upload to oss
-        run: ossutil cp -rf --acl=public-read ali-dbhub-client/electron-build/ oss://chat2db/release/
+        run: ossutil cp -rf --acl=public-read ali-dbhub-client/ oss://chat2db/release/
