@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
+import { history } from 'umi';
 import classnames from 'classnames';
 import i18n from '@/i18n';
 import AppHeader from '@/components/AppHeader';
@@ -108,7 +109,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
 
   const jumpToDatabasePage = (item: IHistoryRecord) => {
     if (currentTab == TabsKey.SAVE && item.connectable) {
-      location.href = `/#/database?consoleId=${item.id}`
+      history.push(`/database?consoleId=${item.id}`)
     }
   }
 

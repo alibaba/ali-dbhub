@@ -160,8 +160,6 @@ public class ChatController {
             throw new BusinessException(CommonErrorEnum.PARAM_ERROR);
         }
 
-        log.info(prompt);
-
         GptVersionType modelType = EasyEnumUtils.getEnum(GptVersionType.class, gptVersion);
         switch (modelType) {
             case GPT3:
@@ -291,11 +289,12 @@ public class ChatController {
         String promptType = StringUtils.isBlank(queryRequest.getPromptType()) ? PromptType.NL_2_SQL.getCode()
             : queryRequest.getPromptType();
         PromptType pType = EasyEnumUtils.getEnum(PromptType.class, promptType);
+        String ext = StringUtils.isNotBlank(queryRequest.getExt()) ? queryRequest.getExt() : "";
         String schemaProperty = CollectionUtils.isNotEmpty(tableSchemas) ? String.format(
             "### 请根据以下table properties和SQL input%s. %s\n#\n### %s SQL tables, with their properties:\n#\n# "
-                + "%s\n#\n#\n### SQL input: %s", pType.getDescription(), queryRequest.getExt(), dataSourceType,
+                + "%s\n#\n#\n### SQL input: %s", pType.getDescription(), ext, dataSourceType,
             properties, prompt) : String.format("### 请根据以下SQL input%s. %s\n#\n### SQL input: %s",
-            pType.getDescription(), queryRequest.getExt(), prompt);
+            pType.getDescription(), ext, prompt);
         switch (pType) {
             case SQL_2_SQL:
                 schemaProperty = StringUtils.isNotBlank(queryRequest.getDestSqlType()) ? String.format(

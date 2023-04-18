@@ -27,6 +27,8 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +71,12 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public DataResult<Operation> find(Long id) {
         OperationSavedDO operationSavedDO = operationSavedMapper.selectById(id);
-        return DataResult.of(operationConverter.do2dto(operationSavedDO));
+        List<Long> dataSourceIds = Lists.newArrayList(operationSavedDO.getDataSourceId());
+        Map<Long, DataSource> dataSourceMap = getDataSourceInfo(dataSourceIds);
+        Operation operation = operationConverter.do2dto(operationSavedDO);
+        operation.setDataSourceName(dataSourceMap.containsKey(operation.getDataSourceId()) ? dataSourceMap.get(
+            operation.getDataSourceId()).getAlias() : null);
+        return DataResult.of(operation);
     }
 
     @Override
@@ -106,13 +113,27 @@ public class OperationServiceImpl implements OperationService {
             return PageResult.empty(param.getPageNo(), param.getPageSize());
         }
         List<Long> dataSourceIds = userSavedDdlDOS.stream().map(Operation::getDataSourceId).toList();
-        ListResult<DataSource> dataSourceListResult = dataSourceService.queryByIds(dataSourceIds);
-        Map<Long, DataSource> dataSourceMap = dataSourceListResult.getData().stream().collect(
-            Collectors.toMap(DataSource::getId, Function.identity(), (a, b) -> a));
+        Map<Long, DataSource> dataSourceMap = getDataSourceInfo(dataSourceIds);
         userSavedDdlDOS.forEach(userSavedDdl -> userSavedDdl.setDataSourceName(
             dataSourceMap.containsKey(userSavedDdl.getDataSourceId()) ? dataSourceMap.get(
                 userSavedDdl.getDataSourceId()).getAlias() : null));
         return PageResult.of(userSavedDdlDOS, iPage.getTotal(), param);
+    }
+
+    /**
+     * 查询数据源信息
+     *
+     * @param dataSourceIds
+     * @return
+     */
+    private Map<Long, DataSource> getDataSourceInfo(List<Long> dataSourceIds) {
+        if (CollectionUtils.isEmpty(dataSourceIds)) {
+            return Maps.newHashMap();
+        }
+        ListResult<DataSource> dataSourceListResult = dataSourceService.queryByIds(dataSourceIds);
+        Map<Long, DataSource> dataSourceMap = dataSourceListResult.getData().stream().collect(
+            Collectors.toMap(DataSource::getId, Function.identity(), (a, b) -> a));
+        return dataSourceMap;
     }
 }
 

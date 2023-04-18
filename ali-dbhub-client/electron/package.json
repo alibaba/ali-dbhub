@@ -1,9 +1,9 @@
 {
-  "name": "ali-dbhub-client",
+  "name": "chat2db",
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "0.0.20",
+  "version": "1.0.0-beta",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
@@ -28,6 +28,7 @@
     "directories": {
       "output": "../electron-build"
     },
+    "productName": "Chat2DB",
     "asar": false,
     "files": [
       "dist/**/*",
@@ -38,7 +39,7 @@
       "my.bat"
     ],
     "mac": {
-      "icon": "logo/dbhub.icns",
+      "icon": "logo/logo.icns",
       "target": [
         {
           "target": "dmg",
