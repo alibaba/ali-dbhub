@@ -154,12 +154,12 @@ export default memo<IProps>(function ConsoleList(props) {
 
       newWindowList.map((item: any, index: number) => {
         if (!consoleId && index === 0) {
-          setActiveKey(item.key + '');
-        } else if (item.id === +consoleId) {
+          setActiveKey(item.key);
+        } else if (+item.key === +consoleId) {
           flag = true;
+          setActiveKey(item.key);
         }
       });
-
       if (!flag && consoleId) {
         historyService.getWindowTab({ id: consoleId }).then((res: any) => {
           if (res.connectable) {
