@@ -86,7 +86,7 @@ jobs:
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
          # args: "--c.extraMetadata.appId=com.dbhub --c.extraMetadata.productName=Chat"
-          release: true
+          release: false
 
       - name: upload artifacts mac
         uses: actions/upload-artifact@main
