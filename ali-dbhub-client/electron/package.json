@@ -24,11 +24,11 @@
   },
   "icon": "logo/logo.png",
   "build": {
-    "appId": "com.ali-dbhub",
+    "appId": "${appId}",
     "directories": {
       "output": "../electron-build"
     },
-    "productName": "Chat2DB",
+    "productName": "${productName}",
     "asar": false,
     "files": [
       "dist/**/*",
