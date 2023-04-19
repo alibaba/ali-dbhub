@@ -196,9 +196,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2px;
+  padding: 2px 4px 2px 15px;
   height: 24px;
   user-select: none;
+  position: relative;
+  border-radius: 4px;
   i {
     font-size: 13px;
     margin-left: 4px;
@@ -208,10 +210,25 @@
     cursor: pointer;
     background-color: var(--color-bg-hover);
   }
+  &::after{
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 99px;
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--custom-success-color-outline);
+  }
 }
 
 .unfoldSearchResult {
   i {
     transform: rotate(90deg);
+  }
+  &::after{
+    background-color: var(--custom-success-color);
+
   }
 }
