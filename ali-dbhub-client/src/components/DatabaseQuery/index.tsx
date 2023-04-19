@@ -163,7 +163,7 @@ export default function DatabaseQuery(props: IProps) {
         myEditorHintData[item.name] = [];
       });
       monacoHint.current = setEditorHint(myEditorHintData);
-    } catch { }
+    } catch {}
   };
 
   const getEditor = (editor: any) => {
@@ -174,8 +174,8 @@ export default function DatabaseQuery(props: IProps) {
       localStorage.getItem(
         `window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.consoleId}`,
       ) ||
-      windowTab.ddl ||
-      '',
+        windowTab.ddl ||
+        '',
     );
   };
 
@@ -551,36 +551,36 @@ export default function DatabaseQuery(props: IProps) {
     ],
     /** 自然语言转化SQL */
     [
-      { name: '自然语言转SQL', icon: '\ue626', onClick: () => lang2SQL() },
+      // { name: '自然语言转SQL', icon: '\ue626', onClick: () => lang2SQL() },
       {
-        name: '带参数自然语言转SQL',
+        name: '自然语言转SQL',
         icon: '\ue626',
         onClick: () => lang2SQL('withParams'),
       },
     ],
     // /** 解释SQL */
     [
-      { name: 'SQL解释', icon: '\ue626', onClick: () => explainSQL() },
+      // { name: 'SQL解释', icon: '\ue626', onClick: () => explainSQL() },
       {
-        name: '带参数SQL解释',
+        name: 'SQL解释',
         icon: '\ue626',
         onClick: () => explainSQL('withParams'),
       },
     ],
     // /** 优化SQL */
     [
-      { name: 'SQL优化', icon: '\ue626', onClick: () => optimizeSQL() },
+      // { name: 'SQL优化', icon: '\ue626', onClick: () => optimizeSQL() },
       {
-        name: '带参数SQL优化',
+        name: 'SQL优化',
         icon: '\ue626',
         onClick: () => optimizeSQL('withParams'),
       },
     ],
     // /** SQL转化 */
     [
-      { name: 'SQL转化', icon: '\ue626', onClick: () => changeSQL() },
+      // { name: 'SQL转化', icon: '\ue626', onClick: () => changeSQL() },
       {
-        name: '带参数SQL转换',
+        name: 'SQL转化',
         icon: '\ue626',
         onClick: () => changeSQL('withParams'),
       },
@@ -639,10 +639,11 @@ export default function DatabaseQuery(props: IProps) {
       <DraggableContainer
         className={classnames(styles.databaseQuery)}
         callback={callback}
+        showLine={showSearchResult}
         direction="row"
         volatileDom={{
           volatileRef: volatileRef,
-          volatileIndex: 2,
+          volatileIndex: 1,
         }}
       >
         <div className={styles.console}>
@@ -663,14 +664,15 @@ export default function DatabaseQuery(props: IProps) {
           </div>
         </div>
         <div
-          ref={volatileRef}
-          style={{ display: showSearchResult ? 'block' : 'none' }}
-          className={styles.searchResult}
-        >
-          <LoadingContent data={manageResultDataList} handleEmpty>
-            <SearchResult manageResultDataList={manageResultDataList} />
-          </LoadingContent>
-        </div>
+         ref={volatileRef}
+         style={{ display: showSearchResult ? 'block' : 'none' }}
+         className={styles.searchResult}
+       >
+         <LoadingContent data={manageResultDataList} handleEmpty>
+           <SearchResult manageResultDataList={manageResultDataList} />
+         </LoadingContent>
+       </div>
+        
       </DraggableContainer>
 
       <Modal

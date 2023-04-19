@@ -94,7 +94,7 @@ function DatabasePage({ className }: IProps) {
   }
 
   return <>
-    <DraggableContainer className={classnames(className, styles.box)} callback={callback} volatileDom={{ volatileRef, volatileIndex: 1 }} >
+    <DraggableContainer className={classnames(className, styles.box)} callback={callback} volatileDom={{ volatileRef, volatileIndex: 0 }} >
       <div ref={volatileRef} className={styles.asideBox}>
         <div className={styles.aside}>
           <div className={styles.header}>
