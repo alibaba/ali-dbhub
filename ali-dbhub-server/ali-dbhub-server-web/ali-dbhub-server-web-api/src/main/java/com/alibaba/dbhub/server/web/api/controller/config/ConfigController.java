@@ -37,7 +37,7 @@ public class ConfigController {
     @Autowired
     private ConfigService configService;
 
-    @GetMapping("/system_config")
+    @PostMapping("/system_config")
     public ActionResult systemConfig(@RequestBody SystemConfigRequest request) {
         SystemConfigParam param = SystemConfigParam.builder().code(request.getCode()).content(request.getContent())
             .build();
