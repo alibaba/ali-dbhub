@@ -24,6 +24,7 @@ import com.alibaba.dbhub.server.web.api.controller.ai.enums.GptVersionType;
 import com.alibaba.dbhub.server.web.api.controller.ai.enums.PromptType;
 import com.alibaba.dbhub.server.web.api.controller.ai.listener.OpenAIEventSourceListener;
 import com.alibaba.dbhub.server.web.api.controller.ai.request.ChatQueryRequest;
+import com.alibaba.dbhub.server.web.api.util.OpenAIClient;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -59,7 +60,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Slf4j
 public class ChatController {
 
-    private final OpenAiStreamClient openAiStreamClient;
 
     @Autowired
     private TableService tableService;
@@ -90,10 +90,6 @@ public class ChatController {
      * 返回token大小
      */
     private Integer RETURN_TOKEN_LENGTH = 150;
-
-    public ChatController(OpenAiStreamClient openAiStreamClient) {
-        this.openAiStreamClient = openAiStreamClient;
-    }
 
     /**
      * 问答对话模型
@@ -204,7 +200,7 @@ public class ChatController {
             }
         );
         OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
-        openAiStreamClient.streamChatCompletion(messages, openAIEventSourceListener);
+        OpenAIClient.getInstance().streamChatCompletion(messages, openAIEventSourceListener);
         LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
         return sseEmitter;
     }
@@ -241,7 +237,7 @@ public class ChatController {
         OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
         Completion completion = Completion.builder().maxTokens(RETURN_TOKEN_LENGTH).stream(true).stop(
             Lists.newArrayList("#", ";")).user(uid).prompt(prompt).build();
-        openAiStreamClient.streamCompletions(completion, openAIEventSourceListener);
+        OpenAIClient.getInstance().streamCompletions(completion, openAIEventSourceListener);
         return sseEmitter;
     }
 
