@@ -7,14 +7,15 @@ interface IProps {
   children: React.ReactNode[];
   volatileDom: {
     volatileRef: any;
-    volatileIndex: 1 | 2;
+    volatileIndex: 0 | 1;
   }
   min?: number;
   direction?: 'row' | 'line';
   callback?: Function;
+  showLine?: boolean;
 }
 
-export default memo<IProps>(function DraggableContainer({ children, callback, min, className, direction = 'line', volatileDom }) {
+export default memo<IProps>(function DraggableContainer({ children, showLine=true, callback, min, className, direction = 'line', volatileDom }) {
   const { volatileRef, volatileIndex } = volatileDom
 
   const DividerRef = useRef<HTMLDivElement | null>(null);
@@ -55,9 +56,9 @@ export default memo<IProps>(function DraggableContainer({ children, callback, mi
     let computedXY = nowClientXY - clientStart;
     let changeLength = 0
     if (volatileIndex == 1) {
-      changeLength = volatileBoxXY + computedXY;
-    } else {
       changeLength = volatileBoxXY - computedXY;
+    } else {
+      changeLength = volatileBoxXY + computedXY;
     }
 
     if (min && changeLength < min) {
@@ -73,7 +74,9 @@ export default memo<IProps>(function DraggableContainer({ children, callback, mi
 
   return <div className={classnames(styles.box, className)}>
     {children[0]}
+    {
     <div
+      style={{display:showLine? 'block': 'none'}}
       ref={DividerLine}
       className={classnames(direction == 'line' ? styles.divider : styles.rowDivider, { [styles.displayDivider]: !children[1] })}
     >
@@ -83,6 +86,7 @@ export default memo<IProps>(function DraggableContainer({ children, callback, mi
         { [styles.rowDragging]: (dragging && direction == 'row') }
       )} />
     </div>
+    }
     {children[1]}
   </div>
 })

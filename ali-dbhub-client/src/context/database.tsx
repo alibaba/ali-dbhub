@@ -44,7 +44,8 @@ const initDatabaseValue: IModel = {
   needRefreshNodeTree: {},
   dblclickNodeData: null,
   aiImportSql: '',
-  showSearchResult: localStorage.getItem('showSearchResultBox') === 'true',
+  // showSearchResult: localStorage.getItem('showSearchResultBox') === 'true',
+  showSearchResult: false,
   editDataSourceData: false,
   refreshTreeNum: 0
 };
