@@ -223,8 +223,9 @@ function VisiblyCreateConnection(props: IProps) {
     if (type === submitType.UPDATE) {
       p.id = dataSourceId;
     }
-
-    connectionServer[type](p).then(res => {
+    
+    const api:any = connectionServer[type](p)
+    api.then((res:any) => {
       if (type === submitType.TEST) {
         message.success(res === false ? '测试连接失败' : '测试连接成功');
       } else {

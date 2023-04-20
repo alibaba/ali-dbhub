@@ -639,10 +639,11 @@ export default function DatabaseQuery(props: IProps) {
       <DraggableContainer
         className={classnames(styles.databaseQuery)}
         callback={callback}
+        showLine={showSearchResult}
         direction="row"
         volatileDom={{
           volatileRef: volatileRef,
-          volatileIndex: 2,
+          volatileIndex: 1,
         }}
       >
         <div className={styles.console}>
@@ -663,14 +664,15 @@ export default function DatabaseQuery(props: IProps) {
           </div>
         </div>
         <div
-          ref={volatileRef}
-          style={{ display: showSearchResult ? 'block' : 'none' }}
-          className={styles.searchResult}
-        >
-          <LoadingContent data={manageResultDataList} handleEmpty>
-            <SearchResult manageResultDataList={manageResultDataList} />
-          </LoadingContent>
-        </div>
+         ref={volatileRef}
+         style={{ display: showSearchResult ? 'block' : 'none' }}
+         className={styles.searchResult}
+       >
+         <LoadingContent data={manageResultDataList} handleEmpty>
+           <SearchResult manageResultDataList={manageResultDataList} />
+         </LoadingContent>
+       </div>
+        
       </DraggableContainer>
 
       <Modal
