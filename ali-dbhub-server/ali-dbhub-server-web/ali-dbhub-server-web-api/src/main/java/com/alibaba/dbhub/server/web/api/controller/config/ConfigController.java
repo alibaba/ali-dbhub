@@ -14,6 +14,7 @@ import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dbhub.server.web.api.aspect.ConnectionInfoAspect;
 import com.alibaba.dbhub.server.web.api.controller.config.request.SystemConfigRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
+import com.alibaba.dbhub.server.web.api.util.OpenAIClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,11 @@ public class ConfigController {
     public ActionResult systemConfig(@RequestBody SystemConfigRequest request) {
         SystemConfigParam param = SystemConfigParam.builder().code(request.getCode()).content(request.getContent())
             .build();
-        return configService.createOrUpdate(param);
+        configService.createOrUpdate(param);
+        if (OpenAIClient.OPENAI_KEY.equals(request.getCode())) {
+            OpenAIClient.refresh();
+        }
+        return ActionResult.isSuccess();
     }
 
     @GetMapping("/system_config/{code}")
