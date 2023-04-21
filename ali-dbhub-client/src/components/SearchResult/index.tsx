@@ -98,7 +98,6 @@ export function TableBox(props: ITableProps) {
   const { headerList, dataList, className, data, ...rest } = props
   const [columns, setColumns] = useState<any>();
   const [tableData, setTableData] = useState<any>();
-  const monacoEditor = useRef();
   const [viewTableCellData, setViewTableCellData] = useState<IViewTableCellData | null>(null);
 
   function viewTableCell(data: IViewTableCellData) {
@@ -119,7 +118,6 @@ export function TableBox(props: ITableProps) {
       return
     }
     const columns: any = headerList?.map((item: any, index) => {
-      console.log(item)
       const data = {
         title: item.stringValue,
         dataIndex: item.stringValue,
@@ -154,15 +152,20 @@ export function TableBox(props: ITableProps) {
   useEffect(() => {
     if (!columns?.length) return
     const tableData = dataList?.map((item: ITableCellItem[], index) => {
+      console.log(dataList);
       const rowData: any = {}
       item.map((i: ITableCellItem, index: number) => {
-        rowData[columns[index].title] = i[TableDataTypeCorresValue[i.type]]
+        if (TableDataTypeCorresValue[i.type] === TableDataTypeCorresValue.DATE) {
+          rowData[columns[index].title] = formatDate(i[TableDataTypeCorresValue[i.type]], 'yyyy-MM-dd hh:mm:ss');
+        } else {
+          rowData[columns[index].title] = i[TableDataTypeCorresValue[i.type]];
+        }
       })
       // rowData.aliDBHub_table_index = index + 1
       rowData.key = index
       return rowData
     })
-    setTableData(tableData)
+    setTableData(tableData);
   }, [columns])
 
   return <div {...rest} className={classnames(className, styles.tableBox)}>
