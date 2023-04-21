@@ -41,7 +41,7 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
     /**
      * 全局放行的url
      */
-    private static final String[] FRONT_PERMIT_ALL = new String[] {"/", "/favicon.ico", "/error", "/static/**"};
+    private static final String[] FRONT_PERMIT_ALL = new String[] {"/favicon.ico", "/error", "/static/**"};
 
     @Resource
     private UserService userService;
@@ -116,7 +116,7 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                             throw new NeedLoggedInBusinessException();
                         } else {
                             throw new RedirectBusinessException(
-                                "/#/login?callback=" + SaFoxUtil.joinParam(SpringMVCUtil.getRequest().getRequestURI(),
+                                "/login-a/#/login?callback=" + SaFoxUtil.joinParam(SpringMVCUtil.getRequest().getRequestURI(),
                                     SpringMVCUtil.getRequest().getQueryString()));
                         }
                     }
@@ -127,6 +127,8 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
             .addPathPatterns("/**")
             // 前端需要放行的链接
             .excludePathPatterns(FRONT_PERMIT_ALL)
+            // -a结尾的统一放行
+            .excludePathPatterns("/**/*-a")
             // _a结尾的统一放行
             .excludePathPatterns("/**/*_a");
     }
