@@ -89,6 +89,14 @@ jobs:
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
+      # 获取版本号 workflow不支持 所以用插件
+      - name: substring-action
+        id: chat2db_version
+        uses: bhowell2/github-substring-action@1.0.1
+        with:
+          value: ${{ github.ref }}
+          index_of_str: "refs/tags/v"
+
       # 把文件上传到OSS 方便下载
       - name: Set up oss utils
         uses: yizhoumo/setup-ossutil@v1
@@ -98,4 +106,7 @@ jobs:
           access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
           ossutil-version: 'latest'
       - name: Upload to oss
-        run: ossutil cp -rf --acl=public-read ali-dbhub-client/ oss://chat2db/release/
+        run: |
+          ossutil cp -rf --acl=public-read ali-dbhub-client/electron/app/ali-dbhub-server-start.jar oss://chat2db/release/${{ steps.chat2db_version.outputs.substring }}/
+          ossutil cp -rf --acl=public-read ali-dbhub-client/electron-build/*.dmg oss://chat2db/release/${{ steps.chat2db_version.outputs.substring }}/
+          ossutil cp -rf --acl=public-read ali-dbhub-client/electron/app/ali-dbhub-client/electron-build/*Setup*.exe oss://chat2db/release/${{ steps.chat2db_version.outputs.substring }}/
