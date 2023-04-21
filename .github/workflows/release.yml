@@ -97,12 +97,19 @@ jobs:
           value: ${{ github.ref }}
           index_of_str: "refs/tags/v"
 
-      # 准备要需要的数据
-      - name: Prepare upload
+      # 准备要需要的数据 MacOS
+      - name: Prepare upload MacOS
+        if: runner.os == 'macOS'
         run: |
           mkdir oss_temp_file 
-          cp -rf ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file
-          cp -rf ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
+          cp -r ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file
+          cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
+
+      # 准备要需要的数据 Windows
+      - name: Prepare upload Windows
+        if: runner.os == 'Windows'
+        run: |
+          mkdir oss_temp_file 
           cp -rf ali-dbhub-client/electron/app/ali-dbhub-client/electron-build/*Setup*.exe ./oss_temp_file
 
       # 把文件上传到OSS 方便下载
