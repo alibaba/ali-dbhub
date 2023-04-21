@@ -4,19 +4,13 @@
  */
 package com.alibaba.dbhub.server.web.api.controller.config.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 /**
  * @author jipengfei
  * @version : SystemConfigRequest.java
  */
 @Data
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 public class SystemConfigRequest {
 
     private String code;
