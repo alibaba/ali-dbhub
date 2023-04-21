@@ -13,10 +13,8 @@ function DemoPage() {
 
   return <div className={styles.page}>
     {
-      list.map(item => {
-        <div onClick={task}>
-          {item}
-        </div>
+      (new Array(100)).fill(1).map((i, index) => {
+        return <div key={index}>{index}</div>
       })
     }
   </div>
