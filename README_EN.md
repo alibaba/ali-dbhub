@@ -58,18 +58,46 @@ Note: If local debugging is required
 ```bash
 $ git clone git@github.com:alibaba/Chat2DB.git
 ```
-- Front-end installation
+- Front-End installation
 ```bash
 $ cd Chat2DB/ali-dbhub-client
 $ npm install # 安装npm 
 $ npm run build:prod # 把js打包生成到后端的source目录
 ```
-- Backend startup
+- Backend debug
 ```bash
 $ cd ../ali-dbhub-server
-$ mvn clean install # 需要安装maven 3.8以上版本
+$ mvn clean install # maven 3.8 or later needs to be installed
 $ cd ali-dbhub-server/ali-dbhub-server-start/target/
-$ java -jar -Dchatgpt.apiKey=xxxxx ali-dbhub-server-start.jar  # 启动应用 chatgpt.apiKey 需要输入ChatGPT的key,如果不输入无法使用AIGC功能
+$ java -jar -Dchatgpt.apiKey=xxxxx ali-dbhub-server-start.jar  # To launch the chat application, you need to enter the ChatGPT key for the chatgpt.apiKey. Without entering it, you won't be able to use the AIGC function.
+$ # open http://localhost:7001 to start debug
+```
+
+- Front-End debug
+```bash
+$ cd Chat2DB/ali-dbhub-client
+$ npm install 
+$ npm run start
+$ # open http://localhost:8001  to start Front-End debug
+```
+But front debugging need mapping of resources, you can download [XSwitch](https://chrome.google.com/webstore/detail/idkjhjggpffolpidfkikidcokdkdaogg), add the following configuration file
+``` json
+{
+  "proxy": [
+    [
+      "http://127.0.0.1:7001/static/front/(.*)",
+      "http://127.0.0.1:8001/$1",
+    ],
+    [
+      "http://127.0.0.1:7001/(.*).js$",
+      "http://127.0.0.1:8001/$1.js",
+    ],
+    [
+      "http://127.0.0.1:7001/(.*).css$",
+      "http://127.0.0.1:8001/$1.css",
+    ]
+  ],
+}
 ```
 
 ## 📑 Documentation
