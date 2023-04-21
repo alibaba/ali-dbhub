@@ -8,7 +8,7 @@ name: OSS test
 on:
   push:
     tags:
-      - *
+      - test*
 
 # Workflow's jobs
 jobs:
