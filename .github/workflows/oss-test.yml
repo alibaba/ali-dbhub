@@ -5,7 +5,10 @@ name: OSS test
 # 在创建标签的时候触发打包
 # main 分支打包release的
 # 其他分支统一打包test的
-on: [push, pull_request]
+on:
+  push:
+    tags:
+      - *
 
 # Workflow's jobs
 jobs:
