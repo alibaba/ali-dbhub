@@ -377,7 +377,11 @@ export default function DatabaseQuery(props: IProps) {
             style={{ width: '100%' }}
             placeholder="请输入想要查询的表"
             onChange={(values) => {
-              extendParams.current.tableNames = values;
+              extendParams.current = {
+                tableNames: values,
+                ext: '',
+                destSqlType: '',
+              };
             }}
             options={tableListRef.current}
           />
@@ -412,7 +416,11 @@ export default function DatabaseQuery(props: IProps) {
           <Input
             key={IPromptType.SQL_EXPLAIN}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              extendParams.current.ext = e.target.value;
+              extendParams.current = {
+                tableNames: [],
+                ext: e.target.value,
+                destSqlType: '',
+              };
             }}
             placeholder="例如：解释SQL查询的目的"
           />
@@ -424,6 +432,7 @@ export default function DatabaseQuery(props: IProps) {
       //     <Input
       //       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
       //         extendParams.current.ext = e.target.value;
+
       //       }}
       //     />
       //   ),
@@ -459,7 +468,11 @@ export default function DatabaseQuery(props: IProps) {
           <Input
             key={IPromptType.SQL_OPTIMIZER}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              extendParams.current.ext = e.target.value;
+              extendParams.current = {
+                tableNames: [],
+                ext: e.target.value,
+                destSqlType: '',
+              };
             }}
             placeholder="例如：提供索引优化建议"
           />
@@ -506,7 +519,10 @@ export default function DatabaseQuery(props: IProps) {
               addonBefore="目标数据库类型"
               key={IPromptType.SQL_2_SQL}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                extendParams.current.destSqlType = e.target.value;
+                extendParams.current = {
+                  ...extendParams.current,
+                  destSqlType: e.target.value,
+                };
               }}
               placeholder="例如: MySQL"
               style={{ marginBottom: 10 }}
@@ -515,7 +531,10 @@ export default function DatabaseQuery(props: IProps) {
               addonBefore="其他附加条件 "
               key={IPromptType.SQL_2_SQL + 'ext'}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                extendParams.current.ext = e.target.value;
+                extendParams.current = {
+                  ...extendParams.current,
+                  ext: e.target.value,
+                };
               }}
               placeholder="例如：使用On Conflict语法来替代的Merge Into"
             />
@@ -664,25 +683,26 @@ export default function DatabaseQuery(props: IProps) {
           </div>
         </div>
         <div
-         ref={volatileRef}
-         style={{ display: showSearchResult ? 'block' : 'none' }}
-         className={styles.searchResult}
-       >
-         <LoadingContent data={manageResultDataList} handleEmpty>
-           <SearchResult manageResultDataList={manageResultDataList} />
-         </LoadingContent>
-       </div>
-        
+          ref={volatileRef}
+          style={{ display: showSearchResult ? 'block' : 'none' }}
+          className={styles.searchResult}
+        >
+          <LoadingContent data={manageResultDataList} handleEmpty>
+            <SearchResult manageResultDataList={manageResultDataList} />
+          </LoadingContent>
+        </div>
       </DraggableContainer>
 
-      <Modal
-        title={modalConfig.title}
-        open={modalConfig.open}
-        onOk={modalConfig.handleOk}
-        onCancel={modalConfig.handleCancel}
-      >
-        {modalConfig.content}
-      </Modal>
+      {modalConfig?.open && (
+        <Modal
+          title={modalConfig.title}
+          open={modalConfig.open}
+          onOk={modalConfig.handleOk}
+          onCancel={modalConfig.handleCancel}
+        >
+          {modalConfig.content}
+        </Modal>
+      )}
     </>
   );
 }
