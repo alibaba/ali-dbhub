@@ -36,7 +36,7 @@ jobs:
           ossutil-version: 'latest'
       - name: Upload to oss
         run: |
-          ossutil cp -rf --acl=public-read ali-dbhub-client/electron/logo/logo.png oss://chat2db/release/${{ steps.chat2db_version.outputs.substring }}/
+          ossutil cp -rf --acl=public-read ali-dbhub-client/electron/logo/logo.png oss://chat2db/release/${{ steps.chat2db_version.outputs.substring }}/logo.png
 #          ossutil cp -rf --acl=public-read ali-dbhub-client/electron/app/ali-dbhub-server-start.jar oss://chat2db/release/${{ steps.chat2db_version.outputs.substring }}/
 #          ossutil cp -rf --acl=public-read ali-dbhub-client/electron-build/*.dmg oss://chat2db/release/${{ steps.chat2db_version.outputs.substring }}/
 #          ossutil cp -rf --acl=public-read ali-dbhub-client/electron/app/ali-dbhub-client/electron-build/*Setup*.exe oss://chat2db/release/${{ steps.chat2db_version.outputs.substring }}/
