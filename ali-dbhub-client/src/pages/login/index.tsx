@@ -4,6 +4,7 @@ import { getLocationHash } from '@/utils';
 import './index.less';
 import { getUser, userLogin } from '@/service/user';
 import { history } from 'umi';
+const path = require('path');
 
 interface IFormData {
   userName: string;
@@ -21,8 +22,7 @@ const App: React.FC = () => {
   function handleLogin() {
     userLogin(formData).then(res => {
       const params = getLocationHash();
-      const href = (params?.callback ?? '/');
-      history.push(href);
+      window.location.href = path.join(__dirname, `/`) + '#' + (params?.callback || '/')
     })
   }
 
