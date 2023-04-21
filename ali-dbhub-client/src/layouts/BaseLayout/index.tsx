@@ -41,7 +41,7 @@ const LNKConfig: INavItem[] = [
   {
     title: i18n('home.nav.github'),
     icon: '\ue885',
-    path: 'https://github.com/alibaba/ali-dbhub',
+    path: 'https://github.com/alibaba/Chat2DB',
     openBrowser: true
   }
 ];
