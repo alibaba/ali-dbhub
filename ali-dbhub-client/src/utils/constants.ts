@@ -125,7 +125,7 @@ export enum ConsoleStatus {
 
 export enum TableDataType {
   STRING = 'STRING',
-  DATA = 'DATA',
+  DATE = 'DATE',
   BYTE = 'BYTE',
   EMPTY = 'EMPTY',
   BIG_DECIMAL = 'BIG_DECIMAL',
@@ -133,7 +133,7 @@ export enum TableDataType {
 
 export enum TableDataTypeCorresValue {
   STRING = 'stringValue',
-  DATA = 'dateValue',
+  DATE = 'dateValue',
   BYTE = 'byteValue',
   EMPTY = 'emptyValue',
   BIG_DECIMAL = 'bigDecimalValue',

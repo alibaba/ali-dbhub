@@ -16,8 +16,7 @@ import { IConnectionBase, ITreeNode, IWindowTab, IDB, IConsole } from '@/types';
 const monaco = require('monaco-editor/esm/vs/editor/editor.api');
 import { language } from 'monaco-editor/esm/vs/basic-languages/sql/sql';
 const { keywords } = language;
-import DatabaseContextProvider from '@/context/database';
-import { DatabaseContext } from '@/context/database';
+import DatabaseContextProvider, { DatabaseContext } from '@/context/database';
 import CreateConnection from '@/components/CreateConnection';
 
 
