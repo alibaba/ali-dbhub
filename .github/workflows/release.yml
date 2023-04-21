@@ -89,27 +89,6 @@ jobs:
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
-#      - name: upload artifacts mac
-#        uses: actions/upload-artifact@main
-#        with:
-#          name: ali-dbhub-mac
-#          path: ali-dbhub-client/electron-build/*.dmg
-#          if-no-files-found: ignore
-#
-#      - name: upload artifacts window
-#        uses: actions/upload-artifact@main
-#        with:
-#          name: ali-dbhub-window
-#          path: ali-dbhub-client/electron-build/*Setup*.exe
-#          if-no-files-found: ignore
-#
-#      - name: upload artifacts web
-#        uses: actions/upload-artifact@main
-#        with:
-#          name: ali-dbhub-web
-#          path: ali-dbhub-client/dist
-#          if-no-files-found: ignore
-
       # 把文件上传到OSS 方便下载
       - name: Set up oss utils
         uses: yizhoumo/setup-ossutil@v1
