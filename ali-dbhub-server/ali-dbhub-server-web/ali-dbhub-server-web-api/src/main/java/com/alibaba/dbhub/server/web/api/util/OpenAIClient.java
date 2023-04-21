@@ -13,7 +13,7 @@ import com.unfbx.chatgpt.constant.OpenAIConst;
 
 /**
  * @author jipengfei
- * @version : OpeanAIClient.java
+ * @version : OpenAIClient.java
  */
 public class OpenAIClient {
 
