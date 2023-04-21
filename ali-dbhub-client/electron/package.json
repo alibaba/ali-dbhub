@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "1.0.33-beta",
+  "version": "1.0.0-dev",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
