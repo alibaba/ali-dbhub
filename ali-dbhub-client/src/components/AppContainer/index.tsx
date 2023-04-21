@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useLayoutEffect, useState } from 'react';
+import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import { ConfigProvider } from 'antd';
@@ -26,13 +26,21 @@ declare global {
 window._ENV = process.env.UMI_ENV!
 
 export default memo<IProps>(function AppContainer({ className, children }) {
-
   const [startSchedule, setStartSchedule] = useState(0); // 0 初始状态 1 服务启动中 2 启动成功
   const [serviceFail, setServiceFail] = useState(false);
+  // const scrollTimer = useRef<any>();
 
   function hashchange() {
     setCurrentPosition();
   }
+
+  // window.addEventListener('scroll', function () {
+  //   document.body.toggleAttribute('scroll', true)
+  //   scrollTimer.current && clearTimeout(scrollTimer.current)
+  //   scrollTimer.current = setTimeout(() => {
+  //     document.body.toggleAttribute('scroll')
+  //   }, 500)
+  // })
 
   useLayoutEffect(() => {
     settings();
