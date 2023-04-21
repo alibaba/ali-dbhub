@@ -26,6 +26,7 @@ export default defineConfig({
       component: '@/components/AppContainer',
       routes: [
         { path: '/login', exact: true, component: '@/pages/login' },
+        // { path: '/verify', exact: true, component: '@/pages/verify' },
         { path: '/error', component: '@/pages/error' },
         { path: '/demo', exact: true, component: '@/pages/demo' },
         {

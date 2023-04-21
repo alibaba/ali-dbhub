@@ -11,6 +11,7 @@ body {
     padding-left: 0;
     list-style: none;
   }
+  overflow: overlay; /*滚动条会覆盖在页面之上*/
 }
 
 div,
@@ -23,7 +24,6 @@ li {
 :root {
   /* same as vs-dark theme's bg, not pure black. */
   --color-dark-bg: #1e1e1e;
-
   /* The Matrix green */
   --color-matrix-green: #00cc00;
   /* The matrix green lighter */
@@ -36,21 +36,25 @@ li {
 // }
 
 // ::-webkit-scrollbar-thumb {
-//   background: var(--color-border);
+//   background-color: transparent;
 //   border-radius: 4px;
+// }
+
+// body[scroll]::-webkit-scrollbar-thumb {
+//   background: var(--color-border);
 // }
 
 // ::-webkit-scrollbar-button {
 //   display: none;
-//   width: 0;
-//   height: 0;
-//   background: transparent;
+//   // width: 0;
+//   // height: 0;
+//   // background: transparent;
 // }
 
 // ::-webkit-scrollbar-track {
 //   background: transparent;
 // }
 
-// ::-webkit-scrollbar-corner{
+// ::-webkit-scrollbar-corner {
 //   background: transparent;
 // }
