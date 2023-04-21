@@ -20,12 +20,12 @@ interface INavItem {
 const LNKConfig: INavItem[] = [
   {
     title: i18n('home.nav.database'),
-    icon: '\uec57',
+    icon: '\ue62f',
     path: '/'
   },
   {
     title: i18n('home.nav.myHistory'),
-    icon: '\ue610',
+    icon: '\ue80a',
     path: '/sql-history'
   },
   {
