@@ -116,7 +116,7 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                             throw new NeedLoggedInBusinessException();
                         } else {
                             throw new RedirectBusinessException(
-                                "/#/login?callback=" + SaFoxUtil.joinParam(SpringMVCUtil.getRequest().getRequestURI(),
+                                "/login-a/#/login?callback=" + SaFoxUtil.joinParam(SpringMVCUtil.getRequest().getRequestURI(),
                                     SpringMVCUtil.getRequest().getQueryString()));
                         }
                     }
