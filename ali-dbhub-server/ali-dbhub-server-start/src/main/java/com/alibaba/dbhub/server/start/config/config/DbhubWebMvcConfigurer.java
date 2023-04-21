@@ -41,7 +41,7 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
     /**
      * 全局放行的url
      */
-    private static final String[] FRONT_PERMIT_ALL = new String[] {"/", "/favicon.ico", "/error", "/static/**"};
+    private static final String[] FRONT_PERMIT_ALL = new String[] {"/favicon.ico", "/error", "/static/**"};
 
     @Resource
     private UserService userService;

@@ -1,9 +1,11 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useLayoutEffect, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import Iconfont from '@/components/Iconfont';
-import { Modal, Button, Radio } from 'antd';
+import Button from '@/components/Button';
+import { Modal, Radio, Input, message } from 'antd';
 import i18n from '@/i18n';
+import configService from '@/service/config';
 
 interface IProps {
   className?: any;
@@ -55,13 +57,33 @@ let colorSchemeListeners: ((theme: string) => void)[] = [];
 
 export default memo<IProps>(function Setting({ className }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [chatgptKey, setChatgptKey] = useState('');
   const [lang, setLang] = useState(localStorage.getItem('lang'));
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem('theme'));
   const [currentPrimaryColor, setCurrentPrimaryColor] = useState(localStorage.getItem('primary-color'));
 
+  useLayoutEffect(() => {
+
+  }, [])
+
   const showModal = () => {
-    setIsModalVisible(true);
+    configService.getSystemConfig({ code: 'chatgpt.apiKey' }).then(res => {
+      setChatgptKey(res.content)
+      setIsModalVisible(true);
+    }).catch(() => {
+      setIsModalVisible(true);
+    })
   };
+
+  function changeChatgptApiKey() {
+    if (!chatgptKey) {
+      message.error('请输入ChatGPT-apiKey')
+      return
+    }
+    configService.setSystemConfig({ code: 'chatgpt.apiKey', content: chatgptKey }).then(res => {
+      message.success('配置成功')
+    })
+  }
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -114,6 +136,13 @@ export default memo<IProps>(function Setting({ className }) {
             );
           })}
         </ul>
+        <div className={styles.title}>
+          ChatGPT-apiKey
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          <Input value={chatgptKey} onChange={(e) => { setChatgptKey(e.target.value) }} />
+          <Button theme='default' onClick={changeChatgptApiKey}>更新</Button>
+        </div>
         {/* <div className={styles.title}>
           主题色
         </div>
