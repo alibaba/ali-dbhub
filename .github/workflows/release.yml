@@ -93,7 +93,7 @@ jobs:
       - name: Set up oss utils
         uses: yizhoumo/setup-ossutil@v1
         with:
-          endpoint: "chat2db.oss-accelerate.aliyuncs.com"
+          endpoint: "oss-accelerate.aliyuncs.com"
           access-key-id: ${{ secrets.OSS_ACCESS_KEY_ID }}
           access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
           ossutil-version: 'latest'
