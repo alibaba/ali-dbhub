@@ -83,7 +83,7 @@ function Tree(props: IProps, ref: any) {
   }, [refreshTreeNum])
 
   return <div className={classnames(className, styles.box)}>
-    <LoadingContent data={treeData} handleEmpty>
+    <LoadingContent data={treeData}>
       {
         (searchedTreeData || treeData)?.map((item, index) => {
           return <TreeNode

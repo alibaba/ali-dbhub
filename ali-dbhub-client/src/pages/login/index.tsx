@@ -63,7 +63,7 @@ const App: React.FC = () => {
   return <div className='box'>
     <div className="form-box">
       <form className="form">
-        <span className="title">欢迎登陆Chat-DB</span>
+        <span className="title">欢迎登陆Chat2DB</span>
         <span className="subtitle"></span>
         <div className="form-container">
           <input type="text" onChange={(e) => { setFormData({ ...formData, userName: e.target.value }) }} className="input" placeholder="UserName" />
