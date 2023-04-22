@@ -142,13 +142,15 @@ jobs:
 
       # 登录docker hub
       - name: Log in to Docker Hub
-        if:  ${{ env.CHAT2DB_ENVIRONMENT == 'release' }}
+        if:  ${{ env.CHAT2DB_ENVIRONMENT == 'release' && runner.os == 'macOS' }}
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
       # 打包发送到docker
       - name: Build and push
+        if: ${{ env.CHAT2DB_ENVIRONMENT == 'release' && runner.os == 'macOS' }}
         uses: docker/build-push-action@v4
         with:
           context: .
