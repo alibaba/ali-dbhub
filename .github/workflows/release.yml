@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [ macos-latest, windows-latest ]
 
     steps:
       - name: Check out git repository
@@ -35,22 +35,17 @@ jobs:
       # 计算当前是什么环境
       # v1.x.x-dev 代表 dev环境
       # v1.x.x 代表 release
-      # 注意这里的变量是 ${} 这样获取的
+      # 注意这里的变量是 ${{ env.CHAT2DB_ENVIRONMENT }} 这样获取的
       - name: set environment variables
-        if: ${{ endsWith(github.ref, '-dev') }}
-        uses: allenevans/set-env@v2.0.0
+        uses: marcdomain/set-variables@v1
         with:
-          CHAT2DB_ENVIRONMENT: 'dev'
-      - name: set environment variables
-        if: ${{ !endsWith(github.ref, '-dev') }}
-        uses: allenevans/set-env@v2.0.0
-        with:
-          CHAT2DB_ENVIRONMENT: 'release'
+          variables: |
+            CHAT2DB_ENVIRONMENT: ${{ endsWith(github.ref, '-dev') }} ? "dev" : "release"
 
       # 输出基础信息
       - name: Print basic information
         run: |
-          echo "current environment: ${CHAT2DB_ENVIRONMENT}"
+          echo "current environment: ${{ env.CHAT2DB_ENVIRONMENT }}"
           echo "current version: ${{ steps.chat2db_version.outputs.substring }}"
 
       # 安装java
@@ -113,7 +108,7 @@ jobs:
 
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-         # args: "--c.extraMetadata.appId=com.dbhub --c.extraMetadata.productName=Chat"
+          # args: "--c.extraMetadata.appId=com.dbhub --c.extraMetadata.productName=Chat"
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
@@ -143,4 +138,4 @@ jobs:
           ossutil-version: 'latest'
       - name: Upload to oss
         run: |
-          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/${ CHAT2DB_ENVIRONMENT }/${{ steps.chat2db_version.outputs.substring }}/
+          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/${{ env.CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/
