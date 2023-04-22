@@ -20,6 +20,7 @@ const restartCount = 200;
 declare global {
   interface Window {
     _ENV: string;
+    _BaseURL: string;
   }
 }
 
