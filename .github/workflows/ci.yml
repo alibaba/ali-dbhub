@@ -18,6 +18,6 @@
        - name: Docker Compose Action
          uses: isbang/compose-action@v1.4.1
          with:
-           compose-file: "./docker/docker-compose.yml"
+           compose-file: "./docker/test/docker-compose.yml"
        - name: Test with Maven
          run: mvn test -B -Dmaven.test.skip=false -pl ali-dbhub-server-test -am -f ali-dbhub-server/pom.xml
