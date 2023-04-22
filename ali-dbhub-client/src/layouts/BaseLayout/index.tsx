@@ -82,6 +82,10 @@ export default function BaseLayout({ children }: PropsWithChildren<IProps>) {
     history.push('/');
   }
 
+  function stopxxx() {
+
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.layoutLeft}>

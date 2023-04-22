@@ -30,7 +30,7 @@
 
   .tree {
     flex: 1;
-    overflow: scroll;
+    overflow: auto;
     ::-webkit-scrollbar {
       display: none;
     }
@@ -210,7 +210,7 @@
     cursor: pointer;
     background-color: var(--color-bg-hover);
   }
-  &::after{
+  &::after {
     content: '';
     width: 5px;
     height: 5px;
@@ -227,8 +227,7 @@
   i {
     transform: rotate(90deg);
   }
-  &::after{
+  &::after {
     background-color: var(--custom-success-color);
-
   }
 }
