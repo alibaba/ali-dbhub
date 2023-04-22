@@ -22,8 +22,7 @@ const App: React.FC = () => {
   function handleLogin() {
     userLogin(formData).then(res => {
       const params = getLocationHash();
-      console.log(path.join(__dirname, '#' + (params?.callback || '/')))
-      window.location.href = path.join(__dirname, '#' + (params?.callback || '/'))
+      window.location.href = path.join(__dirname)
     })
   }
 
