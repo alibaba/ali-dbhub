@@ -40,7 +40,6 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
-        selected: AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -134,7 +133,6 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
-        selected: AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -240,7 +238,6 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         name: 'driver',
         required: true,
         labelTextAlign: 'right',
-        selected: 'thin',
         selects: [
           {
             value: 'thin',
@@ -262,7 +259,6 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
-        selected:AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -348,7 +344,6 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
-        selected:AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -453,7 +448,6 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
-        selected:AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -584,7 +578,6 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
-        selected:AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {
@@ -680,7 +673,6 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         labelNameCN: '身份验证',
         labelNameEN: 'Authentication',
         name: 'authentication',
-        selected:AuthenticationType.USERANDPASSWORD,
         required: true,
         selects: [
           {

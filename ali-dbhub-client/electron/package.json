@@ -54,6 +54,9 @@
       "target": [
         {
           "target": "nsis",
+          "icon": "logo/logo.png",
+          "createDesktopShortcut": true,
+          "createStartMenuShortcut": true,
           "arch": [
             "x64",
             "ia32"

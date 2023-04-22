@@ -28,7 +28,7 @@ function createWindow() {
     center: true,
     title: 'AliDBHub',
     resizable: false,
-    frame: false,
+    frame: true,
     titleBarStyle: 'hidden', // 删除后mac没有了关闭按钮
     ...options,
     webPreferences: {

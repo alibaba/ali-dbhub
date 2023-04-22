@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState, Fragment, useContext } from 'react';
+import React, { memo, useEffect, useMemo, useState, Fragment, useContext, useCallback } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import Button from '@/components/Button';
@@ -54,13 +54,14 @@ function VisiblyCreateConnection(props: IProps) {
     })!
   );
 
-  const [initialValues] = useState(initialFormData(dataSourceFormConfig.items));
+  // const initialValues = useMemo<any>(, [])
 
-  function initialFormData(dataSourceFormConfig: IFormItem[] | undefined) {
+  const initialFormData = useCallback(function initialFormData(dataSourceFormConfig: IFormItem[] | undefined) {
     let initValue: any = {}
     if (dataSourceId) {
       connectionServer.getDetails({ id: dataSourceId + '' }).then((res: any) => {
         // TODO: authentication类型
+        // selectChange({ name: 'authentication类型', value: res.user ? 1 : 2 })  
         if (res.user) {
           res.authentication = 1
         } else {
@@ -73,7 +74,7 @@ function VisiblyCreateConnection(props: IProps) {
         initValue[t.name] = t.defaultValue
         if (t.selects?.length) {
           t.selects?.map(item => {
-            if (item.value === t.selected) {
+            if (item.value === t.defaultValue) {
               initValue = {
                 ...initValue,
                 ...initialFormData(item.items)
@@ -84,11 +85,12 @@ function VisiblyCreateConnection(props: IProps) {
       })
     }
     return initValue
-  }
+  }, [])
+
+  const [initialValues] = useState(initialFormData(dataSourceFormConfig.items));
 
   function extractObj(url: any) {
     const { template, pattern } = dataSourceFormConfig
-    console.log(dataSourceFormConfig)
     // 提取关键词对应的内容 value
     const matches = url.match(pattern)!;
     console.log(matches)
@@ -108,12 +110,17 @@ function VisiblyCreateConnection(props: IProps) {
   }
 
   function regEXFormatting(variableData: { [key: string]: any }, dataObj: { [key: string]: any }) {
-    const { template } = dataSourceFormConfig
+    const { template, pattern } = dataSourceFormConfig
     const keyName = Object.keys(variableData)[0]
     const keyValue = variableData[Object.keys(variableData)[0]]
     let newData: any = {}
     if (keyName === 'url') {
-      newData = extractObj(keyValue)
+      //先判断url是否符合规定的正则
+      if (!pattern.test(keyValue)) {
+
+      } else {
+        newData = extractObj(keyValue);
+      }
     } else if (keyName === 'alias') {
       aliasChanged = true
     } else {
@@ -129,11 +136,20 @@ function VisiblyCreateConnection(props: IProps) {
     if (keyName === 'host' && !aliasChanged) {
       newData.alias = '@' + keyValue
     }
-    console.log(newData)
     form.setFieldsValue({
       ...dataObj,
       ...newData,
     });
+  }
+
+  function selectChange(t: { name: string, value: any }) {
+    const newForm: any = form;
+    dataSourceFormConfig.items.map((j, i) => {
+      if (j.name === t.name) {
+        j.defaultValue = t.value
+      }
+    })
+    setDataSourceFormConfig({ ...dataSourceFormConfig })
   }
 
   function renderFormItem(t: IFormItem): React.ReactNode {
@@ -141,11 +157,6 @@ function VisiblyCreateConnection(props: IProps) {
       [InputType.INPUT]: () => <Form.Item
         label={t.labelNameCN}
         name={t.name}
-      // rules={[
-      //   {
-      //     required: t.required,
-      //   }
-      // ]}
       >
         <Input />
       </Form.Item>,
@@ -153,13 +164,8 @@ function VisiblyCreateConnection(props: IProps) {
       [InputType.SELECT]: () => <Form.Item
         label={t.labelNameCN}
         name={t.name}
-      // rules={[
-      //   {
-      //     required: t.required,
-      //   }
-      // ]}
       >
-        <Select value={t.selected} onChange={selectChange}>
+        <Select value={t.defaultValue} onChange={(e) => { selectChange({ name: t.name, value: e }) }}>
           {t.selects?.map((t: ISelect) => <Option key={t.value} value={t.value}>{t.label}</Option>)}
         </Select>
       </Form.Item>,
@@ -167,27 +173,9 @@ function VisiblyCreateConnection(props: IProps) {
       [InputType.PASSWORD]: () => <Form.Item
         label={t.labelNameCN}
         name={t.name}
-      // rules={[
-      //   {
-      //     required: t.required,
-      //   }
-      // ]}
       >
         <Input.Password />
       </Form.Item>
-    }
-
-    function selectChange() {
-      const newForm: any = form;
-      const formData = newForm.getFieldValue();
-      dataSourceFormConfig.items.map((j, i) => {
-        if (j.name === t.name) {
-          j.selects?.map(item => {
-            j.selected = item.value === formData[t.name] ? true : false;
-          })
-        }
-      })
-      setDataSourceFormConfig({ ...dataSourceFormConfig })
     }
 
     return <Fragment key={t.name}>
@@ -196,7 +184,7 @@ function VisiblyCreateConnection(props: IProps) {
       </div>
       {
         t.selects?.map(item => {
-          if (t.selected === item.value) {
+          if (t.defaultValue === item.value) {
             return item.items?.map(t => renderFormItem(t))
           }
         })
@@ -223,9 +211,9 @@ function VisiblyCreateConnection(props: IProps) {
     if (type === submitType.UPDATE) {
       p.id = dataSourceId;
     }
-    
-    const api:any = connectionServer[type](p)
-    api.then((res:any) => {
+
+    const api: any = connectionServer[type](p)
+    api.then((res: any) => {
       if (type === submitType.TEST) {
         message.success(res === false ? '测试连接失败' : '测试连接成功');
       } else {
@@ -240,7 +228,7 @@ function VisiblyCreateConnection(props: IProps) {
 
   function onFieldsChange(data: any, datas: any) {
     // 将antd的格式转换为正常的对象格式
-    if(!data.length){
+    if (!data.length) {
       return
     }
 
@@ -280,7 +268,7 @@ function VisiblyCreateConnection(props: IProps) {
         <div className={styles.formFooter}>
           <div className={styles.test}>
             {
-              !dataSourceId &&
+              // !dataSourceId &&
               <Button
                 onClick={submitConnection.bind(null, submitType.TEST)}
                 className={styles.test}>
