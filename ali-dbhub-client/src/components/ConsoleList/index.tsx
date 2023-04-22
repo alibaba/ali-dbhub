@@ -268,7 +268,7 @@ export default memo<IProps>(function ConsoleList(props) {
         </div>
       </AppHeader>
       <div className={styles.databaseQueryBox}>
-        {!windowList.length && <div className={styles.ears}>Chat-DB</div>}
+        {!windowList.length && <div className={styles.ears}>Chat2DB</div>}
         {windowList?.map((i: IConsole, index: number) => {
           return (
             <div

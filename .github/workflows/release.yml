@@ -18,11 +18,35 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [ macos-latest, windows-latest ]
 
     steps:
       - name: Check out git repository
         uses: actions/checkout@main
+
+      # 获取版本号 workflow不支持 所以用插件
+      - name: Create version
+        id: chat2db_version
+        uses: bhowell2/github-substring-action@1.0.1
+        with:
+          value: ${{ github.ref }}
+          index_of_str: "refs/tags/v"
+
+      # 计算当前是什么环境
+      # v1.x.x-dev 代表 dev环境
+      # v1.x.x 代表 release
+      # 注意这里的变量是 ${{ env.CHAT2DB_ENVIRONMENT }} 这样获取的
+      - name: set environment variables
+        uses: marcdomain/set-variables@v1
+        with:
+          variables: |
+            CHAT2DB_ENVIRONMENT: ${{ endsWith(github.ref, '-dev') }} == true ? "dev" : "release"
+
+      # 输出基础信息
+      - name: Print basic information
+        run: |
+          echo "current environment: ${{ env.CHAT2DB_ENVIRONMENT }}"
+          echo "current version: ${{ steps.chat2db_version.outputs.substring }}"
 
       # 安装java
       - name: Install Java and Maven
@@ -51,8 +75,8 @@ jobs:
         uses: actions/setup-node@main
         with:
           node-version: 16
-          # cache: "yarn"
-          # cache-dependency-path: ali-dbhub-client/yarn.lock
+#          cache: "yarn"
+#          cache-dependency-path: ali-dbhub-client/yarn.lock
 
       # - name: change directory ali-dbhub-client
 
@@ -84,18 +108,10 @@ jobs:
 
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-         # args: "--c.extraMetadata.appId=com.dbhub --c.extraMetadata.productName=Chat"
+          # args: "--c.extraMetadata.appId=com.dbhub --c.extraMetadata.productName=Chat"
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-
-      # 获取版本号 workflow不支持 所以用插件
-      - name: Create version
-        id: chat2db_version
-        uses: bhowell2/github-substring-action@1.0.1
-        with:
-          value: ${{ github.ref }}
-          index_of_str: "refs/tags/v"
 
       # 准备要需要的数据 MacOS
       - name: Prepare upload MacOS
@@ -110,7 +126,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           mkdir oss_temp_file 
-          cp -r ali-dbhub-client/electron/app/ali-dbhub-client/electron-build/*Setup*.exe ./oss_temp_file
+          cp -r ali-dbhub-client/electron-build/*Setup*.exe ./oss_temp_file
 
       # 把文件上传到OSS 方便下载
       - name: Set up oss utils
@@ -122,4 +138,4 @@ jobs:
           ossutil-version: 'latest'
       - name: Upload to oss
         run: |
-          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/release/${{ steps.chat2db_version.outputs.substring }}/
+          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/${{ env.CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/

@@ -137,7 +137,7 @@ export default memo<IProps>(function Setting({ className }) {
           })}
         </ul>
         <div className={styles.title}>
-          ChatGPT-apiKey
+          SecretKey
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
           <Input value={chatgptKey} onChange={(e) => { setChatgptKey(e.target.value) }} />
