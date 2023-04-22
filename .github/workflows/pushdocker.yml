@@ -13,10 +13,8 @@ jobs:
       matrix:
         include:
           - arch: amd64
-            mode: build-only
           - arch: arm64
             variant: v8
-            mode: build-only
     runs-on: ubuntu-latest
     steps:
       - name: Check out git repository

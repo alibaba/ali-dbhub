@@ -88,7 +88,6 @@ export default function BaseLayout({ children }: PropsWithChildren<IProps>) {
 
   return (
     <div className={styles.page}>
-      <button onClick={stopxxx}>停止</button>
       <div className={styles.layoutLeft}>
         <BrandLogo onClick={jumpHome} className={styles.brandLogo} />
         <ul className={styles.navList}>
