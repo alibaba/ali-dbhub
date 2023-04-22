@@ -61,8 +61,8 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(
     if (operationData.type == 'export') {
       let p = {
         tableName: operationData.nodeData?.name!,
-        dataSourceId: operationData.nodeData?.dataSourceId,
-        databaseName: operationData.nodeData?.databaseName,
+        dataSourceId: operationData.nodeData?.dataSourceId!,
+        databaseName: operationData.nodeData?.databaseName!,
         schemaName: operationData.nodeData?.schemaName
 
       };
