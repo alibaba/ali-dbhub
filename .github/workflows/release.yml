@@ -138,4 +138,4 @@ jobs:
           ossutil-version: 'latest'
       - name: Upload to oss
         run: |
-          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/${{ CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/
+          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/${ CHAT2DB_ENVIRONMENT }/${{ steps.chat2db_version.outputs.substring }}/
