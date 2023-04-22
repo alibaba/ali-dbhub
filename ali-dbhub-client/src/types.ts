@@ -134,6 +134,7 @@ export interface IConsoleBasic {
   databaseName: string; // 数据库名称
   dataSourceId: number; // 数据源id
   dataSourceName?: string; // 数据源名称
+  schemaName?: string;
 }
 
 // 查询sql的控制台

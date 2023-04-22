@@ -73,6 +73,7 @@ export default memo<IProps>(function ConsoleList(props) {
             DBType: dblclickNodeData.dataType!,
             databaseName: dblclickNodeData.databaseName!,
             dataSourceId: dblclickNodeData.dataSourceId!,
+            schemaName: dblclickNodeData.schemaName!,
             consoleId: res,
             ddl: `${consoleTopComment}SELECT * FROM`,
           };

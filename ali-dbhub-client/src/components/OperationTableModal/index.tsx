@@ -100,6 +100,7 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(
         sql: getMonacoEditorValue(monacoEditor.current),
         dataSourceId: operationData.nodeData?.dataSourceId,
         databaseName: operationData.nodeData?.databaseName,
+        schemaName: operationData.nodeData?.schemaName,
       };
       if (operationData.type == 'edit') {
         p.tableName = operationData.nodeData?.name;
