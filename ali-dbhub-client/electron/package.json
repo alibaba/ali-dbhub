@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "1.0.17-dev",
+  "version": "1.0.6-dev",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
@@ -54,16 +54,14 @@
       "target": [
         {
           "target": "nsis",
-          "icon": "logo/logo.png",
-          "createDesktopShortcut": true,
-          "createStartMenuShortcut": true,
           "arch": [
             "x64",
             "ia32"
           ]
         }
       ],
-      "publisherName": "Chat2DB"
+      "publisherName": "Chat2DB",
+      "icon": "logo/logo.png"
     }
   }
 }
