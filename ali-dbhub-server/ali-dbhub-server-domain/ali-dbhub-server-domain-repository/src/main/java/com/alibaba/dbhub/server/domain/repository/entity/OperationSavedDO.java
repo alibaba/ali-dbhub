@@ -14,7 +14,7 @@ import lombok.Setter;
  * </p>
  *
  * @author ali-dbhub
- * @since 2022-12-28
+ * @since 2023-04-22
  */
 @Getter
 @Setter
@@ -78,4 +78,9 @@ public class OperationSavedDO implements Serializable {
      * 用户id
      */
     private Long userId;
+
+    /**
+     * schema名称
+     */
+    private String dbSchemaName;
 }
