@@ -52,7 +52,5 @@ jobs:
         with:
           context: .
           push: true
-          tags:
-            - chat2db/chat2db:${{ steps.chat2db_version.outputs.substring }}
-            - chat2db/chat2db:latest
+          tags: chat2db/chat2db:${{ steps.chat2db_version.outputs.substring }},chat2db/chat2db:latest
           file: docker/Dockerfile
