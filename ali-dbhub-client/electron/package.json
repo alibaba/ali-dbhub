@@ -38,6 +38,15 @@
       "jre/**/*",
       "my.bat"
     ],
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "shortcutName": "Chat2DB"
+    },
     "mac": {
       "icon": "logo/logo.icns",
       "target": [
