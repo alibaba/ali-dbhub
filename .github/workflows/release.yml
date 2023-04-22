@@ -75,8 +75,8 @@ jobs:
         uses: actions/setup-node@main
         with:
           node-version: 16
-          # cache: "yarn"
-          # cache-dependency-path: ali-dbhub-client/yarn.lock
+          cache: "yarn"
+          cache-dependency-path: ali-dbhub-client/yarn.lock
 
       # - name: change directory ali-dbhub-client
 
