@@ -43,6 +43,8 @@ jobs:
         run: |
           echo "current environment: ${{ env.CHAT2DB_ENVIRONMENT }}"
           echo "current version: ${{ steps.chat2db_version.outputs.substring }}"
+          echo "current arch: ${{ runner.arch }}"
+
 
       # 安装nodejs
       - name: Install Node.js
