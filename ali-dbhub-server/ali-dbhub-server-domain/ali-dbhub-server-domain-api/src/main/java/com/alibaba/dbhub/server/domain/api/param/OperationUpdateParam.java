@@ -29,6 +29,11 @@ public class OperationUpdateParam {
     private String databaseName;
 
     /**
+     * 表所在空间
+     */
+    private String schemaName;
+
+    /**
      * 保存名称
      */
     private String name;

@@ -43,6 +43,7 @@ jobs:
         run: |
           echo "current environment: ${{ env.CHAT2DB_ENVIRONMENT }}"
           echo "current version: ${{ steps.chat2db_version.outputs.substring }}"
+          echo "current matrix: ${{ toJSON(matrix) }}"
 
       # 安装nodejs
       - name: Install Node.js
@@ -98,6 +99,7 @@ jobs:
 
       # 把文件上传到OSS 方便下载
       - name: Set up oss utils
+        if: ${{ matrix.arch == 'amd64'}}
         uses: yizhoumo/setup-ossutil@v1
         with:
           endpoint: "oss-accelerate.aliyuncs.com"
