@@ -40,7 +40,7 @@ jobs:
         uses: marcdomain/set-variables@v1
         with:
           variables: |
-            ENVIRONMENT: ${{ endWith(github.ref, '-dev') }} ? "dev" : "release"
+            ENVIRONMENT: ${{ endsWith(github.ref, '-dev') }} ? "dev" : "release"
 
       # 输出基础信息
       - name: Print basic information
