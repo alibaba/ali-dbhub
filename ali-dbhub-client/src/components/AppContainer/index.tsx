@@ -61,14 +61,15 @@ export default memo<IProps>(function AppContainer({ className, children }) {
       miscService.testService().then(() => {
         clearInterval(time);
         setStartSchedule(2);
+        flag++;
       }).catch(error => {
         setStartSchedule(1);
+        flag++;
       });
       if (flag > restartCount) {
         setServiceFail(true);
         clearInterval(time);
       }
-      flag++;
     }, 1000);
   }
 
