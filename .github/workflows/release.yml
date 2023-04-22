@@ -24,6 +24,22 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@main
 
+
+      # 计算当前是什么环境
+      # v1.x.x-dev 代表 dev环境
+      # v1.x.x 代表 release
+      - name: set environment variables
+        if: ${{ endsWith(github.ref, '-dev') }}
+        uses: allenevans/set-env@v2.0.0
+        with:
+          CHAT2DB_ENVIRONMENT: 'dev'
+      - name: set environment variables
+        if: ${{ !endsWith(github.ref, '-dev') }}
+        uses: allenevans/set-env@v2.0.0
+        with:
+          CHAT2DB_ENVIRONMENT: 'release'
+
+
       # 安装java
       - name: Install Java and Maven
         uses: actions/setup-java@main
@@ -122,4 +138,4 @@ jobs:
           ossutil-version: 'latest'
       - name: Upload to oss
         run: |
-          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/release/${{ steps.chat2db_version.outputs.substring }}/
+          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/${{ CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/
