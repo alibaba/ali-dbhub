@@ -139,21 +139,3 @@ jobs:
       - name: Upload to oss
         run: |
           ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/${{ env.CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/
-
-      # 登录docker hub
-      - name: Log in to Docker Hub
-        if:  ${{ env.CHAT2DB_ENVIRONMENT == 'release' && runner.os == 'macOS' }}
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      # 打包发送到docker
-      - name: Build and push
-        if: ${{ env.CHAT2DB_ENVIRONMENT == 'release' && runner.os == 'macOS' }}
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: chat2db/chat2db:${{ steps.chat2db_version.outputs.substring }}
-          file: docker/Dockerfile
