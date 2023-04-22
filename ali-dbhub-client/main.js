@@ -16,7 +16,7 @@ function createWindow() {
     minWidth: 800,
     height: 800,
     title: 'dataOps',
-    frame: false,
+    frame: true,
     titleBarStyle: 'hidden', // window 可以自定义样式
     webPreferences: {
       webSercurity:false,

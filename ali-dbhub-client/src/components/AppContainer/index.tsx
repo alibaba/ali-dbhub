@@ -15,7 +15,7 @@ interface IProps {
 }
 
 /** 重启次数 */
-const restartCount = 30;
+const restartCount = 200;
 
 declare global {
   interface Window {
@@ -69,7 +69,7 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         clearInterval(time);
       }
       flag++;
-    }, 300);
+    }, 1000);
   }
 
   function settings() {
