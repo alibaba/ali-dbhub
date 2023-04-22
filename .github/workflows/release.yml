@@ -118,7 +118,6 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           mkdir oss_temp_file 
-          cp -r ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file
           cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
 
       # 准备要需要的数据 Windows

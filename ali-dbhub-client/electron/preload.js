@@ -1,6 +1,7 @@
 const { contextBridge } = require('electron');
 const { spawn, exec } = require('child_process');
 const path = require('path');
+const { app} = require('electron');
 
 
 const appName = 'ali-dbhub-server-start.jar';
@@ -24,6 +25,11 @@ contextBridge.exposeInMainWorld('myAPI', {
     });
     ls.on('close', (code) => {
       console.log(`child process exited with code ${code}`);
+    });
+    app.on('before-quit', (event) => {
+      event.preventDefault();
+      ls.kill();
+      app.quit();
     });
   },
   startServerForbat: () => {

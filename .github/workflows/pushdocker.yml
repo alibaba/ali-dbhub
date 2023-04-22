@@ -4,11 +4,17 @@ name: Push To Docker
 # Workflow's trigger
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 # Workflow's jobs
 jobs:
   docker:
+    strategy:
+      matrix:
+        include:
+          - arch: amd64
+          - arch: arm64
+            variant: v8
     runs-on: ubuntu-latest
     steps:
       - name: Check out git repository
@@ -22,6 +28,38 @@ jobs:
           value: ${{ github.ref }}
           index_of_str: "refs/tags/v"
 
+      # 计算当前是什么环境
+      # v1.x.x-dev 代表 dev环境
+      # v1.x.x 代表 release
+      # 注意这里的变量是 ${{ env.CHAT2DB_ENVIRONMENT }} 这样获取的
+      - name: set environment variables
+        uses: marcdomain/set-variables@v1
+        with:
+          variables: |
+            CHAT2DB_ENVIRONMENT: ${{ endsWith(github.ref, '-dev') }} == true ? "dev" : "release"
+
+      # 输出基础信息
+      - name: Print basic information
+        run: |
+          echo "current environment: ${{ env.CHAT2DB_ENVIRONMENT }}"
+          echo "current version: ${{ steps.chat2db_version.outputs.substring }}"
+          echo "current matrix: ${{ toJSON(matrix) }}"
+
+      # 安装nodejs
+      - name: Install Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 16
+
+      # 构建静态文件信息
+      - name: npm install & build & copy
+        run: |
+          cd ali-dbhub-client
+          npm install 
+          npm run build:desktop
+          mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static
+          mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
+
       # 安装java
       - name: Install Java and Maven
         uses: actions/setup-java@main
@@ -33,9 +71,12 @@ jobs:
       # 编译服务端java版本
       - name: Build Java
         run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
+      
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
+        with:
+          platforms: amd64,arm64
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -52,5 +93,19 @@ jobs:
         with:
           context: .
           push: true
+          platforms: linux/amd64,linux/arm64/v8
           tags: chat2db/chat2db:${{ steps.chat2db_version.outputs.substring }},chat2db/chat2db:latest
           file: docker/Dockerfile
+
+      # 把文件上传到OSS 方便下载
+      - name: Set up oss utils
+        if: ${{ matrix.arch == 'amd64'}}
+        uses: yizhoumo/setup-ossutil@v1
+        with:
+          endpoint: "oss-accelerate.aliyuncs.com"
+          access-key-id: ${{ secrets.OSS_ACCESS_KEY_ID }}
+          access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
+          ossutil-version: 'latest'
+      - name: Upload to oss
+        run: |
+          ossutil cp -rf --acl=public-read ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar oss://chat2db/${{ env.CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/
