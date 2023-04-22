@@ -99,6 +99,7 @@ jobs:
 
       # 把文件上传到OSS 方便下载
       - name: Set up oss utils
+        if: ${{ matrix.arch == 'amd64'}}
         uses: yizhoumo/setup-ossutil@v1
         with:
           endpoint: "oss-accelerate.aliyuncs.com"
