@@ -43,8 +43,6 @@ jobs:
         uses: actions/setup-node@main
         with:
           node-version: 16
-          cache: "npm"
-          cache-dependency-path: ali-dbhub-client/npm.lock
 
       # 构建静态文件信息
       - name: npm install & build & copy
