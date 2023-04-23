@@ -1,6 +1,7 @@
 import React, { useState, createContext } from 'react';
 import { IOperationData } from '@/components/OperationTableModal';
 import { ITreeNode } from '@/types';
+import { DatabaseTypeCode } from '@/utils/constants';
 import { IEditDataSourceData } from '@/components/CreateConnection';
 
 export type ICreateConsoleDialog =
@@ -9,6 +10,7 @@ export type ICreateConsoleDialog =
     dataSourceId: number;
     databaseName: string;
     schemaName: string;
+    databaseType: DatabaseTypeCode;
   };
 
 export type IOperationDataDialog = false | IOperationData;
