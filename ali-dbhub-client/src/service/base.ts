@@ -43,10 +43,9 @@ window._BaseURL = location.href.indexOf('dist/index.html') > -1
   ? desktopServiceUrl
   : prodServiceUrl;
 
-const baseURL = window._BaseURL;
+export const baseURL = window._BaseURL;
 
 const errorHandler = (error: ResponseError, errorLevel: IErrorLevel) => {
-  console.log('errorHandler==>', error, errorLevel);
   const { response } = error;
   if (!response) return;
   const errorText = codeMessage[response.status] || response.statusText;
