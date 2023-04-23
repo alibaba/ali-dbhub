@@ -107,5 +107,6 @@ jobs:
           access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
           ossutil-version: 'latest'
       - name: Upload to oss
+        if: ${{ matrix.arch == 'amd64'}}
         run: |
           ossutil cp -rf --acl=public-read ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar oss://chat2db/${{ env.CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/
