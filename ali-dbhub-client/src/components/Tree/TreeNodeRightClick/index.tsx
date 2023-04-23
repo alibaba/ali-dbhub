@@ -99,10 +99,12 @@ function TreeNodeRightClick(props: IProps) {
         text: '新建查询',
         icon: '\ue619',
         handle: () => {
+          console.log(data)
           setCreateConsoleDialog({
             dataSourceId: data.dataSourceId!,
             databaseName: data.databaseName!,
-            schemaName: data.schemaName!
+            schemaName: data.schemaName!,
+            databaseType: data.dataType!,
           })
         }
       }
@@ -115,7 +117,8 @@ function TreeNodeRightClick(props: IProps) {
           setCreateConsoleDialog({
             dataSourceId: data.dataSourceId!,
             databaseName: data.databaseName!,
-            schemaName: data.schemaName!
+            schemaName: data.schemaName!,
+            databaseType: data.dataType!
           })
         }
       }
