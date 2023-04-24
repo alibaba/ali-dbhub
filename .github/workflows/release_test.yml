@@ -22,29 +22,11 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@main
 
-      # 获取版本号 workflow不支持 所以用插件
-      - name: Create version
-        id: chat2db_version
-        uses: bhowell2/github-substring-action@1.0.1
-        with:
-          value: ${{ github.ref }}
-          index_of_str: "refs/tags/v"
-
-      # 计算当前是什么环境
-      # v1.x.x-dev 代表 dev环境
-      # v1.x.x 代表 release
-      # 注意这里的变量是 ${{ env.CHAT2DB_ENVIRONMENT }} 这样获取的
-      - name: set environment variables
-        uses: marcdomain/set-variables@v1
-        with:
-          variables: |
-            CHAT2DB_ENVIRONMENT: ${{ endsWith(github.ref, '-dev') }} == true ? "dev" : "release"
-
       # 输出基础信息
       - name: Print basic information
         run: |
-          echo "current environment: ${{ env.CHAT2DB_ENVIRONMENT }}"
-          echo "current version: ${{ steps.chat2db_version.outputs.substring }}"
+          echo "current github: ${{ toJSON(github) }}"
+          echo "current job: ${{ toJSON(job) }}"
 
       - name: Install Node.js
         uses: actions/setup-node@main
@@ -83,23 +65,6 @@ jobs:
           mkdir ali-dbhub-client/electron/app
           cp ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar ali-dbhub-client/electron/app/
 
-#          cache: "yarn"
-#          cache-dependency-path: ali-dbhub-client/yarn.lock
-
-      # - name: change directory ali-dbhub-client
-
-      # - name: Install UNM dependencies for macOS
-      #   if: runner.os == 'Windows'
-      #   run: |
-      #     dir
-      #   shell: bash
-
-      # - name: npm install & build
-      #   run: |
-      #     cd ali-dbhub-client
-      #     npm install
-      #     npm run build:desktop
-
       - name: npm install electron
         run: |
           cd ali-dbhub-client/electron
@@ -116,10 +81,7 @@ jobs:
 
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          # args: "--c.extraMetadata.appId=com.dbhub --c.extraMetadata.productName=Chat"
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          args: "-c.extraMetadata.version=1.0.0-test -c.extraMetadata.version=1.0.0-test"
 
       # 准备要需要的数据 MacOS
       - name: Prepare upload MacOS
