@@ -1,8 +1,7 @@
 // 引入electron并创建一个Browserwindow
-const { app, BrowserWindow, shell } = require('electron');
+const { app, BrowserWindow, shell, net } = require('electron');
 const path = require('path');
 const url = require('url');
-const http = require('http');
 // const isDev = require('electron-is-dev');
 // const { autoUpdater } = require('electron-updater');
 const isPro = process.env.NODE_ENV !== 'development';
@@ -75,23 +74,13 @@ app.on('window-all-closed', function () {
 app.on('before-quit', (event) => {
   event.preventDefault();
   // 调用接口杀死 Java 进程
-  try {
-    const options = {
-      hostname: '127.0.0.1:10824',
-      path: '/api/system/stop',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    };
-    http.request(options, (res) => {
-      res.on('data', (chunk) => {
-      });
-    });
-  }
-  catch {
-    
-  }
+  net.request({
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    url: 'http://127.0.0.1:7001/api/system/stop'
+  })
   app.quit();
 });
 

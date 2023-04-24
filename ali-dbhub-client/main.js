@@ -2,7 +2,6 @@
 const { app, BrowserWindow,shell } = require('electron');
 const path = require('path');
 const url = require('url');
-const fetch = require('node-fetch');
 const isPro = process.env.NODE_ENV !== 'development';
 // 修改main.js实时更新
 // reloader(module);
