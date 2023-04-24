@@ -63,7 +63,6 @@ app.on('before-quit', (event) => {
     // 杀死 Java 进程
     // javaProcess.kill();
     // 退出应用
-    debugger
     app.quit();
   })
 });

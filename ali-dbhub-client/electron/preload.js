@@ -26,11 +26,6 @@ contextBridge.exposeInMainWorld('myAPI', {
     ls.on('close', (code) => {
       console.log(`child process exited with code ${code}`);
     });
-    app.on('before-quit', (event) => {
-      event.preventDefault();
-      ls.kill();
-      app.quit();
-    });
   },
   startServerForbat: () => {
     const bat = spawn(path.join(__dirname, 'my.bat'));
