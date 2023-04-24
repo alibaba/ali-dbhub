@@ -28,13 +28,12 @@ jobs:
           node-version: 16
 
       # 构建静态文件信息
-      - name: npm install & build & copy
+      - name: Npm install & build & copy
         run: |
           cd ali-dbhub-client
-          npm install
+          npm install 
           npm run build:desktop
-          mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static
-          cp dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
+          cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
 
       # 安装java
       - name: Install Java and Maven
@@ -128,5 +127,5 @@ jobs:
           content: |
             {
               "title": "macOS-test-构建完成通知",
-              "text": "# macOS-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang.gif)   \n ### Intel下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB Setup 1.0.0-test.exe](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB Setup 1.0.0-test.exe)"
+              "text": "# macOS-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang.gif)   \n ### Intel芯片下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB Setup 1.0.0-test.exe](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB Setup 1.0.0-test.exe)"
             }
