@@ -50,7 +50,7 @@ jobs:
 
       # 打包jre
       - name: Build jre
-        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument --output jre --no-man-pages --no-header-files --compress=2
+        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument,jdk.crypto.ec --output jre --no-man-pages --no-header-files --compress=2
 
       # 复制jre & 服务端java 到制修订位置
       - name: Copy app &  jre
@@ -107,12 +107,26 @@ jobs:
 
       # 构建完成通知
       - name: Send dingtalk message
+        if: runner.os == 'Windows'
         uses: ghostoy/dingtalk-action@master
         with:
           webhook: ${{ secrets.DINGTALK_WEBHOOK }}
           msgtype: markdown
           content: |
             {
-              "title": "${{ runner.os }}-test-构建完成通知",
-              "text": "# ${{ runner.os }}-test-构建完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang.gif)   \n ### 下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-test.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-test.dmg)"
+              "title": "Windows-test-打包完成通知",
+              "text": "# Windows-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang.gif)   \n ### Windows下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB Setup 1.0.0-test.exe](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB Setup 1.0.0-test.exe)"
+            }
+
+      # 构建完成通知
+      - name: Send dingtalk message
+        if: runner.os == 'macOS'
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          msgtype: markdown
+          content: |
+            {
+              "title": "macOS-test-构建完成通知",
+              "text": "# macOS-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang.gif)   \n ### Intel下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB Setup 1.0.0-test.exe](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB Setup 1.0.0-test.exe)"
             }
