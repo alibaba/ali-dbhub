@@ -22,12 +22,6 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@main
 
-      # 输出基础信息
-      - name: Print basic information
-        run: |
-          echo "current github: ${{ toJSON(github) }}"
-          echo "current job: ${{ toJSON(job) }}"
-
       - name: Install Node.js
         uses: actions/setup-node@main
         with:
@@ -81,14 +75,16 @@ jobs:
 
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.extraMetadata.version=1.0.0-test -c.extraMetadata.version=1.0.0-test"
+          args: "-c.extraMetadata.version=1.0.0-test -c.extraMetadata.build.appId=com.ali-dbhub.test -c.extraMetadata.build.productName=Chat2DB-Test -c.extraMetadata.build.nsis.shortcutName=Chat2DB-Test -c.extraMetadata.build.win.publisherName=Chat2DB-Test"
 
       # 准备要需要的数据 MacOS
       - name: Prepare upload MacOS
         if: runner.os == 'macOS'
         run: |
           mkdir oss_temp_file
+          cp ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file
           cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
+
 
       # 准备要需要的数据 Windows
       - name: Prepare upload Windows
@@ -107,4 +103,16 @@ jobs:
           ossutil-version: 'latest'
       - name: Upload to oss
         run: |
-          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/${{ env.CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/
+          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/test/${{ github.run_id }}/
+
+      # 构建完成通知
+      - name: Send dingtalk message
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          msgtype: markdown
+          content: |
+            {
+              "title": "${{ runner.os }}-test-构建完成通知",
+              "text": "# ${{ runner.os }}-test-构建完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang.gif)   \n ### 下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-test.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-test.dmg)"
+            }
