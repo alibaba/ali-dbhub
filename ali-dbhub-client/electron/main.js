@@ -71,6 +71,18 @@ app.on('window-all-closed', function () {
   }
 });
 
+app.on('before-quit', (event) => {
+  event.preventDefault();
+  // 调用接口杀死 Java 进程
+  fetch('/api/system/stop', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  })  
+  app.quit();
+});
+
 app.on('activate', function () {
   // macOS中点击Dock图标时没有已打开的其余应用窗口时,则通常在应用中重建一个窗口
   if (mainWindow === null) {
