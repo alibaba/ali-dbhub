@@ -75,7 +75,7 @@ jobs:
 
       # 打包jre
       - name: Build jre
-        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument --output jre --no-man-pages --no-header-files --compress=2
+        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument,jdk.crypto.ec --output jre --no-man-pages --no-header-files --compress=2
 
       # 复制jre & 服务端java 到制修订位置
       - name: Copy app &  jre

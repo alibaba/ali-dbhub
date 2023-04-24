@@ -28,13 +28,12 @@ jobs:
           node-version: 16
 
       # 构建静态文件信息
-      - name: npm install & build & copy
+      - name: Npm install & build & copy
         run: |
           cd ali-dbhub-client
-          npm install
+          npm install 
           npm run build:desktop
-          mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static
-          cp dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
+          cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
 
       # 安装java
       - name: Install Java and Maven
@@ -50,7 +49,7 @@ jobs:
 
       # 打包jre
       - name: Build jre
-        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument --output jre --no-man-pages --no-header-files --compress=2
+        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument,jdk.crypto.ec --output jre --no-man-pages --no-header-files --compress=2
 
       # 复制jre & 服务端java 到制修订位置
       - name: Copy app &  jre
@@ -75,7 +74,7 @@ jobs:
 
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.extraMetadata.version=1.0.0-test -c.extraMetadata.build.appId=com.ali-dbhub.test -c.extraMetadata.build.productName=Chat2DB-Test -c.extraMetadata.build.nsis.shortcutName=Chat2DB-Test -c.extraMetadata.build.win.publisherName=Chat2DB-Test"
+          args: "-c.extraMetadata.version=1.0.0-Test -c.extraMetadata.build.appId=com.ali-dbhub.test -c.extraMetadata.build.productName=Chat2DB-Test -c.extraMetadata.build.nsis.shortcutName=Chat2DB-Test -c.extraMetadata.build.win.publisherName=Chat2DB-Test"
 
       # 准备要需要的数据 MacOS
       - name: Prepare upload MacOS
@@ -107,12 +106,26 @@ jobs:
 
       # 构建完成通知
       - name: Send dingtalk message
+        if: runner.os == 'Windows'
         uses: ghostoy/dingtalk-action@master
         with:
           webhook: ${{ secrets.DINGTALK_WEBHOOK }}
           msgtype: markdown
           content: |
             {
-              "title": "${{ runner.os }}-test-构建完成通知",
-              "text": "# ${{ runner.os }}-test-构建完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang.gif)   \n ### 下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-test.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-test.dmg)"
+              "title": "Windows-test-打包完成通知",
+              "text": "# Windows-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang.gif)   \n ### Windows下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB Setup 1.0.0-Test.exe](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB Setup 1.0.0-Test.exe)"
+            }
+
+      # 构建完成通知
+      - name: Send dingtalk message
+        if: runner.os == 'macOS'
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          msgtype: markdown
+          content: |
+            {
+              "title": "MacOS-test-构建完成通知",
+              "text": "# MacOS-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang.gif)   \n ### Intel芯片下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test.dmg)   \n ### Apple芯片下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test-arm64.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test-arm64.dmg)   \n ### jar包下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/ali-dbhub-server-start.jar(https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/ali-dbhub-server-start.jar)"
             }
