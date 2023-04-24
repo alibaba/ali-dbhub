@@ -74,7 +74,7 @@ jobs:
 
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "--c.extraMetadata.version=1.0.0-Test --c.extraMetadata.build.appId=com.ali-dbhub.test --c.extraMetadata.build.productName=Chat2DB-Test --c.extraMetadata.build.nsis.shortcutName=Chat2DB-Test --c.extraMetadata.build.win.publisherName=Chat2DB-Test"
+          args: "-c.extraMetadata.version=1.0.0-Test"
 
       # 准备要需要的数据 MacOS
       - name: Prepare upload MacOS
