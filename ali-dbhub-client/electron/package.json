@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "1.0.41-dev",
+  "version": "1.0.42-dev",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
@@ -72,5 +72,8 @@
       "publisherName": "Chat2DB",
       "icon": "logo/logo.png"
     }
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3"
   }
 }

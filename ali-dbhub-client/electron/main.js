@@ -2,6 +2,7 @@
 const { app, BrowserWindow, shell } = require('electron');
 const path = require('path');
 const url = require('url');
+const http = require('http');
 // const isDev = require('electron-is-dev');
 // const { autoUpdater } = require('electron-updater');
 const isPro = process.env.NODE_ENV !== 'development';
@@ -74,12 +75,23 @@ app.on('window-all-closed', function () {
 app.on('before-quit', (event) => {
   event.preventDefault();
   // 调用接口杀死 Java 进程
-  fetch('/api/system/stop', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  })  
+  try {
+    const options = {
+      hostname: '127.0.0.1:10824',
+      path: '/api/system/stop',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    };
+    http.request(options, (res) => {
+      res.on('data', (chunk) => {
+      });
+    });
+  }
+  catch {
+    
+  }
   app.quit();
 });
 
