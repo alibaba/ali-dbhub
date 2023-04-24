@@ -65,12 +65,14 @@ function VisiblyCreateConnection(props: IProps) {
     let initValue: any = {}
     if (dataSourceId) {
       connectionServer.getDetails({ id: dataSourceId + '' }).then((res: any) => {
+        //TODO: 这里只处理了authentication，应该是需要处理所有的selete的
         if (res.user) {
           res.authentication = 1
         } else {
           res.authentication = 2
         }
         selectChange({ name: 'authentication', value: res.user ? 1 : 2 });
+
         regEXFormatting({ url: res.url }, res)
       })
     } else {
