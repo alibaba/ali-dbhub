@@ -141,5 +141,5 @@ jobs:
           content: |
             {
               "title": "构建${{ env.CHAT2DB_ENVIRONMENT }}完成通知",
-              "text": "# 构建${{ env.CHAT2DB_ENVIRONMENT }}完成通知   \n ### 下载地址:[https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg](https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg)"
+              "text": "# 构建${{ env.CHAT2DB_ENVIRONMENT }}完成通知   \n ![bang](https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg)   \n ### 下载地址:[https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg](https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg)"
             }
