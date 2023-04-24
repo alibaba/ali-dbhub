@@ -126,6 +126,6 @@ jobs:
           msgtype: markdown
           content: |
             {
-              "title": "macOS-test-构建完成通知",
-              "text": "# macOS-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang.gif)   \n ### Intel芯片下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test.dmg)   \n ### Apple芯片下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test-arm64.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test-arm64.dmg)   \n ### jar包下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/ali-dbhub-server-start.jar(https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/ali-dbhub-server-start.jar)"
+              "title": "MacOS-test-构建完成通知",
+              "text": "# MacOS-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang.gif)   \n ### Intel芯片下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test.dmg)   \n ### Apple芯片下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test-arm64.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.0-Test-arm64.dmg)   \n ### jar包下载地址:[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/ali-dbhub-server-start.jar(https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/ali-dbhub-server-start.jar)"
             }
