@@ -56,7 +56,7 @@ public class SystemController {
      */
     @PostMapping("/stop")
     public DataResult<String> stop() {
-        SpringApplication.exit(applicationContext);
+        new Thread(() -> SpringApplication.exit(applicationContext)).start();
         return DataResult.of("ok");
     }
 }
