@@ -136,10 +136,10 @@ jobs:
       - name: send dingtalk message
         uses: ghostoy/dingtalk-action@master
         with:
-        webhook: ${{ secrets.DINGTALK_WEBHOOK}}
-        msgtype: markdown
-        content: |
-          {
-            "title": "构建${{ env.CHAT2DB_ENVIRONMENT }}完成通知",
-            "text": "# 构建${{ env.CHAT2DB_ENVIRONMENT }}完成通知   \n ## 下载地址:![https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg](https://img.alicdn.com/tps/TB1XLjqNVXXXXc4XVXXXXXXXXXX-170-64.png)"
-          }
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          msgtype: markdown
+          content: |
+            {
+              "title": "构建${{ env.CHAT2DB_ENVIRONMENT }}完成通知",
+              "text": "# 构建${{ env.CHAT2DB_ENVIRONMENT }}完成通知   \n ## 下载地址:![https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg](https://img.alicdn.com/tps/TB1XLjqNVXXXXc4XVXXXXXXXXXX-170-64.png)"
+            }
