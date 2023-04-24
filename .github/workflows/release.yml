@@ -133,7 +133,7 @@ jobs:
           ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/${{ env.CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/
 
       # 构建完成通知
-      - name: send dingtalk message
+      - name: Send dingtalk message
         uses: ghostoy/dingtalk-action@master
         with:
           webhook: ${{ secrets.DINGTALK_WEBHOOK }}
