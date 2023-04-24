@@ -50,7 +50,21 @@ function createWindow() {
 
   // 关闭window时触发下列事件.
   mainWindow.on('closed', function () {
-    mainWindow = null;
+    const request = net.request({
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      url: 'http://127.0.0.1:10824/api/system/stop',
+    });
+    request.write(JSON.stringify({}));
+    request.on('response', (response) => {
+      response.on('data', (res) => {
+        let data = JSON.parse(res.toString());
+      });
+      response.on('end', () => {});
+    });
+    request.end();
   });
 
   // 监听打开新窗口事件 用默认浏览器打开
@@ -69,19 +83,6 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit();
   }
-});
-
-app.on('before-quit', (event) => {
-  event.preventDefault();
-  // 调用接口杀死 Java 进程
-  net.request({
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    url: 'http://127.0.0.1:7001/api/system/stop'
-  })
-  app.quit();
 });
 
 app.on('activate', function () {
