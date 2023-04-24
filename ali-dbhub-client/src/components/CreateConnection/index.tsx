@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState, Fragment, useContext, useCallback } from 'react';
+import React, { memo, useEffect, useMemo, useState, Fragment, useContext, useCallback, useLayoutEffect } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import Button from '@/components/Button';
@@ -47,26 +47,30 @@ function VisiblyCreateConnection(props: IProps) {
   const [form] = Form.useForm();
   let aliasChanged = false;
 
-  const [dataSourceFormConfig, setDataSourceFormConfig] = useState<IDataSourceForm>(
-    // 不深拷贝这里回影响dataSourceFormConfigs
-    deepClone(dataSourceFormConfigs).find((t: IDataSourceForm) => {
+  const dataSourceFormConfigMemo = useMemo<IDataSourceForm>(() => {
+    return deepClone(dataSourceFormConfigs).find((t: IDataSourceForm) => {
       return t.type === dataSourceType
-    })!
-  );
+    })
+  }, [])
 
-  // const initialValues = useMemo<any>(, [])
+  const initialValuesMemo = useMemo(() => {
+    return initialFormData(dataSourceFormConfigMemo.items)
+  }, [])
 
-  const initialFormData = useCallback(function initialFormData(dataSourceFormConfig: IFormItem[] | undefined) {
+  const [dataSourceFormConfig, setDataSourceFormConfig] = useState<IDataSourceForm>(dataSourceFormConfigMemo);
+
+  const [initialValues] = useState(initialValuesMemo);
+
+  function initialFormData(dataSourceFormConfig: IFormItem[] | undefined) {
     let initValue: any = {}
     if (dataSourceId) {
       connectionServer.getDetails({ id: dataSourceId + '' }).then((res: any) => {
-        // TODO: authentication类型
-        // selectChange({ name: 'authentication类型', value: res.user ? 1 : 2 })  
         if (res.user) {
           res.authentication = 1
         } else {
           res.authentication = 2
         }
+        selectChange({ name: 'authentication', value: res.user ? 1 : 2 });
         regEXFormatting({ url: res.url }, res)
       })
     } else {
@@ -85,9 +89,7 @@ function VisiblyCreateConnection(props: IProps) {
       })
     }
     return initValue
-  }, [])
-
-  const [initialValues] = useState(initialFormData(dataSourceFormConfig.items));
+  }
 
   function extractObj(url: any) {
     const { template, pattern } = dataSourceFormConfig
@@ -116,9 +118,7 @@ function VisiblyCreateConnection(props: IProps) {
     let newData: any = {}
     if (keyName === 'url') {
       //先判断url是否符合规定的正则
-      if (!pattern.test(keyValue)) {
-
-      } else {
+      if (pattern.test(keyValue)) {
         newData = extractObj(keyValue);
       }
     } else if (keyName === 'alias') {
@@ -143,7 +143,6 @@ function VisiblyCreateConnection(props: IProps) {
   }
 
   function selectChange(t: { name: string, value: any }) {
-    const newForm: any = form;
     dataSourceFormConfig.items.map((j, i) => {
       if (j.name === t.name) {
         j.defaultValue = t.value
@@ -151,6 +150,10 @@ function VisiblyCreateConnection(props: IProps) {
     })
     setDataSourceFormConfig({ ...dataSourceFormConfig })
   }
+
+  useEffect(() => {
+    console.log(dataSourceFormConfig)
+  }, [dataSourceFormConfig])
 
   function renderFormItem(t: IFormItem): React.ReactNode {
     const FormItemTypes: { [key in InputType]: () => React.ReactNode } = {
@@ -231,7 +234,6 @@ function VisiblyCreateConnection(props: IProps) {
     if (!data.length) {
       return
     }
-
     const keyName = data[0].name[0];
     const keyValue = data[0].value;
     const variableData = {
