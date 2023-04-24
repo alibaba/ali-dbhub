@@ -1,4 +1,5 @@
-# Workflow's name
+# 在标签发布的时候 做2个事情
+# 1.
 name: Push To Docker
 
 # Workflow's trigger
@@ -52,7 +53,7 @@ jobs:
           node-version: 16
 
       # 构建静态文件信息
-      - name: npm install & build & copy
+      - name: Npm install & build & copy
         run: |
           cd ali-dbhub-client
           npm install 

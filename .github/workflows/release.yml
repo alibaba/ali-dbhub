@@ -54,13 +54,13 @@ jobs:
           node-version: 16
 
       # 构建静态文件信息
-      - name: npm install & build & copy
+      - name: Npm install & build & copy
         run: |
           cd ali-dbhub-client
           npm install 
           npm run build:desktop
           mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static
-          cp dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
+          cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
 
       # 安装java
       - name: Install Java and Maven
@@ -85,24 +85,8 @@ jobs:
           mkdir ali-dbhub-client/electron/app
           cp ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar ali-dbhub-client/electron/app/
 
-#          cache: "yarn"
-#          cache-dependency-path: ali-dbhub-client/yarn.lock
-
-      # - name: change directory ali-dbhub-client
-
-      # - name: Install UNM dependencies for macOS
-      #   if: runner.os == 'Windows'
-      #   run: |
-      #     dir
-      #   shell: bash
-
-      # - name: npm install & build
-      #   run: |
-      #     cd ali-dbhub-client
-      #     npm install 
-      #     npm run build:desktop
-
-      - name: npm install electron
+      # 安装electron
+      - name: Npm install electron
         run: |
           cd ali-dbhub-client/electron
           cp -r ../dist ./
