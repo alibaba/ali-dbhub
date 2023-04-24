@@ -48,6 +48,20 @@ jobs:
           echo "current environment: ${{ env.CHAT2DB_ENVIRONMENT }}"
           echo "current version: ${{ steps.chat2db_version.outputs.substring }}"
 
+      - name: Install Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 16
+
+      # 构建静态文件信息
+      - name: npm install & build & copy
+        run: |
+          cd ali-dbhub-client
+          npm install 
+          npm run build:desktop
+          mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static
+          cp dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
+
       # 安装java
       - name: Install Java and Maven
         uses: actions/setup-java@main
@@ -71,10 +85,6 @@ jobs:
           mkdir ali-dbhub-client/electron/app
           cp ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar ali-dbhub-client/electron/app/
 
-      - name: Install Node.js
-        uses: actions/setup-node@main
-        with:
-          node-version: 16
 #          cache: "yarn"
 #          cache-dependency-path: ali-dbhub-client/yarn.lock
 
@@ -86,11 +96,11 @@ jobs:
       #     dir
       #   shell: bash
 
-      - name: npm install & build
-        run: |
-          cd ali-dbhub-client
-          npm install 
-          npm run build:desktop
+      # - name: npm install & build
+      #   run: |
+      #     cd ali-dbhub-client
+      #     npm install 
+      #     npm run build:desktop
 
       - name: npm install electron
         run: |
@@ -118,7 +128,6 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           mkdir oss_temp_file 
-          cp -r ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file
           cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
 
       # 准备要需要的数据 Windows

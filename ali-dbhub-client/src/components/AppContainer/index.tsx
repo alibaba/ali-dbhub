@@ -15,11 +15,12 @@ interface IProps {
 }
 
 /** 重启次数 */
-const restartCount = 30;
+const restartCount = 200;
 
 declare global {
   interface Window {
     _ENV: string;
+    _BaseURL: string;
   }
 }
 
@@ -61,15 +62,16 @@ export default memo<IProps>(function AppContainer({ className, children }) {
       miscService.testService().then(() => {
         clearInterval(time);
         setStartSchedule(2);
+        flag++;
       }).catch(error => {
         setStartSchedule(1);
+        flag++;
       });
       if (flag > restartCount) {
         setServiceFail(true);
         clearInterval(time);
       }
-      flag++;
-    }, 300);
+    }, 1000);
   }
 
   function settings() {

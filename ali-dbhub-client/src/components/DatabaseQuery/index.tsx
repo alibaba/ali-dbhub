@@ -58,8 +58,8 @@ let monacoEditorExternalList: any = {};
 const initModal = {
   open: false,
   title: '',
-  handleOk: () => {},
-  handleCancel: () => {},
+  handleOk: () => { },
+  handleCancel: () => { },
   content: <></>,
 };
 export default function DatabaseQuery(props: IProps) {
@@ -163,7 +163,7 @@ export default function DatabaseQuery(props: IProps) {
         myEditorHintData[item.name] = [];
       });
       monacoHint.current = setEditorHint(myEditorHintData);
-    } catch {}
+    } catch { }
   };
 
   const getEditor = (editor: any) => {
@@ -174,8 +174,8 @@ export default function DatabaseQuery(props: IProps) {
       localStorage.getItem(
         `window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.consoleId}`,
       ) ||
-        windowTab.ddl ||
-        '',
+      windowTab.ddl ||
+      '',
     );
   };
 
@@ -214,12 +214,14 @@ export default function DatabaseQuery(props: IProps) {
       message.warning('请输入SQL语句');
       return;
     }
+    console.log(windowTab)
     let p = {
       sql,
       type: windowTab.DBType,
       consoleId: +windowTab.consoleId,
       dataSourceId: windowTab?.dataSourceId as number,
       databaseName: windowTab?.databaseName,
+      schemaName: windowTab?.schemaName
     };
     setManageResultDataList(null);
     mysqlServer

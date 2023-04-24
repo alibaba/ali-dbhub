@@ -2,6 +2,7 @@
 const { app, BrowserWindow,shell } = require('electron');
 const path = require('path');
 const url = require('url');
+const fetch = require('node-fetch');
 const isPro = process.env.NODE_ENV !== 'development';
 // 修改main.js实时更新
 // reloader(module);
@@ -16,7 +17,7 @@ function createWindow() {
     minWidth: 800,
     height: 800,
     title: 'dataOps',
-    frame: false,
+    frame: true,
     titleBarStyle: 'hidden', // window 可以自定义样式
     webPreferences: {
       webSercurity:false,
@@ -25,7 +26,7 @@ function createWindow() {
     },
   });
   //  * 加载应用-----  electron-quick-start中默认的加载入口
-  mainWindow.loadURL('http://localhost:8001');
+  mainWindow.loadURL('http://127.0.0.1:7001');
   // if (isPro) {
     // mainWindow.loadFile(`${__dirname}/dist/index.html`);
   // } else {
@@ -35,7 +36,7 @@ function createWindow() {
 
   // 关闭window时触发下列事件.
   mainWindow.on('closed', function () {
-    mainWindow = null;
+      mainWindow = nul
   });
 
   // 监听打开新窗口事件 用默认浏览器打开
@@ -45,10 +46,27 @@ function createWindow() {
   })
 }
 
-
-
 // 当 Electron 完成初始化并准备创建浏览器窗口时调用此方法
 app.on('ready', createWindow);
+
+app.on('before-quit', (event) => {
+  event.preventDefault();
+  // 调用接口杀死 Java 进程
+  fetch('/api/system/stop', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    // 杀死 Java 进程
+    // javaProcess.kill();
+    // 退出应用
+    debugger
+    app.quit();
+  })
+});
 
 // 所有窗口关闭时退出应用.
 app.on('window-all-closed', function () {

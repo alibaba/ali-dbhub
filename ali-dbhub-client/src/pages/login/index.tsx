@@ -22,7 +22,12 @@ const App: React.FC = () => {
   function handleLogin() {
     userLogin(formData).then(res => {
       const params = getLocationHash();
-      window.location.href = path.join(__dirname, `/`) + '#' + (params?.callback || '/')
+      if (window._ENV === 'desktop') {
+        history.push('/')
+      } else {
+        window.location.href = '/'
+      }
+      // console.log(path.join(__dirname, '#' + (params?.callback || '/')))
     })
   }
 
