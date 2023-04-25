@@ -71,10 +71,10 @@ jobs:
         run: |
           cd ali-dbhub-client/electron
           cp -r ../dist ./
-          yarn
+      #   yarn
 
       # windows
-      - name: Build/release Electron app
+      - name: Build/release Electron app for Windows
         if: ${{ runner.os == 'Windows' }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
@@ -85,7 +85,7 @@ jobs:
           args: "-c.extraMetadata.version=1.0.${{ github.run_id }}-Test"
 
       # macos amd64
-      - name: Build/release Electron app
+      - name: Build/release Electron app for MacOS amd64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
@@ -93,10 +93,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
+          args: "-c.appId=com.chat2db.test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
 
       # macos amd64
-      - name: Build/release Electron app
+      - name: Build/release Electron app for MacOS arm64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
@@ -107,14 +107,14 @@ jobs:
           args: "-c.extraMetadata.version=1.0.${{ github.run_id }}-Test --arm64"
 
       # 准备要需要的数据 Windows
-      - name: Prepare upload Windows
+      - name: Prepare upload for Windows
         if: runner.os == 'Windows'
         run: |
           mkdir oss_temp_file
           cp -r ali-dbhub-client/electron-build/*Setup*.exe ./oss_temp_file
 
       # 准备要需要的数据 MacOS amd64
-      - name: Prepare upload MacOS
+      - name: Prepare upload for MacOS amd64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
         run: |
           mkdir oss_temp_file
@@ -122,7 +122,7 @@ jobs:
           cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
 
       # 准备要需要的数据 MacOS arm64
-      - name: Prepare upload MacOS
+      - name: Prepare upload for MacOS arm64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         run: |
           mkdir oss_temp_file
@@ -141,7 +141,7 @@ jobs:
           ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/test/${{ github.run_id }}/
 
       # 构建完成通知
-      - name: Send dingtalk message
+      - name: Send dingtalk message for Windows
         if: ${{ runner.os == 'Windows' }}
         uses: ghostoy/dingtalk-action@master
         with:
@@ -154,7 +154,7 @@ jobs:
             }
 
       # 构建完成通知
-      - name: Send dingtalk message
+      - name: Send dingtalk message for MacOS amd64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
         uses: ghostoy/dingtalk-action@master
         with:
@@ -167,7 +167,7 @@ jobs:
             }
 
       # 构建完成通知
-      - name: Send dingtalk message
+      - name: Send dingtalk message for MacOS arm64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         uses: ghostoy/dingtalk-action@master
         with:
