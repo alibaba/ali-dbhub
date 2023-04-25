@@ -15,6 +15,7 @@
   },
   "description": "Electron Application",
   "scripts": {
+    "start": "electron .",
     "electron:build": "electron-builder"
   },
   "devDependencies": {
