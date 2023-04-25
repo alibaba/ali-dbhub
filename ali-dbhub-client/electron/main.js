@@ -15,9 +15,8 @@ function createWindow() {
   //创建浏览器窗口,宽高自定义具体大小你开心就好
   let options = {};
   if (process.platform === 'win32') { // 如果平台是win32，也即windows
-    options.show = true // 当window创建的时候打开
-    options.frame = true // 创建一个frameless窗口，详情：https://electronjs.org/docs/api/frameless-window
-    options.backgroundColor = '#3f3c37'
+    options.show = true; // 当window创建的时候打开
+    options.backgroundColor = '#3f3c37';
   }
 
   mainWindow = new BrowserWindow({
@@ -27,24 +26,15 @@ function createWindow() {
     height: 800,
     center: true,
     title: 'AliDBHub',
-    resizable: false,
-    frame: true,
-    titleBarStyle: 'hidden', // 删除后mac没有了关闭按钮
     ...options,
     webPreferences: {
-      webSercurity:false,
+      webSercurity: false,
       nodeIntegration: true,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-
-  if (process.platform === 'win32') { // 如果平台是win32，也即windows
-    mainWindow.show = true // 当window创建的时候打开
-    mainWindow.frame = false // 创建一个frameless窗口，详情：https://electronjs.org/docs/api/frameless-window
-    mainWindow.backgroundColor = '#3f3c37'
-  }
-
+  
   // 加载应用-----  electron-quick-start中默认的加载入口
   mainWindow.loadFile(`${__dirname}/dist/index.html`);
 
@@ -68,10 +58,10 @@ function createWindow() {
   });
 
   // 监听打开新窗口事件 用默认浏览器打开
-  mainWindow.webContents.on('new-window', function(event, url){    
-    event.preventDefault();  
+  mainWindow.webContents.on('new-window', function (event, url) {
+    event.preventDefault();
     shell.openExternal(url);
-  })
+  });
 }
 
 // 当 Electron 完成初始化并准备创建浏览器窗口时调用此方法
@@ -93,4 +83,3 @@ app.on('activate', function () {
 });
 
 // 你可以在这个脚本中续写或者使用require引入独立的js文件.
-
