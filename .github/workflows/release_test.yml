@@ -18,13 +18,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, windows-latest ]
         include:
+          - os: windows-latest
           - os: macos-latest
             arch: amd64
           - os: macos-latest
             arch: arm64
             variant: v8
+          - os: macos-latest
     runs-on: ${{ matrix.os }}
 
     steps:
