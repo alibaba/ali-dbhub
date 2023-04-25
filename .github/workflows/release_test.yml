@@ -46,32 +46,11 @@ jobs:
 
       # 安装java
       - name: Install Java and Maven
-        if: ${{ runner.os == 'Windows' }}
         uses: actions/setup-java@main
         with:
           java-version: "17"
           distribution: "temurin"
           cache: "maven"
-
-      # 安装java
-      - name: Install Java and Maven
-        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
-        uses: actions/setup-java@main
-        with:
-          java-version: "17"
-          distribution: "temurin"
-          cache: "maven"
-
-      # 安装java
-      - name: Install Java and Maven
-        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
-        uses: actions/setup-java@main
-        with:
-          java-version: "17"
-          distribution: "temurin"
-          architecture: "aarch64"
-          cache: "maven"
-
 
       # 编译服务端java版本
       - name: Build Java
@@ -103,8 +82,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
-
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test"
 
       # macos amd64
       - name: Build/release Electron app for MacOS X64
@@ -126,7 +104,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --arm64"
 
       # 准备要需要的数据 Windows
       - name: Prepare upload for Windows
