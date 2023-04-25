@@ -82,10 +82,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.extraMetadata.version=1.0.${{ github.run_id }}-Test"
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
+
 
       # macos amd64
-      - name: Build/release Electron app for MacOS amd64
+      - name: Build/release Electron app for MacOS X64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
@@ -93,7 +94,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.appId=com.chat2db.test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
 
       # macos amd64
       - name: Build/release Electron app for MacOS arm64
@@ -104,7 +105,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.extraMetadata.version=1.0.${{ github.run_id }}-Test --arm64"
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
 
       # 准备要需要的数据 Windows
       - name: Prepare upload for Windows
