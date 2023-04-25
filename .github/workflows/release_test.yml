@@ -9,14 +9,23 @@ on:
       - 'release_test'
 
 # Workflow's jobs
+# 一共需要3台电脑运行
+# windows
+# macos-latest amd64
+# macos-latest arm64
 jobs:
   release:
-    runs-on: ${{ matrix.os }}
-
     strategy:
       fail-fast: false
       matrix:
         os: [ macos-latest, windows-latest ]
+        include:
+          - os: macos-latest
+            arch: amd64
+          - os: macos-latest
+            arch: arm64
+            variant: v8
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Check out git repository
@@ -40,7 +49,7 @@ jobs:
         uses: actions/setup-java@main
         with:
           java-version: "17"
-          distribution: "oracle"
+          distribution: "adopt"
           cache: "maven"
 
       # 编译服务端java版本
