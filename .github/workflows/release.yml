@@ -66,7 +66,7 @@ jobs:
         uses: actions/setup-java@main
         with:
           java-version: "17"
-          distribution: "oracle"
+          distribution: "adopt"
           cache: "maven"
 
       # 编译服务端java版本
