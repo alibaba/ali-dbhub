@@ -115,11 +115,11 @@ export default function DatabaseQuery(props: IProps) {
       } else if (nodeData.nodeType == TreeNodeType.COLUMN) {
         if (value == 'SELECT * FROM' || value == 'SELECT * FROM ') {
           model.setValue(
-            `SELECT * FROM ${nodeData?.parent?.name} WHERE ${nodeData.name} = ''`,
+            `SELECT * FROM ${nodeData?.databaseName} WHERE ${nodeData.name} = ''`,
           );
         } else {
           model.setValue(
-            `${value}\nSELECT * FROM ${nodeData?.parent?.name} WHERE ${nodeData.name} = ''`,
+            `${value}\nSELECT * FROM ${nodeData?.databaseName} WHERE ${nodeData.name} = ''`,
           );
         }
       }

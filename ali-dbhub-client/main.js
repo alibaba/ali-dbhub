@@ -25,7 +25,7 @@ function createWindow() {
     },
   });
   //  * 加载应用-----  electron-quick-start中默认的加载入口
-  mainWindow.loadURL('http://127.0.0.1:7001');
+  mainWindow.loadURL('http://127.0.0.1:8001');
   // if (isPro) {
   // mainWindow.loadFile(`${__dirname}/dist/index.html`);
   // } else {
@@ -40,7 +40,7 @@ function createWindow() {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-      url: 'http://127.0.0.1:7001/api/system/stop',
+      url: 'http://127.0.0.1:10821/api/system/stop',
     });
     request.write(JSON.stringify({}));
     request.on('response', (response) => {
@@ -50,6 +50,7 @@ function createWindow() {
       response.on('end', () => {});
     });
     request.end();
+    mainWindow = null
   });
 
   // 监听打开新窗口事件 用默认浏览器打开
