@@ -8,7 +8,8 @@ import i18n from '@/i18n';
 import configService from '@/service/config';
 
 interface IProps {
-  className?: any;
+  className?: string;
+  text: string;
 }
 
 const colorList = [
@@ -55,9 +56,10 @@ const backgroundList = [
 
 let colorSchemeListeners: ((theme: string) => void)[] = [];
 
-export default memo<IProps>(function Setting({ className }) {
+export default memo<IProps>(function Setting({ className, text }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [chatgptKey, setChatgptKey] = useState('');
+  const [apiPrefix, setApiPrefix] = useState(window._BaseURL);
   const [lang, setLang] = useState(localStorage.getItem('lang'));
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem('theme'));
   const [currentPrimaryColor, setCurrentPrimaryColor] = useState(localStorage.getItem('primary-color'));
@@ -115,10 +117,27 @@ export default memo<IProps>(function Setting({ className }) {
     location.reload();
   }
 
+  function updateApi(e: any) {
+    setApiPrefix(e.target.value)
+  }
+
+  function affirmUpdateApi() {
+    if (!apiPrefix) {
+      return
+    }
+    localStorage.setItem('_BaseURL', apiPrefix);
+    location.reload();
+  }
+
   return (
     <>
       <div className={classnames(className, styles.box)} onClick={showModal}>
-        <Iconfont code="&#xe795;"></Iconfont>
+        {
+          text ?
+            <span className={styles.setText}>{text}</span>
+            :
+            <Iconfont code="&#xe795;"></Iconfont>
+        }
       </div>
       <Modal
         open={isModalVisible}
@@ -142,6 +161,13 @@ export default memo<IProps>(function Setting({ className }) {
         <div className={classnames(styles.content, styles.chatGPTKey)}>
           <Input value={chatgptKey} onChange={(e) => { setChatgptKey(e.target.value) }} />
           <Button theme='default' onClick={changeChatgptApiKey}>更新</Button>
+        </div>
+        <div className={styles.title}>
+          接口前缀
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          <Input value={apiPrefix} onChange={updateApi} />
+          <Button theme='default' onClick={affirmUpdateApi}>更新</Button>
         </div>
         {/* <div className={styles.title}>
           主题色
