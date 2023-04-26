@@ -57,9 +57,9 @@ public class SystemController {
     @PostMapping("/stop")
     public DataResult<String> stop() {
         new Thread(() -> {
-            // 会在3秒以后 退出后台
+            // 会在100ms以后 退出后台
             try {
-                Thread.sleep(3000L);
+                Thread.sleep(100L);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

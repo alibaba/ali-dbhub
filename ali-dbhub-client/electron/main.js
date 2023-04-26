@@ -55,6 +55,7 @@ function createWindow() {
       response.on('end', () => {});
     });
     request.end();
+    mainWindow = null;
   });
 
   // 监听打开新窗口事件 用默认浏览器打开
