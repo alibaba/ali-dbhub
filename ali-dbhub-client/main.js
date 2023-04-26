@@ -1,8 +1,7 @@
 // 引入electron并创建一个Browserwindow
-const { app, BrowserWindow,shell } = require('electron');
+const { app, BrowserWindow, shell, net } = require('electron');
 const path = require('path');
 const url = require('url');
-const fetch = require('node-fetch');
 const isPro = process.env.NODE_ENV !== 'development';
 // 修改main.js实时更新
 // reloader(module);
@@ -20,7 +19,7 @@ function createWindow() {
     frame: true,
     titleBarStyle: 'hidden', // window 可以自定义样式
     webPreferences: {
-      webSercurity:false,
+      webSercurity: false,
       nodeIntegration: true,
       contextIsolation: true,
     },
@@ -28,7 +27,7 @@ function createWindow() {
   //  * 加载应用-----  electron-quick-start中默认的加载入口
   mainWindow.loadURL('http://127.0.0.1:7001');
   // if (isPro) {
-    // mainWindow.loadFile(`${__dirname}/dist/index.html`);
+  // mainWindow.loadFile(`${__dirname}/dist/index.html`);
   // } else {
   //   // 打开开发者工具，默认不打开
   //   mainWindow.webContents.openDevTools();
@@ -36,37 +35,32 @@ function createWindow() {
 
   // 关闭window时触发下列事件.
   mainWindow.on('closed', function () {
-      mainWindow = nul
+    const request = net.request({
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      url: 'http://127.0.0.1:7001/api/system/stop',
+    });
+    request.write(JSON.stringify({}));
+    request.on('response', (response) => {
+      response.on('data', (res) => {
+        let data = JSON.parse(res.toString());
+      });
+      response.on('end', () => {});
+    });
+    request.end();
   });
 
   // 监听打开新窗口事件 用默认浏览器打开
-  mainWindow.webContents.on('new-window', function(event, url){    
-    event.preventDefault();  
+  mainWindow.webContents.on('new-window', function (event, url) {
+    event.preventDefault();
     shell.openExternal(url);
-  })
+  });
 }
 
 // 当 Electron 完成初始化并准备创建浏览器窗口时调用此方法
 app.on('ready', createWindow);
-
-app.on('before-quit', (event) => {
-  event.preventDefault();
-  // 调用接口杀死 Java 进程
-  fetch('/api/system/stop', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  })
-  .then(response => response.json())
-  .then(data => {
-    // 杀死 Java 进程
-    // javaProcess.kill();
-    // 退出应用
-    debugger
-    app.quit();
-  })
-});
 
 // 所有窗口关闭时退出应用.
 app.on('window-all-closed', function () {

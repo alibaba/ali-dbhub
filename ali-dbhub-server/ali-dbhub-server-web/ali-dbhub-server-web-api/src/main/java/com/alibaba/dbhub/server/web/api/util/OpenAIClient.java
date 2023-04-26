@@ -10,11 +10,13 @@ import com.alibaba.dbhub.server.domain.api.service.ConfigService;
 import com.google.common.collect.Lists;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.constant.OpenAIConst;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author jipengfei
  * @version : OpenAIClient.java
  */
+@Slf4j
 public class OpenAIClient {
 
     public static final String OPENAI_KEY = "chatgpt.apiKey";
@@ -42,7 +44,7 @@ public class OpenAIClient {
     }
 
     public static void refresh() {
-        String apikey = null;
+        String apikey;
         ConfigService configService = ApplicationContextUtil.getBean(ConfigService.class);
         Config config = configService.find(OPENAI_KEY).getData();
         if (config != null) {
@@ -50,6 +52,7 @@ public class OpenAIClient {
         } else {
             apikey = ApplicationContextUtil.getProperty(OPENAI_KEY);
         }
+        log.info("refresh openai apikey:{}", apikey);
         OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(OpenAIConst.OPENAI_HOST).apiKey(
             Lists.newArrayList(apikey)).build();
         apiKey = apikey;

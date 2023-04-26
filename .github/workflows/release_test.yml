@@ -1,0 +1,199 @@
+# Workflow's name
+name: Build Test Client
+
+# Workflow's trigger
+# 在release_test 分支收到推送的时候触发
+on:
+  push:
+    branches:
+      - 'release_test'
+
+# Workflow's jobs
+# 一共需要3台电脑运行
+# windows
+# macos-latest amd64
+# macos-latest arm64
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+          - os: macos-latest
+            arch: amd64
+          - os: macos-latest
+            arch: arm64
+            variant: v8
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check out git repository
+        uses: actions/checkout@main
+
+      - name: Install Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 16
+
+      # 构建静态文件信息
+      - name: Npm install & build & copy
+        run: |
+          cd ali-dbhub-client
+          npm install 
+          npm run build:desktop
+          cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
+
+      # 安装java
+      - name: Install Java and Maven
+        if: ${{ runner.os == 'Windows' }}
+        uses: actions/setup-java@main
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+
+      # 安装java
+      - name: Install Java and Maven
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
+        uses: actions/setup-java@main
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+
+      # 安装java
+      - name: Install Java and Maven
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
+        uses: actions/setup-java@main
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+
+      # 编译服务端java版本
+      - name: Build Java
+        run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
+
+      # 打包jre
+      - name: Build jre
+        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument,jdk.crypto.ec --output jre --no-man-pages --no-header-files --compress=2
+
+      # 复制jre & 服务端java 到制修订位置
+      - name: Copy app &  jre
+        run: |
+          cp -r jre ali-dbhub-client/electron/
+          mkdir ali-dbhub-client/electron/app
+          cp ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar ali-dbhub-client/electron/app/
+
+      - name: npm install electron
+        run: |
+          cd ali-dbhub-client/electron
+          cp -r ../dist ./
+      #   yarn
+
+      # windows
+      - name: Build/release Electron app for Windows
+        if: ${{ runner.os == 'Windows' }}
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          package_root: "ali-dbhub-client/electron"
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          mac_certs: ${{ secrets.mac_certs }}
+          mac_certs_password: ${{ secrets.mac_certs_password }}
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test"
+
+      # macos amd64
+      - name: Build/release Electron app for MacOS X64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          package_root: "ali-dbhub-client/electron"
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          mac_certs: ${{ secrets.mac_certs }}
+          mac_certs_password: ${{ secrets.mac_certs_password }}
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
+
+      # macos amd64
+      - name: Build/release Electron app for MacOS arm64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          package_root: "ali-dbhub-client/electron"
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          mac_certs: ${{ secrets.mac_certs }}
+          mac_certs_password: ${{ secrets.mac_certs_password }}
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --arm64"
+
+      # 准备要需要的数据 Windows
+      - name: Prepare upload for Windows
+        if: runner.os == 'Windows'
+        run: |
+          mkdir oss_temp_file
+          cp -r ali-dbhub-client/electron-build/*Setup*.exe ./oss_temp_file
+
+      # 准备要需要的数据 MacOS amd64
+      - name: Prepare upload for MacOS amd64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
+        run: |
+          mkdir oss_temp_file
+          cp ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file
+          cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
+
+      # 准备要需要的数据 MacOS arm64
+      - name: Prepare upload for MacOS arm64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
+        run: |
+          mkdir oss_temp_file
+          cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
+
+      # 把文件上传到OSS 方便下载
+      - name: Set up oss utils
+        uses: yizhoumo/setup-ossutil@v1
+        with:
+          endpoint: "oss-accelerate.aliyuncs.com"
+          access-key-id: ${{ secrets.OSS_ACCESS_KEY_ID }}
+          access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
+          ossutil-version: 'latest'
+      - name: Upload to oss
+        run: |
+          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/test/${{ github.run_id }}/
+
+      # 构建完成通知
+      - name: Send dingtalk message for Windows
+        if: ${{ runner.os == 'Windows' }}
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          msgtype: markdown
+          content: |
+            {
+              "title": "Windows-test-打包完成通知",
+              "text": "# Windows-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang100.gif)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})   \n ### Windows下载地址：[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB%20Setup%201.0.${{ github.run_id }}-Test.exe](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB%20Setup%201.0.${{ github.run_id }}-Test.exe) "
+            }
+
+      # 构建完成通知
+      - name: Send dingtalk message for MacOS amd64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          msgtype: markdown
+          content: |
+            {
+              "title": "MacOS-amd64-test-构建完成通知",
+              "text": "# MacOS-amd64-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang100.gif)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})    \n ### Intel芯片下载地址：[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.${{ github.run_id }}-Test.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.${{ github.run_id }}-Test.dmg)   \n ### jar包下载地址：[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/ali-dbhub-server-start.jar) "
+            }
+
+      # 构建完成通知
+      - name: Send dingtalk message for MacOS arm64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          msgtype: markdown
+          content: |
+            {
+              "title": "MacOS-arm64-test-构建完成通知",
+              "text": "# MacOS-arm64-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang100.gif)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})   \n ### Apple芯片下载地址：[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.${{ github.run_id }}-Test-arm64.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-1.0.${{ github.run_id }}-Test-arm64.dmg) "
+            }
