@@ -46,25 +46,6 @@ jobs:
 
       # 安装java
       - name: Install Java and Maven
-        if: ${{ runner.os == 'Windows' }}
-        uses: actions/setup-java@main
-        with:
-          java-version: "17"
-          distribution: "temurin"
-          cache: "maven"
-
-      # 安装java
-      - name: Install Java and Maven
-        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
-        uses: actions/setup-java@main
-        with:
-          java-version: "17"
-          distribution: "temurin"
-          cache: "maven"
-
-      # 安装java
-      - name: Install Java and Maven
-        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         uses: actions/setup-java@main
         with:
           java-version: "17"
