@@ -69,6 +69,7 @@ public class OpenAIEventSourceListener extends EventSourceListener {
 
     @Override
     public void onClosed(EventSource eventSource) {
+        sseEmitter.complete();
         log.info("OpenAI关闭sse连接...");
     }
 
@@ -79,11 +80,22 @@ public class OpenAIEventSourceListener extends EventSourceListener {
             return;
         }
         ResponseBody body = response.body();
+        String bodyString = null;
         if (Objects.nonNull(body)) {
-            log.error("OpenAI  sse连接异常data：{}，异常：{}", body.string(), t);
+            bodyString = body.string();
+            log.error("OpenAI  sse连接异常data：{}，异常：{}", bodyString, t);
         } else {
             log.error("OpenAI  sse连接异常data：{}，异常：{}", response, t);
         }
         eventSource.cancel();
+        Message message = new Message();
+        message.setContent("出现异常,请检查是否网络能访问chatgpt或者api key 是否配置正确：" + bodyString);
+        sseEmitter.send(SseEmitter.event()
+            .id("[ERROR]")
+            .data(message));
+        sseEmitter.send(SseEmitter.event()
+            .id("[DONE]")
+            .data("[DONE]"));
+        sseEmitter.complete();
     }
 }
