@@ -6,6 +6,7 @@ import Button from '@/components/Button';
 import { Modal, Radio, Input, message } from 'antd';
 import i18n from '@/i18n';
 import configService from '@/service/config';
+import miscService from '@/service/misc';
 
 interface IProps {
   className?: string;
@@ -125,8 +126,18 @@ export default memo<IProps>(function Setting({ className, text }) {
     if (!apiPrefix) {
       return
     }
-    localStorage.setItem('_BaseURL', apiPrefix);
-    location.reload();
+    const xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.open('GET', `${apiPrefix}/api/system/get-version-a`);
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        localStorage.setItem('_BaseURL', apiPrefix);
+        location.reload();
+      } else {
+        message.error('接口测试不通过')
+      }
+    };
+    xhr.send();
   }
 
   return (
@@ -156,14 +167,14 @@ export default memo<IProps>(function Setting({ className, text }) {
           })}
         </ul>
         <div className={styles.title}>
-          SecretKey
+          OpenAI Api Key
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
           <Input value={chatgptKey} onChange={(e) => { setChatgptKey(e.target.value) }} />
           <Button theme='default' onClick={changeChatgptApiKey}>更新</Button>
         </div>
         <div className={styles.title}>
-          接口前缀
+          后台服务地址
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
           <Input value={apiPrefix} onChange={updateApi} />
