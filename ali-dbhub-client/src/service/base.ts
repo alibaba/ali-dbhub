@@ -64,17 +64,26 @@ const request = extend({
   },
 });
 
-request.interceptors.request.use((url, options) => {
+request.interceptors.request.use((url, options) => {  
   return {
     options: {
       ...options,
+      headers: {
+        ...options.headers,
+        DBHUB: localStorage.getItem('DBHUB') || ''
+      }
     },
   };
 });
 
 request.interceptors.response.use(async (response, options) => {
   const res = await response.clone().json();
-
+  if (window._ENV === 'desktop') {
+    const DBHUB = response.headers.get('DBHUB') || ''
+    if (DBHUB) {
+      localStorage.setItem('DBHUB', DBHUB)
+    }
+  }
   const { errorCode, codeMessage } = res;
   if (errorCode === ErrorCode.NEED_LOGGED_IN) {
     // window.location.href = '#/login?callback=' + window.location.hash.substr(1);
