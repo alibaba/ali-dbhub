@@ -46,7 +46,7 @@ public class SystemController {
      *
      * @return
      */
-    @GetMapping("/get_version")
+    @GetMapping("/get-version-a")
     public DataResult<String> getVersion() {
         return DataResult.of(aliDbhubProperties.getVersion());
     }
