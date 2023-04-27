@@ -126,12 +126,18 @@ export default memo<IProps>(function Setting({ className, text }) {
     if (!apiPrefix) {
       return
     }
-    localStorage.setItem('_BaseURL', apiPrefix);
-    location.reload();
-    // miscService.testApiSmooth().then(res => {
-    // }).catch(error => {
-    //   message.error('接口测试不通过')
-    // })
+    const xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.open('GET', `${apiPrefix}/api/system/get-version-a`);
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        localStorage.setItem('_BaseURL', apiPrefix);
+        location.reload();
+      } else {
+        message.error('接口测试不通过')
+      }
+    };
+    xhr.send();
   }
 
   return (
