@@ -50,6 +50,7 @@ public class OpenAIEventSourceListener extends EventSourceListener {
                 .id("[DONE]")
                 .data("[DONE]")
                 .reconnectTime(3000));
+            sseEmitter.complete();
             return;
         }
         ObjectMapper mapper = new ObjectMapper();
