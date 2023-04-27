@@ -43,18 +43,23 @@
 
 
 ## ⏬ 下载安装
+| 描述          | 文件大小 | 下载地址                                                                                                                                                                                                                                        |
+|-------------|------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Windows     | 361M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test%20Setup%201.0.4796588172-Test.exe">https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test%20Setup%201.0.4796588172-Test.exe </a> |
+| MacOS ARM64 | 207M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test-arm64.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test-arm64.dmg </a> |
+| MacOS X64   | 210M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test.dmg </a>  |       
+| Jar包        | 88M  | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/ali-dbhub-server-start.jar"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/ali-dbhub-server-start.jar </a>  |                                                                                                                
 
-Mac、Windows客户端应用下载地址 <a href="https://github.com/alibaba/ali-dbhub/releases">GitHub releases</a>.
+## 📦 Docker部署
 
-网页版本待更新...
-
+```bash
+  docker pull chat2db/chat2db:latest
+```
 ## 🎯 运行环境
 注意：
 如果需要本地调试
 - java运行 <a href="https://adoptopenjdk.net/" target="_blank">Open JDK 17</a>
-- jre参考打包发布中jre安装方式.
 - Node运行环境Node16 <a href="https://nodejs.org/" target="_blank">Node.js</a>.
-
 ## 💻 本地调试
 - git clone到本地
 ```bash

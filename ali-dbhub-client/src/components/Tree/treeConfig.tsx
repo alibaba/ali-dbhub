@@ -142,8 +142,22 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
               databaseName: parentData.databaseName!
             }
           })
-          r(data);
-
+          if (data.length) {
+            r(data);
+          } else {
+            let data = [
+              {
+                key: parentData.name + 'tables',
+                name: 'tables',
+                nodeType: TreeNodeType.TABLES,
+                dataSourceId: parentData.dataSourceId,
+                databaseName: parentData.databaseName,
+                dataType: parentData.dataType,
+                schemaName: parentData.schemaName,
+              }
+            ]
+            r(data);
+          }
         })
       })
     },

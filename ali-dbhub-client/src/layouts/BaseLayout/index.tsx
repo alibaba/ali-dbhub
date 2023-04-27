@@ -20,7 +20,7 @@ interface INavItem {
 const LNKConfig: INavItem[] = [
   {
     title: i18n('home.nav.database'),
-    icon: '\ue62f',
+    icon: '\ue609',
     path: '/'
   },
   {
@@ -89,6 +89,7 @@ export default function BaseLayout({ children }: PropsWithChildren<IProps>) {
   return (
     <div className={styles.page}>
       <div className={styles.layoutLeft}>
+        <div className={styles.dargBox}></div>
         <BrandLogo onClick={jumpHome} className={styles.brandLogo} />
         <ul className={styles.navList}>
           {LNKConfig.map((item) => {

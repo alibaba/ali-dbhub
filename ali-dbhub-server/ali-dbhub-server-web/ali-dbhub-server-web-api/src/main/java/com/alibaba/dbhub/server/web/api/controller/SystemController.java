@@ -56,7 +56,15 @@ public class SystemController {
      */
     @PostMapping("/stop")
     public DataResult<String> stop() {
-        SpringApplication.exit(applicationContext);
+        new Thread(() -> {
+            // 会在100ms以后 退出后台
+            try {
+                Thread.sleep(100L);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            SpringApplication.exit(applicationContext);
+        }).start();
         return DataResult.of("ok");
     }
 }

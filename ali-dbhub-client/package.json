@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "umi dev",
-    "build": "cross-env UMI_ENV=test umi build",
+    "build": "cross-env UMI_ENV=test umi build && cp -r dist ./electron",
     "postinstall": "umi generate tmp",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",

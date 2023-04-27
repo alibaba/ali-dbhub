@@ -54,20 +54,19 @@ jobs:
           node-version: 16
 
       # 构建静态文件信息
-      - name: npm install & build & copy
+      - name: Npm install & build & copy
         run: |
           cd ali-dbhub-client
           npm install 
           npm run build:desktop
-          mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static
-          cp dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
+          cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
 
       # 安装java
       - name: Install Java and Maven
         uses: actions/setup-java@main
         with:
           java-version: "17"
-          distribution: "adopt"
+          distribution: "temurin"
           cache: "maven"
 
       # 编译服务端java版本
@@ -76,7 +75,7 @@ jobs:
 
       # 打包jre
       - name: Build jre
-        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument --output jre --no-man-pages --no-header-files --compress=2
+        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument,jdk.crypto.ec --output jre --no-man-pages --no-header-files --compress=2
 
       # 复制jre & 服务端java 到制修订位置
       - name: Copy app &  jre
@@ -85,24 +84,8 @@ jobs:
           mkdir ali-dbhub-client/electron/app
           cp ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar ali-dbhub-client/electron/app/
 
-#          cache: "yarn"
-#          cache-dependency-path: ali-dbhub-client/yarn.lock
-
-      # - name: change directory ali-dbhub-client
-
-      # - name: Install UNM dependencies for macOS
-      #   if: runner.os == 'Windows'
-      #   run: |
-      #     dir
-      #   shell: bash
-
-      # - name: npm install & build
-      #   run: |
-      #     cd ali-dbhub-client
-      #     npm install 
-      #     npm run build:desktop
-
-      - name: npm install electron
+      # 安装electron
+      - name: Npm install electron
         run: |
           cd ali-dbhub-client/electron
           cp -r ../dist ./
@@ -148,3 +131,15 @@ jobs:
       - name: Upload to oss
         run: |
           ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/${{ env.CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/
+
+      # 构建完成通知
+      - name: Send dingtalk message
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          msgtype: markdown
+          content: |
+            {
+              "title": "构建${{ env.CHAT2DB_ENVIRONMENT }}完成通知",
+              "text": "# 构建${{ env.CHAT2DB_ENVIRONMENT }}完成通知   \n ![bang](https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg)   \n ### 下载地址:[https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg](https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg)"
+            }
