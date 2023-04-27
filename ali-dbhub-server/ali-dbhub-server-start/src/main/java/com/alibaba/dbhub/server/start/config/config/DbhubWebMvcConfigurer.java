@@ -10,11 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.dbhub.server.domain.api.model.User;
 import com.alibaba.dbhub.server.domain.api.service.UserService;
 import com.alibaba.dbhub.server.tools.base.constant.SymbolConstant;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBusinessException;
 import com.alibaba.dbhub.server.tools.common.exception.RedirectBusinessException;
 import com.alibaba.dbhub.server.tools.common.model.Context;
 import com.alibaba.dbhub.server.tools.common.model.LoginUser;
 import com.alibaba.dbhub.server.tools.common.util.ContextUtils;
+import com.alibaba.fastjson2.JSON;
 
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.spring.SpringMVCUtil;
@@ -27,6 +29,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import static com.alibaba.dbhub.server.tools.common.enums.ErrorEnum.NEED_LOGGED_IN;
 
 /**
  * web项目配置
@@ -45,7 +49,8 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
     /**
      * 全局放行的url
      */
-    private static final String[] FRONT_PERMIT_ALL = new String[] {"/favicon.ico", "/error", "/static/**"};
+    private static final String[] FRONT_PERMIT_ALL = new String[] {"/favicon.ico", "/error", "/static/**",
+        "/api/system"};
 
     @Resource
     private UserService userService;
@@ -62,8 +67,8 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                     // 未登录
                     if (!StringUtils.isNumeric(userIdString)) {
                         // TODO 这个版本默认放开登录 不管用户是否登录 都算登录，下个版本做权限
-                        userIdString = "1";
-                        //return true;
+                        //userIdString = "1";
+                        return true;
                     }
                     // 已经登录 查询用户信息
                     Long userId = Long.parseLong(userIdString);
@@ -104,7 +109,10 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
 
                         String path = SaHolder.getRequest().getRequestPath();
                         if (path.startsWith(API_PREFIX)) {
-                            throw new NeedLoggedInBusinessException();
+                            response.getWriter().println(JSON.toJSONString(
+                                ActionResult.fail(NEED_LOGGED_IN.getCode(), NEED_LOGGED_IN.getDescription())));
+                            return false;
+                            //throw new NeedLoggedInBusinessException();
                         } else {
                             throw new RedirectBusinessException(
                                 "/login-a#/login?callback=" + SaFoxUtil.joinParam(
