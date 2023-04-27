@@ -1,6 +1,7 @@
 package com.alibaba.dbhub.server.start.config.config;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.dbhub.server.domain.api.model.User;
 import com.alibaba.dbhub.server.domain.api.service.UserService;
+import com.alibaba.dbhub.server.tools.base.constant.SymbolConstant;
 import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBusinessException;
 import com.alibaba.dbhub.server.tools.common.exception.RedirectBusinessException;
 import com.alibaba.dbhub.server.tools.common.model.Context;
@@ -112,7 +114,8 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                     Context context = ContextUtils.queryContext();
                     // 校验登录信息
                     if (context == null) {
-                        log.info("访问{}需要登录", SaHolder.getRequest().getUrl());
+                        log.info("访问{},{}需要登录", buildHeaderString(request), SaHolder.getRequest().getUrl());
+
                         String path = SaHolder.getRequest().getRequestPath();
                         if (path.startsWith(API_PREFIX)) {
                             throw new NeedLoggedInBusinessException();
@@ -134,5 +137,18 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
             .excludePathPatterns("/**/*-a")
             // _a结尾的统一放行
             .excludePathPatterns("/**/*_a");
+    }
+
+    private String buildHeaderString(HttpServletRequest request) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headName = headerNames.nextElement();
+            stringBuilder.append(headName);
+            stringBuilder.append(SymbolConstant.COLON);
+            stringBuilder.append(request.getHeader(headName));
+            stringBuilder.append(SymbolConstant.COMMA);
+        }
+        return stringBuilder.toString();
     }
 }
