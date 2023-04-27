@@ -156,14 +156,14 @@ export default memo<IProps>(function Setting({ className, text }) {
           })}
         </ul>
         <div className={styles.title}>
-          SecretKey
+          OpenAI Api Key
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
           <Input value={chatgptKey} onChange={(e) => { setChatgptKey(e.target.value) }} />
           <Button theme='default' onClick={changeChatgptApiKey}>更新</Button>
         </div>
         <div className={styles.title}>
-          接口前缀
+          后台服务地址
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
           <Input value={apiPrefix} onChange={updateApi} />
