@@ -126,12 +126,12 @@ export default memo<IProps>(function Setting({ className, text }) {
     if (!apiPrefix) {
       return
     }
-    miscService.testApiSmooth().then(res => {
-      localStorage.setItem('_BaseURL', apiPrefix);
-      location.reload();
-    }).catch(error => {
-      message.error('接口测试不通过')
-    })
+    localStorage.setItem('_BaseURL', apiPrefix);
+    location.reload();
+    // miscService.testApiSmooth().then(res => {
+    // }).catch(error => {
+    //   message.error('接口测试不通过')
+    // })
   }
 
   return (
