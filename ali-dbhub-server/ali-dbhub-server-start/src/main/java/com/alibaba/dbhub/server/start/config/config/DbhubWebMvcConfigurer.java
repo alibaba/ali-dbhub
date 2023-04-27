@@ -67,8 +67,8 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                     // 未登录
                     if (!StringUtils.isNumeric(userIdString)) {
                         // TODO 这个版本默认放开登录 不管用户是否登录 都算登录，下个版本做权限
-                        //userIdString = "1";
-                        return true;
+                        userIdString = "1";
+                        //return true;
                     }
                     // 已经登录 查询用户信息
                     Long userId = Long.parseLong(userIdString);
