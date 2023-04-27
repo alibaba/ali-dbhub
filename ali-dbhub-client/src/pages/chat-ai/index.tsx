@@ -103,6 +103,7 @@ function ChatAI(props: IChatAIProps) {
     const eventSource = new EventSourcePolyfill(`${url}?${params}`, {
       headers: {
         uid: uid.current,
+        DBHUB: localStorage.getItem('DBHUB') || ''
       },
     });
 
