@@ -18,12 +18,10 @@ import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.spring.SpringMVCUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaFoxUtil;
-import cn.hutool.http.Header;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -37,6 +35,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @Slf4j
 public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
+
+    /**
+     * api前缀
+     */
+    private static final String API_PREFIX = "/api/";
 
     /**
      * 全局放行的url
@@ -72,7 +75,7 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                     if (!StringUtils.isNumeric(userIdString)) {
                         // TODO 这个版本默认放开登录 不管用户是否登录 都算登录，下个版本做权限
                         userIdString = "1";
-                        // return true;
+                        //return true;
                     }
                     // 已经登录 查询用户信息
                     Long userId = Long.parseLong(userIdString);
@@ -110,13 +113,13 @@ public class DbhubWebMvcConfigurer implements WebMvcConfigurer {
                     // 校验登录信息
                     if (context == null) {
                         log.info("访问{}需要登录", SaHolder.getRequest().getUrl());
-                        String accept = request.getHeader(Header.ACCEPT.getValue());
-                        // 前端传了 需要json,则认为是异步请求
-                        if (StringUtils.containsIgnoreCase(accept, MediaType.APPLICATION_JSON_VALUE)) {
+                        String path = SaHolder.getRequest().getRequestPath();
+                        if (path.startsWith(API_PREFIX)) {
                             throw new NeedLoggedInBusinessException();
                         } else {
                             throw new RedirectBusinessException(
-                                "/login-a#/login?callback=" + SaFoxUtil.joinParam(SpringMVCUtil.getRequest().getRequestURI(),
+                                "/login-a#/login?callback=" + SaFoxUtil.joinParam(
+                                    SpringMVCUtil.getRequest().getRequestURI(),
                                     SpringMVCUtil.getRequest().getQueryString()));
                         }
                     }
