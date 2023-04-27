@@ -14,11 +14,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 /**
- * Cros跨越
+ * Cors跨域的拦截器，任何情况都允许跨域
+ *
+ * 通过CorsRegistry策略的跨域 在登录的情况下会有有问题，但是本地没有复现，可能原因是：bean 的加载顺序的问题。
+ * 临时通过CorsFilter解决，后续可以研究下：CorsRegistry
+ *
  * @author 是仪
  */
 @Component
-public class CrosFilter implements Filter {
+public class CorsFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
