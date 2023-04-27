@@ -6,6 +6,7 @@ import Button from '@/components/Button';
 import { Modal, Radio, Input, message } from 'antd';
 import i18n from '@/i18n';
 import configService from '@/service/config';
+import miscService from '@/service/misc';
 
 interface IProps {
   className?: string;
@@ -125,8 +126,12 @@ export default memo<IProps>(function Setting({ className, text }) {
     if (!apiPrefix) {
       return
     }
-    localStorage.setItem('_BaseURL', apiPrefix);
-    location.reload();
+    miscService.testApiSmooth().then(res => {
+      localStorage.setItem('_BaseURL', apiPrefix);
+      location.reload();
+    }).catch(error => {
+      message.error('接口测试不通过')
+    })
   }
 
   return (
