@@ -20,7 +20,7 @@ interface INavItem {
 const LNKConfig: INavItem[] = [
   {
     title: i18n('home.nav.database'),
-    icon: '\ue62f',
+    icon: '\ue607',
     path: '/'
   },
   {

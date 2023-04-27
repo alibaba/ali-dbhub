@@ -17,7 +17,7 @@ function createWindow() {
     height: 800,
     title: 'dataOps',
     frame: true,
-    titleBarStyle: 'hidden', // window 可以自定义样式
+    // titleBarStyle: 'hidden', // window 可以自定义样式
     webPreferences: {
       webSercurity: false,
       nodeIntegration: true,
@@ -35,22 +35,34 @@ function createWindow() {
 
   // 关闭window时触发下列事件.
   mainWindow.on('closed', function () {
-    const request = net.request({
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      url: 'http://127.0.0.1:10821/api/system/stop',
-    });
-    request.write(JSON.stringify({}));
-    request.on('response', (response) => {
-      response.on('data', (res) => {
-        let data = JSON.parse(res.toString());
+    try {
+      const request = net.request({
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        url: 'http://127.0.0.1:10821/api/system/stop',
       });
-      response.on('end', () => {});
-    });
-    request.end();
+      request.write(JSON.stringify({}));
+      request.on('response', (response) => {
+        response.on('data', (res) => {
+          let data = JSON.parse(res.toString());
+        });
+        response.on('end', () => {});
+      });
+      request.end();
+    }
+    catch (err) {
+      
+    }
     mainWindow = null
+  });
+
+  // 让electron 不会弹窗报错
+  process.on('uncaughtException', (error) => {
+    console.error(error);
+    logStream.write(`${error.stack}
+  `);
   });
 
   // 监听打开新窗口事件 用默认浏览器打开

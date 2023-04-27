@@ -9,6 +9,7 @@ import miscService from '@/service/misc';
 import LoadingLiquid from '@/components/Loading/LoadingLiquid';
 import i18n from '@/i18n';
 import { ThemeType } from '@/utils/constants';
+import Setting from '@/components/Setting';
 
 interface IProps {
   className?: any;
@@ -102,9 +103,10 @@ export default memo<IProps>(function AppContainer({ className, children }) {
         <div>
           {!serviceFail && <LoadingLiquid />}
           <div className={styles.hint}>
-            {serviceFail
+            {/* {serviceFail
               ? i18n('common.text.serviceFail')
-              : i18n('common.text.serviceStarting')}
+              : i18n('common.text.serviceStarting')} */}
+            <Setting text={'设置'} />
           </div>
           {serviceFail && (
             <>
