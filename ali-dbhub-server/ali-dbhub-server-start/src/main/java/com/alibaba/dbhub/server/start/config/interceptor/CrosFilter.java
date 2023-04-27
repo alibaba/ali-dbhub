@@ -10,28 +10,27 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
+/**
+ * Cros跨越
+ * @author 是仪
+ */
 @Component
-public class CROSFilter implements Filter {
+public class CrosFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
         throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse)res;
-        /*
-         * 跨域设置允所有请求跨域
-         * 如果允许指定的客户端跨域设置: http://127.0.0.1:8020
-         */
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        HttpServletRequest request = (HttpServletRequest)req;
+
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader(HttpHeaders.ORIGIN));
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-        if (((HttpServletRequest)req).getMethod().equals("OPTIONS")) {
-            response.getWriter().println("ok");
-            return;
-        }
         chain.doFilter(req, res);
     }
 
