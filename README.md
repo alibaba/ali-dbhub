@@ -29,6 +29,13 @@
 - 🛡 前端使用 Electron 开发，提供 Windows、Mac、Linux 客户端、网页版本一体化的解决方案
 - 🎁 支持环境隔离、线上、日常数据权限分离
 
+## ⏬ 下载安装
+| 描述                   | 下载地址                                                                                                                                                                                                                                       |
+|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB%20Setup%201.0.0.exe](https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB%20Setup%201.0.0.exe) |
+| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0-arm64.dmg) |
+| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0.dmg](https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0.dmg) |       
+| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.0/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.0/ali-dbhub-server-start.jar) |                                                                                                                
 
 ## 🌰 使用Demo
 - 创建数据源
@@ -40,15 +47,6 @@
 - AI智能助手
 <a><img src="https://gw.alicdn.com/imgextra/i4/O1CN01iaSXot1W6VeaDFbK2_!!6000000002739-0-tps-3430-1740.jpg" width="100%"/></a>
 
-
-
-## ⏬ 下载安装
-| 描述          | 文件大小 | 下载地址                                                                                                                                                                                                                                        |
-|-------------|------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows     | 361M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test%20Setup%201.0.4796588172-Test.exe">https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test%20Setup%201.0.4796588172-Test.exe </a> |
-| MacOS ARM64 | 207M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test-arm64.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test-arm64.dmg </a> |
-| MacOS X64   | 210M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test.dmg </a>  |       
-| Jar包        | 88M  | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/ali-dbhub-server-start.jar"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/ali-dbhub-server-start.jar </a>  |                                                                                                                
 
 ## 📦 Docker部署
 

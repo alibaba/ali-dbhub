@@ -2,23 +2,30 @@
 name: Build Client
 
 # Workflow's trigger
-# 在创建标签的时候触发打包
-# main 分支打包release的
-# 其他分支统一打包test的
+# 在创建标签的时候打包
 on:
   push:
     tags:
       - v*
 
 # Workflow's jobs
+# 一共需要3台电脑运行
+# windows
+# macos-latest amd64
+# macos-latest arm64
 jobs:
   release:
-    runs-on: ${{ matrix.os }}
-
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, windows-latest ]
+        include:
+          - os: windows-latest
+          - os: macos-latest
+            arch: amd64
+          - os: macos-latest
+            arch: arm64
+            variant: v8
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Check out git repository
@@ -32,15 +39,6 @@ jobs:
           value: ${{ github.ref }}
           index_of_str: "refs/tags/v"
 
-      # 计算当前是什么环境
-      # v1.x.x-dev 代表 dev环境
-      # v1.x.x 代表 release
-      # 注意这里的变量是 ${{ env.CHAT2DB_ENVIRONMENT }} 这样获取的
-      - name: set environment variables
-        uses: marcdomain/set-variables@v1
-        with:
-          variables: |
-            CHAT2DB_ENVIRONMENT: ${{ endsWith(github.ref, '-dev') }} == true ? "dev" : "release"
 
       # 输出基础信息
       - name: Print basic information
@@ -89,36 +87,64 @@ jobs:
         run: |
           cd ali-dbhub-client/electron
           cp -r ../dist ./
-          yarn
 
-      - name: Build/release Electron app
+      # windows
+      - name: Build/release Electron app for Windows
+        if: ${{ runner.os == 'Windows' }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
           package_root: "ali-dbhub-client/electron"
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          # args: "--c.extraMetadata.appId=com.dbhub --c.extraMetadata.productName=Chat"
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }}"
+          release: true
 
-      # 准备要需要的数据 MacOS
-      - name: Prepare upload MacOS
-        if: runner.os == 'macOS'
-        run: |
-          mkdir oss_temp_file 
-          cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
+      # macos amd64
+      - name: Build/release Electron app for MacOS X64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          package_root: "ali-dbhub-client/electron"
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          mac_certs: ${{ secrets.mac_certs }}
+          mac_certs_password: ${{ secrets.mac_certs_password }}
+          args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }} --x64"
+          release: true
+
+      # macos amd64
+      - name: Build/release Electron app for MacOS arm64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          package_root: "ali-dbhub-client/electron"
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          mac_certs: ${{ secrets.mac_certs }}
+          mac_certs_password: ${{ secrets.mac_certs_password }}
+          args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }} --arm64"
+          release: true
 
       # 准备要需要的数据 Windows
-      - name: Prepare upload Windows
+      - name: Prepare upload for Windows
         if: runner.os == 'Windows'
         run: |
-          mkdir oss_temp_file 
+          mkdir oss_temp_file
           cp -r ali-dbhub-client/electron-build/*Setup*.exe ./oss_temp_file
+
+      # 准备要需要的数据 MacOS amd64
+      - name: Prepare upload for MacOS amd64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
+        run: |
+          mkdir oss_temp_file
+          cp ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file
+          cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
+
+      # 准备要需要的数据 MacOS arm64
+      - name: Prepare upload for MacOS arm64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
+        run: |
+          mkdir oss_temp_file
+          cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
 
       # 把文件上传到OSS 方便下载
       - name: Set up oss utils
@@ -130,16 +156,43 @@ jobs:
           ossutil-version: 'latest'
       - name: Upload to oss
         run: |
-          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/${{ env.CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/
+          ossutil cp -rf --acl=public-read ./oss_temp_file/ oss://chat2db/release/${{ steps.chat2db_version.outputs.substring }}/
 
       # 构建完成通知
-      - name: Send dingtalk message
+      - name: Send dingtalk message for Windows
+        if: ${{ runner.os == 'Windows' }}
         uses: ghostoy/dingtalk-action@master
         with:
           webhook: ${{ secrets.DINGTALK_WEBHOOK }}
           msgtype: markdown
           content: |
             {
-              "title": "构建${{ env.CHAT2DB_ENVIRONMENT }}完成通知",
-              "text": "# 构建${{ env.CHAT2DB_ENVIRONMENT }}完成通知   \n ![bang](https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg)   \n ### 下载地址:[https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg](https://oss-chat2db.alibaba.com/dev/1.0.37-dev/Chat2DB-1.0.37-dev.dmg)"
+              "title": "Windows-release-打包完成通知",
+              "text": "# Windows-release-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/happy100.jpg)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})   \n ### Windows下载地址：[https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/Chat2DB%20Setup%20${{ steps.chat2db_version.outputs.substring }}.exe](https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/Chat2DB%20Setup%20${{ steps.chat2db_version.outputs.substring }}.exe) "
+            }
+
+      # 构建完成通知
+      - name: Send dingtalk message for MacOS amd64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          msgtype: markdown
+          content: |
+            {
+              "title": "MacOS-amd64-release-构建完成通知",
+              "text": "# MacOS-amd64-release-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/happy100.jpg)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})    \n ### Intel芯片下载地址：[https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/Chat2DB-${{ steps.chat2db_version.outputs.substring }}.dmg](https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/Chat2DB-${{ steps.chat2db_version.outputs.substring }}.dmg)   \n ### jar包下载地址：[https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/ali-dbhub-server-start.jar) "
+            }
+
+      # 构建完成通知
+      - name: Send dingtalk message for MacOS arm64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
+          msgtype: markdown
+          content: |
+            {
+              "title": "MacOS-arm64-release-构建完成通知",
+              "text": "# MacOS-arm64-release-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/happy100.jpg)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})   \n ### Apple芯片下载地址：[https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/Chat2DB-${{ steps.chat2db_version.outputs.substring }}-arm64.dmg](https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/Chat2DB-${{ steps.chat2db_version.outputs.substring }}-arm64.dmg) "
             }
