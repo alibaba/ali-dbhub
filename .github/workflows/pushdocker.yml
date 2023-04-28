@@ -29,22 +29,11 @@ jobs:
           value: ${{ github.ref }}
           index_of_str: "refs/tags/v"
 
-      # 计算当前是什么环境
-      # v1.x.x-dev 代表 dev环境
-      # v1.x.x 代表 release
-      # 注意这里的变量是 ${{ env.CHAT2DB_ENVIRONMENT }} 这样获取的
-      - name: set environment variables
-        uses: marcdomain/set-variables@v1
-        with:
-          variables: |
-            CHAT2DB_ENVIRONMENT: ${{ endsWith(github.ref, '-dev') }} == true ? "dev" : "release"
 
       # 输出基础信息
       - name: Print basic information
         run: |
-          echo "current environment: ${{ env.CHAT2DB_ENVIRONMENT }}"
           echo "current version: ${{ steps.chat2db_version.outputs.substring }}"
-          echo "current matrix: ${{ toJSON(matrix) }}"
 
       # 安装nodejs
       - name: Install Node.js
@@ -96,17 +85,3 @@ jobs:
           platforms: linux/amd64,linux/arm64/v8
           tags: chat2db/chat2db:${{ steps.chat2db_version.outputs.substring }},chat2db/chat2db:latest
           file: docker/Dockerfile
-
-      # 把文件上传到OSS 方便下载
-      - name: Set up oss utils
-        if: ${{ matrix.arch == 'amd64'}}
-        uses: yizhoumo/setup-ossutil@v1
-        with:
-          endpoint: "oss-accelerate.aliyuncs.com"
-          access-key-id: ${{ secrets.OSS_ACCESS_KEY_ID }}
-          access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
-          ossutil-version: 'latest'
-      - name: Upload to oss
-        if: ${{ matrix.arch == 'amd64'}}
-        run: |
-          ossutil cp -rf --acl=public-read ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar oss://chat2db/${{ env.CHAT2DB_ENVIRONMENT }}/${{ steps.chat2db_version.outputs.substring }}/
