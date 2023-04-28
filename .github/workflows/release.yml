@@ -168,7 +168,7 @@ jobs:
           content: |
             {
               "title": "Windows-release-打包完成通知",
-              "text": "# Windows-release-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/happy100.jpg)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})   \n ### Windows下载地址：[https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/Chat2DB%20Setup%20${{ steps.chat2db_version.outputs.substring }}.exe](https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/Chat2DB-Test%20Setup%20${{ steps.chat2db_version.outputs.substring }}.exe) "
+              "text": "# Windows-release-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/happy100.jpg)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})   \n ### Windows下载地址：[https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/Chat2DB%20Setup%20${{ steps.chat2db_version.outputs.substring }}.exe](https://oss-chat2db.alibaba.com/release/${{ steps.chat2db_version.outputs.substring }}/Chat2DB%20Setup%20${{ steps.chat2db_version.outputs.substring }}.exe) "
             }
 
       # 构建完成通知
