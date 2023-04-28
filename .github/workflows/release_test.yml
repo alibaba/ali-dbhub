@@ -71,7 +71,6 @@ jobs:
         run: |
           cd ali-dbhub-client/electron
           cp -r ../dist ./
-      #   yarn
 
       # windows
       - name: Build/release Electron app for Windows
