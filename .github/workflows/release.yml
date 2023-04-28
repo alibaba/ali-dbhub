@@ -98,6 +98,7 @@ jobs:
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
           args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }}"
+          release: true
 
       # macos amd64
       - name: Build/release Electron app for MacOS X64
@@ -109,6 +110,7 @@ jobs:
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
           args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }} --x64"
+          release: true
 
       # macos amd64
       - name: Build/release Electron app for MacOS arm64
@@ -120,6 +122,7 @@ jobs:
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
           args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }} --arm64"
+          release: true
 
       # 准备要需要的数据 Windows
       - name: Prepare upload for Windows
