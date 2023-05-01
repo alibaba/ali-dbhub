@@ -30,12 +30,12 @@
 - 🎁 支持环境隔离、线上、日常数据权限分离
 
 ## ⏬ 下载安装
-| 描述          | 文件大小 | 下载地址                                                                                                                                                                                                                                        |
-|-------------|------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows     | 361M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test%20Setup%201.0.4819968180-Test.exe">https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test%20Setup%201.0.4796588172-Test.exe </a> |
-| MacOS ARM64 | 207M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test-1.0.4819968180-Test-arm64.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test-arm64.dmg </a> |
-| MacOS X64   | 210M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test-1.0.4819968180-Test.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test.dmg </a>  |       
-| Jar包        | 88M  | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/ali-dbhub-server-start.jar"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/ali-dbhub-server-start.jar </a>  |                                                                                                                
+| 描述                   | 下载地址                                                                                                                                                                                                                                       |
+|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB%20Setup%201.0.0.exe](https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB%20Setup%201.0.0.exe) |
+| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0-arm64.dmg) |
+| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0.dmg](https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0.dmg) |       
+| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.0/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.0/ali-dbhub-server-start.jar) |                                                                                                                
 
 ## 🌰 使用Demo
 - 创建数据源

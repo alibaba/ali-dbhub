@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "1.0.52-dev",
+  "version": "1.0.0",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
@@ -25,7 +25,7 @@
   },
   "icon": "logo/logo.png",
   "build": {
-    "appId": "com.ali-dbhub",
+    "appId": "com.chat2db",
     "directories": {
       "output": "../electron-build"
     },
