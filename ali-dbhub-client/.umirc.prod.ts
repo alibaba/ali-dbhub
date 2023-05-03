@@ -1,5 +1,5 @@
 import { defineConfig } from 'umi';
 
 export default defineConfig({
-  publicPath: './static/front/',
+  publicPath: 'https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/static/front/',
 });
