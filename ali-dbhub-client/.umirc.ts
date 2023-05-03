@@ -3,6 +3,7 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin');
 const UMI_ENV = process.env.UMI_ENV || 'local'; 
+const assetDir = "static";
 
 const chainWebpack = (config: any, { webpack }: any) => {
   config.plugin('monaco-editor').use(MonacoWebpackPlugin, [

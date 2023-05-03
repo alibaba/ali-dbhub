@@ -65,14 +65,17 @@ const request = extend({
 });
 
 request.interceptors.request.use((url, options) => {  
+  const myOptions:any = {
+    ...options,
+    headers: {
+      ...options.headers,
+    }
+  }
+  if (localStorage.getItem('DBHUB')) {
+    myOptions.headers.DBHUB = localStorage.getItem('DBHUB')
+  }
   return {
-    options: {
-      ...options,
-      headers: {
-        ...options.headers,
-        DBHUB: localStorage.getItem('DBHUB') || ''
-      }
-    },
+    options: myOptions,
   };
 });
 
