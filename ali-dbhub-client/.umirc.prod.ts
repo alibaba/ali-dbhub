@@ -1,6 +1,6 @@
 import { defineConfig } from 'umi';
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
-const assetDir = "https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/static/front/";
+const assetDir = "https://oss-chat2db.alibaba.com/static/front/";
 
 const chainWebpack = (config: any, { webpack }: any) => {
   config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
