@@ -1,5 +1,11 @@
 # Chat2DB AI SQL功能使用说明
 Chat2DB包含一系列基于ChatGPT的AI SQL使用功能，主要包括自然语言转SQL、SQL解释、SQL优化和SQL转换。 使用这些AI功能，可以将自然语言转换成本地查询SQL，而不仅仅是SQL查询伪代码；可以将SQL解释成自然语言，帮助用户理解复杂的SQL；可以针对慢SQL提供全方位的优化建议，提升查询效率；可以转换不同数据库类型的SQL语言，降低数据库迁移难度等等。
+## 使用配置
+### 点击设置
+<a><img src="https://img.alicdn.com/imgextra/i2/O1CN01hecdtO1acLegtiP9k_!!6000000003350-2-tps-2400-1600.png" width="100%"/></a>
+### 配置OPENAI_API_KEY
+<a><img src="https://img.alicdn.com/imgextra/i4/O1CN0197wmQv1XFV33cm1aY_!!6000000002894-2-tps-1054-590.png" width="100%"/></a>
+
 ## 自然语言转SQL
 ### 功能描述
 输入自然语言，选中执行并传入查询相关的表结构信息，则会返回相应的SQL

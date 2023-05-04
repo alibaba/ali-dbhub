@@ -1,6 +1,7 @@
 package com.alibaba.dbhub.server.web.api.controller.ai;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,8 @@ import com.alibaba.dbhub.server.domain.api.model.DataSource;
 import com.alibaba.dbhub.server.domain.api.param.TableQueryParam;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.api.service.TableService;
-import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
@@ -30,7 +31,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.entity.chat.Message;
 import com.unfbx.chatgpt.entity.completions.Completion;
 import com.unfbx.chatgpt.exception.BaseException;
@@ -60,7 +60,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Slf4j
 public class ChatController {
 
-
     @Autowired
     private TableService tableService;
 
@@ -75,6 +74,11 @@ public class ChatController {
 
     @Value("${chatgpt.version}")
     private String gptVersion;
+
+    /**
+     * chat的超时时间
+     */
+    private static final Long CHAT_TIMEOUT = Duration.ofMinutes(10).toMillis();
 
     /**
      * 提示语最大token数
@@ -139,7 +143,7 @@ public class ChatController {
     public SseEmitter completions(ChatQueryRequest queryRequest, @RequestHeader Map<String, String> headers)
         throws IOException {
         //默认30秒超时,设置为0L则永不超时
-        SseEmitter sseEmitter = new SseEmitter(0L);
+        SseEmitter sseEmitter = new SseEmitter(CHAT_TIMEOUT);
         String uid = headers.get("uid");
         if (StrUtil.isBlank(uid)) {
             throw new BusinessException(CommonErrorEnum.COMMON_SYSTEM_ERROR);
@@ -152,7 +156,8 @@ public class ChatController {
 
         String prompt = buildPrompt(queryRequest);
         if (prompt.length() / TOKEN_CONVERT_CHAR_LENGTH > MAX_PROMPT_LENGTH) {
-            log.error("提示语超出最大长度:{}，输入长度:{}, 请重新输入", MAX_PROMPT_LENGTH, prompt.length() / TOKEN_CONVERT_CHAR_LENGTH);
+            log.error("提示语超出最大长度:{}，输入长度:{}, 请重新输入", MAX_PROMPT_LENGTH,
+                prompt.length() / TOKEN_CONVERT_CHAR_LENGTH);
             throw new BusinessException(CommonErrorEnum.PARAM_ERROR);
         }
 
@@ -225,7 +230,8 @@ public class ChatController {
             throwable -> {
                 try {
                     log.info(LocalDateTime.now() + ", uid#" + "765431" + ", chatGpt3 on error#" + throwable.toString());
-                    sseEmitter.send(SseEmitter.event().id("765431").name("chatGpt3 发生异常！").data(throwable.getMessage())
+                    sseEmitter.send(SseEmitter.event().id("765431").name("chatGpt3 发生异常！")
+                        .data(throwable.getMessage())
                         .reconnectTime(3000));
                 } catch (IOException e) {
                     e.printStackTrace();

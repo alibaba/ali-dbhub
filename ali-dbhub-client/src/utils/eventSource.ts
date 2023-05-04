@@ -16,6 +16,7 @@ const connectToEventSource = (params: {
   const eventSource = new EventSourcePolyfill(`${baseURL}${url}`, {
     headers: {
       uid,
+      DBHUB: localStorage.getItem('DBHUB') || ''
     },
   });
 

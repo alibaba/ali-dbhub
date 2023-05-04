@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3633546 */
-  src: url('iconfont.woff2?t=1682086589170') format('woff2'),
-       url('iconfont.woff?t=1682086589170') format('woff'),
-       url('iconfont.ttf?t=1682086589170') format('truetype');
+  src: url('iconfont.woff2?t=1682599433280') format('woff2'),
+       url('iconfont.woff?t=1682599433280') format('woff'),
+       url('iconfont.ttf?t=1682599433280') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,34 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-shujuku4:before {
+  content: "\e609";
+}
+
+.icon-shujuyuanpeizhi:before {
+  content: "\e649";
+}
+
+.icon-jurassic_server:before {
+  content: "\e6a6";
+}
+
+.icon-shujuku2:before {
+  content: "\e607";
+}
+
+.icon-shujuku3:before {
+  content: "\e625";
+}
+
+.icon-shujukushuju:before {
+  content: "\e63c";
+}
+
+.icon-shujuku1:before {
+  content: "\e636";
 }
 
 .icon-peizhishujuyuan:before {
