@@ -52,9 +52,21 @@ public class OpenAIClient {
         } else {
             apikey = ApplicationContextUtil.getProperty(OPENAI_KEY);
         }
-        log.info("refresh openai apikey:{}", apikey);
+        log.info("refresh openai apikey:{}", maskApiKey(apikey));
         OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(OpenAIConst.OPENAI_HOST).apiKey(
             Lists.newArrayList(apikey)).build();
         apiKey = apikey;
+    }
+
+    private static String maskApiKey(String input) {
+        if (input == null) {
+            return input;
+        }
+
+        StringBuilder maskedString = new StringBuilder(input);
+        for (int i = input.length() / 4; i < input.length() / 2; i++) {
+            maskedString.setCharAt(i, '*');
+        }
+        return maskedString.toString();
     }
 }
