@@ -25,7 +25,7 @@
 - 🌈 AI智能助手，支持自然语言转SQL、SQL转自然语言、SQL优化建议
 - 👭 支持团队协作，研发无需知道线上数据库密码，解决企业数据库账号安全问题
 - ⚙️ 强大的数据管理能力，支持数据表、视图、存储过程、函数、触发器、索引、序列、用户、角色、授权等管理
-- 🔌 强大的扩展能力，目前已经支持Mysql、PostgreSQL、Oracle、SQLServer、ClickHouse、Oceanbase、H2、SQLite等等，未来会支持更多的数据库
+- 🔌 强大的扩展能力，目前已经支持MySQL、PostgreSQL、Oracle、SQLServer、ClickHouse、OceanBase、H2、SQLite等等，未来会支持更多的数据库
 - 🛡 前端使用 Electron 开发，提供 Windows、Mac、Linux 客户端、网页版本一体化的解决方案
 - 🎁 支持环境隔离、线上、日常数据权限分离
 
