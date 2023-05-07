@@ -1,6 +1,6 @@
 import { defineConfig } from 'umi';
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
-const assetDir = "https://oss-chat2db.alibaba.com/static/front/";
+const UMI_PublicPath = process.env.UMI_PublicPath || '/';
 
 const chainWebpack = (config: any, { webpack }: any) => {
   config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
@@ -8,7 +8,11 @@ const chainWebpack = (config: any, { webpack }: any) => {
       languages: ['mysql', 'pgsql', 'sql'],
     },
   ]);
-  config.output.publicPath(assetDir);
+  
+  // new RuntimePublicPathPlugin({
+  //   publicPath: `${window.assetsRoot}`,
+  // })
+  // config.output.publicPath(assetDir);
 
   // config.output
   // .filename('[name].js')
@@ -26,6 +30,6 @@ const chainWebpack = (config: any, { webpack }: any) => {
 };
 
 export default defineConfig({
-  publicPath: assetDir,
+  publicPath: UMI_PublicPath,
   chainWebpack
 });
