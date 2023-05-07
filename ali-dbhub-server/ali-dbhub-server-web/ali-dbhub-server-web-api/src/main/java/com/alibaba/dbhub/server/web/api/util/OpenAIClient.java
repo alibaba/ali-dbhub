@@ -21,7 +21,7 @@ public class OpenAIClient {
 
     public static final String OPENAI_KEY = "chatgpt.apiKey";
 
-    private static OpenAiStreamClient OPEN_AI_STREAM_CLIENT;
+    private static volatile OpenAiStreamClient OPEN_AI_STREAM_CLIENT;
     private static String apiKey;
 
     public static OpenAiStreamClient getInstance() {
