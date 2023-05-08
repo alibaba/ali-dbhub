@@ -6,6 +6,7 @@ package com.alibaba.dbhub.server.web.api.util;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.Objects;
 
 import com.alibaba.dbhub.server.domain.api.model.Config;
 import com.alibaba.dbhub.server.domain.api.service.ConfigService;
@@ -66,21 +67,27 @@ public class OpenAIClient {
         } else {
             apikey = ApplicationContextUtil.getProperty(OPENAI_KEY);
         }
-        String host = "127.0.0.1";
+        String host = System.getProperty("http.proxyHost");
         Config hostConfig = configService.find(PROXY_HOST).getData();
         if (hostConfig != null) {
             host = hostConfig.getContent();
         }
-        Integer port = 10824;
+        Integer port = Objects.nonNull(System.getProperty("http.proxyPort")) ? Integer.valueOf(
+            System.getProperty("http.proxyPort")) : null;
         Config portConfig = configService.find(PROXY_PORT).getData();
         if (portConfig != null) {
             port = Integer.valueOf(portConfig.getContent());
         }
         log.info("refresh openai apikey:{}", maskApiKey(apikey));
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
-        OkHttpClient okHttpClient = new OkHttpClient.Builder().proxy(proxy).build();
-        OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(OpenAIConst.OPENAI_HOST).apiKey(
-            Lists.newArrayList(apikey)).okHttpClient(okHttpClient).build();
+        if (Objects.nonNull(host) && Objects.nonNull(port)) {
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
+            OkHttpClient okHttpClient = new OkHttpClient.Builder().proxy(proxy).build();
+            OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(OpenAIConst.OPENAI_HOST).apiKey(
+                Lists.newArrayList(apikey)).okHttpClient(okHttpClient).build();
+        } else {
+            OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(OpenAIConst.OPENAI_HOST).apiKey(
+                Lists.newArrayList(apikey)).build();
+        }
         apiKey = apikey;
     }
 
