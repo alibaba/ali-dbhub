@@ -68,7 +68,7 @@ public class ManageApplicationListener implements ApplicationListener<Applicatio
 
     private void checkRunning(Integer managePort) throws Exception {
         try (Socket socket = new Socket("127.0.0.1", managePort)) {
-            socket.setSoTimeout(1000*10);
+            socket.setSoTimeout(1000);
             try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
                 objectOutputStream.writeObject(ManageMessage.builder()
                         .messageTypeEnum(MessageTypeEnum.HEARTBEAT)
@@ -91,7 +91,7 @@ public class ManageApplicationListener implements ApplicationListener<Applicatio
 
     private void accept() throws Exception {
         Socket socket = serverSocket.accept();
-        socket.setSoTimeout(1000*10);
+        socket.setSoTimeout(1000);
         try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream())) {
             ManageMessage message = (ManageMessage) objectInputStream.readObject();
             switch (message.getMessageTypeEnum()) {
