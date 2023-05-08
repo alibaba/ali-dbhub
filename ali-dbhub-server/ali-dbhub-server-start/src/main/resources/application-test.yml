@@ -17,3 +17,6 @@ spring:
 # 端口号
 server:
   port: 10822
+# 管理的端口号
+manage:
+  port: 10832
