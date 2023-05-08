@@ -7,10 +7,17 @@ import { Modal, Radio, Input, message } from 'antd';
 import i18n from '@/i18n';
 import configService from '@/service/config';
 import miscService from '@/service/misc';
+import BrandLogo from '@/components/BrandLogo';
 
 interface IProps {
   className?: string;
   text: string;
+}
+
+interface IChatgptConfig {
+  apiKey: string;
+  httpHost: string;
+  httpPort: string;
 }
 
 const colorList = [
@@ -59,7 +66,13 @@ let colorSchemeListeners: ((theme: string) => void)[] = [];
 
 export default memo<IProps>(function Setting({ className, text }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [chatgptKey, setChatgptKey] = useState('');
+  const [chatgptConfig, setChatgptConfig] = useState<IChatgptConfig>({
+    apiKey: '',
+    httpHost: '',
+    httpPort: ''
+  });
+  const [chatgptHost, setChatgptHost] = useState('');
+  const [chatgptProt, setChatgptProt] = useState('');
   const [apiPrefix, setApiPrefix] = useState(window._BaseURL);
   const [lang, setLang] = useState(localStorage.getItem('lang'));
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem('theme'));
@@ -67,6 +80,7 @@ export default memo<IProps>(function Setting({ className, text }) {
   const menusList = [
     {
       label: '基础设置',
+      icon: '\ue795',
       render: <>
         <div className={styles.title}>
           {i18n('common.text.background')}
@@ -103,12 +117,27 @@ export default memo<IProps>(function Setting({ className, text }) {
     },
     {
       label: 'OpenAI',
+      icon: '\ue69c',
       render: <>
         <div className={styles.title}>
-          OpenAI Api Key
+          Api Key
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
-          <Input value={chatgptKey} onChange={(e) => { setChatgptKey(e.target.value) }} />
+          <Input value={chatgptConfig.apiKey} onChange={(e) => { setChatgptConfig({...chatgptConfig, apiKey:e.target.value})}} />
+        </div>
+        <div className={styles.title}>
+          HTTP代理Host
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          <Input value={chatgptConfig.httpHost} onChange={(e) => { setChatgptConfig({...chatgptConfig, httpHost:e.target.value})} } />
+        </div>
+        <div className={styles.title}>
+          HTTP代理Prot
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          <Input value={chatgptConfig.httpPort} onChange={(e) => { setChatgptConfig({...chatgptConfig, httpPort:e.target.value})} } />
+        </div>
+        <div className={styles.bottomButton}>
           <Button theme='default' onClick={changeChatgptApiKey}>更新</Button>
         </div>
 
@@ -116,13 +145,30 @@ export default memo<IProps>(function Setting({ className, text }) {
     },
     {
       label: '代理设置',
+      icon:'\ue6e2',
       render: <>
         <div className={styles.title}>
           后台服务地址
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
           <Input value={apiPrefix} onChange={updateApi} />
+        </div>
+        <div className={styles.bottomButton}>
           <Button theme='default' onClick={affirmUpdateApi}>更新</Button>
+        </div>
+      </>
+    },
+    {
+      label: '关于Chat2DB',
+      icon: '\ue60c',
+      render: <>
+        <div className={styles.aboutUs}>
+          <div className={styles.versions}>
+            <BrandLogo className={styles.brandLogo} />
+            <div>
+              chat2DB
+            </div>
+          </div>
         </div>
       </>
     },
@@ -137,7 +183,11 @@ export default memo<IProps>(function Setting({ className, text }) {
 
   const showModal = () => {
     configService.getSystemConfig({ code: 'chatgpt.apiKey' }).then(res => {
-      setChatgptKey(res.content)
+      setChatgptConfig({
+        apiKey:res.content,
+        httpHost: '',
+        httpPort: ''
+      })
       setIsModalVisible(true);
     }).catch(() => {
       setIsModalVisible(true);
@@ -145,13 +195,13 @@ export default memo<IProps>(function Setting({ className, text }) {
   };
 
   function changeChatgptApiKey() {
-    if (!chatgptKey) {
-      message.error('请输入ChatGPT-apiKey')
-      return
-    }
-    configService.setSystemConfig({ code: 'chatgpt.apiKey', content: chatgptKey }).then(res => {
-      message.success('配置成功')
-    })
+    // if (!chatgptKey) {
+    //   message.error('请输入ChatGPT-apiKey')
+    //   return
+    // }
+    // configService.setSystemConfig({ code: 'chatgpt.apiKey', content: chatgptConfig }).then(res => {
+    //   message.success('配置成功')
+    // })
   }
 
   const handleOk = () => {
@@ -206,6 +256,10 @@ export default memo<IProps>(function Setting({ className, text }) {
     xhr.send();
   }
 
+  function changeMenu(t:any){
+    setCurrentMenu(t);
+  }
+
   return (
     <>
       <div className={classnames(className, styles.box)} onClick={showModal}>
@@ -221,6 +275,7 @@ export default memo<IProps>(function Setting({ className, text }) {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={false}
+        width={600}
       >
         <div className={styles.modalBox}>
           <div className={styles.menus}>
@@ -229,13 +284,17 @@ export default memo<IProps>(function Setting({ className, text }) {
             </div>
             {
               menusList.map(t => {
-                return <div className={classnames(styles.menuItem, { [styles.activeMenu]: t.label === currentMenu.label })}>
+                return <div onClick={changeMenu.bind(null,t)} className={classnames(styles.menuItem, { [styles.activeMenu]: t.label === currentMenu.label })}>
+                  <Iconfont code={t.icon} />
                   {t.label}
                 </div>
               })
             }
           </div>
           <div className={styles.menuContent}>
+            <div className={classnames(styles.menuContentTitle)}>
+              {currentMenu.label}
+            </div>
             {currentMenu.render}
           </div>
         </div>

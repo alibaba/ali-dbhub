@@ -31,18 +31,8 @@
 }
 
 .title {
-  font-size: 16px;
-  margin-bottom: 15px;
-}
-
-.chatGPTKey {
-  display: flex;
-  input {
-    margin-right: 10px;
-  }
-  button {
-    flex-shrink: 0;
-  }
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
 .content {
@@ -74,8 +64,8 @@
 }
 
 .menus {
-  width: 120px;
-  background-color: var(--color-bg-50);
+  width: 200px;
+  background-color: var(--color-bg-200);
   padding: 20px;
   .menusTitle {
     font-size: 16px;
@@ -84,7 +74,16 @@
 
   .menuItem {
     margin: 10px 0px;
-    padding: 10px 0px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    i{
+      font-size: 16px;
+      margin-right: 10px;
+    }
   }
   .activeMenu {
     background-color: var(--color-bg-6);
@@ -94,4 +93,21 @@
 .menuContent {
   padding: 20px;
   flex: 1;
+  .menuContentTitle{
+    font-size: 16px;
+    padding-bottom: 20px;
+  }
+}
+
+.bottomButton{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.versions{
+  display: flex;
+}
+
+.brandLogo{
+  margin-right: 20px;
 }
