@@ -37,7 +37,6 @@ logging:
 sa-token:
   # token名称 (同时也是cookie名称)
   token-name: DBHUB
-  # token有效期，单位s 默认30天, -1代表永不过期
   timeout: 2592000
   # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
   is-concurrent: true
@@ -49,8 +48,12 @@ sa-token:
   is-log: true
   # jwt秘钥 部署的时候需要改掉，不然可以随便破解登录
   jwt-secret-key: jwt_dbhub
+  is-write-header: true
+
 chatgpt:
   apiKey: sk-xxxx
   apiHost: https://api.openai.com/
+  # 可以选择GPT3或GPT35
+  version: GPT35
   context:
-    length: 1
+    length: 4

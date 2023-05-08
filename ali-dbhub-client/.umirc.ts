@@ -1,6 +1,9 @@
 import { defineConfig } from 'umi';
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin');
+const UMI_ENV = process.env.UMI_ENV || 'local'; 
+const assetDir = "static";
 
 const chainWebpack = (config: any, { webpack }: any) => {
   config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
@@ -8,22 +11,15 @@ const chainWebpack = (config: any, { webpack }: any) => {
       languages: ['mysql', 'pgsql', 'sql'],
     },
   ]);
-
-  // TODO: Monaco汉化
-  // config.module.rules()
-  // .test(/\.js/)
-  // .use(MonacoWebpackPlugin.loader)
-  // .loader(MonacoWebpackPlugin.loader)
-  // .options({name: /node_modules[\\\/]monaco-editor[\\\/]esm/ ,esModule: false});
 };
 
 export default defineConfig({
-  title: 'dbHub',
+  title: 'Chat2DB',
   history: {
     type: 'hash',
   },
   base: '/',
-  publicPath: process.env.NODE_ENV === 'prod' ? './static/front/' : '/',
+  publicPath: '/',
   hash: false,
   routes: [
     {
@@ -31,6 +27,7 @@ export default defineConfig({
       component: '@/components/AppContainer',
       routes: [
         { path: '/login', exact: true, component: '@/pages/login' },
+        // { path: '/verify', exact: true, component: '@/pages/verify' },
         { path: '/error', component: '@/pages/error' },
         { path: '/demo', exact: true, component: '@/pages/demo' },
         {
@@ -70,9 +67,11 @@ export default defineConfig({
       ],
     },
   ],
-
   mfsu: {},
   fastRefresh: {},
+  dynamicImport: {
+    loading: '@/components/Loading/LazyLoading'
+  },
   nodeModulesTransform: {
     type: 'none',
   },
@@ -81,4 +80,7 @@ export default defineConfig({
     port: 8001,
     host: '127.0.0.1',
   },
+  define: {
+    'process.env.UMI_ENV': UMI_ENV,
+  }
 });

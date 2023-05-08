@@ -36,7 +36,7 @@ public class TableServiceImpl implements TableService {
     @Override
     public DataResult<String> showCreateTable(ShowCreateTableParam param) {
         MetaSchema metaSchema = DbhubContext.getConnectInfo().getDbType().metaSchema();
-        String ddl = metaSchema.tableDDL(param.getDatabaseName(), param.getTableSchema(), param.getTableName());
+        String ddl = metaSchema.tableDDL(param.getDatabaseName(), param.getSchemaName(), param.getTableName());
         return DataResult.of(ddl);
     }
 

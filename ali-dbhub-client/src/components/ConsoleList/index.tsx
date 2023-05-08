@@ -1,107 +1,126 @@
 import React, { memo, useEffect, useState, useContext } from 'react';
-import styles from './index.less';
 import classnames from 'classnames';
 import ModifyTable from '@/components/ModifyTable/ModifyTable';
 import DatabaseQuery from '@/components/DatabaseQuery';
 import AppHeader from '@/components/AppHeader';
-import { qs } from '@/utils'
+import { qs } from '@/utils';
+import { Tabs } from 'antd';
 
 import historyService from '@/service/history';
 
-import { Tabs, Modal, Button, Input } from 'antd';
 import {
   ISavedConsole,
   IConsole,
   IEditTableConsole,
   ISQLQueryConsole,
 } from '@/types';
-import { TabOpened, ConsoleType, ConsoleStatus, DatabaseTypeCode } from '@/utils/constants';
+import {
+  TabOpened,
+  ConsoleType,
+  ConsoleStatus,
+  DatabaseTypeCode,
+  consoleTopComment,
+} from '@/utils/constants';
+import { DatabaseContext } from '@/context/database';
+import styles from './index.less';
 
-import { DatabaseContext } from '@/context/database'
-import { MenuItem } from '../Menu';
-
-interface Iprops {
+interface IProps {
   className?: string;
+  windowListChange: (value: IConsole[]) => void;
 }
 
-export default memo<Iprops>(function ConsoleList(props) {
-  const { consoleId } = qs<{ consoleId: string }>()
-  const { model, setcreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
+export default memo<IProps>(function ConsoleList(props) {
+  const { windowListChange } = props;
+  const { consoleId } = qs<{ consoleId: string }>();
+  const { model, setCreateConsoleDialog, setDblclickNodeData } =
+    useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [activeKey, setActiveKey] = useState<string>(consoleId);
   const { dblclickNodeData, createConsoleDialog } = model;
 
   useEffect(() => {
+    windowListChange(windowList);
+  }, [windowList]);
+
+  useEffect(() => {
     if (dblclickNodeData) {
-      let flag = false
-      windowList.map(i => {
-        if (i.databaseName === dblclickNodeData.databaseName && i.dataSourceId === dblclickNodeData.dataSourceId) {
-          flag = true
+      let flag = false;
+      windowList.map((i) => {
+        if (
+          i.databaseName === dblclickNodeData.databaseName &&
+          i.dataSourceId === dblclickNodeData.dataSourceId
+        ) {
+          flag = true;
+          setActiveKey(i.key);
         }
-      })
+      });
       if (!flag) {
         let p = {
-          name: `${dblclickNodeData?.databaseName}-console`,
+          name: `${dblclickNodeData?.databaseName}${dblclickNodeData.schemaName && ('-' + dblclickNodeData.schemaName)}-console`,
           type: dblclickNodeData.dataType as DatabaseTypeCode,
           dataSourceId: dblclickNodeData.dataSourceId!,
           databaseName: dblclickNodeData?.databaseName!,
+          schemaName: dblclickNodeData.schemaName!,
           status: ConsoleStatus.DRAFT,
-          ddl: 'SELECT * FROM',
+          ddl: `${consoleTopComment}SELECT * FROM`,
           tabOpened: TabOpened.IS_OPEN,
         };
 
         historyService.saveWindowTab(p).then((res) => {
           const newConsole: IConsole = {
-            name: `${dblclickNodeData?.databaseName}-console`,
+            name: `${dblclickNodeData?.databaseName}${dblclickNodeData.schemaName && ('-' + dblclickNodeData.schemaName)}-console`,
             key: res.toString(),
             type: ConsoleType.SQLQ,
-            DBType: dblclickNodeData.dataType!,
+            DBType: dblclickNodeData.dataType! as DatabaseTypeCode,
             databaseName: dblclickNodeData.databaseName!,
             dataSourceId: dblclickNodeData.dataSourceId!,
+            schemaName: dblclickNodeData.schemaName!,
             consoleId: res,
-            ddl: 'SELECT * FROM',
+            ddl: `${consoleTopComment}SELECT * FROM`,
           };
-          setActiveKey(newConsole.key)
-          setWindowList([...windowList, newConsole])
+          setActiveKey(newConsole.key);
+          setWindowList([...windowList, newConsole]);
         });
       }
     }
-  }, [dblclickNodeData])
+  }, [dblclickNodeData]);
 
   useEffect(() => {
     if (createConsoleDialog) {
-      createConsole()
+      createConsole();
     }
-  }, [createConsoleDialog])
+  }, [createConsoleDialog]);
 
   function createConsole() {
     if (!createConsoleDialog) {
-      return
+      return;
     }
 
     let p = {
-      name: `${createConsoleDialog?.databaseName}-console`,
-      type: DatabaseTypeCode.MYSQL,
+      name: `${createConsoleDialog?.databaseName}${createConsoleDialog.schemaName && ('-' + createConsoleDialog.schemaName)}-console`,
+      type: createConsoleDialog.databaseType,
       dataSourceId: createConsoleDialog.dataSourceId,
       databaseName: createConsoleDialog?.databaseName,
+      schemaName: createConsoleDialog.schemaName!,
       status: ConsoleStatus.DRAFT,
-      ddl: 'SELECT * FROM',
+      ddl: `${consoleTopComment}SELECT * FROM`,
       tabOpened: TabOpened.IS_OPEN,
     };
 
     historyService.saveWindowTab(p).then((res) => {
       const newConsole: IConsole = {
-        name: `${createConsoleDialog.databaseName}-console`,
+        name: `${createConsoleDialog.databaseName}${createConsoleDialog.schemaName && ('-' + createConsoleDialog.schemaName)}-console`,
         key: res.toString(),
         type: ConsoleType.SQLQ,
-        DBType: DatabaseTypeCode.MYSQL,
+        DBType: createConsoleDialog.databaseType,
         databaseName: createConsoleDialog.databaseName,
         dataSourceId: createConsoleDialog.dataSourceId,
+        schemaName: createConsoleDialog.schemaName!,
         consoleId: res,
-        ddl: 'SELECT * FROM',
+        ddl: `${consoleTopComment}SELECT * FROM`,
       };
-      setActiveKey(newConsole.key)
-      setWindowList([...windowList, newConsole])
+      setActiveKey(newConsole.key);
+      setWindowList([...windowList, newConsole]);
     });
   }
 
@@ -119,41 +138,51 @@ export default memo<Iprops>(function ConsoleList(props) {
     historyService.getSaveList(p).then((res) => {
       let flag = false;
 
-      const newWindowList = res.data?.map((item, index) => {
-        if (!consoleId && index === 0) {
-          setActiveKey(item.id + '');
-        } else if (item.id === +consoleId) {
-          flag = true
+      const newWindowList: any = [];
+      res.data?.map((item, index) => {
+        if (item.connectable) {
+          newWindowList.push({
+            consoleId: item.id,
+            ddl: item.ddl,
+            name: item.name,
+            key: item.id + '',
+            DBType: item.type,
+            type: ConsoleType.SQLQ,
+            status: item.status,
+            databaseName: item.databaseName,
+            dataSourceName: item?.dataSourceName,
+            dataSourceId: item.dataSourceId,
+          });
         }
-        return {
-          consoleId: item.id,
-          ddl: item.ddl,
-          name: item.name,
-          key: item.id + '',
-          DBType: item.type,
-          type: ConsoleType.SQLQ,
-          status: item.status,
-          databaseName: item.databaseName,
-          dataSourceName: item?.dataSourceName,
-          dataSourceId: item.dataSourceId
-        };
-      })
+      });
+
+      newWindowList.map((item: any, index: number) => {
+        if (!consoleId && index === 0) {
+          setActiveKey(item.key);
+        } else if (+item.key === +consoleId) {
+          flag = true;
+          setActiveKey(item.key);
+        }
+      });
       if (!flag && consoleId) {
         historyService.getWindowTab({ id: consoleId }).then((res: any) => {
-          newWindowList.push({
-            consoleId: res.id,
-            ddl: res.ddl,
-            name: res.name,
-            key: res.id + '',
-            DBType: res.type,
-            type: ConsoleType.SQLQ,
-            status: res.status,
-            databaseName: res.databaseName,
-            dataSourceName: res?.dataSourceName,
-            dataSourceId: res.dataSourceId
-          })
-          setWindowList(newWindowList);
-        })
+          if (res.connectable) {
+            newWindowList.push({
+              consoleId: res.id,
+              ddl: res.ddl,
+              name: res.name,
+              key: res.id + '',
+              DBType: res.type,
+              type: ConsoleType.SQLQ,
+              status: res.status,
+              databaseName: res.databaseName,
+              dataSourceName: res?.dataSourceName,
+              dataSourceId: res.dataSourceId,
+            });
+            setActiveKey(res.id + '');
+            setWindowList(newWindowList);
+          }
+        });
       } else {
         setWindowList(newWindowList);
       }
@@ -180,7 +209,7 @@ export default memo<Iprops>(function ConsoleList(props) {
 
   const onEdit = (targetKey: any, action: 'add' | 'remove', window: any) => {
     // if (action === 'add') {
-    //   setcreateConsoleDialog(true)
+    //   setCreateConsoleDialog(true)
     // } else {
     //   closeWindowTab(targetKey);
     // }
@@ -213,47 +242,50 @@ export default memo<Iprops>(function ConsoleList(props) {
     };
 
     if (window.status === 'DRAFT') {
-      historyService.deleteWindowTab({ id: window.id })
+      historyService.deleteWindowTab({ id: window.id });
     } else {
       historyService.updateWindowTab(p);
     }
   };
 
-  return <div className={styles.box}>
-    <AppHeader className={styles.appHeader} showRight={false}>
-      <div className={styles.tabsBox}>
-        {
-          !!windowList.length &&
-          <Tabs
-            hideAdd
-            type="editable-card"
-            onChange={onChangeTab}
-            activeKey={activeKey}
-            onEdit={(targetKey: any, action: 'add' | 'remove') => { onEdit(targetKey, action, window) }}
-            items={windowList.map(t => {
-              return {
-                key: t.key,
-                label: t.name
-              }
-            })}
-          ></Tabs>
-        }
+  return (
+    <div className={styles.box}>
+      <AppHeader className={styles.appHeader} showRight={false}>
+        <div className={styles.tabsBox}>
+          {!!windowList.length && (
+            <Tabs
+              hideAdd
+              type="editable-card"
+              onChange={onChangeTab}
+              activeKey={activeKey}
+              onEdit={(targetKey: any, action: 'add' | 'remove') => {
+                onEdit(targetKey, action, window);
+              }}
+              items={windowList.map((t) => {
+                return {
+                  key: t.key,
+                  label: t.name,
+                };
+              })}
+            ></Tabs>
+          )}
+        </div>
+      </AppHeader>
+      <div className={styles.databaseQueryBox}>
+        {!windowList.length && <div className={styles.ears}>Chat2DB</div>}
+        {windowList?.map((i: IConsole, index: number) => {
+          return (
+            <div
+              key={index}
+              className={classnames(styles.windowContent, {
+                [styles.concealTab]: activeKey !== i.key,
+              })}
+            >
+              {renderCurrentTab(i)}
+            </div>
+          );
+        })}
       </div>
-    </AppHeader>
-    <div className={styles.databaseQueryBox}>
-      {windowList?.map((i: IConsole, index: number) => {
-        return (
-          <div
-            key={index}
-            className={classnames(styles.windowContent, {
-              [styles.concealTab]: activeKey !== i.key,
-            })}
-          >
-            {renderCurrentTab(i)}
-          </div>
-        );
-      })}
     </div>
-  </div>
+  );
 });
-

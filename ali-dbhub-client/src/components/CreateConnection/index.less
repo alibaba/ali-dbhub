@@ -1,0 +1,49 @@
+@import '../../var.less';
+
+.box {
+}
+
+.form {
+  :global {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .custom-form-item {
+      > div > div:nth-of-type(1) {
+        width: 70px;
+        text-align: left;
+      }
+    }
+  }
+}
+
+.labelTextAlign {
+  :global {
+    .custom-form-item {
+      > div > div:nth-of-type(1) {
+        text-align: right;
+      }
+    }
+  }
+}
+
+.formFooter {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  .cancel {
+    margin-right: 20px;
+    .f-button();
+  }
+
+  .rightButton {
+    display: flex;
+  }
+
+  .test,
+  .save,
+  .cancel {
+    .f-button();
+  }
+}

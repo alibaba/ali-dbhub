@@ -21,7 +21,6 @@ public class DataSourceBaseRequest implements DataSourceBaseRequestInfo{
     /**
      * DB名称
      */
-    @NotNull
     private String databaseName;
 
     /**

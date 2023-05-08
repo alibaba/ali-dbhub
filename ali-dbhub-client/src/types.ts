@@ -45,6 +45,7 @@ export interface IHistoryRecord {
   type: DatabaseTypeCode;
   dataSourceName: string;
   ddl: string;
+  connectable: boolean;
 }
 export interface ITableColumn {
   name: string;
@@ -66,15 +67,18 @@ export interface ITreeNode {
   key: string;
   name: string;
   nodeType: TreeNodeType;
-  dataType?: DatabaseTypeCode;
+  dataType?: string;
+  databaseType?: DatabaseTypeCode;
   isLeaf?: boolean;
   children?: ITreeNode[];
   parent?: ITreeNode;
   dataSourceId?: number;
+  dataSourceName?: string;
   databaseName?: string;
   tableName?: string;
   schemaName?: string;
-  // columnType: string;
+  columnType?: string;
+  pretendNodeType?: TreeNodeType;
 }
 export interface IDB {
   name: string;
@@ -130,6 +134,7 @@ export interface IConsoleBasic {
   databaseName: string; // 数据库名称
   dataSourceId: number; // 数据源id
   dataSourceName?: string; // 数据源名称
+  schemaName?: string;
 }
 
 // 查询sql的控制台
@@ -155,4 +160,5 @@ export interface ISavedConsole {
   dataSourceName: string;
   type: DatabaseTypeCode;
   status: string;
+  connectable: boolean;
 }

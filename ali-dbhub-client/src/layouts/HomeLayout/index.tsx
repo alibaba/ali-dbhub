@@ -7,7 +7,7 @@ import i18n from '@/i18n';
 import classnames from 'classnames';
 import { history, useLocation } from 'umi';
 import styles from './index.less';
-interface Iprops {
+interface IProps {
 
 }
 interface INavItem {
@@ -31,7 +31,7 @@ const navConfig: INavItem[] = [
   {
     title: i18n('home.nav.github'),
     icon: '\ue885',
-    path: 'https://github.com/alibaba/ali-dbhub',
+    path: 'https://github.com/alibaba/Chat2DB',
     openBrowser: true
   },
   {
@@ -41,7 +41,7 @@ const navConfig: INavItem[] = [
   },
 ];
 
-export default function HomeLayout({ children }: PropsWithChildren<Iprops>) {
+export default function HomeLayout({ children }: PropsWithChildren<IProps>) {
   const location = useLocation();
   const defaultNav = location.pathname == '/' ? navConfig[0].path : location.pathname
   const [currentNav, setCurrentNav] = useState<string>(defaultNav);

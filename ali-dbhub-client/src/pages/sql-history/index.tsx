@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
+import { history } from 'umi';
 import classnames from 'classnames';
 import i18n from '@/i18n';
 import AppHeader from '@/components/AppHeader';
@@ -107,8 +108,8 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
   const searchChange = useDebounce(searchInputChange, 250)
 
   const jumpToDatabasePage = (item: IHistoryRecord) => {
-    if (currentTab == TabsKey.SAVE) {
-      location.href = `/#/database?consoleId=${item.id}`
+    if (currentTab == TabsKey.SAVE && item.connectable) {
+      history.push(`/database?consoleId=${item.id}`)
     }
   }
 
@@ -135,7 +136,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
         <div className={styles.sqlList}>
           {
             dataList?.map(item => {
-              return <div onClick={jumpToDatabasePage.bind(null, item)} key={item.id} className={styles.cardItem}>
+              return <div onClick={jumpToDatabasePage.bind(null, item)} key={item.id} className={classnames({ [styles.unConnect]: !item.connectable }, styles.cardItem)}>
                 <div className={styles.ddlType}>
                   <img src={databaseType[item.type].img} alt="" />
                 </div>
@@ -152,7 +153,7 @@ export default memo<IProps>(function SQLHistoryPage({ className }) {
                   {item.ddl}
                 </div>
                 {
-                  currentTab == TabsKey.SAVE &&
+                  currentTab == TabsKey.SAVE && item.connectable &&
                   <div className={styles.arrows}>
                     <Iconfont code='&#xe685;'></Iconfont>
                   </div>

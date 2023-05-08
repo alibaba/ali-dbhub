@@ -41,13 +41,8 @@ public class TableColumn {
      * 列的数据类型
      * 比如 varchar ,double
      */
-    private String dataType;
+    private Integer dataType;
 
-    /**
-     * 是否可以为空
-     * 为空 代表没有值 数据库的实际语义是 true
-     */
-    private Boolean nullable;
 
     /**
      * 默认值
@@ -69,4 +64,82 @@ public class TableColumn {
      * 是否主键
      */
     private Boolean primaryKey;
+
+    /**
+     * 空间名
+     */
+    private String schemaName;
+
+    /**
+     * 数据库名
+     */
+    private String databaseName;
+
+    /**
+     *  Data source dependent type name, for a UDT the type name is fully qualified
+     */
+    private String typeName;
+
+    /**
+     * column size.
+     */
+    private Integer columnSize;
+
+    /**
+     * is not used.
+     */
+    private Integer bufferLength;
+
+    /**
+     * the number of fractional digits. Null is returned for data types where DECIMAL_DIGITS is not applicable.
+     */
+    private Integer decimalDigits;
+
+    /**
+     * Radix (typically either 10 or 2)
+     */
+    private Integer numPrecRadix;
+
+    /**
+     * is NULL allowed.
+     * columnNoNulls - might not allow NULL values
+     * columnNullable - definitely allows NULL values
+     * columnNullableUnknown - nullability unknown
+     */
+    private Integer nullableInt;
+
+    /**
+     * unused
+     */
+    private Integer sqlDataType;
+
+
+    /**
+     * unused
+     */
+    private Integer sqlDatetimeSub;
+
+    /**
+     * for char types the maximum number of bytes in the column
+     */
+    private Integer charOctetLength;
+
+    /**
+     * index of column in table (starting at 1)
+     */
+    private Integer ordinalPosition;
+
+    /**
+     * ISO rules are used to determine the nullability for a column.
+     */
+    private Boolean nullable;
+
+    /**
+     * String => Indicates whether this is a generated column
+     *      * YES --- if this a generated column
+     *      * NO --- if this not a generated column
+     */
+    private Boolean generatedColumn;
+
+
 }
