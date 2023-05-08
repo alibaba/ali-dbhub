@@ -64,6 +64,72 @@ export default memo<IProps>(function Setting({ className, text }) {
   const [lang, setLang] = useState(localStorage.getItem('lang'));
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem('theme'));
   const [currentPrimaryColor, setCurrentPrimaryColor] = useState(localStorage.getItem('primary-color'));
+  const menusList = [
+    {
+      label: '基础设置',
+      render: <>
+        <div className={styles.title}>
+          {i18n('common.text.background')}
+        </div>
+        <ul className={styles.backgroundList}>
+          {backgroundList.map((item) => {
+            return (
+              <li key={item.code} className={classnames({ [styles.current]: currentTheme == item.code })} onClick={changeTheme.bind(null, item)} style={{ backgroundImage: `url(${item.img})` }} />
+            );
+          })}
+        </ul>
+        <div className={styles.title}>
+          {i18n('common.text.language')}
+        </div>
+        <div>
+          <Radio.Group onChange={changeLang} value={lang}>
+            <Radio value='zh-cn'>{i18n('common.text.zh-cn')}</Radio>
+            <Radio value='en'>{i18n('common.text.en')}</Radio>
+          </Radio.Group>
+        </div>
+        {/* <div className={styles.title}>
+          主题色
+        </div>
+        <ul className={styles.primaryColorList}>
+          {colorList.map((item) => {
+            return (
+              <li key={item.code} onClick={changePrimaryColor.bind(null, item)} style={{ backgroundColor: item.color }}>
+                {currentPrimaryColor == item.code && <Iconfont code="&#xe617;"></Iconfont>}
+              </li>
+            );
+          })}
+        </ul> */}
+      </>
+    },
+    {
+      label: 'OpenAI',
+      render: <>
+        <div className={styles.title}>
+          OpenAI Api Key
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          <Input value={chatgptKey} onChange={(e) => { setChatgptKey(e.target.value) }} />
+          <Button theme='default' onClick={changeChatgptApiKey}>更新</Button>
+        </div>
+
+      </>
+    },
+    {
+      label: '代理设置',
+      render: <>
+        <div className={styles.title}>
+          后台服务地址
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          <Input value={apiPrefix} onChange={updateApi} />
+          <Button theme='default' onClick={affirmUpdateApi}>更新</Button>
+        </div>
+      </>
+    },
+  ]
+  const [currentMenu, setCurrentMenu] = useState(menusList[0]);
+
+
 
   useLayoutEffect(() => {
 
@@ -156,50 +222,22 @@ export default memo<IProps>(function Setting({ className, text }) {
         onCancel={handleCancel}
         footer={false}
       >
-        <div className={styles.title}>
-          {i18n('common.text.background')}
-        </div>
-        <ul className={styles.backgroundList}>
-          {backgroundList.map((item) => {
-            return (
-              <li key={item.code} className={classnames({ [styles.current]: currentTheme == item.code })} onClick={changeTheme.bind(null, item)} style={{ backgroundImage: `url(${item.img})` }} />
-            );
-          })}
-        </ul>
-        <div className={styles.title}>
-          OpenAI Api Key
-        </div>
-        <div className={classnames(styles.content, styles.chatGPTKey)}>
-          <Input value={chatgptKey} onChange={(e) => { setChatgptKey(e.target.value) }} />
-          <Button theme='default' onClick={changeChatgptApiKey}>更新</Button>
-        </div>
-        <div className={styles.title}>
-          后台服务地址
-        </div>
-        <div className={classnames(styles.content, styles.chatGPTKey)}>
-          <Input value={apiPrefix} onChange={updateApi} />
-          <Button theme='default' onClick={affirmUpdateApi}>更新</Button>
-        </div>
-        {/* <div className={styles.title}>
-          主题色
-        </div>
-        <ul className={styles.primaryColorList}>
-          {colorList.map((item) => {
-            return (
-              <li key={item.code} onClick={changePrimaryColor.bind(null, item)} style={{ backgroundColor: item.color }}>
-                {currentPrimaryColor == item.code && <Iconfont code="&#xe617;"></Iconfont>}
-              </li>
-            );
-          })}
-        </ul> */}
-        <div className={styles.title}>
-          {i18n('common.text.language')}
-        </div>
-        <div>
-          <Radio.Group onChange={changeLang} value={lang}>
-            <Radio value='zh-cn'>{i18n('common.text.zh-cn')}</Radio>
-            <Radio value='en'>{i18n('common.text.en')}</Radio>
-          </Radio.Group>
+        <div className={styles.modalBox}>
+          <div className={styles.menus}>
+            <div className={classnames(styles.menusTitle)}>
+              设置
+            </div>
+            {
+              menusList.map(t => {
+                return <div className={classnames(styles.menuItem, { [styles.activeMenu]: t.label === currentMenu.label })}>
+                  {t.label}
+                </div>
+              })
+            }
+          </div>
+          <div className={styles.menuContent}>
+            {currentMenu.render}
+          </div>
         </div>
       </Modal>
     </>
