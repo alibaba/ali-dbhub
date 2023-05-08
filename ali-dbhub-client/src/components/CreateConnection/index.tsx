@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState, Fragment, useContext } from 'react';
+import React, { memo, useEffect, useMemo, useState, Fragment, useContext, useCallback, useLayoutEffect } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
 import Button from '@/components/Button';
@@ -47,25 +47,32 @@ function VisiblyCreateConnection(props: IProps) {
   const [form] = Form.useForm();
   let aliasChanged = false;
 
-  const [dataSourceFormConfig, setDataSourceFormConfig] = useState<IDataSourceForm>(
-    // 不深拷贝这里回影响dataSourceFormConfigs
-    deepClone(dataSourceFormConfigs).find((t: IDataSourceForm) => {
+  const dataSourceFormConfigMemo = useMemo<IDataSourceForm>(() => {
+    return deepClone(dataSourceFormConfigs).find((t: IDataSourceForm) => {
       return t.type === dataSourceType
-    })!
-  );
+    })
+  }, [])
 
-  const [initialValues] = useState(initialFormData(dataSourceFormConfig.items));
+  const initialValuesMemo = useMemo(() => {
+    return initialFormData(dataSourceFormConfigMemo.items)
+  }, [])
+
+  const [dataSourceFormConfig, setDataSourceFormConfig] = useState<IDataSourceForm>(dataSourceFormConfigMemo);
+
+  const [initialValues] = useState(initialValuesMemo);
 
   function initialFormData(dataSourceFormConfig: IFormItem[] | undefined) {
     let initValue: any = {}
     if (dataSourceId) {
       connectionServer.getDetails({ id: dataSourceId + '' }).then((res: any) => {
-        // TODO: authentication类型
+        //TODO: 这里只处理了authentication，应该是需要处理所有的selete的
         if (res.user) {
           res.authentication = 1
         } else {
           res.authentication = 2
         }
+        selectChange({ name: 'authentication', value: res.user ? 1 : 2 });
+
         regEXFormatting({ url: res.url }, res)
       })
     } else {
@@ -73,7 +80,7 @@ function VisiblyCreateConnection(props: IProps) {
         initValue[t.name] = t.defaultValue
         if (t.selects?.length) {
           t.selects?.map(item => {
-            if (item.value === t.selected) {
+            if (item.value === t.defaultValue) {
               initValue = {
                 ...initValue,
                 ...initialFormData(item.items)
@@ -88,7 +95,6 @@ function VisiblyCreateConnection(props: IProps) {
 
   function extractObj(url: any) {
     const { template, pattern } = dataSourceFormConfig
-    console.log(dataSourceFormConfig)
     // 提取关键词对应的内容 value
     const matches = url.match(pattern)!;
     console.log(matches)
@@ -108,12 +114,15 @@ function VisiblyCreateConnection(props: IProps) {
   }
 
   function regEXFormatting(variableData: { [key: string]: any }, dataObj: { [key: string]: any }) {
-    const { template } = dataSourceFormConfig
+    const { template, pattern } = dataSourceFormConfig
     const keyName = Object.keys(variableData)[0]
     const keyValue = variableData[Object.keys(variableData)[0]]
     let newData: any = {}
     if (keyName === 'url') {
-      newData = extractObj(keyValue)
+      //先判断url是否符合规定的正则
+      if (pattern.test(keyValue)) {
+        newData = extractObj(keyValue);
+      }
     } else if (keyName === 'alias') {
       aliasChanged = true
     } else {
@@ -129,23 +138,30 @@ function VisiblyCreateConnection(props: IProps) {
     if (keyName === 'host' && !aliasChanged) {
       newData.alias = '@' + keyValue
     }
-    console.log(newData)
     form.setFieldsValue({
       ...dataObj,
       ...newData,
     });
   }
 
+  function selectChange(t: { name: string, value: any }) {
+    dataSourceFormConfig.items.map((j, i) => {
+      if (j.name === t.name) {
+        j.defaultValue = t.value
+      }
+    })
+    setDataSourceFormConfig({ ...dataSourceFormConfig })
+  }
+
+  useEffect(() => {
+    console.log(dataSourceFormConfig)
+  }, [dataSourceFormConfig])
+
   function renderFormItem(t: IFormItem): React.ReactNode {
     const FormItemTypes: { [key in InputType]: () => React.ReactNode } = {
       [InputType.INPUT]: () => <Form.Item
         label={t.labelNameCN}
         name={t.name}
-      // rules={[
-      //   {
-      //     required: t.required,
-      //   }
-      // ]}
       >
         <Input />
       </Form.Item>,
@@ -153,13 +169,8 @@ function VisiblyCreateConnection(props: IProps) {
       [InputType.SELECT]: () => <Form.Item
         label={t.labelNameCN}
         name={t.name}
-      // rules={[
-      //   {
-      //     required: t.required,
-      //   }
-      // ]}
       >
-        <Select value={t.selected} onChange={selectChange}>
+        <Select value={t.defaultValue} onChange={(e) => { selectChange({ name: t.name, value: e }) }}>
           {t.selects?.map((t: ISelect) => <Option key={t.value} value={t.value}>{t.label}</Option>)}
         </Select>
       </Form.Item>,
@@ -167,27 +178,9 @@ function VisiblyCreateConnection(props: IProps) {
       [InputType.PASSWORD]: () => <Form.Item
         label={t.labelNameCN}
         name={t.name}
-      // rules={[
-      //   {
-      //     required: t.required,
-      //   }
-      // ]}
       >
         <Input.Password />
       </Form.Item>
-    }
-
-    function selectChange() {
-      const newForm: any = form;
-      const formData = newForm.getFieldValue();
-      dataSourceFormConfig.items.map((j, i) => {
-        if (j.name === t.name) {
-          j.selects?.map(item => {
-            j.selected = item.value === formData[t.name] ? true : false;
-          })
-        }
-      })
-      setDataSourceFormConfig({ ...dataSourceFormConfig })
     }
 
     return <Fragment key={t.name}>
@@ -196,7 +189,7 @@ function VisiblyCreateConnection(props: IProps) {
       </div>
       {
         t.selects?.map(item => {
-          if (t.selected === item.value) {
+          if (t.defaultValue === item.value) {
             return item.items?.map(t => renderFormItem(t))
           }
         })
@@ -223,9 +216,9 @@ function VisiblyCreateConnection(props: IProps) {
     if (type === submitType.UPDATE) {
       p.id = dataSourceId;
     }
-    
-    const api:any = connectionServer[type](p)
-    api.then((res:any) => {
+
+    const api: any = connectionServer[type](p)
+    api.then((res: any) => {
       if (type === submitType.TEST) {
         message.success(res === false ? '测试连接失败' : '测试连接成功');
       } else {
@@ -240,10 +233,9 @@ function VisiblyCreateConnection(props: IProps) {
 
   function onFieldsChange(data: any, datas: any) {
     // 将antd的格式转换为正常的对象格式
-    if(!data.length){
+    if (!data.length) {
       return
     }
-
     const keyName = data[0].name[0];
     const keyValue = data[0].value;
     const variableData = {
@@ -280,7 +272,7 @@ function VisiblyCreateConnection(props: IProps) {
         <div className={styles.formFooter}>
           <div className={styles.test}>
             {
-              !dataSourceId &&
+              // !dataSourceId &&
               <Button
                 onClick={submitConnection.bind(null, submitType.TEST)}
                 className={styles.test}>

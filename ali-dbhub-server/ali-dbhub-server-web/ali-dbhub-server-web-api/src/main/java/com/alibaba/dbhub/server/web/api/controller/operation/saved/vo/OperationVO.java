@@ -43,6 +43,11 @@ public class OperationVO {
     private String databaseName;
 
     /**
+     * 表所在空间
+     */
+    private String schemaName;
+
+    /**
      * ddl语言类型
      * @see DbTypeEnum
      */

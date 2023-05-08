@@ -1,3 +1,4 @@
+import { baseURL } from '@/service/base';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 
 const connectToEventSource = (params: {
@@ -12,9 +13,10 @@ const connectToEventSource = (params: {
     throw new Error('url, onMessage, and onError are required');
   }
 
-  const eventSource = new EventSourcePolyfill(url, {
+  const eventSource = new EventSourcePolyfill(`${baseURL}${url}`, {
     headers: {
       uid,
+      DBHUB: localStorage.getItem('DBHUB') || ''
     },
   });
 

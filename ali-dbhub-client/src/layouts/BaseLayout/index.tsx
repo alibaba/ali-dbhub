@@ -20,12 +20,12 @@ interface INavItem {
 const LNKConfig: INavItem[] = [
   {
     title: i18n('home.nav.database'),
-    icon: '\uec57',
+    icon: '\ue609',
     path: '/'
   },
   {
     title: i18n('home.nav.myHistory'),
-    icon: '\ue610',
+    icon: '\ue80a',
     path: '/sql-history'
   },
   {
@@ -41,7 +41,7 @@ const LNKConfig: INavItem[] = [
   {
     title: i18n('home.nav.github'),
     icon: '\ue885',
-    path: 'https://github.com/alibaba/ali-dbhub',
+    path: 'https://github.com/alibaba/Chat2DB',
     openBrowser: true
   }
 ];
@@ -82,9 +82,14 @@ export default function BaseLayout({ children }: PropsWithChildren<IProps>) {
     history.push('/');
   }
 
+  function stopxxx() {
+
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.layoutLeft}>
+        <div className={styles.dargBox}></div>
         <BrandLogo onClick={jumpHome} className={styles.brandLogo} />
         <ul className={styles.navList}>
           {LNKConfig.map((item) => {

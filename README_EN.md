@@ -24,10 +24,19 @@ Languages： English | [中文](README.md)
 - 🌈 AI intelligent assistant, supporting natural language to SQL conversion, SQL to natural language conversion, and SQL optimization suggestions
 - 👭 Support team collaboration, developers do not need to know the online database password, solving the problem of enterprise database account security
 - ⚙️ Powerful data management capability, supporting management of data tables, views, stored procedures, functions, triggers, indexes, sequences, users, roles, authorizations, etc.
-- 🔌 Powerful extension capability, currently supporting Mysql, PostgreSQL, Oracle, SQLServer, ClickHouse, Oceanbase, H2, SQLite, etc., and more databases will be supported in the future
+- 🔌 Powerful extension capability, currently supporting MySQL, PostgreSQL, Oracle, SQLServer, ClickHouse, OceanBase, H2, SQLite, etc., and more databases will be supported in the future
 - 🛡 Front-end development using Electron, providing a solution that integrates Windows, Mac, Linux clients, and web versions
 - 🎁 Support environment isolation, online, and daily data permission separation
 
+
+## ⏬ Download and Install
+
+| Description | Size | Download                                                                                                                                                                                                                                        |
+|-------------|------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Windows     | 361M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test%20Setup%201.0.4819968180-Test.exe">https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test%20Setup%201.0.4796588172-Test.exe </a> |
+| MacOS ARM64 | 207M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test-1.0.4819968180-Test-arm64.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test-arm64.dmg </a> |
+| MacOS X64   | 210M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test-1.0.4819968180-Test.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test.dmg </a>  |       
+| Jar package | 88M  | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/ali-dbhub-server-start.jar"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/ali-dbhub-server-start.jar </a>  |                                                                                                                
 
 
 ## 🌰 Demo
@@ -41,11 +50,11 @@ Languages： English | [中文](README.md)
   <a><img src="https://gw.alicdn.com/imgextra/i4/O1CN01iaSXot1W6VeaDFbK2_!!6000000002739-0-tps-3430-1740.jpg" width="100%"/></a>
 
 
-## ⏬ Download and Install
+## 📦 Docker installation
 
-Mac and Windows client application download address GitHub releases.<a href="https://github.com/alibaba/ali-dbhub/releases">GitHub releases</a>.
-
-Web version to be updated...
+```bash
+docker pull chat2db/chat2db:latest
+```
 
 ## 🎯 Operating Environment
 Note: If local debugging is required
@@ -58,18 +67,46 @@ Note: If local debugging is required
 ```bash
 $ git clone git@github.com:alibaba/Chat2DB.git
 ```
-- Front-end installation
+- Front-End installation
 ```bash
 $ cd Chat2DB/ali-dbhub-client
 $ npm install # 安装npm 
 $ npm run build:prod # 把js打包生成到后端的source目录
 ```
-- Backend startup
+- Backend debug
 ```bash
 $ cd ../ali-dbhub-server
-$ mvn clean install # 需要安装maven 3.8以上版本
+$ mvn clean install # maven 3.8 or later needs to be installed
 $ cd ali-dbhub-server/ali-dbhub-server-start/target/
-$ java -jar -Dchatgpt.apiKey=xxxxx ali-dbhub-server-start.jar  # 启动应用 chatgpt.apiKey 需要输入ChatGPT的key,如果不输入无法使用AIGC功能
+$ java -jar -Dchatgpt.apiKey=xxxxx ali-dbhub-server-start.jar  # To launch the chat application, you need to enter the ChatGPT key for the chatgpt.apiKey. Without entering it, you won't be able to use the AIGC function.
+$ # open http://localhost:7001 to start debug
+```
+
+- Front-End debug
+```bash
+$ cd Chat2DB/ali-dbhub-client
+$ npm install 
+$ npm run start
+$ # open http://localhost:8001  to start Front-End debug
+```
+But front debugging need mapping of resources, you can download [XSwitch](https://chrome.google.com/webstore/detail/idkjhjggpffolpidfkikidcokdkdaogg), add the following configuration file
+``` json
+{
+  "proxy": [
+    [
+      "http://127.0.0.1:7001/static/front/(.*)",
+      "http://127.0.0.1:8001/$1",
+    ],
+    [
+      "http://127.0.0.1:7001/(.*).js$",
+      "http://127.0.0.1:8001/$1.js",
+    ],
+    [
+      "http://127.0.0.1:7001/(.*).css$",
+      "http://127.0.0.1:8001/$1.css",
+    ]
+  ],
+}
 ```
 
 ## 📑 Documentation

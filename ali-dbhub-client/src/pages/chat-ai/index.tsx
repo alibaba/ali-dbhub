@@ -99,10 +99,11 @@ function ChatAI(props: IChatAIProps) {
       databaseName,
       message: question,
     });
-    const url = type === 'page' ? '/api/ai/chat1' : '/api/ai/chat';
+    const url = type === 'page' ? `${window._BaseURL}/api/ai/chat1` : `${window._BaseURL}/api/ai/chat`;
     const eventSource = new EventSourcePolyfill(`${url}?${params}`, {
       headers: {
         uid: uid.current,
+        DBHUB: localStorage.getItem('DBHUB') || ''
       },
     });
 

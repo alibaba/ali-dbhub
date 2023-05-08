@@ -11,7 +11,9 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.common.model.LoginUser;
 import com.alibaba.dbhub.server.tools.common.util.ContextUtils;
 
+import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.util.SaTokenConsts;
 import cn.hutool.crypto.digest.DigestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -41,7 +43,7 @@ public class OauthController {
      * @return
      */
     @PostMapping("login_a")
-    public ActionResult login(@Validated @RequestBody LoginRequest request) {
+    public DataResult login(@Validated @RequestBody LoginRequest request) {
         //   查询用户
         User user = userService.query(request.getUserName()).getData();
         if (user == null) {
@@ -51,7 +53,8 @@ public class OauthController {
             throw new BusinessException("您输入的密码有误。");
         }
         StpUtil.login(user.getId());
-        return ActionResult.isSuccess();
+        Object token = SaHolder.getStorage().get(SaTokenConsts.JUST_CREATED_NOT_PREFIX);
+        return DataResult.of(token);
     }
 
     /**

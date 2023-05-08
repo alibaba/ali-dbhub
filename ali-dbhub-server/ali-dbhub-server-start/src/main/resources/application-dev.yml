@@ -1,7 +1,7 @@
 spring:
   datasource:
     # 配置自带数据库的相对路径
-    url: jdbc:h2:~/.dbhub/db/ali_dbhub_dev;MODE=MYSQL
+    url: jdbc:h2:~/.chat2db/db/chat2db_dev;MODE=MYSQL
     driver-class-name: org.h2.Driver
   #  用于数据库表结构版本管理
   flyway:
@@ -15,4 +15,7 @@ spring:
         web-allow-others: true
 # 端口号
 server:
-  port: 7001
+  port: 10821
+# 管理的端口号
+manage:
+  port: 10831

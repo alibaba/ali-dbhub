@@ -35,16 +35,17 @@ enum ErrorCode {
 const noNeedToastErrorCode = [ErrorCode.NEED_LOGGED_IN];
 
 const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
-const desktopServiceUrl = 'http://127.0.0.1:10824';
-const prodServiceUrl = '';
 
-const baseURL =
-  location.href.indexOf('dist/index.html') > -1
-    ? desktopServiceUrl
-    : prodServiceUrl;
+const desktopServiceUrl = 'http://127.0.0.1:10824';
+const prodServiceUrl = location.origin;
+
+window._BaseURL = localStorage.getItem('_BaseURL') || (location.href.indexOf('dist/index.html') > -1
+  ? desktopServiceUrl
+  : prodServiceUrl)
+
+export const baseURL = window._BaseURL;
 
 const errorHandler = (error: ResponseError, errorLevel: IErrorLevel) => {
-  console.log('errorHandler==>', error, errorLevel);
   const { response } = error;
   if (!response) return;
   const errorText = codeMessage[response.status] || response.statusText;
@@ -63,17 +64,29 @@ const request = extend({
   },
 });
 
-request.interceptors.request.use((url, options) => {
+request.interceptors.request.use((url, options) => {  
+  const myOptions:any = {
+    ...options,
+    headers: {
+      ...options.headers,
+    }
+  }
+  if (localStorage.getItem('DBHUB')) {
+    myOptions.headers.DBHUB = localStorage.getItem('DBHUB')
+  }
   return {
-    options: {
-      ...options,
-    },
+    options: myOptions,
   };
 });
 
 request.interceptors.response.use(async (response, options) => {
   const res = await response.clone().json();
-
+  if (window._ENV === 'desktop') {
+    const DBHUB = response.headers.get('DBHUB') || ''
+    if (DBHUB) {
+      localStorage.setItem('DBHUB', DBHUB)
+    }
+  }
   const { errorCode, codeMessage } = res;
   if (errorCode === ErrorCode.NEED_LOGGED_IN) {
     // window.location.href = '#/login?callback=' + window.location.hash.substr(1);
