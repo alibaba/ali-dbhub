@@ -64,15 +64,15 @@ public class ConfigController {
         SystemConfigParam param = SystemConfigParam.builder().code(OpenAIClient.OPENAI_KEY).content(request.getApiKey())
             .build();
         configService.createOrUpdate(param);
-        if (StringUtils.isNotBlank(request.getApiKey())) {
-            OpenAIClient.refresh();
-        }
         SystemConfigParam httpProxyHostParam = SystemConfigParam.builder().code(OpenAIClient.PROXY_HOST).content(
             request.getHttpProxyHost()).build();
         configService.createOrUpdate(httpProxyHostParam);
         SystemConfigParam httpProxyPortParam = SystemConfigParam.builder().code(OpenAIClient.PROXY_PORT).content(
                 request.getHttpProxyPort()).build();
         configService.createOrUpdate(httpProxyPortParam);
+        if (StringUtils.isNotBlank(request.getApiKey())) {
+            OpenAIClient.refresh();
+        }
         return ActionResult.isSuccess();
     }
 
