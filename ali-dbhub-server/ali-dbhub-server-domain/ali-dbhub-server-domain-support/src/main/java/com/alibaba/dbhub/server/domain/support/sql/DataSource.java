@@ -301,7 +301,7 @@ public class DataSource extends DynamicDataSource {
         switch (info.getDbType()) {
             case MYSQL, SQLSERVER -> {
                 try {
-                    execute("use " + database + ";", null);
+                    execute("use `" + database + "`;", null);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
