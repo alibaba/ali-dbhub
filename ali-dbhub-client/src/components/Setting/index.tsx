@@ -69,12 +69,12 @@ export default memo<IProps>(function Setting({ className, text }) {
     },
     {
       label: 'OpenAI',
-      icon: '\ue69c',
+      icon: '\ue646',
       body: <OpenAiBody />,
     },
     {
       label: '代理设置',
-      icon: '\ue6e2',
+      icon: '\ue63f',
       body: <ProxyBody />
     },
     {
