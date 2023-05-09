@@ -294,7 +294,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         width: 50,
       },
       {
-        defaultValue: 'jdbc:oracle:thin://localhost:1521:XE',
+        defaultValue: 'jdbc:oracle:thin:@localhost:1521:XE',
         inputType: InputType.INPUT,
         labelNameCN: 'URL',
         labelNameEN: 'URL',
@@ -304,8 +304,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
       },
     ],
     type: DatabaseTypeCode.ORACLE,
-    pattern: /jdbc:oracle:(.*):\/\/(.*):(\d+):(.*)/,
-    template: 'jdbc:oracle:{driver}://{host}:{port}:{sid}',
+    pattern: /jdbc:oracle:(.*):@(.*):(\d+):(.*)/,
+    template: 'jdbc:oracle:{driver}:@{host}:{port}:{sid}',
   },
   // H2
   {

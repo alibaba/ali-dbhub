@@ -20,22 +20,22 @@
 </div>
 
 ## 📖 简介
-&emsp; &emsp;Chat2DB 是一款有阿里巴巴开源免费的多数据库客户端工具，支持windows、mac本地安装，也支持服务器端部署，web网页访问。和传统的数据库客户端软件Navicat、DBeaver 相比Chat2DB集成了AIGC的能力，能够将自然语言转换为SQL，也可以将SQL转换为自然语言，可以给出研发人员SQL的优化建议，极大的提升人员的效率，是AI时代数据库研发人员的利器，未来即使不懂SQL的运营业务也可以使用快速查询业务数据、生成报表能力。
+&emsp; &emsp;Chat2DB 是一款有开源免费的多数据库客户端工具，支持windows、mac本地安装，也支持服务器端部署，web网页访问。和传统的数据库客户端软件Navicat、DBeaver 相比Chat2DB集成了AIGC的能力，能够将自然语言转换为SQL，也可以将SQL转换为自然语言，可以给出研发人员SQL的优化建议，极大的提升人员的效率，是AI时代数据库研发人员的利器，未来即使不懂SQL的运营业务也可以使用快速查询业务数据、生成报表能力。
 ## ✨ 特性
 - 🌈 AI智能助手，支持自然语言转SQL、SQL转自然语言、SQL优化建议
 - 👭 支持团队协作，研发无需知道线上数据库密码，解决企业数据库账号安全问题
 - ⚙️ 强大的数据管理能力，支持数据表、视图、存储过程、函数、触发器、索引、序列、用户、角色、授权等管理
-- 🔌 强大的扩展能力，目前已经支持Mysql、PostgreSQL、Oracle、SQLServer、ClickHouse、Oceanbase、H2、SQLite等等，未来会支持更多的数据库
+- 🔌 强大的扩展能力，目前已经支持MySQL、PostgreSQL、Oracle、SQLServer、ClickHouse、OceanBase、H2、SQLite等等，未来会支持更多的数据库
 - 🛡 前端使用 Electron 开发，提供 Windows、Mac、Linux 客户端、网页版本一体化的解决方案
 - 🎁 支持环境隔离、线上、日常数据权限分离
 
 ## ⏬ 下载安装
 | 描述                   | 下载地址                                                                                                                                                                                                                                       |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB%20Setup%201.0.0.exe](https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB%20Setup%201.0.0.exe) |
-| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0-arm64.dmg) |
-| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0.dmg](https://oss-chat2db.alibaba.com/release/1.0.0/Chat2DB-1.0.0.dmg) |       
-| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.0/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.0/ali-dbhub-server-start.jar) |                                                                                                                
+| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.1/Chat2DB%20Setup%201.0.1.exe](https://oss-chat2db.alibaba.com/release/1.0.1/Chat2DB%20Setup%201.0.1.exe) |
+| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.1/Chat2DB-1.0.1-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.1/Chat2DB-1.0.1-arm64.dmg) |
+| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.1/Chat2DB-1.0.1.dmg](https://oss-chat2db.alibaba.com/release/1.0.1/Chat2DB-1.0.1.dmg) |       
+| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.1/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.1/ali-dbhub-server-start.jar) |                                                                                                                
 
 ## 🌰 使用Demo
 - 创建数据源
@@ -52,6 +52,7 @@
 
 ```bash
   docker pull chat2db/chat2db:latest
+  docker run --rm -ti -p 10824:10824  chat2db/chat2db:latest
 ```
 ## 🎯 运行环境
 注意：
@@ -113,6 +114,9 @@ $ # 打开 http://localhost:8001 开启前端调试
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
 
 ## ☎️ 联系我们
+
+如果觉得对你有帮助请点个star吧。
+
 <a><img src="https://gw.alicdn.com/imgextra/i1/O1CN01VBaYST1MFzhUY9QP6_!!6000000001406-0-tps-723-731.jpg" width="40%"/></a>
 
 微信：yxccw132  钉钉：9135032392
@@ -121,7 +125,7 @@ $ # 打开 http://localhost:8001 开启前端调试
 感谢所有为Chat2DB贡献力量的同学们~
 
 <a href="https://github.com/alibaba/ali-dbhub/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=alibaba/ali-dbhub" />
+  <img src="https://contrib.rocks/image?repo=alibaba/Chat2DB" />
 </a>
 
 
