@@ -15,10 +15,12 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dbhub.server.web.api.aspect.ConnectionInfoAspect;
+import com.alibaba.dbhub.server.web.api.controller.config.request.ChatGptSystemConfigRequest;
 import com.alibaba.dbhub.server.web.api.controller.config.request.SystemConfigRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
 import com.alibaba.dbhub.server.web.api.util.OpenAIClient;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +52,30 @@ public class ConfigController {
         }
         return ActionResult.isSuccess();
     }
+
+    /**
+     * 保存ChatGPT相关配置
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/system_config/chatgpt")
+    public ActionResult addChatGptSystemConfig(@RequestBody ChatGptSystemConfigRequest request) {
+        SystemConfigParam param = SystemConfigParam.builder().code(OpenAIClient.OPENAI_KEY).content(request.getApiKey())
+            .build();
+        configService.createOrUpdate(param);
+        if (StringUtils.isNotBlank(request.getApiKey())) {
+            OpenAIClient.refresh();
+        }
+        SystemConfigParam httpProxyHostParam = SystemConfigParam.builder().code(OpenAIClient.PROXY_HOST).content(
+            request.getHttpProxyHost()).build();
+        configService.createOrUpdate(httpProxyHostParam);
+        SystemConfigParam httpProxyPortParam = SystemConfigParam.builder().code(OpenAIClient.PROXY_PORT).content(
+                request.getHttpProxyPort()).build();
+        configService.createOrUpdate(httpProxyPortParam);
+        return ActionResult.isSuccess();
+    }
+
 
     @GetMapping("/system_config/{code}")
     public DataResult<Config> getSystemConfig(@PathVariable("code") String code) {
