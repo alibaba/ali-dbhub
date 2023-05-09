@@ -57,8 +57,13 @@ public class ConfigController {
         return DataResult.of(result.getData());
     }
 
+    /**
+     * 查询ChatGPT相关配置
+     *
+     * @return
+     */
     @GetMapping("/system_config/chatgpt")
-    public DataResult<ChatGptConfig> getSystemConfig() {
+    public DataResult<ChatGptConfig> getChatGptSystemConfig() {
         DataResult<Config> apiKey = configService.find(OpenAIClient.OPENAI_KEY);
         DataResult<Config> httpProxyHost = configService.find(OpenAIClient.PROXY_HOST);
         DataResult<Config> httpProxyPort = configService.find(OpenAIClient.PROXY_PORT);
