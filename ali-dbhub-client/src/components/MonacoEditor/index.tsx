@@ -16,8 +16,10 @@ interface IProps {
   height?: number;
   getEditor?: any;
   onSave?: Function;
+  onExecute?: Function;
   onChange?: Function;
   [key: string]: any;
+  isActive?: boolean;
 }
 
 export default memo(function MonacoEditor(props: IProps) {
@@ -27,7 +29,9 @@ export default memo(function MonacoEditor(props: IProps) {
     id = 0,
     onChange,
     onSave,
+    onExecute,
     value,
+    isActive,
     ...option
   } = props;
   const [editor, setEditor] = useState<any>();
@@ -71,12 +75,6 @@ export default memo(function MonacoEditor(props: IProps) {
     );
     setValue(editor, value);
 
-    // 自定义快捷键
-    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-      const value = editor.getValue();
-      onSave && onSave(value);
-    });
-
     // Editor onChange
     editor.onDidChangeModelContent(() => {
       onChange && onChange();
@@ -113,6 +111,20 @@ export default memo(function MonacoEditor(props: IProps) {
       },
     });
   }, []);
+
+  useEffect(() => {
+    if (isActive && editor) {
+      // 自定义快捷键
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+        const value = editor.getValue();
+        onSave && onSave(value);
+      });
+
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, (event: Event) => {
+        onExecute && onExecute();
+      });
+    }
+  }, [editor, isActive])
 
   useEffect(() => {
     setValue(editor, value);
