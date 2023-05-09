@@ -4,6 +4,9 @@
  */
 package com.alibaba.dbhub.server.web.api.controller.config;
 
+import java.util.Objects;
+
+import com.alibaba.dbhub.server.domain.api.model.ChatGptConfig;
 import com.alibaba.dbhub.server.domain.api.model.Config;
 import com.alibaba.dbhub.server.domain.api.param.DatabaseOperationParam;
 import com.alibaba.dbhub.server.domain.api.param.SystemConfigParam;
@@ -52,5 +55,17 @@ public class ConfigController {
     public DataResult<Config> getSystemConfig(@PathVariable("code") String code) {
         DataResult<Config> result = configService.find(code);
         return DataResult.of(result.getData());
+    }
+
+    @GetMapping("/system_config/chatgpt")
+    public DataResult<ChatGptConfig> getSystemConfig() {
+        DataResult<Config> apiKey = configService.find(OpenAIClient.OPENAI_KEY);
+        DataResult<Config> httpProxyHost = configService.find(OpenAIClient.PROXY_HOST);
+        DataResult<Config> httpProxyPort = configService.find(OpenAIClient.PROXY_PORT);
+        ChatGptConfig config = new ChatGptConfig();
+        config.setApiKey(Objects.nonNull(apiKey.getData()) ? apiKey.getData().getContent() : null);
+        config.setHttpProxyHost(Objects.nonNull(httpProxyHost.getData()) ? httpProxyHost.getData().getContent() : null);
+        config.setHttpProxyPort(Objects.nonNull(httpProxyPort.getData()) ? httpProxyPort.getData().getContent() : null);
+        return DataResult.of(config);
     }
 }
