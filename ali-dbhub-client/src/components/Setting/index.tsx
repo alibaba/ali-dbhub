@@ -5,9 +5,12 @@ import Iconfont from '@/components/Iconfont';
 import Button from '@/components/Button';
 import { Modal, Radio, Input, message } from 'antd';
 import i18n from '@/i18n';
+import { imghub } from '@/utils/imghub';
 import configService, { IChatgptConfig } from '@/service/config';
 import miscService from '@/service/misc';
 import BrandLogo from '@/components/BrandLogo';
+import themeDarkImg from '@/assets/theme-dark.webp';
+import themeDefaultImg from '@/assets/theme-default.webp';
 
 interface IProps {
   className?: string;
@@ -42,12 +45,12 @@ const backgroundList = [
   {
     code: 'dark',
     name: '暗色',
-    img: 'https://img.alicdn.com/imgextra/i1/O1CN01Oj4G6k22ln0NU3A1X_!!6000000007161-2-tps-171-130.png'
+    img: themeDarkImg
   },
   {
     code: 'default',
     name: '亮色',
-    img: 'https://img.alicdn.com/imgextra/i2/O1CN01HCTGD11PF1erPJvXa_!!6000000001810-2-tps-182-137.png'
+    img: themeDefaultImg
   },
   // {
   //   code: 'eyeshield',

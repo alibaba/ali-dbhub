@@ -97,7 +97,6 @@ export default memo(function MonacoEditor(props: IProps) {
         // 相关颜色属性配置
         'editor.foreground': '#ffffff',
         'editor.background': '#15161a', //背景色
-        'editor.inactiveSelectionBackground': '#ff0000',
       },
     });
 
