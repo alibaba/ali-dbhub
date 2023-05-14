@@ -13,18 +13,24 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.Map;
 
 import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Cell;
 import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
+import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
 import com.alibaba.dbhub.server.domain.support.sql.IDriverManager;
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.excption.SystemException;
 import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
 import com.alibaba.dbhub.server.tools.common.util.EasyOptionalUtils;
 import com.alibaba.druid.DbType;
+
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 /**
  * jdbc工具类
@@ -139,19 +145,24 @@ public class JdbcUtils {
      * @param dbType   数据库类型
      * @return
      */
-    public static DataSourceConnect testConnect(String url, String userName, String password, DbTypeEnum dbType,
-        String jdbc) {
+    public static DataSourceConnect testConnect(String url, String host, String port,
+        String userName, String password, DbTypeEnum dbType,
+        String jdbc, SSHInfo ssh, Map<String, String> properties) {
         DataSourceConnect dataSourceConnect = DataSourceConnect.builder()
             .success(Boolean.TRUE)
             .build();
-        // 加载驱动
-
-        // 创建连接
+        Session session = null;
         Connection connection = null;
+        // 加载驱动
         try {
+            if (ssh.isUse()) {
+                session = JSchUtils.getSession(ssh,host,port);
+                url = url.replace(host, "127.0.0.1").replace(port, ssh.getLocalPort());
+            }
+            // 创建连接
             connection = IDriverManager.getConnection(url, userName, password,
-                DriverTypeEnum.getDriver(dbType, jdbc));
-        } catch (SQLException e) {
+                DriverTypeEnum.getDriver(dbType, jdbc), properties);
+        } catch (Exception e) {
             dataSourceConnect.setSuccess(Boolean.FALSE);
             // 获取最后一个异常的信息给前端
             Throwable t = e;
@@ -167,6 +178,8 @@ public class JdbcUtils {
                 } catch (SQLException e) {
                     // ignore
                 }
+            }if(session!=null){
+                session.disconnect();
             }
         }
         dataSourceConnect.setDescription("成功");

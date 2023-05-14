@@ -16,6 +16,8 @@ import com.alibaba.dbhub.server.domain.api.service.ConsoleService;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.support.model.Database;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
+import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
+import com.alibaba.dbhub.server.domain.support.util.JSchUtils;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
@@ -24,6 +26,7 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dbhub.server.web.api.aspect.ConnectionInfoAspect;
 import com.alibaba.dbhub.server.web.api.controller.data.source.converter.DataSourceWebConverter;
+import com.alibaba.dbhub.server.web.api.controller.data.source.converter.SSHWebConverter;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleCloseRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleConnectRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceAttachRequest;
@@ -39,6 +42,7 @@ import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DatabaseVO;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,6 +64,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ConnectionInfoAspect
 @RequestMapping("/api/connection")
 @RestController
+@Slf4j
 public class DataSourceController {
 
     @Autowired
@@ -70,6 +75,9 @@ public class DataSourceController {
 
     @Autowired
     private DataSourceWebConverter dataSourceWebConverter;
+
+    @Autowired
+    private SSHWebConverter sshWebConverter;
 
     /**
      * 数据库连接测试
@@ -91,19 +99,16 @@ public class DataSourceController {
      */
     @RequestMapping("/ssh/pre_connect")
     public ActionResult sshConnect(@RequestBody SSHTestRequest request) {
+        Session session = null;
         try {
-            JSch jSch = new JSch();
-            Session session = jSch.getSession(request.getUserName(), request.getHostName(),
-                Integer.parseInt(request.getPort()));
-           // if ("password".equals(request.getAuthenticationType())) {
-                session.setPassword(request.getPassword());
-            //} else {
-            //    jSch.addIdentity(request.getKeyFile(), request.getPassphrase());
-            //}
-            session.setConfig("StrictHostKeyChecking", "no");
-            session.connect();
+            session = JSchUtils.getSession(sshWebConverter.toInfo(request));
         } catch (Exception e) {
+            log.error("sshConnect error", e);
             throw new RuntimeException(e);
+        } finally {
+            if (session != null) {
+                session.disconnect();
+            }
         }
         return ActionResult.isSuccess();
     }

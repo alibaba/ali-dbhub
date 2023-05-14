@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
 import com.alibaba.dbhub.server.domain.support.sql.ConnectInfo;
+import com.alibaba.dbhub.server.domain.support.util.JSchUtils;
 import com.alibaba.druid.pool.DruidDataSource;
 
 import com.jcraft.jsch.JSch;
@@ -49,21 +50,11 @@ public class IDataSource extends DruidDataSource {
         SSHInfo ssh = connectInfo.getSsh();
         if (ssh != null && ssh.isUse()) {
             try {
-                JSch jSch = new JSch();
-                Session session = jSch.getSession(ssh.getUserName(), ssh.getHostName(),
-                    Integer.parseInt(ssh.getPort()));
-                if ("password".equals(ssh.getAuthenticationType())) {
-                    session.setPassword(ssh.getPassword());
-                } else {
-                    jSch.addIdentity(ssh.getKeyFile(), ssh.getPassphrase());
-                }
-                session.setConfig("StrictHostKeyChecking", "no");
-                session.connect();
-                int port = session.setPortForwardingL(Integer.parseInt(ssh.getLocalPort()), connectInfo.getHost(),
-                    connectInfo.getPort());
-                System.out.println("getServerVersion :" + session.getServerVersion() + " setPortForwardingL:" + port);
-                setUrl(connectInfo.getUrl().replace(connectInfo.getHost() + ":" + connectInfo.getPort(),
-                    ssh.getHostName() + ":" + ssh.getLocalPort()));
+                Session session = JSchUtils.getSession(ssh, connectInfo.getHost(), connectInfo.getPort() + "");
+                String url = connectInfo.getUrl();
+                url = url.replace(connectInfo.getHost(), "127.0.0.1").replace(connectInfo.getPort() + "",
+                    ssh.getLocalPort());
+                setUrl(url);
             } catch (JSchException e) {
                 throw new RuntimeException(e);
             }
