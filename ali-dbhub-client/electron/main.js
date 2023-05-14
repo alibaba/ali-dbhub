@@ -2,7 +2,7 @@
 const { app, BrowserWindow, Menu, shell, net, ipcMain } = require('electron');
 const path = require('path');
 const os = require('os');
-const fs = require('fs')
+const fs = require('fs');
 const isPro = process.env.NODE_ENV !== 'development';
 // 修改main.js实时更新
 // reloader(module);
@@ -98,18 +98,9 @@ app.on('activate', function () {
 });
 
 ipcMain.handle('get-product-name', (event) => {
-  // 获取应用路径
-  const appPath = app.getAppPath();
+  const exePath = app.getPath('exe');
 
-  // 拼接 package.json 的路径
-  const packageJsonPath = path.join(appPath, 'package.json');
-
-  // 读取并解析 package.json 文件
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-
-  // 从 packageJson 中获取 productName
-  const productName = packageJson.build.productName || packageJson.name;
-  return productName;
+  return exePath.split('/').pop();
 });
 
 // -------------------- 菜单栏 --------------------
@@ -118,7 +109,18 @@ const menuBar = [
     label: '文件',
     submenu: [
       {
+        label: '刷新',
+        accelerator: process.platform === 'darwin' ? 'Cmd+R' : 'Ctrl+R',
+        click() {
+          const focusedWindow = BrowserWindow.getFocusedWindow();
+          if (focusedWindow) {
+            focusedWindow.reload();
+          }
+        },
+      },
+      {
         label: '退出',
+        accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Alt+F4',
         click() {
           // 退出程序
           app.quit();

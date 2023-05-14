@@ -29,7 +29,7 @@ const close = createRequest<IConnectionBase, void>(
 
 const test = createRequest<IConnectionBase, boolean>(
   '/api/connection/datasource/pre_connect',
-  {},
+  {method: 'post'},
 );
 
 const update = createRequest<IConnectionBase, void>(

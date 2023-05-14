@@ -16,11 +16,17 @@ import {
   Form,
   Input,
   message,
+  Table,
   Radio,
   // Menu,
 } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import Tabs, { ITab } from '@/components/Tabs';
+import Iconfont from '../Iconfont';
 
 const { Option } = Select;
+
+type ITabsType = 'ssh' | 'baseInfo'
 
 export enum submitType {
   UPDATE = 'update',
@@ -38,13 +44,138 @@ interface IProps {
   submitCallback?: (data: ITreeNode) => void;
 }
 
+const tabsConfig = [
+  {
+    label: '常规',
+    key: 'baseInfo'
+  },
+  {
+    label: 'SSH',
+    key: 'ssh'
+  },
+  {
+    label: '高级',
+    key: 'extendInfo'
+  },
+]
+
 function VisiblyCreateConnection(props: IProps) {
   const { className, submitCallback } = props;
   const { model, setEditDataSourceData, setRefreshTreeNum, setModel } = useContext(DatabaseContext);
   const editDataSourceData: IEditDataSourceData = model.editDataSourceData as IEditDataSourceData
   const dataSourceId = editDataSourceData.id;
   const dataSourceType = editDataSourceData.dataType;
-  const [form] = Form.useForm();
+  const [baseInfoForm] = Form.useForm();
+  const [sshForm] = Form.useForm();
+  const [extendInfoForm] = Form.useForm();
+  const [currentTab, setCurrentTab] = useState<ITab>(tabsConfig[0]);
+
+  // 测试、保存、修改连接
+  function saveConnection(type: submitType) {
+    const ssh = sshForm.getFieldsValue();
+    const baseInfo = baseInfoForm.getFieldsValue();
+    const extendInfo: any = {}
+    extendTableData.map((t: any) => {
+      if (t.label) {
+        extendInfo[t.label] = t.value
+      }
+    })
+
+    let p: any = {
+      ssh,
+      ...baseInfo,
+      extendInfo,
+      // ...values,
+      EnvType: EnvType.DAILY,
+      type: dataSourceType!
+    };
+
+    if (type === submitType.UPDATE) {
+      p.id = dataSourceId;
+    }
+
+    const api: any = connectionServer[type](p)
+    api.then((res: any) => {
+      if (type === submitType.TEST) {
+        message.success(res === false ? '测试连接失败' : '测试连接成功');
+      } else {
+        setModel({
+          ...model,
+          editDataSourceData: false,
+          refreshTreeNum: new Date().getTime(),
+        })
+      }
+    })
+  }
+
+  function onCancel() {
+    setEditDataSourceData(false)
+  }
+
+  function changeTabs(key: string, index: number) {
+    setCurrentTab(tabsConfig[index])
+  }
+
+  return <div className={classnames(styles.box, className)}>
+    <Modal
+      title={dataSourceId ? "修改数据源" : "连接数据源"}
+      open={!!editDataSourceData}
+      onCancel={onCancel}
+      footer={false}
+      width={560}
+    >
+      <Tabs className={styles.tabsBox} tabs={tabsConfig} onChange={changeTabs}></Tabs>
+      <div className={classnames(styles.baseInfoBox, { [styles.showFormBox]: currentTab.key === 'baseInfo' })}>
+        <RenderForm form={baseInfoForm} tab='baseInfo' dataSourceType={dataSourceType} dataSourceId={dataSourceId} ></RenderForm>
+      </div>
+      <div className={classnames(styles.sshBox, { [styles.showFormBox]: currentTab.key === 'ssh' })}>
+        <RenderForm form={sshForm} tab='ssh' dataSourceType={dataSourceType} dataSourceId={dataSourceId} ></RenderForm>
+        <div className={styles.testSSHConnect}>
+          {/* <Iconfont code="&#xe605;" /> */}
+          <div className={styles.testSSHConnectText}>
+            测试ssh连接
+          </div>
+        </div>
+      </div>
+      <div className={classnames(styles.extendInfoBox, { [styles.showFormBox]: currentTab.key === 'extendInfo' })}>
+        <RenderExtendTable dataSourceType={dataSourceType}></RenderExtendTable>
+      </div>
+      <div className={styles.formFooter}>
+        <div className={styles.test}>
+          {
+            // !dataSourceId &&
+            <Button
+              onClick={saveConnection.bind(null, submitType.TEST)}
+              className={styles.test}>
+              测试连接
+            </Button>
+          }
+        </div>
+        <div className={styles.rightButton}>
+          <Button onClick={onCancel} className={styles.cancel}>
+            取消
+          </Button>
+          <Button className={styles.save} theme="primary" onClick={saveConnection.bind(null, dataSourceId ? submitType.UPDATE : submitType.SAVE)}>
+            {
+              dataSourceId ? '修改' : '连接'
+            }
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  </div >
+}
+
+interface IRenderFormProps {
+  dataSourceId: number | undefined,
+  dataSourceType: string,
+  tab: ITabsType;
+  form: any;
+}
+
+function RenderForm(props: IRenderFormProps) {
+  const { dataSourceId, dataSourceType, tab, form } = props;
+
   let aliasChanged = false;
 
   const dataSourceFormConfigMemo = useMemo<IDataSourceForm>(() => {
@@ -53,13 +184,17 @@ function VisiblyCreateConnection(props: IProps) {
     })
   }, [])
 
-  const initialValuesMemo = useMemo(() => {
-    return initialFormData(dataSourceFormConfigMemo.items)
-  }, [])
-
   const [dataSourceFormConfig, setDataSourceFormConfig] = useState<IDataSourceForm>(dataSourceFormConfigMemo);
 
+  const initialValuesMemo = useMemo(() => {
+    return initialFormData(dataSourceFormConfigMemo[tab].items)
+  }, [])
+
   const [initialValues] = useState(initialValuesMemo);
+
+  useEffect(() => {
+    console.log(dataSourceFormConfig)
+  }, [dataSourceFormConfig])
 
   function initialFormData(dataSourceFormConfig: IFormItem[] | undefined) {
     let initValue: any = {}
@@ -72,7 +207,6 @@ function VisiblyCreateConnection(props: IProps) {
           res.authentication = 2
         }
         selectChange({ name: 'authentication', value: res.user ? 1 : 2 });
-
         regEXFormatting({ url: res.url }, res)
       })
     } else {
@@ -93,11 +227,39 @@ function VisiblyCreateConnection(props: IProps) {
     return initValue
   }
 
+  function selectChange(t: { name: string, value: any }) {
+    dataSourceFormConfig[tab].items.map((j, i) => {
+      if (j.name === t.name) {
+        j.defaultValue = t.value
+      }
+    })
+    setDataSourceFormConfig({ ...dataSourceFormConfig })
+  }
+
+  function onFieldsChange(data: any, datas: any) {
+    // 将antd的格式转换为正常的对象格式
+    if (!data.length) {
+      return
+    }
+    const keyName = data[0].name[0];
+    const keyValue = data[0].value;
+    const variableData = {
+      [keyName]: keyValue
+    }
+    const dataObj: any = {}
+    datas.map((t: any) => {
+      dataObj[t.name[0]] = t.value
+    })
+    // 正则拆分url/组建url
+    if (tab === 'baseInfo') {
+      regEXFormatting(variableData, dataObj);
+    }
+  }
+
   function extractObj(url: any) {
-    const { template, pattern } = dataSourceFormConfig
+    const { template, pattern } = dataSourceFormConfig.baseInfo
     // 提取关键词对应的内容 value
     const matches = url.match(pattern)!;
-    console.log(matches)
     // 提取花括号内的关键词 key
     const reg = /{(.*?)}/g;
     let match;
@@ -114,7 +276,7 @@ function VisiblyCreateConnection(props: IProps) {
   }
 
   function regEXFormatting(variableData: { [key: string]: any }, dataObj: { [key: string]: any }) {
-    const { template, pattern } = dataSourceFormConfig
+    const { template, pattern } = dataSourceFormConfig.baseInfo
     const keyName = Object.keys(variableData)[0]
     const keyValue = variableData[Object.keys(variableData)[0]]
     let newData: any = {}
@@ -143,19 +305,6 @@ function VisiblyCreateConnection(props: IProps) {
       ...newData,
     });
   }
-
-  function selectChange(t: { name: string, value: any }) {
-    dataSourceFormConfig.items.map((j, i) => {
-      if (j.name === t.name) {
-        j.defaultValue = t.value
-      }
-    })
-    setDataSourceFormConfig({ ...dataSourceFormConfig })
-  }
-
-  useEffect(() => {
-    console.log(dataSourceFormConfig)
-  }, [dataSourceFormConfig])
 
   function renderFormItem(t: IFormItem): React.ReactNode {
     const FormItemTypes: { [key in InputType]: () => React.ReactNode } = {
@@ -197,103 +346,110 @@ function VisiblyCreateConnection(props: IProps) {
     </Fragment>
   }
 
-  const submitConnection = (type: submitType) => {
-    form.validateFields().then(res => {
-      saveConnection(res, type);
-    }).catch(error => {
-      message.error('请确认必填信息')
+  return <Form
+    form={form}
+    initialValues={initialValues}
+    autoComplete="off"
+    className={styles.form}
+    onFieldsChange={onFieldsChange}
+  >
+    {dataSourceFormConfig[tab]!.items.map((t => renderFormItem(t)))}
+  </Form>
+}
+
+interface IRenderExtendTableProps {
+  dataSourceType: string;
+}
+
+let extendTableData: any = []
+
+function RenderExtendTable(props: IRenderExtendTableProps) {
+  const { dataSourceType } = props
+
+  const dataSourceFormConfigMemo = useMemo<IDataSourceForm>(() => {
+    return deepClone(dataSourceFormConfigs).find((t: IDataSourceForm) => {
+      return t.type === dataSourceType
     })
-  }
+  }, [])
 
-  // 测试、保存、修改连接
-  function saveConnection(values: IConnectionBase, type: submitType) {
-    let p = {
-      ...values,
-      EnvType: EnvType.DAILY,
-      type: dataSourceType!
-    };
-
-    if (type === submitType.UPDATE) {
-      p.id = dataSourceId;
+  const extendInfo = dataSourceFormConfigMemo.extendInfo?.map(t => {
+    return {
+      label: t.label,
+      value: t.value
     }
+  }) || []
 
-    const api: any = connectionServer[type](p)
-    api.then((res: any) => {
-      if (type === submitType.TEST) {
-        message.success(res === false ? '测试连接失败' : '测试连接成功');
-      } else {
-        setModel({
-          ...model,
-          editDataSourceData: false,
-          refreshTreeNum: new Date().getTime(),
-        })
+  const [data, setData] = useState([...extendInfo, { label: '', value: '' }])
+
+  useEffect(() => {
+    extendTableData = data
+  }, [data])
+
+  const columns: any = [
+    {
+      title: '名称',
+      dataIndex: 'label',
+      key: 'label',
+      width: '60%',
+      render: (value: any, row: any, index: number) => {
+        function change(e: any) {
+          const newData = [...data]
+          newData[index] = {
+            label: e.target.value,
+            value: ''
+          }
+          setData(newData)
+        }
+
+        function blur() {
+          const newData = [...data]
+          newData[index] = {
+            label: row.label,
+            value: ''
+          }
+          setData(newData)
+          setData([...newData, { label: '', value: '' }])
+        }
+
+        if (index === data.length - 1) {
+          return <Input onBlur={blur} placeholder='<用户自定义>' onChange={change} value={value}></Input>
+        } else {
+          return value
+        }
       }
-    })
-  }
+    },
+    {
+      title: '值',
+      dataIndex: 'value',
+      key: 'value',
+      width: '40%',
+      render: (value: any, row: any, index: number) => {
+        function change(e: any) {
+          const newData = [...data]
+          newData[index] = {
+            label: row.label,
+            value: e.target.value
+          }
+          setData(newData)
+        }
 
-  function onFieldsChange(data: any, datas: any) {
-    // 将antd的格式转换为正常的对象格式
-    if (!data.length) {
-      return
-    }
-    const keyName = data[0].name[0];
-    const keyValue = data[0].value;
-    const variableData = {
-      [keyName]: keyValue
-    }
-    const dataObj: any = {}
-    datas.map((t: any) => {
-      dataObj[t.name[0]] = t.value
-    })
-    // 正则拆分url/组建url
-    regEXFormatting(variableData, dataObj);
-  }
+        if (index === data.length - 1) {
+          return <Input disabled placeholder='<value>' onChange={change} value={value}></Input>
+        } else {
+          return <Input onChange={change} value={value}></Input>
+        }
+      }
+    },
+  ];
 
-  function onCancel() {
-    setEditDataSourceData(false)
-  }
-
-  return <div className={classnames(styles.box, className)}>
-    <Modal
-      title={dataSourceId ? "修改数据源" : "连接数据源"}
-      open={!!editDataSourceData}
-      onCancel={onCancel}
-      footer={false}
-      width={560}
-    >
-      <Form
-        form={form}
-        initialValues={initialValues}
-        autoComplete="off"
-        className={styles.form}
-        onFieldsChange={onFieldsChange}
-      >
-        {dataSourceFormConfig.items.map((t => renderFormItem(t)))}
-        <div className={styles.formFooter}>
-          <div className={styles.test}>
-            {
-              // !dataSourceId &&
-              <Button
-                onClick={submitConnection.bind(null, submitType.TEST)}
-                className={styles.test}>
-                测试连接
-              </Button>
-            }
-          </div>
-          <div className={styles.rightButton}>
-            <Button onClick={onCancel} className={styles.cancel}>
-              取消
-            </Button>
-            <Button className={styles.save} theme="primary" onClick={submitConnection.bind(null, dataSourceId ? submitType.UPDATE : submitType.SAVE)}>
-              {
-                dataSourceId ? '修改' : '连接'
-              }
-            </Button>
-          </div>
-        </div>
-      </Form>
-    </Modal>
-  </div >
+  return <div className={styles.extendTable}>
+    <Table
+      size="small"
+      pagination={false}
+      columns={columns}
+      dataSource={data}
+    />
+  </div>
 }
 
 export default function CreateConnection() {
