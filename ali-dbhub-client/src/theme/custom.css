@@ -24819,7 +24819,7 @@ tr.custom-table-expanded-row .custom-descriptions-view table {
   padding: 2px 8px;
   background: var(--color-bg-200);
   border: 1px solid var(--color-bg-6);
-  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: all 0.3s;
 }
 .custom-tabs-card > .custom-tabs-nav .custom-tabs-tab-active,
 .custom-tabs-card > div > .custom-tabs-nav .custom-tabs-tab-active {

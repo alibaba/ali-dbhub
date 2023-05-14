@@ -183,7 +183,7 @@ export const callVar = (css: string) => {
 };
 
 // os is mac or windows
-export function OSnow():OSType{
+export const OSnow = function():OSType{
   var agent = navigator.userAgent.toLowerCase();
   var isMac = /macintosh|mac os x/i.test(navigator.userAgent);
   if (agent.indexOf("win32") >= 0 || agent.indexOf("wow32") >= 0 || agent.indexOf("win64") >= 0 || agent.indexOf("wow64") >= 0) {
@@ -193,7 +193,7 @@ export function OSnow():OSType{
   }else{
     return OSType.RESTS
   }
-}
+}()
 
 export const rootScrollingElement = document.scrollingElement as HTMLElement || document.documentElement || document.body;
 

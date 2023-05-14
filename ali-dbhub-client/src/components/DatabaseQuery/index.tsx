@@ -82,9 +82,10 @@ export default function DatabaseQuery(props: IProps) {
   });
   const [modalConfig, setModalConfig] = useState(initModal);
   // const [aiDropVisible, setAiDropVisible] = useState(false);
+  const isActive = windowTab.consoleId === +activeTabKey
 
   useEffect(() => {
-    if (windowTab.consoleId !== +activeTabKey) {
+    if (!isActive) {
       return;
     }
     connectConsole();
@@ -214,7 +215,6 @@ export default function DatabaseQuery(props: IProps) {
       message.warning('请输入SQL语句');
       return;
     }
-    console.log(windowTab)
     let p = {
       sql,
       type: windowTab.DBType,
@@ -562,9 +562,9 @@ export default function DatabaseQuery(props: IProps) {
   const optBtn = [
     /** 基础SQL命令 */
     [
-      { name: '执行', icon: '\ue626', onClick: executeSql },
+      { name: OSnow === OSType.WIN ? '执行 Ctrl + Enter' : '执行 CMD + Enter', icon: '\ue626', onClick: executeSql },
       {
-        name: OSnow() === OSType.WIN ? '保存 Ctrl + S' : '保存 CMD + S',
+        name: OSnow === OSType.WIN ? '保存 Ctrl + S' : '保存 CMD + S',
         icon: '\ue645',
         onClick: saveWindowTabTab,
       },
@@ -677,7 +677,9 @@ export default function DatabaseQuery(props: IProps) {
           </div>
           <div className={styles.monacoEditor}>
             <MonacoEditor
+              isActive={isActive}
               onSave={saveWindowTabTab}
+              onExecute={executeSql}
               onChange={monacoEditorChange}
               id={windowTab.consoleId!}
               getEditor={getEditor}
