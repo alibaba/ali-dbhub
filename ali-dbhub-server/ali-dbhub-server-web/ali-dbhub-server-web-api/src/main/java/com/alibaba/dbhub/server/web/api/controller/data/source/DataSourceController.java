@@ -77,7 +77,7 @@ public class DataSourceController {
      * @param request
      * @return
      */
-    @GetMapping("/datasource/pre_connect")
+    @RequestMapping("/datasource/pre_connect")
     public ActionResult preConnect(DataSourceTestRequest request) {
         DataSourcePreConnectParam param = dataSourceWebConverter.testRequest2param(request);
         return dataSourceService.preConnect(param);
