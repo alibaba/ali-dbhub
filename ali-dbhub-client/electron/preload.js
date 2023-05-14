@@ -15,7 +15,7 @@ contextBridge.exposeInMainWorld('myAPI', {
 
     const ls = spawn(path.join(__dirname, 'jre/bin/java'), [
       '-jar',
-      '-Xmx128M',
+      '-Xmx512M',
       `-Dspring.profiles.active=${isTest?'test':'release'}`,
       '-Dserver.address=127.0.0.1',
       path1,
