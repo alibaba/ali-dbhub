@@ -20,9 +20,6 @@ import org.springframework.util.ObjectUtils;
  * @version : ConnectInfo.java
  */
 public class ConnectInfo {
-
-    private String jdbcJarDownLoadUrl;
-
     /**
      * 别名
      */
@@ -556,21 +553,4 @@ public class ConnectInfo {
         this.gmtModified = gmtModified;
     }
 
-    /**
-     * Getter method for property <tt>jdbcJarDownLoadUrl</tt>.
-     *
-     * @return property value of jdbcJarDownLoadUrl
-     */
-    public String getJdbcJarDownLoadUrl() {
-        return jdbcJarDownLoadUrl;
-    }
-
-    /**
-     * Setter method for property <tt>jdbcJarDownLoadUrl</tt>.
-     *
-     * @param jdbcJarDownLoadUrl value to be assigned to property jdbcJarDownLoadUrl
-     */
-    public void setJdbcJarDownLoadUrl(String jdbcJarDownLoadUrl) {
-        this.jdbcJarDownLoadUrl = jdbcJarDownLoadUrl;
-    }
 }

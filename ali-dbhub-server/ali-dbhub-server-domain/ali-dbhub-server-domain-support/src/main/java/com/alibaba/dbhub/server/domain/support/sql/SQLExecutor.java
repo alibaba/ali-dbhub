@@ -189,9 +189,16 @@ public class SQLExecutor {
         }
         ConnectInfo info = DbhubContext.getConnectInfo();
         switch (info.getDbType()) {
-            case MYSQL, SQLSERVER -> {
+            case MYSQL -> {
                 try {
                     execute("use `" + database + "`;", null);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            case SQLSERVER -> {
+                try {
+                    execute("use " + database + ";", null);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }

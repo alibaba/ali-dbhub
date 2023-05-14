@@ -521,7 +521,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ],
     type: DatabaseTypeCode.SQLSERVER,
     pattern: /jdbc:sqlserver:\/\/(.*):(\d+)(\/(\w+))?/,
-    template: 'jdbc:sqlserver://{host}:{port}/{database}',
+    template: 'jdbc:sqlserver://{host}:{port};',
   },
   // SQLITE
   {
