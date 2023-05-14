@@ -171,6 +171,13 @@
                 <version>1.34.0</version>
             </dependency>
 
+            <!-- http -->
+            <dependency>
+                <groupId>com.dtflys.forest</groupId>
+                <artifactId>forest-spring-boot-starter</artifactId>
+                <version>1.5.31</version>
+            </dependency>
+
             <!-- 数据库版本管理 -->
             <dependency>
                 <groupId>org.flywaydb</groupId>
