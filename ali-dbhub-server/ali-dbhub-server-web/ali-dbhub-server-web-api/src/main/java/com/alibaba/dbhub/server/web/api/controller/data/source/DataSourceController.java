@@ -78,7 +78,7 @@ public class DataSourceController {
      * @return
      */
     @RequestMapping("/datasource/pre_connect")
-    public ActionResult preConnect(DataSourceTestRequest request) {
+    public ActionResult preConnect(@RequestBody DataSourceTestRequest request) {
         DataSourcePreConnectParam param = dataSourceWebConverter.testRequest2param(request);
         return dataSourceService.preConnect(param);
     }
@@ -89,8 +89,8 @@ public class DataSourceController {
      * @param request
      * @return
      */
-    @GetMapping("/ssh/pre_connect")
-    public ActionResult sshConnect(SSHTestRequest request) {
+    @RequestMapping("/ssh/pre_connect")
+    public ActionResult sshConnect(@RequestBody SSHTestRequest request) {
         try {
             JSch jSch = new JSch();
             Session session = jSch.getSession(request.getUserName(), request.getHostName(),

@@ -41,7 +41,7 @@ function TreeNodeRightClick(props: IProps) {
   const treeNodeConfig: ITreeConfigItem = treeConfig[data.nodeType]
   const { getChildren, operationColumn } = treeNodeConfig;
   const dataSourceFormConfig = dataSourceFormConfigs.find((t: IDataSourceForm) => {
-    return t.baseInfo.type === data.dataType
+    return t.type === data.dataType
   })!
   const OperationColumnConfig: { [key in OperationColumn]: (data: ITreeNode) => IOperationColumnConfigItem } = {
     [OperationColumn.REFRESH]: (data) => {
