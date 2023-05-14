@@ -1,5 +1,10 @@
 package com.alibaba.dbhub.server.web.api.controller.data.source.vo;
 
+import java.util.Map;
+
+import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
+import com.alibaba.dbhub.server.domain.support.model.SSLInfo;
+
 import lombok.Data;
 
 /**
@@ -39,4 +44,46 @@ public class DataSourceVO {
      * 环境类型
      */
     private String envType;
+
+    /**
+     * host
+     */
+    private String host;
+
+    /**
+     * port
+     */
+    private String port;
+
+    /**
+     * ssh
+     */
+    private SSHInfo ssh;
+
+    /**
+     * ssh
+     */
+    private SSLInfo ssl;
+
+    /**
+     * sid
+     */
+    private String sid;
+
+    /**
+     * driver
+     */
+    private String driver;
+
+    /**
+     * jdbc版本
+     */
+    private String jdbc;
+
+
+    /**
+     * 扩展信息
+     */
+    private Map<String,String> extendInfo;
+
 }
