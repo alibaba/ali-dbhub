@@ -229,6 +229,10 @@ function RenderForm(props: IRenderFormProps) {
           res.authentication = 2
         }
         selectChange({ name: 'authentication', value: res.user ? 1 : 2 });
+        res = {
+          ...res,
+          ...res.ssh
+        }
         regEXFormatting({ url: res.url }, res)
       })
     } else {
