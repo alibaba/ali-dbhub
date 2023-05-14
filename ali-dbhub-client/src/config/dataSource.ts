@@ -121,7 +121,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           labelNameCN: '使用SSH',
           labelNameEN: 'USE SSH',
           name: 'use',
-          required: 'false',
+          required: false,
           selects: [
             {
               value: 'false',
@@ -192,7 +192,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         label: 'useStreamLengthsInPrepStmts2',
         value: false,
       }
-],
+    ],
     type: DatabaseTypeCode.MYSQL
   },
   // POSTGRESQL
