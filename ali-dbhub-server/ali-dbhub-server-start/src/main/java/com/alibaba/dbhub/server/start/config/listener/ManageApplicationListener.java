@@ -41,7 +41,7 @@ public class ManageApplicationListener implements ApplicationListener<Applicatio
                 .execute(new TypeReference<>() {});
         } catch (Exception e) {
             // 抛出异常 代表没有旧的启动 或者旧的不靠谱
-            log.info("尝试访问旧的应用失败", e);
+            log.info("尝试访问旧的应用失败。本异常不重要，正常启动启动都会输出，请忽略。", e);
 
             // 尝试杀死旧的进程
             killOldIfNecessary(environment);
@@ -63,7 +63,9 @@ public class ManageApplicationListener implements ApplicationListener<Applicatio
         ProcessHandle.allProcesses().forEach(process -> {
             String command = process.info().command().orElse(null);
             // 不是java应用
-            if (!StringUtils.endsWithIgnoreCase(command, "java")) {
+            boolean isJava = StringUtils.endsWithIgnoreCase(command, "java") || StringUtils.endsWithIgnoreCase(command,
+                "java.exe");
+            if (!isJava) {
                 return;
             }
             String[] arguments = process.info().arguments().orElse(null);
@@ -94,9 +96,20 @@ public class ManageApplicationListener implements ApplicationListener<Applicatio
                 return;
             }
 
-            // 判断是否是正式环境
-            if (!StringUtils.equals(SystemEnvironmentEnum.RELEASE.getCode(), environment)) {
-                log.info("非正式环境需要关闭进程");
+            // 判断是否是测试环境
+            if (StringUtils.equals(SystemEnvironmentEnum.TEST.getCode(), environment) && StringUtils.equals(
+                SystemEnvironmentEnum.TEST.getCode(), environmentArgument)) {
+                log.info("测试环境需要关闭进程");
+                destroyProcess(process, command, arguments);
+                return;
+            }
+
+            // 判断是否是本地环境
+            boolean devDestroy = StringUtils.equals(SystemEnvironmentEnum.DEV.getCode(), environment) && (
+                environmentArgument == null
+                    || StringUtils.equals(SystemEnvironmentEnum.DEV.getCode(), environmentArgument));
+            if (devDestroy) {
+                log.info("本地环境需要关闭进程");
                 destroyProcess(process, command, arguments);
             }
         });
