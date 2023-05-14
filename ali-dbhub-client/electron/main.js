@@ -1,5 +1,13 @@
 // 引入electron并创建一个Browserwindow
-const { app, BrowserWindow, Menu, shell, net, ipcMain, dialog } = require('electron');
+const {
+  app,
+  BrowserWindow,
+  Menu,
+  shell,
+  net,
+  ipcMain,
+  dialog,
+} = require('electron');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
@@ -110,14 +118,15 @@ const menuBar = [
     submenu: [
       {
         label: '关于Chat2DB',
-        click(){
+        click() {
           dialog.showMessageBox({
             title: '关于Chat2DB',
             // message: '关于Chat2DB v1.0.0',
-            detail: '一款由阿里巴巴开源免费的多数据库客户端工具，支持windows、mac本地安装，也支持服务器端部署，web网页访问。',
-            icon: './logo/icon.png' ,
+            detail:
+              '一款由阿里巴巴开源免费的多数据库客户端工具，支持windows、mac本地安装，也支持服务器端部署，web网页访问。',
+            icon: './logo/icon.png',
           });
-        }
+        },
       },
       {
         label: '刷新',
@@ -142,13 +151,13 @@ const menuBar = [
   {
     label: '编辑',
     submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
+      { label: '撤销', role: 'undo' },
+      { label: '重做', role: 'redo' },
       { type: 'separator' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { role: 'paste' },
-      { role: 'selectAll' },
+      { label: '剪切', role: 'cut' },
+      { label: '复制', role: 'copy' },
+      { label: '粘贴', role: 'paste' },
+      { label: '全选', role: 'selectAll' },
     ],
   },
   {
@@ -156,7 +165,8 @@ const menuBar = [
     submenu: [
       {
         label: '打开日志',
-        accelerator: process.platform === 'darwin' ? 'Cmd+Shift+L' : 'Ctrl+Shift+L',
+        accelerator:
+          process.platform === 'darwin' ? 'Cmd+Shift+L' : 'Ctrl+Shift+L',
         click() {
           const fileName = '.chat2db/logs/application.log';
           const url = path.join(os.homedir(), fileName);
@@ -165,7 +175,8 @@ const menuBar = [
       },
       {
         label: '打开控制台',
-        accelerator: process.platform === 'darwin' ? 'Cmd+Shift+I' : 'Ctrl+Shift+I',
+        accelerator:
+          process.platform === 'darwin' ? 'Cmd+Shift+I' : 'Ctrl+Shift+I',
         click() {
           mainWindow && mainWindow.toggleDevTools();
         },
