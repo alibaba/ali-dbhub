@@ -116,20 +116,37 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: 'false',
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
-          labelNameCN: '主机',
-          labelNameEN: 'host',
-          name: 'host',
+          labelNameCN: 'SSH 主机',
+          labelNameEN: 'SSH Hostname',
+          name: 'hostName',
           required: false,
           width: 70,
         },
         {
           defaultValue: '',
           inputType: InputType.INPUT,
-          labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameCN: 'SSH 端口',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -137,7 +154,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '用户名',
-          labelNameEN: 'userName',
+          labelNameEN: 'SSH UserName',
           name: 'userName',
           required: false,
           width: 70,
@@ -146,8 +163,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -244,7 +261,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
               value: AuthenticationType.USERANDPASSWORD,
             },
             {
-  
+
               label: 'NONE',
               value: AuthenticationType.NONE,
             },
@@ -378,11 +395,11 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
               value: 'thin',
             },
             {
-  
+
               value: 'oci',
             },
             {
-  
+
               value: 'oci8',
             },
           ],
@@ -421,7 +438,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
               value: AuthenticationType.USERANDPASSWORD,
             },
             {
-  
+
               label: 'NONE',
               value: AuthenticationType.NONE,
             },
@@ -553,12 +570,12 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
                   width: 100,
                 },
               ],
-  
+
               label: 'User&Password',
               value: AuthenticationType.USERANDPASSWORD,
             },
             {
-  
+
               label: 'NONE',
               value: AuthenticationType.NONE,
             },
@@ -708,12 +725,12 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
                   width: 100,
                 },
               ],
-  
+
               label: 'User&Password',
               value: AuthenticationType.USERANDPASSWORD,
             },
             {
-  
+
               label: 'NONE',
               value: AuthenticationType.NONE,
             },
@@ -940,12 +957,12 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
                   width: 100,
                 },
               ],
-  
+
               label: 'User&Password',
               value: AuthenticationType.USERANDPASSWORD,
             },
             {
-  
+
               label: 'NONE',
               value: AuthenticationType.NONE,
             },
@@ -1086,12 +1103,12 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
                   width: 100,
                 },
               ],
-  
+
               label: 'User&Password',
               value: AuthenticationType.USERANDPASSWORD,
             },
             {
-  
+
               label: 'NONE',
               value: AuthenticationType.NONE,
             },
@@ -1126,17 +1143,26 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         {
           defaultValue: '',
           inputType: InputType.INPUT,
-          labelNameCN: '主机',
-          labelNameEN: 'host',
-          name: 'host',
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
           required: false,
           width: 70,
         },
         {
           defaultValue: '',
           inputType: InputType.INPUT,
-          labelNameCN: '端口',
-          labelNameEN: 'prot',
+          labelNameCN: 'SSH 主机',
+          labelNameEN: 'SSH Hostname',
+          name: 'hostName',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: 'SSH 端口',
+          labelNameEN: 'Prot',
           name: 'prot',
           required: false,
           width: 28,
@@ -1145,7 +1171,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '用户名',
-          labelNameEN: 'userName',
+          labelNameEN: 'SSH UserName',
           name: 'userName',
           required: false,
           width: 70,
@@ -1154,8 +1180,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
