@@ -47,7 +47,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 数据库连接类
+ * 前台应用/数据库连接类
  *
  * @author moji
  * @version ConnectionController.java, v 0.1 2022年09月16日 14:07 moji Exp $

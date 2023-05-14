@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 环境打标服务类
+ * 前台应用/环境打标服务类
  *
  * @author moji
  * @version EnvController.java, v 0.1 2022年09月18日 14:04 moji Exp $
  * @date 2022/09/18
  */
 @BusinessExceptionAspect
-@RequestMapping("/api/environment")
+@RequestMapping("/api/web/environment")
 @RestController
 public class EnvironmentController {
 
