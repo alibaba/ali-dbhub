@@ -140,6 +140,18 @@ const menuBar = [
     ],
   },
   {
+    label: '编辑',
+    submenu: [
+      { role: 'undo' },
+      { role: 'redo' },
+      { type: 'separator' },
+      { role: 'cut' },
+      { role: 'copy' },
+      { role: 'paste' },
+      { role: 'selectAll' },
+    ],
+  },
+  {
     label: '帮助',
     submenu: [
       {
