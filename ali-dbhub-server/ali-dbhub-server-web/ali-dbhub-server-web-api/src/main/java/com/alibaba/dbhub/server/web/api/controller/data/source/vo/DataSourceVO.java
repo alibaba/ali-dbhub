@@ -36,7 +36,7 @@ public class DataSourceVO {
     private String type;
 
     /**
-     * 环境类型
+     * 环境
      */
-    private String envType;
+    private EnvironmentVO environment;
 }

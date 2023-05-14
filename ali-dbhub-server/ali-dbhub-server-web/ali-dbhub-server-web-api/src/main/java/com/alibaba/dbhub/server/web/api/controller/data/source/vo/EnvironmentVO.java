@@ -1,4 +1,4 @@
-package com.alibaba.dbhub.server.web.api.controller.environment.vo;
+package com.alibaba.dbhub.server.web.api.controller.data.source.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,14 +8,13 @@ import lombok.experimental.SuperBuilder;
 /**
  * 环境
  *
- * @author 是仪
+ * @author Jiaju Zhuang
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EnvironmentListVO {
-
+public class EnvironmentVO {
     /**
      * 主键
      */
@@ -30,9 +29,4 @@ public class EnvironmentListVO {
      * 环境缩写
      */
     private String shortName;
-
-    /**
-     * 样式类型
-     */
-    private String style;
 }

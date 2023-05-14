@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
+import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
@@ -15,7 +16,6 @@ import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.domain.api.service.ConsoleService;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
@@ -130,9 +130,14 @@ public class DataSourceController {
 
     /**
      * 查询我建立的数据库连接
+     * <h4>1.1.0</h4>
+     * <ul>
+     *     <li>出参envType改为environment</li>
+     * </ul>
      *
      * @param request
      * @return
+     * @version 1.1.0
      */
     @GetMapping("/datasource/list")
     public WebPageResult<DataSourceVO> list(DataSourceQueryRequest request) {
@@ -142,14 +147,16 @@ public class DataSourceController {
         return WebPageResult.of(dataSourceVOS, result.getTotal(), result.getPageNo(), result.getPageSize());
     }
 
-
-
-
     /**
      * 获取连接内容
+     * <h4>1.1.0</h4>
+     * <ul>
+     *     <li>出参envType改为environment</li>
+     * </ul>
      *
      * @param id
      * @return
+     * @version 1.1.0
      */
     @GetMapping("/datasource/{id}")
     public DataResult<DataSourceVO> queryById(@PathVariable("id") Long id) {
@@ -160,9 +167,14 @@ public class DataSourceController {
 
     /**
      * 保存连接
+     * <h4>1.1.0</h4>
+     * <ul>
+     *     <li>入参envType改为environmentId</li>
+     * </ul>
      *
      * @param request
      * @return
+     * @version 1.1.0
      */
     @PostMapping("/datasource/create")
     public DataResult<Long> create(@RequestBody DataSourceCreateRequest request) {
@@ -172,9 +184,14 @@ public class DataSourceController {
 
     /**
      * 更新连接
+     * <h4>1.1.0</h4>
+     * <ul>
+     *     <li>入参envType改为environmentId</li>
+     * </ul>
      *
      * @param request
      * @return
+     * @version 1.1.0
      */
     @PutMapping("/datasource/update")
     public ActionResult update(@RequestBody DataSourceUpdateRequest request) {

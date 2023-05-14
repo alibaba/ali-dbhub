@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EnvironmentListVO {
+public class EnvironmentGetVO {
 
     /**
      * 主键

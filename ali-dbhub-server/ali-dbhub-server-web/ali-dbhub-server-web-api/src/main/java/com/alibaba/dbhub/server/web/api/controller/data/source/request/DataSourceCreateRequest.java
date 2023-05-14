@@ -3,7 +3,6 @@ package com.alibaba.dbhub.server.web.api.controller.data.source.request;
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.tools.base.enums.EnvTypeEnum;
 
 import lombok.Data;
 
@@ -39,14 +38,14 @@ public class DataSourceCreateRequest {
 
     /**
      * 连接类型
+     *
      * @see DbTypeEnum
      */
     @NotNull
     private String type;
 
     /**
-     * 环境类型
-     * @see EnvTypeEnum
+     * 环境id
      */
-    private String envType;
+    private Long environmentId;
 }

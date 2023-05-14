@@ -2,7 +2,10 @@ package com.alibaba.dbhub.server.domain.api.model;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * 环境
@@ -10,6 +13,9 @@ import lombok.Data;
  * @author 是仪
  */
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Environment {
 
     /**
