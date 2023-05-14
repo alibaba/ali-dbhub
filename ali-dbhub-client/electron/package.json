@@ -34,6 +34,7 @@
     "files": [
       "dist/**/*",
       "main.js",
+      "menu.js",
       "preload.js",
       "app/**/*",
       "jre/**/*",
@@ -65,7 +66,7 @@
         {
           "target": "nsis",
           "arch": [
-            "ia32"
+            "x64"
           ]
         }
       ],
