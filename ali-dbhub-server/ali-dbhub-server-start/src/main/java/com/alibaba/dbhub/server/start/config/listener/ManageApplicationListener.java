@@ -63,7 +63,9 @@ public class ManageApplicationListener implements ApplicationListener<Applicatio
         ProcessHandle.allProcesses().forEach(process -> {
             String command = process.info().command().orElse(null);
             // 不是java应用
-            if (!StringUtils.endsWithIgnoreCase(command, "java")) {
+            boolean isJava = StringUtils.endsWithIgnoreCase(command, "java") || StringUtils.endsWithIgnoreCase(command,
+                "java.exe");
+            if (!isJava) {
                 return;
             }
             String[] arguments = process.info().arguments().orElse(null);
