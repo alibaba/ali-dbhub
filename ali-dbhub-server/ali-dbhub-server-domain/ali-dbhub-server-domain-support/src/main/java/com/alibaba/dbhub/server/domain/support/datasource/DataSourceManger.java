@@ -68,6 +68,8 @@ public class DataSourceManger {
         dataSource.setMinEvictableIdleTimeMillis(300000L);
         dataSource.setUsername(connectInfo.getUser());
         dataSource.setPassword(connectInfo.getPassword());
+        dataSource.setConnectionErrorRetryAttempts(2);
+        dataSource.setBreakAfterAcquireFailure(true);
         if (connectInfo.getExtendInfo() != null) {
             Properties properties = new Properties();
             properties.putAll(connectInfo.getExtendInfo());
