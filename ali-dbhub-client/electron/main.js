@@ -107,8 +107,8 @@ app.on('activate', function () {
 
 ipcMain.handle('get-product-name', (event) => {
   const exePath = app.getPath('exe');
-  const splitStr = process.platform === 'darwin' ? '/' : '\\';
-  return exePath.split(splitStr).pop();
+  const { name } = path.parse(exePath);
+  return name;
 });
 
 // -------------------- 菜单栏 --------------------
