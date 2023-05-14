@@ -1,9 +1,7 @@
 // 引入electron并创建一个Browserwindow
-const { app, BrowserWindow, shell, net } = require('electron');
+const { app, BrowserWindow, Menu, shell, net } = require('electron');
+const menuConfig = require('./menu');
 const path = require('path');
-const url = require('url');
-// const isDev = require('electron-is-dev');
-// const { autoUpdater } = require('electron-updater');
 const isPro = process.env.NODE_ENV !== 'development';
 // 修改main.js实时更新
 // reloader(module);
@@ -14,7 +12,8 @@ let mainWindow;
 function createWindow() {
   //创建浏览器窗口,宽高自定义具体大小你开心就好
   let options = {};
-  if (process.platform === 'win32') { // 如果平台是win32，也即windows
+  if (process.platform === 'win32') {
+    // 如果平台是win32，也即windows
     options.show = true; // 当window创建的时候打开
     options.backgroundColor = '#3f3c37';
   }
@@ -35,7 +34,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-  
+
   // 加载应用-----  electron-quick-start中默认的加载入口
   mainWindow.loadFile(`${__dirname}/dist/index.html`);
 
@@ -62,7 +61,6 @@ process.on('uncaughtException', (error) => {
 // 当 Electron 完成初始化并准备创建浏览器窗口时调用此方法
 app.on('ready', createWindow);
 
-
 app.on('before-quit', (event) => {
   const request = net.request({
     headers: {
@@ -85,7 +83,7 @@ app.on('before-quit', (event) => {
 app.on('window-all-closed', function (event) {
   // macOS中除非用户按下 `Cmd + Q` 显式退出,否则应用与菜单栏始终处于活动状态.
   event.preventDefault();
-  app.hide()
+  app.hide();
   // if (process.platform !== 'darwin') {
   //   app.quit();
   // }
@@ -99,3 +97,10 @@ app.on('activate', function () {
 });
 
 // 你可以在这个脚本中续写或者使用require引入独立的js文件.
+
+// 菜单栏
+const menuBar = menuConfig;
+// 构建菜单项
+const menu = Menu.buildFromTemplate(menuBar);
+// 设置一个顶部菜单栏
+Menu.setApplicationMenu(menu);
