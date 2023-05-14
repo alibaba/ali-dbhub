@@ -4,7 +4,8 @@ Chat2DB包含一系列基于ChatGPT的AI SQL使用功能，主要包括自然语
 ### 点击设置
 <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01hecdtO1acLegtiP9k_!!6000000003350-2-tps-2400-1600.png" width="100%"/></a>
 ### 配置OPENAI_API_KEY
-<a><img src="https://img.alicdn.com/imgextra/i4/O1CN0197wmQv1XFV33cm1aY_!!6000000002894-2-tps-1054-590.png" width="100%"/></a>
+使用ChatSql功能之前必须配置OPENAI_API_KEY，也可在客户端中设置代理HOST和PORT
+<a><img src="https://img.alicdn.com/imgextra/i2/O1CN01mkVmEd1FTY7SBG6Lq_!!6000000000488-0-tps-1212-788.jpg" width="100%"/></a>
 
 ## 自然语言转SQL
 ### 功能描述
@@ -37,3 +38,34 @@ WHERE student.name = '小明'
 输入SQL，选中执行并传入目标SQL类型和附加信息，附加信息中可以添加转换的自定义要求，则会返回目标SQL类型且符合附加要求的SQL语言
 - 输入样例：SELECT IFNULL(NULL, "W3Schools.com")，目标SQL类型为Oracle SQL
 - 输出样例：SELECT NVL(NULL, 'W3Schools.com') FROM dual;
+## CHATBOT
+### 功能描述
+输入任意prompt，点击ChatRobot按钮即可根据prompt返回相应的结果，此处聊天对话默认支持上下文，默认上下文长度为4，可在application.yml文件中修改上下文长度
+- 输入样例：针对第二条优化建议给出具体实现方法
+- 输出样例：针对第二条优化建议，可以考虑在student表中添加一个索引，以加快查询速度。具体实现方法如下：
+
+1. 查看student表中是否已经存在索引。可以使用以下命令查看：
+
+   ```sql
+   SHOW INDEX FROM student;
+   ```
+
+   如果已经存在索引，则可以跳过下一步。
+
+2. 在student表中添加索引。可以使用以下命令添加：
+
+   ```sql
+   ALTER TABLE student ADD INDEX name_index (name);
+   ```
+
+   这里的name_index是索引的名称，name是需要建立索引的列名。
+
+   注意：如果student表中的数据量很大，添加索引可能需要一些时间。
+
+3. 重新执行原始SQL语句，查看查询速度是否有所提升。
+
+   ```sql
+   SELECT score.score FROM score INNER JOIN student ON score.student_id = student.id WHERE student.name = '小明';
+   ```
+
+   如果查询速度有所提升，则说明索引建立成功。
