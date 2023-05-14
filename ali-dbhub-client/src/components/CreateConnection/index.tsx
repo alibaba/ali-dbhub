@@ -76,12 +76,14 @@ function VisiblyCreateConnection(props: IProps) {
     const baseInfo = baseInfoForm.getFieldsValue();
     const extendInfo: any = {}
     extendTableData.map((t: any) => {
-      extendInfo[t.label] = t.value
+      if (t.label) {
+        extendInfo[t.label] = t.value
+      }
     })
 
     let p: any = {
       ssh,
-      baseInfo,
+      ...baseInfo,
       extendInfo,
       // ...values,
       EnvType: EnvType.DAILY,
@@ -129,7 +131,7 @@ function VisiblyCreateConnection(props: IProps) {
       <div className={classnames(styles.sshBox, { [styles.showFormBox]: currentTab.key === 'ssh' })}>
         <RenderForm form={sshForm} tab='ssh' dataSourceType={dataSourceType} dataSourceId={dataSourceId} ></RenderForm>
         <div className={styles.testSSHConnect}>
-          <Iconfont code="" />
+          {/* <Iconfont code="&#xe605;" /> */}
           <div className={styles.testSSHConnectText}>
             测试ssh连接
           </div>
