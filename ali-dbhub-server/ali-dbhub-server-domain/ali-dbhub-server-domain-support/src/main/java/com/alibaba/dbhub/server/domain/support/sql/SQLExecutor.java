@@ -5,14 +5,11 @@
 package com.alibaba.dbhub.server.domain.support.sql;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -24,18 +21,10 @@ import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
-import com.alibaba.dbhub.server.domain.support.sql.DbhubContext.ConnectInfo;
 import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalListener;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.SqlSession;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -48,137 +37,23 @@ import org.springframework.util.StringUtils;
  * @version : DbhubDataSource.java
  */
 @Slf4j
-public class DataSource extends DynamicDataSource {
+public class SQLExecutor {
     /**
      * 全局单例
      */
-    private static final DataSource INSTANCE = new DataSource();
+    private static final SQLExecutor INSTANCE = new SQLExecutor();
 
-    /**
-     * 存储每个数据源对应的连接信息
-     */
-    //private static Map<ConnectInfo, Connection> DATASOURCE_CONNECTION_MAP = Collections.synchronizedMap(
-    //    new
-    //        LRUCache<>(100, entry -> {
-    //        try {
-    //            Connection connection = entry.getValue();
-    //            if (connection != null && !connection.isClosed()) {
-    //                connection.close();
-    //            }
-    //        } catch (SQLException e) {
-    //            throw new RuntimeException(e);
-    //        }
-    //    })
-    //);
+    private SQLExecutor() {}
 
-    private static Cache<ConnectInfo, Connection> DATASOURCE_CONNECTION_MAP = CacheBuilder.newBuilder()
-        // 最大3个 //Cache中存储的对象,写入3秒后过期
-        .maximumSize(100).expireAfterWrite(30, TimeUnit.SECONDS).recordStats().removalListener(
-            (RemovalListener<ConnectInfo, Connection>)notification -> {
-                Connection connection = notification.getValue();
-                try {
-                    if (connection != null && !connection.isClosed()) {
-                        connection.close();
-                    }
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }).build();
-
-    /**
-     * 存储每个数据源对应的 mybatis SqlSessionFactoryBean
-     */
-    private static Cache<ConnectInfo, SqlSessionFactoryBean> SQL_SESSION_FACTORY_MAP = CacheBuilder.newBuilder()
-        // 最大3个 //Cache中存储的对象,写入3秒后过期
-        .maximumSize(100).expireAfterWrite(30, TimeUnit.SECONDS).recordStats().build();
-
-    private DataSource() {}
-
-    public static DataSource getInstance() {
+    public static SQLExecutor getInstance() {
         return INSTANCE;
     }
 
-    @Override
     public Connection getConnection() throws SQLException {
-        ConnectInfo info = DbhubContext.getConnectInfo();
-        if (info == null || info.getDataSourceId() == null) {
-            throw new UnsupportedOperationException();
-        }
-        Connection connection = DATASOURCE_CONNECTION_MAP.getIfPresent(info);
-        if (connection == null || connection.isClosed()) {
-            synchronized (info) {
-                connection = DATASOURCE_CONNECTION_MAP.getIfPresent(info);
-                if (connection == null) {
-                    connection = DriverManager.getConnection(info.getUrl().trim(), info.getUser(), info.getPassword());
-                    DATASOURCE_CONNECTION_MAP.put(info, connection);
-                }
-            }
-        }
-        return connection;
+        return DbhubContext.getConnection();
     }
 
-    @Override
-    public <T> T getMapper(Class<T> type) {
-        ConnectInfo info = DbhubContext.getConnectInfo();
-        if (info == null || info.getDataSourceId() == null) {
-            throw new UnsupportedOperationException();
-        }
-        SqlSessionFactoryBean factoryBean = SQL_SESSION_FACTORY_MAP.getIfPresent(info);
-        try {
-            if (factoryBean != null) {
-                SqlSession session = factoryBean.getObject().openSession();
-                Connection connection = session.getConnection();
-                if (connection == null || connection.isClosed()) {
-                    factoryBean = createSqlSessionMapper(info);
-                }
-            } else {
-                factoryBean = createSqlSessionMapper(info);
-            }
-            SqlSession session = factoryBean.getObject().openSession();
-            return session.getMapper(type);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public void close() {
-        ConnectInfo info = DbhubContext.getConnectInfo();
-        Connection connection = DATASOURCE_CONNECTION_MAP.getIfPresent(info);
-        if (connection != null) {
-            closeConnection(connection);
-            DATASOURCE_CONNECTION_MAP.invalidate(info);
-        }
-    }
-
-    private void closeConnection(Connection connection) {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private SqlSessionFactoryBean createSqlSessionMapper(ConnectInfo info) {
-        synchronized (info) {
-            SqlSessionFactoryBean bean = SQL_SESSION_FACTORY_MAP.getIfPresent(info);
-            if (bean == null) {
-                bean = new SqlSessionFactoryBean();
-                bean.setDataSource(this);
-                try {
-                    bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(
-                        "classpath*:/" + info.getDbType().getCode() + "/TableMetaSchema.xml"));
-                    // 加载全局的配置文件 输入执行sql到控制台 for 本地调试,bean.setPlugins(new Interceptor[]{new SqlStatementInterceptor()});
-                    bean.setConfigLocation(new DefaultResourceLoader().getResource(
-                        "classpath:/" + info.getDbType().getCode() + "/Mybatis.xml"));
-                    SQL_SESSION_FACTORY_MAP.put(info, bean);
-
-                } catch (Exception e) {
-                    throw new RuntimeException("SqlSession error", e);
-                }
-            }
-            return bean;
-        }
     }
 
     /**
@@ -190,7 +65,7 @@ public class DataSource extends DynamicDataSource {
      */
 
     public <R> R executeSql(String sql, Function<ResultSet, R> function) {
-        if(StringUtils.isEmpty(sql)){
+        if (StringUtils.isEmpty(sql)) {
             return null;
         }
         log.info("execute:{}", sql);
@@ -232,14 +107,14 @@ public class DataSource extends DynamicDataSource {
      * @return
      * @throws SQLException
      */
-    public ExecuteResult execute(final String sql, Integer pageSize) throws SQLException {
+    public ExecuteResult execute(final String sql, Integer pageSize, Connection connection) throws SQLException {
         Assert.notNull(sql, "SQL must not be null");
         log.info("execute:{}", sql);
 
         ExecuteResult executeResult = ExecuteResult.builder().sql(sql).success(Boolean.TRUE).build();
         Statement stmt = null;
         try {
-            stmt = getConnection().createStatement();
+            stmt = connection.createStatement();
             boolean query = stmt.execute(sql.replaceFirst(";", ""));
             executeResult.setDescription("执行成功");
             // 代表是查询
@@ -296,7 +171,22 @@ public class DataSource extends DynamicDataSource {
         return executeResult;
     }
 
+    /**
+     * 执行sql
+     *
+     * @param sql
+     * @param pageSize
+     * @return
+     * @throws SQLException
+     */
+    public ExecuteResult execute(final String sql, Integer pageSize) throws SQLException {
+        return execute(sql, pageSize, getConnection());
+    }
+
     public void connectDatabase(String database) {
+        if (StringUtils.isEmpty(database)) {
+            return;
+        }
         ConnectInfo info = DbhubContext.getConnectInfo();
         switch (info.getDbType()) {
             case MYSQL, SQLSERVER -> {
@@ -502,11 +392,13 @@ public class DataSource extends DynamicDataSource {
 
     /**
      * 获取所有的函数
+     *
      * @param databaseName
      * @param schemaName
      * @return
      */
-    public List<com.alibaba.dbhub.server.domain.support.model.Function> functions(String databaseName, String schemaName) {
+    public List<com.alibaba.dbhub.server.domain.support.model.Function> functions(String databaseName,
+        String schemaName) {
         List<com.alibaba.dbhub.server.domain.support.model.Function> functions = Lists.newArrayList();
         try {
             ResultSet resultSet = getConnection().getMetaData().getFunctions(databaseName, schemaName, null);
@@ -522,6 +414,7 @@ public class DataSource extends DynamicDataSource {
 
     /**
      * 获取所有的存储过程
+     *
      * @param databaseName
      * @param schemaName
      * @return
@@ -570,4 +463,5 @@ public class DataSource extends DynamicDataSource {
         }
         return function;
     }
+
 }

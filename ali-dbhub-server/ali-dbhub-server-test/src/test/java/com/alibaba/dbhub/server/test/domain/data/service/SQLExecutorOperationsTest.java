@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Jiaju Zhuang
  */
 @Slf4j
-public class DataSourceOperationsTest extends BaseTest {
+public class SQLExecutorOperationsTest extends BaseTest {
     @Resource
     private DataSourceService dataSourceService;
     @Autowired

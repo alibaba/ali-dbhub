@@ -17,7 +17,7 @@ import javax.validation.constraints.NotEmpty;
 import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.sql.DataSource;
+import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,7 +42,7 @@ public class H2MetaSchemaSupport extends BaseMetaSchema implements MetaSchema {
 
     private String getDDL(String databaseName, String schemaName, String tableName) {
         try {
-            Connection connection = DataSource.getInstance().getConnection();
+            Connection connection = SQLExecutor.getInstance().getConnection();
             // 查询表结构信息
             ResultSet columns = connection.getMetaData().getColumns(databaseName, schemaName, tableName, null);
             List<String> columnDefinitions = new ArrayList<>();

@@ -16,8 +16,10 @@ import java.time.ZoneOffset;
 
 import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Cell;
 import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
+import com.alibaba.dbhub.server.domain.support.sql.IDriverManager;
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.excption.SystemException;
 import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
@@ -137,36 +139,18 @@ public class JdbcUtils {
      * @param dbType   数据库类型
      * @return
      */
-    public static DataSourceConnect testConnect(String url, String userName, String password, String dbType) {
-        DbTypeEnum dbTypeEnum = EasyEnumUtils.getEnum(DbTypeEnum.class, dbType);
-        return testConnect(url, userName, password, dbTypeEnum);
-    }
-
-    /**
-     * 测试数据库连接
-     *
-     * @param url      数据库连接
-     * @param userName 用户名
-     * @param password 密码
-     * @param dbType   数据库类型
-     * @return
-     */
-    public static DataSourceConnect testConnect(String url, String userName, String password, DbTypeEnum dbType) {
+    public static DataSourceConnect testConnect(String url, String userName, String password, DbTypeEnum dbType,
+        String jdbc) {
         DataSourceConnect dataSourceConnect = DataSourceConnect.builder()
             .success(Boolean.TRUE)
             .build();
         // 加载驱动
-        try {
-            Class.forName(dbType.getClassName());
-        } catch (ClassNotFoundException e) {
-            // 理论上不会发生
-            throw new SystemException(CommonErrorEnum.PARAM_ERROR, e);
-        }
 
         // 创建连接
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(url, userName, password);
+            connection = IDriverManager.getConnection(url, userName, password,
+                DriverTypeEnum.getDriver(dbType, jdbc));
         } catch (SQLException e) {
             dataSourceConnect.setSuccess(Boolean.FALSE);
             // 获取最后一个异常的信息给前端

@@ -73,4 +73,45 @@ public class DataSourceDO implements Serializable {
      * 用户id
      */
     private Long userId;
+
+    /**
+     * host
+     */
+    private String host;
+
+    /**
+     * port
+     */
+    private String port;
+
+    /**
+     * ssh
+     */
+    private String ssh;
+
+    /**
+     * ssh
+     */
+    private String ssl;
+
+    /**
+     * sid
+     */
+    private String sid;
+
+    /**
+     * driver
+     */
+    private String driver;
+
+    /**
+     * jdbc版本
+     */
+    private String jdbc;
+
+    /**
+     * 扩展信息
+     */
+    private String extendInfo;
+
 }

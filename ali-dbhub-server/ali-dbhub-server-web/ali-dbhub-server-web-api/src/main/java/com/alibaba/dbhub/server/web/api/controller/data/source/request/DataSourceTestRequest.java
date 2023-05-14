@@ -1,8 +1,12 @@
 package com.alibaba.dbhub.server.web.api.controller.data.source.request;
 
+import java.util.Map;
+
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
+import com.alibaba.dbhub.server.domain.support.model.SSLInfo;
 
 import lombok.Data;
 
@@ -42,4 +46,47 @@ public class DataSourceTestRequest {
      */
     @NotNull
     private String type;
+
+
+
+    /**
+     * host
+     */
+    private String host;
+
+    /**
+     * port
+     */
+    private String port;
+
+    /**
+     * ssh
+     */
+    private SSHInfo ssh;
+
+    /**
+     * ssh
+     */
+    private SSLInfo ssl;
+
+    /**
+     * sid
+     */
+    private String sid;
+
+    /**
+     * driver
+     */
+    private String driver;
+
+
+    /**
+     * jdbc版本
+     */
+    private String jdbc;
+
+    /**
+     * 扩展信息
+     */
+    private Map<String,String> extendInfo;
 }
