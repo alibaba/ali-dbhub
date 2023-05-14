@@ -2,7 +2,7 @@ package com.alibaba.dbhub.server.test.common;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
-import com.alibaba.dbhub.server.domain.support.sql.DbhubContext.ConnectInfo;
+import com.alibaba.dbhub.server.domain.support.sql.ConnectInfo;
 import com.alibaba.dbhub.server.start.Application;
 
 import lombok.extern.slf4j.Slf4j;

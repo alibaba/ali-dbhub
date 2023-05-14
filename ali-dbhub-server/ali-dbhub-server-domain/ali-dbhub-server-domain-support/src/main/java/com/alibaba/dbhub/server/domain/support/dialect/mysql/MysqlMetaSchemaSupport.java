@@ -11,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
 import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.sql.DataSource;
+import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +31,7 @@ public class MysqlMetaSchemaSupport extends BaseMetaSchema implements MetaSchema
     @Override
     public String tableDDL(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName) {
         String sql = "SHOW CREATE TABLE " + databaseName + "." + tableName;
-        return DataSource.getInstance().executeSql(sql, resultSet -> {
+        return SQLExecutor.getInstance().executeSql(sql, resultSet -> {
             try {
                 if (resultSet.next()) {
                     return resultSet.getString("Create Table");

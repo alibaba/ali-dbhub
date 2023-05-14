@@ -16,6 +16,7 @@ import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.constant.OpenAIConst;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author jipengfei
@@ -75,7 +76,7 @@ public class OpenAIClient {
         Integer port = Objects.nonNull(System.getProperty("http.proxyPort")) ? Integer.valueOf(
             System.getProperty("http.proxyPort")) : null;
         Config portConfig = configService.find(PROXY_PORT).getData();
-        if (portConfig != null) {
+        if (portConfig != null && StringUtils.isNotBlank(portConfig.getContent())) {
             port = Integer.valueOf(portConfig.getContent());
         }
         log.info("refresh openai apikey:{}", maskApiKey(apikey));

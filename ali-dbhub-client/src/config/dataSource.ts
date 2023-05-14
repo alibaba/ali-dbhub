@@ -92,6 +92,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           required: true,
           width: 100,
         },
+        {
+          defaultValue: '8.0',
+          inputType: InputType.SELECT,
+          labelNameCN: 'JDBC驱动',
+          labelNameEN: 'JDBC Driver',
+          name: 'jdbc',
+          required: true,
+          selects: [
+            {
+              value: '8.0',
+            },
+            {
+              value: '5.0',
+            },
+          ],
+          width: 100,
+        }
       ],
       pattern: /jdbc:mysql:\/\/(.*):(\d+)(\/(\w+))?/,
       template: 'jdbc:mysql://{host}:{port}/{database}',
@@ -158,7 +175,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         label: 'useStreamLengthsInPrepStmts2',
         value: false,
       }
-    ],
+],
     type: DatabaseTypeCode.MYSQL
   },
   // POSTGRESQL
@@ -723,7 +740,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         },
       ],
       pattern: /jdbc:sqlserver:\/\/(.*):(\d+)(\/(\w+))?/,
-      template: 'jdbc:sqlserver://{host}:{port}/{database}',
+      template: 'jdbc:sqlserver://{host}:{port};',
     },
     ssh: {
       items: [
