@@ -70,6 +70,8 @@ public class ConfigController {
             SystemConfigParam httpProxyHostParam = SystemConfigParam.builder().code(OpenAIClient.PROXY_HOST).content(
                 request.getHttpProxyHost()).build();
             configService.createOrUpdate(httpProxyHostParam);
+        }
+        if (StringUtils.isNotBlank(request.getHttpProxyPort())) {
             SystemConfigParam httpProxyPortParam = SystemConfigParam.builder().code(OpenAIClient.PROXY_PORT).content(
                 request.getHttpProxyPort()).build();
             configService.createOrUpdate(httpProxyPortParam);
