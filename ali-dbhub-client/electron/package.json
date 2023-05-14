@@ -67,6 +67,12 @@
           "arch": [
             "ia32"
           ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "publisherName": "Chat2DB",
