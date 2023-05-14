@@ -41,7 +41,7 @@ public class ManageApplicationListener implements ApplicationListener<Applicatio
                 .execute(new TypeReference<>() {});
         } catch (Exception e) {
             // 抛出异常 代表没有旧的启动 或者旧的不靠谱
-            log.info("尝试访问旧的应用失败。本异常不重要，正常启动启动都会输出，请忽略。", e);
+            log.info("尝试访问旧的应用失败。本异常不重要，正常启动启动都会输出，请忽略。"+ e.getMessage());
 
             // 尝试杀死旧的进程
             killOldIfNecessary(environment);

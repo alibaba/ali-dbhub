@@ -55,6 +55,21 @@ public class IDriverManager {
         return getConnection(url, info, driverTypeEnum);
     }
 
+    public static Connection getConnection(String url, String user, String password, DriverTypeEnum driverTypeEnum,
+        Map<String, String> properties)
+        throws SQLException {
+        Properties info = new Properties();
+        if (user != null) {
+            info.put("user", user);
+        }
+
+        if (password != null) {
+            info.put("password", password);
+        }
+        info.putAll(properties);
+        return getConnection(url, info, driverTypeEnum);
+    }
+
     public static Connection getConnection(String url, Properties info, DriverTypeEnum driverTypeEnum)
         throws SQLException {
         if (url == null) {
@@ -138,31 +153,4 @@ public class IDriverManager {
             }
         }
     }
-
-    //private static String getFullPath(String jarPath) {
-    //    System.out.println("getFullPath:" + LIB_PATH + File.separator + jarPath);
-    //    return LIB_PATH + File.separator + jarPath;
-    //}
-    //
-    //private static String LIB_PATH = null;
-    //
-    //static {
-    //    String str = System.getProperty("jdbc.lib");
-    //    if (StringUtils.isNotBlank(str)) {
-    //        LIB_PATH = str + File.separator + "lib";
-    //    } else {
-    //        str = System.getProperty("user.dir");
-    //        File file = new File(str + File.separator + "lib");
-    //        if (file.exists()) {
-    //            LIB_PATH = str + File.separator + "lib";
-    //        } else {
-    //            String jarPath = System.getProperty("java.class.path");
-    //            LIB_PATH = jarPath + File.separator + "lib";
-    //        }
-    //    }
-    //}
-    //
-    //public static void main(String[] args) {
-    //    System.out.println(System.getProperty("user.home"));
-    //}
 }
