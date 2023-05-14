@@ -1,8 +1,5 @@
 @import '../../var.less';
 
-.box {
-}
-
 .form {
   :global {
     display: flex;
@@ -21,7 +18,7 @@
   :global {
     .custom-form-item {
       > div > div:nth-of-type(1) {
-        width: 100px;
+        width: 200px;
       }
     }
   }
@@ -74,4 +71,23 @@
   opacity: 1;
   height: auto;
   overflow: auto;
+}
+
+.testSSHConnect {
+  .testSSHConnectText {
+    font-size: 12px;
+    color: var(--custom-primary-color);
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.extendTable {
+  max-height: 300px;
+  overflow-y: scroll;
+  input {
+    border: 0px;
+  }
 }

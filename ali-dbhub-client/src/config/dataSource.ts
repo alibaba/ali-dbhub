@@ -1,6 +1,6 @@
 import { DatabaseTypeCode } from '@/utils/constants';
 import { IDataSourceForm} from './types';
-import {InputType,AuthenticationType, OperationColumn } from './enum';
+import {InputType, AuthenticationType, SSHAuthenticationType, OperationColumn } from './enum';
 
 export const dataSourceFormConfigs: IDataSourceForm[] = [
   // MYSQL
@@ -93,57 +93,77 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           width: 100,
         },
       ],
-      type: DatabaseTypeCode.MYSQL,
       pattern: /jdbc:mysql:\/\/(.*):(\d+)(\/(\w+))?/,
       template: 'jdbc:mysql://{host}:{port}/{database}',
     },
     ssh: {
       items: [
         {
-          defaultValue: false,
+          defaultValue: '',
           inputType: InputType.INPUT,
-          labelNameCN: 'ssh',
-          labelNameEN: 'ssh',
-          name: 'ssh',
+          labelNameCN: '主机',
+          labelNameEN: 'host',
+          name: 'host',
           required: false,
-          width: 100,
+          width: 70,
         },
         {
-          defaultValue: false,
+          defaultValue: '',
           inputType: InputType.INPUT,
-          labelNameCN: 'ssh2',
-          labelNameEN: 'ssh2',
-          name: 'ssh2',
+          labelNameCN: '端口',
+          labelNameEN: 'prot',
+          name: 'prot',
           required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '用户名',
+          labelNameEN: 'userName',
+          name: 'userName',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '本地端口',
+          labelNameEN: 'locaProt',
+          name: 'locaProt',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.PASSWORD,
+          labelNameCN: '密码',
+          labelNameEN: 'Password',
+          name: 'password',
+          required: true,
           width: 100,
         },
       ]
     },
-    extendInfo: {
-      items: [
-        {
-          defaultValue: false,
-          inputType: InputType.INPUT,
-          labelNameCN: 'xxValue',
-          labelNameEN: 'xxxxxValue',
-          name: 'xxxxxValue',
-          required: false,
-          width: 100,
-        },
-        {
-          defaultValue: false,
-          inputType: InputType.INPUT,
-          labelNameCN: 'xxValue1',
-          labelNameEN: 'xxValue1',
-          name: 'xxxxxValue1',
-          required: false,
-          width: 100,
-        },
-      ]
-    }
+    extendInfo: [
+      {
+        label: 'useStreamLengthsInPrepStmts',
+        value: false,
+      },
+      {
+        label: 'useStreamLengthsInPrepStmts1',
+        value: false,
+      },
+      {
+        label: 'useStreamLengthsInPrepStmts2',
+        value: false,
+      }
+    ],
+    type: DatabaseTypeCode.MYSQL
   },
   // POSTGRESQL
   {
+    type: DatabaseTypeCode.POSTGRESQL,
     baseInfo: {
       items: [
         {
@@ -233,13 +253,62 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           width: 100,
         },
       ],
-      type: DatabaseTypeCode.POSTGRESQL,
       pattern: /jdbc:postgresql:\/\/(.*):(\d+)(\/(\w+))?/,
       template: 'jdbc:postgresql://{host}:{port}/{database}',
-    }
+    },
+    ssh: {
+      items: [
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '主机',
+          labelNameEN: 'host',
+          name: 'host',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '端口',
+          labelNameEN: 'prot',
+          name: 'prot',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '用户名',
+          labelNameEN: 'userName',
+          name: 'userName',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '本地端口',
+          labelNameEN: 'locaProt',
+          name: 'locaProt',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.PASSWORD,
+          labelNameCN: '密码',
+          labelNameEN: 'Password',
+          name: 'password',
+          required: true,
+          width: 100,
+        },
+      ]
+    },
   },
   // ORACLE
   {
+    type: DatabaseTypeCode.ORACLE,
     baseInfo: {
       items: [
         {
@@ -352,13 +421,62 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           width: 100,
         },
       ],
-      type: DatabaseTypeCode.ORACLE,
       pattern: /jdbc:oracle:(.*):@(.*):(\d+):(.*)/,
       template: 'jdbc:oracle:{driver}:@{host}:{port}:{sid}',
-    }
+    },
+    ssh: {
+      items: [
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '主机',
+          labelNameEN: 'host',
+          name: 'host',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '端口',
+          labelNameEN: 'prot',
+          name: 'prot',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '用户名',
+          labelNameEN: 'userName',
+          name: 'userName',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '本地端口',
+          labelNameEN: 'locaProt',
+          name: 'locaProt',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.PASSWORD,
+          labelNameCN: '密码',
+          labelNameEN: 'Password',
+          name: 'password',
+          required: true,
+          width: 100,
+        },
+      ]
+    },
   },
   // H2
   {
+    type: DatabaseTypeCode.H2,
     baseInfo: {
       items: [
         {
@@ -449,13 +567,62 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           width: 100,
         },
       ],
-      type: DatabaseTypeCode.H2,
       pattern: /jdbc:h2:tcp:\/\/(.*):(\d+)(\/(\w+))?/,
       template: 'jdbc:h2:tcp://{host}:{port}/{database}',
-    }
+    },
+    ssh: {
+      items: [
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '主机',
+          labelNameEN: 'host',
+          name: 'host',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '端口',
+          labelNameEN: 'prot',
+          name: 'prot',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '用户名',
+          labelNameEN: 'userName',
+          name: 'userName',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '本地端口',
+          labelNameEN: 'locaProt',
+          name: 'locaProt',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.PASSWORD,
+          labelNameCN: '密码',
+          labelNameEN: 'Password',
+          name: 'password',
+          required: true,
+          width: 100,
+        },
+      ]
+    },
   },
   // SQLSERVER
   {
+    type: DatabaseTypeCode.SQLSERVER,
     baseInfo: {
       items: [
         {
@@ -555,13 +722,62 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           width: 100,
         },
       ],
-      type: DatabaseTypeCode.SQLSERVER,
       pattern: /jdbc:sqlserver:\/\/(.*):(\d+)(\/(\w+))?/,
       template: 'jdbc:sqlserver://{host}:{port}/{database}',
-    }
+    },
+    ssh: {
+      items: [
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '主机',
+          labelNameEN: 'host',
+          name: 'host',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '端口',
+          labelNameEN: 'prot',
+          name: 'prot',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '用户名',
+          labelNameEN: 'userName',
+          name: 'userName',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '本地端口',
+          labelNameEN: 'locaProt',
+          name: 'locaProt',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.PASSWORD,
+          labelNameCN: '密码',
+          labelNameEN: 'Password',
+          name: 'password',
+          required: true,
+          width: 100,
+        },
+      ]
+    },
   },
   // SQLITE
   {
+    type: DatabaseTypeCode.SQLITE,
     baseInfo: {
       items: [
         {
@@ -592,13 +808,62 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           width: 100,
         },
       ],
-      type: DatabaseTypeCode.SQLITE,
       pattern: /jdbc:sqlite/,
       template: 'jdbc:sqlite://{host}:{port}/{database}',
-    }
+    },
+    ssh: {
+      items: [
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '主机',
+          labelNameEN: 'host',
+          name: 'host',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '端口',
+          labelNameEN: 'prot',
+          name: 'prot',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '用户名',
+          labelNameEN: 'userName',
+          name: 'userName',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '本地端口',
+          labelNameEN: 'locaProt',
+          name: 'locaProt',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.PASSWORD,
+          labelNameCN: '密码',
+          labelNameEN: 'Password',
+          name: 'password',
+          required: true,
+          width: 100,
+        },
+      ]
+    },
   },
   // MARIADB
   {
+    type: DatabaseTypeCode.MARIADB,
     baseInfo: {
       items: [
         {
@@ -689,13 +954,62 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           width: 100,
         },
       ],
-      type: DatabaseTypeCode.MARIADB,
       pattern: /jdbc:mariadb:\/\/(.*):(\d+)(\/(\w+))?/,
       template: 'jdbc:mariadb://{host}:{port}/{database}',
-    }
+    },
+    ssh: {
+      items: [
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '主机',
+          labelNameEN: 'host',
+          name: 'host',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '端口',
+          labelNameEN: 'prot',
+          name: 'prot',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '用户名',
+          labelNameEN: 'userName',
+          name: 'userName',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '本地端口',
+          labelNameEN: 'locaProt',
+          name: 'locaProt',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.PASSWORD,
+          labelNameCN: '密码',
+          labelNameEN: 'Password',
+          name: 'password',
+          required: true,
+          width: 100,
+        },
+      ]
+    },
   },
   // CLICKHOUSE
   {
+    type: DatabaseTypeCode.CLICKHOUSE,
     baseInfo: {
       items: [
         {
@@ -786,10 +1100,58 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           width: 100,
         },
       ],
-      type: DatabaseTypeCode.CLICKHOUSE,
       pattern: /jdbc:clickhouse:\/\/(.*):(\d+)(\/(\w+))?/,
       template: 'jdbc:clickhouse://{host}:{port}/{database}',
       excludes: [OperationColumn.ExportDDL,OperationColumn.CreateTable] //排除掉导出ddl 和 创建表功能 支持的功能见 ./enum.ts => OperationColumn
+    },
+    ssh: {
+      items: [
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '主机',
+          labelNameEN: 'host',
+          name: 'host',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '端口',
+          labelNameEN: 'prot',
+          name: 'prot',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '用户名',
+          labelNameEN: 'userName',
+          name: 'userName',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '本地端口',
+          labelNameEN: 'locaProt',
+          name: 'locaProt',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.PASSWORD,
+          labelNameCN: '密码',
+          labelNameEN: 'Password',
+          name: 'password',
+          required: true,
+          width: 100,
+        },
+      ]
     }
   },
 ];

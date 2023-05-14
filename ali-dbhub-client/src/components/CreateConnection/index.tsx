@@ -16,14 +16,17 @@ import {
   Form,
   Input,
   message,
+  Table,
   Radio,
   // Menu,
 } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import Tabs, { ITab } from '@/components/Tabs';
+import Iconfont from '../Iconfont';
 
 const { Option } = Select;
 
-type ITabsType = 'ssh' | 'extendInfo' | 'baseInfo'
+type ITabsType = 'ssh' | 'baseInfo'
 
 export enum submitType {
   UPDATE = 'update',
@@ -43,7 +46,7 @@ interface IProps {
 
 const tabsConfig = [
   {
-    label: '基础连接',
+    label: '常规',
     key: 'baseInfo'
   },
   {
@@ -51,7 +54,7 @@ const tabsConfig = [
     key: 'ssh'
   },
   {
-    label: '啥啥啥',
+    label: '高级',
     key: 'extendInfo'
   },
 ]
@@ -67,23 +70,15 @@ function VisiblyCreateConnection(props: IProps) {
   const [extendInfoForm] = Form.useForm();
   const [currentTab, setCurrentTab] = useState<ITab>(tabsConfig[0]);
 
-  const dataSourceFormConfigMemo = useMemo<IDataSourceForm>(() => {
-    return deepClone(dataSourceFormConfigs).find((t: IDataSourceForm) => {
-      return t.baseInfo.type === dataSourceType
-    })
-  }, [])
-
-  const [dataSourceFormConfig, setDataSourceFormConfig] = useState<IDataSourceForm>(dataSourceFormConfigMemo);
-
-  useEffect(() => {
-    console.log(dataSourceFormConfig)
-  }, [dataSourceFormConfig])
-
   // 测试、保存、修改连接
   function saveConnection(type: submitType) {
     const ssh = sshForm.getFieldsValue();
     const baseInfo = baseInfoForm.getFieldsValue();
-    const extendInfo = extendInfoForm.getFieldsValue();
+    const extendInfo: any = {}
+    extendTableData.map((t: any) => {
+      extendInfo[t.label] = t.value
+    })
+
     let p: any = {
       ssh,
       baseInfo,
@@ -116,7 +111,6 @@ function VisiblyCreateConnection(props: IProps) {
   }
 
   function changeTabs(key: string, index: number) {
-    console.log(tabsConfig[index])
     setCurrentTab(tabsConfig[index])
   }
 
@@ -134,9 +128,15 @@ function VisiblyCreateConnection(props: IProps) {
       </div>
       <div className={classnames(styles.sshBox, { [styles.showFormBox]: currentTab.key === 'ssh' })}>
         <RenderForm form={sshForm} tab='ssh' dataSourceType={dataSourceType} dataSourceId={dataSourceId} ></RenderForm>
+        <div className={styles.testSSHConnect}>
+          <Iconfont code="" />
+          <div className={styles.testSSHConnectText}>
+            测试ssh连接
+          </div>
+        </div>
       </div>
       <div className={classnames(styles.extendInfoBox, { [styles.showFormBox]: currentTab.key === 'extendInfo' })}>
-        <RenderForm form={extendInfoForm} tab='extendInfo' dataSourceType={dataSourceType} dataSourceId={dataSourceId} ></RenderForm>
+        <RenderExtendTable dataSourceType={dataSourceType}></RenderExtendTable>
       </div>
       <div className={styles.formFooter}>
         <div className={styles.test}>
@@ -171,21 +171,28 @@ interface IRenderFormProps {
   form: any;
 }
 
-function RenderForm(IRenderFormProps: IRenderFormProps) {
-  const { dataSourceId, dataSourceType, tab, form } = IRenderFormProps
+function RenderForm(props: IRenderFormProps) {
+  const { dataSourceId, dataSourceType, tab, form } = props;
+
   let aliasChanged = false;
+
   const dataSourceFormConfigMemo = useMemo<IDataSourceForm>(() => {
     return deepClone(dataSourceFormConfigs).find((t: IDataSourceForm) => {
-      return t.baseInfo.type === dataSourceType
+      return t.type === dataSourceType
     })
   }, [])
+
   const [dataSourceFormConfig, setDataSourceFormConfig] = useState<IDataSourceForm>(dataSourceFormConfigMemo);
 
   const initialValuesMemo = useMemo(() => {
-    return initialFormData(dataSourceFormConfigMemo.baseInfo.items)
+    return initialFormData(dataSourceFormConfigMemo[tab].items)
   }, [])
 
   const [initialValues] = useState(initialValuesMemo);
+
+  useEffect(() => {
+    console.log(dataSourceFormConfig)
+  }, [dataSourceFormConfig])
 
   function initialFormData(dataSourceFormConfig: IFormItem[] | undefined) {
     let initValue: any = {}
@@ -198,7 +205,6 @@ function RenderForm(IRenderFormProps: IRenderFormProps) {
           res.authentication = 2
         }
         selectChange({ name: 'authentication', value: res.user ? 1 : 2 });
-
         regEXFormatting({ url: res.url }, res)
       })
     } else {
@@ -220,7 +226,7 @@ function RenderForm(IRenderFormProps: IRenderFormProps) {
   }
 
   function selectChange(t: { name: string, value: any }) {
-    dataSourceFormConfig.baseInfo.items.map((j, i) => {
+    dataSourceFormConfig[tab].items.map((j, i) => {
       if (j.name === t.name) {
         j.defaultValue = t.value
       }
@@ -243,14 +249,15 @@ function RenderForm(IRenderFormProps: IRenderFormProps) {
       dataObj[t.name[0]] = t.value
     })
     // 正则拆分url/组建url
-    regEXFormatting(variableData, dataObj);
+    if (tab === 'baseInfo') {
+      regEXFormatting(variableData, dataObj);
+    }
   }
 
   function extractObj(url: any) {
     const { template, pattern } = dataSourceFormConfig.baseInfo
     // 提取关键词对应的内容 value
     const matches = url.match(pattern)!;
-    console.log(matches)
     // 提取花括号内的关键词 key
     const reg = /{(.*?)}/g;
     let match;
@@ -346,6 +353,101 @@ function RenderForm(IRenderFormProps: IRenderFormProps) {
   >
     {dataSourceFormConfig[tab]!.items.map((t => renderFormItem(t)))}
   </Form>
+}
+
+interface IRenderExtendTableProps {
+  dataSourceType: string;
+}
+
+let extendTableData: any = []
+
+function RenderExtendTable(props: IRenderExtendTableProps) {
+  const { dataSourceType } = props
+
+  const dataSourceFormConfigMemo = useMemo<IDataSourceForm>(() => {
+    return deepClone(dataSourceFormConfigs).find((t: IDataSourceForm) => {
+      return t.type === dataSourceType
+    })
+  }, [])
+
+  const extendInfo = dataSourceFormConfigMemo.extendInfo?.map(t => {
+    return {
+      label: t.label,
+      value: t.value
+    }
+  }) || []
+
+  const [data, setData] = useState([...extendInfo, { label: '', value: '' }])
+
+  useEffect(() => {
+    extendTableData = data
+  }, [data])
+
+  const columns: any = [
+    {
+      title: '名称',
+      dataIndex: 'label',
+      key: 'label',
+      width: '60%',
+      render: (value: any, row: any, index: number) => {
+        function change(e: any) {
+          const newData = [...data]
+          newData[index] = {
+            label: e.target.value,
+            value: ''
+          }
+          setData(newData)
+        }
+
+        function blur() {
+          const newData = [...data]
+          newData[index] = {
+            label: row.label,
+            value: ''
+          }
+          setData(newData)
+          setData([...newData, { label: '', value: '' }])
+        }
+
+        if (index === data.length - 1) {
+          return <Input onBlur={blur} placeholder='<用户自定义>' onChange={change} value={value}></Input>
+        } else {
+          return value
+        }
+      }
+    },
+    {
+      title: '值',
+      dataIndex: 'value',
+      key: 'value',
+      width: '40%',
+      render: (value: any, row: any, index: number) => {
+        function change(e: any) {
+          const newData = [...data]
+          newData[index] = {
+            label: row.label,
+            value: e.target.value
+          }
+          setData(newData)
+        }
+
+        if (index === data.length - 1) {
+          return <Input disabled placeholder='<value>' onChange={change} value={value}></Input>
+        } else {
+          return <Input onChange={change} value={value}></Input>
+        }
+      }
+    },
+  ];
+
+  return <div className={styles.extendTable}>
+    <Table
+      size="small"
+      pagination={false}
+      columns={columns}
+      dataSource={data}
+    />
+  </div>
 }
 
 export default function CreateConnection() {
