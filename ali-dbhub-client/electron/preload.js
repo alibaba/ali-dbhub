@@ -1,15 +1,25 @@
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 const { spawn, exec } = require('child_process');
 const path = require('path');
-const {app} = require('electron');
-
+const { app } = require('electron');
 
 const appName = 'ali-dbhub-server-start.jar';
 contextBridge.exposeInMainWorld('myAPI', {
-  startServerForSpawn: () => {
+  startServerForSpawn: async () => {
     const path1 = path.join(__dirname, `app/${appName}`);
-    console.log('path1', path1);
-    const ls = spawn(path.join(__dirname, 'jre/bin/java')  , ['-jar', '-Xmx128M', '-Dspring.profiles.active=release','-Dserver.address=127.0.0.1', path1]);
+
+    const productName = await ipcRenderer.invoke('get-product-name');
+    const isTest = productName.match(/test$/i) !== null;
+
+    console.log('productName:', productName, isTest);
+
+    const ls = spawn(path.join(__dirname, 'jre/bin/java'), [
+      '-jar',
+      '-Xmx128M',
+      `-Dspring.profiles.active=${isTest?'test':'release'}`,
+      '-Dserver.address=127.0.0.1',
+      path1,
+    ]);
     ls.stdout.on('data', (buffer) => {
       console.log(buffer.toString('utf8'));
       const data = buffer.toString('utf8');
