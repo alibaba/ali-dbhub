@@ -121,8 +121,8 @@ public class JdbcJarUtils {
     public static String getFullPath(String jarPath) {
         String path = PATH + jarPath;
         File file = new File(path);
-        String url = getDownloadUrl(jarPath);
         if (!file.exists()) {
+            String url = getDownloadUrl(jarPath);
             try {
                 download(url);
             } catch (IOException e) {
@@ -137,7 +137,7 @@ public class JdbcJarUtils {
     }
 
     private static String getDownloadUrl(String jarPath) {
-        String[] paths = DbhubContext.getConnectInfo().getJdbcJarDownLoadUrl().split(",");
+        String[] paths = DbhubContext.JDBC_JAR_DOWNLOAD_URL.split(",");
         for (int i = 0; i < paths.length; i++) {
             String path = paths[i];
             if (path.contains(jarPath)) {

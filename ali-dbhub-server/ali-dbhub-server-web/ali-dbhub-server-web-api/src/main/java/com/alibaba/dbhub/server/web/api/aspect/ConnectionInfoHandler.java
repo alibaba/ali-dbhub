@@ -86,7 +86,6 @@ public class ConnectionInfoHandler {
         connectInfo.setUrl(dataSource.getUrl());
         connectInfo.setPort(dataSource.getPort() != null ? Integer.parseInt(dataSource.getPort()) : null);
         connectInfo.setHost(dataSource.getHost());
-        connectInfo.setJdbcJarDownLoadUrl(jdbcJarDownLoadUrl);
         return connectInfo;
     }
 

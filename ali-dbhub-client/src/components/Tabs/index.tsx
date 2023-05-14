@@ -12,17 +12,22 @@ interface IProps {
   className?: string;
   tabs: ITab[];
   currentTab?: string;
-  onChange: (index: string) => void;
-  extra?: React.ReactNode;
-
+  onChange: (key: string, index: number) => void;
+  extra?: React.ReactNode
 }
 
 export default memo(function Tabs({ className, tabs, currentTab, onChange, extra }: IProps) {
+  function myChange(key: string) {
+    const index = tabs.findIndex(t => {
+      return t.key === key
+    })
+    onChange(key, index)
+  }
 
   return <div className={classnames(className, styles.box)}>
     <AntdTabs
       defaultActiveKey={currentTab}
-      onChange={onChange}
+      onChange={myChange}
       items={tabs}
     />
     <div className={styles.extra}>

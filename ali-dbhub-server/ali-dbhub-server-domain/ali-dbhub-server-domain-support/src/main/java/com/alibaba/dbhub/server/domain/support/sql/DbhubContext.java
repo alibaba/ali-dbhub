@@ -22,6 +22,8 @@ public class DbhubContext {
 
     private static final ThreadLocal<ConnectInfo> CONNECT_INFO_THREAD_LOCAL = new ThreadLocal<>();
 
+    public static String JDBC_JAR_DOWNLOAD_URL;
+
     /**
      * 获取当前线程的ContentContext
      *

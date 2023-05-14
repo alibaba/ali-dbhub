@@ -144,8 +144,8 @@ export default memo<IProps>(function Setting({ className, text }) {
               设置
             </div>
             {
-              menusList.map(t => {
-                return <div onClick={changeMenu.bind(null, t)} className={classnames(styles.menuItem, { [styles.activeMenu]: t.label === currentMenu.label })}>
+              menusList.map((t, index) => {
+                return <div key={index} onClick={changeMenu.bind(null, t)} className={classnames(styles.menuItem, { [styles.activeMenu]: t.label === currentMenu.label })}>
                   <Iconfont code={t.icon} />
                   {t.label}
                 </div>
