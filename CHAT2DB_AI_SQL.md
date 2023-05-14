@@ -40,7 +40,7 @@ WHERE student.name = '小明'
 - 输出样例：SELECT NVL(NULL, 'W3Schools.com') FROM dual;
 ## CHATBOT
 ### 功能描述
-输入任意prompt，点击ChatRobot按钮即可根据prompt返回相应的结果，此处聊天对话默认支持上下文，默认上下文长度为4，可在application文件中修改上下文长度
+输入任意prompt，点击ChatRobot按钮即可根据prompt返回相应的结果，此处聊天对话默认支持上下文，默认上下文长度为4，可在application.yml文件中修改上下文长度
 - 输入样例：针对第二条优化建议给出具体实现方法
 - 输出样例：针对第二条优化建议，可以考虑在student表中添加一个索引，以加快查询速度。具体实现方法如下：
 
