@@ -68,7 +68,7 @@ function VisiblyCreateConnection(props: IProps) {
   const [baseInfoForm] = Form.useForm();
   const [sshForm] = Form.useForm();
   const [currentTab, setCurrentTab] = useState<ITab>(tabsConfig[0]);
-  const [backfillData, setBackfillData] = useState();
+  const [backfillData, setBackfillData] = useState({});
 
   useEffect(() => {
     if (dataSourceId) {
@@ -84,7 +84,6 @@ function VisiblyCreateConnection(props: IProps) {
       })
     }
   }, [])
-
 
   // 测试、保存、修改连接
   function saveConnection(type: submitType) {
@@ -161,7 +160,7 @@ function VisiblyCreateConnection(props: IProps) {
         </div>
       </div>
       <div className={classnames(styles.extendInfoBox, { [styles.showFormBox]: currentTab.key === 'extendInfo' })}>
-        <RenderExtendTable dataSourceType={dataSourceType}></RenderExtendTable>
+        <RenderExtendTable backfillData={backfillData} dataSourceType={dataSourceType}></RenderExtendTable>
       </div>
       <div className={styles.formFooter}>
         <div className={styles.test}>
@@ -379,15 +378,15 @@ function RenderForm(props: IRenderFormProps) {
     {dataSourceFormConfig[tab]!.items.map((t => renderFormItem(t)))}
   </Form>
 }
-
 interface IRenderExtendTableProps {
   dataSourceType: string;
+  backfillData: any;
 }
 
 let extendTableData: any = []
 
 function RenderExtendTable(props: IRenderExtendTableProps) {
-  const { dataSourceType } = props
+  const { dataSourceType, backfillData } = props
 
   const dataSourceFormConfigMemo = useMemo<IDataSourceForm>(() => {
     return deepClone(dataSourceFormConfigs).find((t: IDataSourceForm) => {
@@ -405,6 +404,18 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
   const [data, setData] = useState([...extendInfo, { label: '', value: '' }])
 
   useEffect(() => {
+    const backfillDataExtendInfo = Object.keys(backfillData.extendInfo || {}).map(t => {
+      console.log(backfillData.extendInfo)
+      return {
+        label: t,
+        value: backfillData.extendInfo?.[t]
+      }
+    })
+
+    setData([...backfillDataExtendInfo, { label: '', value: '' }])
+  }, [backfillData])
+
+  useEffect(() => {
     extendTableData = data
   }, [data])
 
@@ -416,11 +427,13 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
       width: '60%',
       render: (value: any, row: any, index: number) => {
         let isCustomLabel = true
+
         dataSourceFormConfigMemo.extendInfo?.map(item => {
           if (item.label === row.label) {
             isCustomLabel = false
           }
         })
+
         function change(e: any) {
           const newData = [...data]
           newData[index] = {
@@ -440,6 +453,7 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
             setData(newData)
             setData([...newData, { label: '', value: '' }])
           }
+          // todo
         }
 
         if (index === data.length - 1 || isCustomLabel) {
@@ -464,8 +478,12 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
           setData(newData)
         }
 
+        function blur() {
+
+        }
+
         if (index === data.length - 1) {
-          return <Input disabled placeholder='<value>' onChange={change} value={value}></Input>
+          return <Input onBlur={blur} disabled placeholder='<value>' onChange={change} value={value}></Input>
         } else {
           return <Input onChange={change} value={value}></Input>
         }
