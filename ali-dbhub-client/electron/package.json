@@ -16,7 +16,7 @@
   "description": "Electron Application",
   "scripts": {
     "start": "electron .",
-    "electron:build": "electron-builder"
+    "electron:build": "electron-builder -c.appId=com.chat2db.test -c.productName=Chat2DB-Test "
   },
   "devDependencies": {
     "electron": "20.1.4",

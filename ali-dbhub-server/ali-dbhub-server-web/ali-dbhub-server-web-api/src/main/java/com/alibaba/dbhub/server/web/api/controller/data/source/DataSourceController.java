@@ -33,9 +33,12 @@ import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourc
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceTestRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceUpdateRequest;
+import com.alibaba.dbhub.server.web.api.controller.data.source.request.SSHTestRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DataSourceVO;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DatabaseVO;
 
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,10 +77,35 @@ public class DataSourceController {
      * @param request
      * @return
      */
-    @GetMapping("/datasource/pre_connect")
+    @RequestMapping("/datasource/pre_connect")
     public ActionResult preConnect(DataSourceTestRequest request) {
         DataSourcePreConnectParam param = dataSourceWebConverter.testRequest2param(request);
         return dataSourceService.preConnect(param);
+    }
+
+    /**
+     * 数据库连接测试
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/ssh/pre_connect")
+    public ActionResult sshConnect(SSHTestRequest request) {
+        try {
+            JSch jSch = new JSch();
+            Session session = jSch.getSession(request.getUserName(), request.getHostName(),
+                Integer.parseInt(request.getPort()));
+            if ("password".equals(request.getAuthenticationType())) {
+                session.setPassword(request.getPassword());
+            } else {
+                jSch.addIdentity(request.getKeyFile(), request.getPassphrase());
+            }
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.connect();
+        } catch (Exception e) {
+            return ActionResult.fail("",e.getMessage());
+        }
+        return ActionResult.isSuccess();
     }
 
     /**
@@ -141,9 +169,6 @@ public class DataSourceController {
         List<DataSourceVO> dataSourceVOS = dataSourceWebConverter.dto2vo(result.getData());
         return WebPageResult.of(dataSourceVOS, result.getTotal(), result.getPageNo(), result.getPageSize());
     }
-
-
-
 
     /**
      * 获取连接内容
