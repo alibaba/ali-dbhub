@@ -1,5 +1,5 @@
 // 引入electron并创建一个Browserwindow
-const { app, BrowserWindow, Menu, shell, net, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, shell, net, ipcMain, dialog } = require('electron');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
@@ -109,6 +109,17 @@ const menuBar = [
     label: '文件',
     submenu: [
       {
+        label: '关于Chat2DB',
+        click(){
+          dialog.showMessageBox({
+            title: '关于Chat2DB',
+            // message: '关于Chat2DB v1.0.0',
+            detail: '一款由阿里巴巴开源免费的多数据库客户端工具，支持windows、mac本地安装，也支持服务器端部署，web网页访问。',
+            icon: './logo/icon.png' ,
+          });
+        }
+      },
+      {
         label: '刷新',
         accelerator: process.platform === 'darwin' ? 'Cmd+R' : 'Ctrl+R',
         click() {
@@ -133,6 +144,7 @@ const menuBar = [
     submenu: [
       {
         label: '打开日志',
+        accelerator: process.platform === 'darwin' ? 'Cmd+Shift+L' : 'Ctrl+Shift+L',
         click() {
           const fileName = '.chat2db/logs/application.log';
           const url = path.join(os.homedir(), fileName);
@@ -141,6 +153,7 @@ const menuBar = [
       },
       {
         label: '打开控制台',
+        accelerator: process.platform === 'darwin' ? 'Cmd+Shift+I' : 'Ctrl+Shift+I',
         click() {
           mainWindow && mainWindow.toggleDevTools();
         },
