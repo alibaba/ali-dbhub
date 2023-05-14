@@ -9,7 +9,7 @@ import com.alibaba.dbhub.server.domain.api.service.DlTemplateService;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
 import com.alibaba.dbhub.server.domain.api.param.SqlAnalyseParam;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
-import com.alibaba.dbhub.server.domain.support.sql.DataSource;
+import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
 import com.alibaba.dbhub.server.domain.support.util.JdbcUtils;
 import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
 import com.alibaba.dbhub.server.tools.base.excption.DatasourceErrorEnum;
@@ -64,7 +64,7 @@ public class DlTemplateServiceImpl implements DlTemplateService {
     private ExecuteResult execute(String sql,int size) {
         ExecuteResult executeResult;
         try {
-            executeResult = DataSource.getInstance().execute(sql, size);
+            executeResult = SQLExecutor.getInstance().execute(sql, size);
         } catch (SQLException e) {
             log.warn("执行sql:{}异常", sql, e);
             executeResult = ExecuteResult.builder()
