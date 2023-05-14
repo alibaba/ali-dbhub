@@ -67,8 +67,24 @@ function VisiblyCreateConnection(props: IProps) {
   const dataSourceType = editDataSourceData.dataType;
   const [baseInfoForm] = Form.useForm();
   const [sshForm] = Form.useForm();
-  const [extendInfoForm] = Form.useForm();
   const [currentTab, setCurrentTab] = useState<ITab>(tabsConfig[0]);
+  const [backfillData, setBackfillData] = useState();
+
+  useEffect(() => {
+    if (dataSourceId) {
+      connectionServer.getDetails({ id: dataSourceId + '' }).then((res: any) => {
+        if (res.user) {
+          res.authentication = 1
+        } else {
+          res.authentication = 2
+        }
+        setBackfillData(res)
+        // selectChange({ name: 'authentication', value: res.user ? 1 : 2 });
+        // regEXFormatting({ url: res.url }, res)
+      })
+    }
+  }, [])
+
 
   // 测试、保存、修改连接
   function saveConnection(type: submitType) {
@@ -116,6 +132,13 @@ function VisiblyCreateConnection(props: IProps) {
     setCurrentTab(tabsConfig[index])
   }
 
+  function testSSH() {
+    let p = sshForm.getFieldsValue();
+    connectionServer.testSSH(p).then(res => {
+      message.success('测试连接成功')
+    })
+  }
+
   return <div className={classnames(styles.box, className)}>
     <Modal
       title={dataSourceId ? "修改数据源" : "连接数据源"}
@@ -126,13 +149,13 @@ function VisiblyCreateConnection(props: IProps) {
     >
       <Tabs className={styles.tabsBox} tabs={tabsConfig} onChange={changeTabs}></Tabs>
       <div className={classnames(styles.baseInfoBox, { [styles.showFormBox]: currentTab.key === 'baseInfo' })}>
-        <RenderForm form={baseInfoForm} tab='baseInfo' dataSourceType={dataSourceType} dataSourceId={dataSourceId} ></RenderForm>
+        <RenderForm backfillData={backfillData} form={baseInfoForm} tab='baseInfo' dataSourceType={dataSourceType} dataSourceId={dataSourceId} ></RenderForm>
       </div>
       <div className={classnames(styles.sshBox, { [styles.showFormBox]: currentTab.key === 'ssh' })}>
-        <RenderForm form={sshForm} tab='ssh' dataSourceType={dataSourceType} dataSourceId={dataSourceId} ></RenderForm>
+        <RenderForm backfillData={backfillData} form={sshForm} tab='ssh' dataSourceType={dataSourceType} dataSourceId={dataSourceId} ></RenderForm>
         <div className={styles.testSSHConnect}>
           {/* <Iconfont code="&#xe605;" /> */}
-          <div className={styles.testSSHConnectText}>
+          <div onClick={testSSH} className={styles.testSSHConnectText}>
             测试ssh连接
           </div>
         </div>
@@ -171,10 +194,11 @@ interface IRenderFormProps {
   dataSourceType: string,
   tab: ITabsType;
   form: any;
+  backfillData: any;
 }
 
 function RenderForm(props: IRenderFormProps) {
-  const { dataSourceId, dataSourceType, tab, form } = props;
+  const { dataSourceId, dataSourceType, tab, form, backfillData } = props;
 
   let aliasChanged = false;
 
@@ -197,10 +221,9 @@ function RenderForm(props: IRenderFormProps) {
   }, [dataSourceFormConfig])
 
   function initialFormData(dataSourceFormConfig: IFormItem[] | undefined) {
-    let initValue: any = {}
+    let initValue: any = {};
     if (dataSourceId) {
       connectionServer.getDetails({ id: dataSourceId + '' }).then((res: any) => {
-        //TODO: 这里只处理了authentication，应该是需要处理所有的selete的
         if (res.user) {
           res.authentication = 1
         } else {
@@ -392,6 +415,12 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
       key: 'label',
       width: '60%',
       render: (value: any, row: any, index: number) => {
+        let isCustomLabel = true
+        dataSourceFormConfigMemo.extendInfo?.map(item => {
+          if (item.label === row.label) {
+            isCustomLabel = false
+          }
+        })
         function change(e: any) {
           const newData = [...data]
           newData[index] = {
@@ -402,17 +431,19 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
         }
 
         function blur() {
-          const newData = [...data]
-          newData[index] = {
-            label: row.label,
-            value: ''
+          if (index === data.length - 1) {
+            const newData = [...data]
+            newData[index] = {
+              label: row.label,
+              value: ''
+            }
+            setData(newData)
+            setData([...newData, { label: '', value: '' }])
           }
-          setData(newData)
-          setData([...newData, { label: '', value: '' }])
         }
 
-        if (index === data.length - 1) {
-          return <Input onBlur={blur} placeholder='<用户自定义>' onChange={change} value={value}></Input>
+        if (index === data.length - 1 || isCustomLabel) {
+          return <Input onBlur={blur} placeholder={index === data.length - 1 ? '自定义' : ''} onChange={change} value={value}></Input>
         } else {
           return value
         }

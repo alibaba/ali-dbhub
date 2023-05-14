@@ -31,6 +31,10 @@ const test = createRequest<IConnectionBase, boolean>(
   '/api/connection/datasource/pre_connect',
   {method: 'post'},
 );
+const testSSH = createRequest<any, boolean>(
+  '/api/connection/ssh/pre_connect',
+  {method: 'post'},
+);
 
 const update = createRequest<IConnectionBase, void>(
   '/api/connection/datasource/update',
@@ -62,4 +66,5 @@ export default {
   clone,
   getDBList,
   close,
+  testSSH
 };
