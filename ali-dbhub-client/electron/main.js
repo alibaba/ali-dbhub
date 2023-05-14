@@ -108,7 +108,7 @@ ipcMain.handle('get-product-name', (event) => {
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
   // 从 packageJson 中获取 productName
-  const productName = packageJson.productName || packageJson.name;
+  const productName = packageJson.build.productName || packageJson.name;
   return productName;
 });
 
