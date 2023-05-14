@@ -34,7 +34,6 @@
     "files": [
       "dist/**/*",
       "main.js",
-      "menu.js",
       "preload.js",
       "app/**/*",
       "jre/**/*",
