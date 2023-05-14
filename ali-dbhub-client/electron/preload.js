@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld('myAPI', {
     const path1 = path.join(__dirname, `app/${appName}`);
 
     const productName = await ipcRenderer.invoke('get-product-name');
-    const isTest = productName.match(/test/i) !== null;
+    const isTest = productName.match(/test$/i) !== null;
 
     console.log('productName:', productName, isTest);
 
