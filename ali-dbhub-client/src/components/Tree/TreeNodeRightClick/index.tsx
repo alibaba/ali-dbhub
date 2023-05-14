@@ -7,7 +7,7 @@ import { Modal, Input } from 'antd';
 // import { Menu } from 'antd';
 import Menu, { IMenu, MenuItem } from '@/components/Menu';
 import { IOperationData } from '@/components/OperationTableModal';
-import { TreeNodeType } from '@/utils/constants';
+import { TreeNodeType, DatabaseTypeCode } from '@/utils/constants';
 import { ITreeConfigItem, ITreeConfig, treeConfig } from '@/components/Tree/treeConfig';
 import { ITreeNode } from '@/types';
 import { DatabaseContext } from '@/context/database';
@@ -41,7 +41,7 @@ function TreeNodeRightClick(props: IProps) {
   const treeNodeConfig: ITreeConfigItem = treeConfig[data.nodeType]
   const { getChildren, operationColumn } = treeNodeConfig;
   const dataSourceFormConfig = dataSourceFormConfigs.find((t: IDataSourceForm) => {
-    return t.type === data.dataType
+    return t.baseInfo.type === data.dataType
   })!
   const OperationColumnConfig: { [key in OperationColumn]: (data: ITreeNode) => IOperationColumnConfigItem } = {
     [OperationColumn.REFRESH]: (data) => {
@@ -104,7 +104,7 @@ function TreeNodeRightClick(props: IProps) {
             dataSourceId: data.dataSourceId!,
             databaseName: data.databaseName!,
             schemaName: data.schemaName!,
-            databaseType: data.dataType!,
+            databaseType: data.dataType! as DatabaseTypeCode
           })
         }
       }
@@ -118,7 +118,7 @@ function TreeNodeRightClick(props: IProps) {
             dataSourceId: data.dataSourceId!,
             databaseName: data.databaseName!,
             schemaName: data.schemaName!,
-            databaseType: data.dataType!
+            databaseType: data.dataType! as DatabaseTypeCode
           })
         }
       }
@@ -177,7 +177,7 @@ function TreeNodeRightClick(props: IProps) {
   }
 
   function excludeSomeOperation() {
-    const excludes = dataSourceFormConfig.excludes
+    const excludes = dataSourceFormConfig.baseInfo.excludes
     const newOperationColumn: OperationColumn[] = []
     operationColumn?.map((item: OperationColumn) => {
       let flag = false

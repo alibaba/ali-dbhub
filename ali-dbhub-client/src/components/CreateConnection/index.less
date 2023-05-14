@@ -17,6 +17,16 @@
   }
 }
 
+.extendInfoBox .form {
+  :global {
+    .custom-form-item {
+      > div > div:nth-of-type(1) {
+        width: 100px;
+      }
+    }
+  }
+}
+
 .labelTextAlign {
   :global {
     .custom-form-item {
@@ -46,4 +56,22 @@
   .cancel {
     .f-button();
   }
+}
+
+.tabsBox {
+  margin-bottom: 20px;
+}
+
+.baseInfoBox,
+.sshBox,
+.extendInfoBox {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.showFormBox {
+  opacity: 1;
+  height: auto;
+  overflow: auto;
 }

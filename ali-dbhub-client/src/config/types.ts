@@ -23,9 +23,17 @@ export interface IFormItem {
 
 // 配置链接数据源表单 Json
 export type IDataSourceForm = {
-  type: DatabaseTypeCode;
-  items: IFormItem[];
-  pattern: RegExp;
-  template: string;
-  excludes?: OperationColumn[];
+  baseInfo: {
+    items: IFormItem[];
+    pattern: RegExp;
+    template: string;
+    excludes?: OperationColumn[];
+    type: DatabaseTypeCode;
+  },
+  ssh?: {
+    items: IFormItem[];
+  },
+  extendInfo?: {
+    items: IFormItem[];
+  }
 };
