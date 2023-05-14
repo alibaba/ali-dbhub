@@ -1,7 +1,8 @@
 // 引入electron并创建一个Browserwindow
-const { app, BrowserWindow, Menu, shell, net } = require('electron');
+const { app, BrowserWindow, Menu, shell, net, ipcMain } = require('electron');
 const path = require('path');
 const os = require('os');
+const fs = require('fs')
 const isPro = process.env.NODE_ENV !== 'development';
 // 修改main.js实时更新
 // reloader(module);
@@ -96,7 +97,20 @@ app.on('activate', function () {
   }
 });
 
-// 你可以在这个脚本中续写或者使用require引入独立的js文件.
+ipcMain.handle('get-product-name', (event) => {
+  // 获取应用路径
+  const appPath = app.getAppPath();
+
+  // 拼接 package.json 的路径
+  const packageJsonPath = path.join(appPath, 'package.json');
+
+  // 读取并解析 package.json 文件
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+
+  // 从 packageJson 中获取 productName
+  const productName = packageJson.productName || packageJson.name;
+  return productName;
+});
 
 // -------------------- 菜单栏 --------------------
 const menuBar = [
