@@ -95,15 +95,15 @@ public class DataSourceController {
             JSch jSch = new JSch();
             Session session = jSch.getSession(request.getUserName(), request.getHostName(),
                 Integer.parseInt(request.getPort()));
-            if ("password".equals(request.getAuthenticationType())) {
+           // if ("password".equals(request.getAuthenticationType())) {
                 session.setPassword(request.getPassword());
-            } else {
-                jSch.addIdentity(request.getKeyFile(), request.getPassphrase());
-            }
+            //} else {
+            //    jSch.addIdentity(request.getKeyFile(), request.getPassphrase());
+            //}
             session.setConfig("StrictHostKeyChecking", "no");
             session.connect();
         } catch (Exception e) {
-            return ActionResult.fail("",e.getMessage());
+            throw new RuntimeException(e);
         }
         return ActionResult.isSuccess();
     }
