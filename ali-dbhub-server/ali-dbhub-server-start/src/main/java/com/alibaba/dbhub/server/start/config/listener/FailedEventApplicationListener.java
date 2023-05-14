@@ -1,5 +1,7 @@
 package com.alibaba.dbhub.server.start.config.listener;
 
+import com.alibaba.dbhub.server.tools.common.util.SystemUtils;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationFailedEvent;
 import org.springframework.context.ApplicationListener;
@@ -16,6 +18,6 @@ public class FailedEventApplicationListener implements ApplicationListener<Appli
     @Override
     public void onApplicationEvent(ApplicationFailedEvent event) {
         log.error("启动失败，停止应用", event.getException());
-        System.exit(1);
+        SystemUtils.stop();
     }
 }
