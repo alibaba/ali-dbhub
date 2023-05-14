@@ -98,18 +98,10 @@ app.on('activate', function () {
 });
 
 ipcMain.handle('get-product-name', (event) => {
-  // 获取应用路径
-  const appPath = app.getAppPath();
+  const exePath = app.getPath('exe');
+  const appName = path.basename(path.dirname(exePath));
 
-  // 拼接 package.json 的路径
-  const packageJsonPath = path.join(appPath, 'package.json');
-
-  // 读取并解析 package.json 文件
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-
-  // 从 packageJson 中获取 productName
-  const productName = packageJson.build.productName || packageJson.name;
-  return productName;
+  return exePath;
 });
 
 // -------------------- 菜单栏 --------------------
