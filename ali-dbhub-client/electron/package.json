@@ -1,9 +1,9 @@
 {
-  "name": "ali-dbhub-client",
+  "name": "chat2db",
   "private": true,
   "license": "MIT",
   "author": "yuqin, hexi",
-  "version": "0.0.20",
+  "version": "1.0.0",
   "main": "main.js",
   "homepage": "./",
   "keywords": [
@@ -11,10 +11,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/alibaba/ali-dbhub"
+    "url": "https://github.com/alibaba/Chat2DB"
   },
   "description": "Electron Application",
   "scripts": {
+    "start": "electron .",
     "electron:build": "electron-builder"
   },
   "devDependencies": {
@@ -24,21 +25,32 @@
   },
   "icon": "logo/logo.png",
   "build": {
-    "appId": "com.ali-dbhub",
+    "appId": "com.chat2db",
     "directories": {
       "output": "../electron-build"
     },
+    "productName": "Chat2DB",
     "asar": false,
     "files": [
       "dist/**/*",
       "main.js",
+      "menu.js",
       "preload.js",
       "app/**/*",
       "jre/**/*",
       "my.bat"
     ],
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "shortcutName": "Chat2DB"
+    },
     "mac": {
-      "icon": "logo/dbhub.icns",
+      "icon": "logo/logo.icns",
       "target": [
         {
           "target": "dmg",
@@ -54,13 +66,15 @@
         {
           "target": "nsis",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         }
       ],
-      "publisherName": "AliDBHub",
+      "publisherName": "Chat2DB",
       "icon": "logo/logo.png"
     }
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3"
   }
 }

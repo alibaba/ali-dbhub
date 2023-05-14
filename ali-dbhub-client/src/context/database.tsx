@@ -1,13 +1,19 @@
-import React, { memo, useEffect, useState, useRef, createContext } from 'react';
+import React, { useState, createContext } from 'react';
 import { IOperationData } from '@/components/OperationTableModal';
 import { ITreeNode } from '@/types';
+import { DatabaseTypeCode } from '@/utils/constants';
+import { IEditDataSourceData } from '@/components/CreateConnection';
 
-export type ICreateConsoleDialog = false | {
-  dataSourceId: number;
-  databaseName: string;
-}
+export type ICreateConsoleDialog =
+  | false
+  | {
+    dataSourceId: number;
+    databaseName: string;
+    schemaName: string;
+    databaseType: DatabaseTypeCode;
+  };
 
-export type IOperationDataDialog = false | IOperationData
+export type IOperationDataDialog = false | IOperationData;
 
 export interface IModel {
   createConsoleDialog: ICreateConsoleDialog;
@@ -15,15 +21,23 @@ export interface IModel {
   needRefreshNodeTree: any;
   dblclickNodeData: ITreeNode | null;
   aiImportSql: string;
+  showSearchResult: boolean;
+  editDataSourceData: IEditDataSourceData | false;
+  refreshTreeNum: number;
+
 }
 
 export interface IContext {
   model: IModel;
+  setModel: (value: IModel) => void
   setCreateConsoleDialog: (value: ICreateConsoleDialog) => void;
   setOperationDataDialog: (value: IOperationDataDialog) => void;
   setNeedRefreshNodeTree: (value: any) => void;
   setDblclickNodeData: (value: ITreeNode | null) => void;
   setAiImportSql: (value: string) => void;
+  setShowSearchResult: (value: boolean) => void;
+  setEditDataSourceData: (value: IEditDataSourceData | false) => void;
+  setRefreshTreeNum: (value: number) => void;
 }
 
 const initDatabaseValue: IModel = {
@@ -32,54 +46,101 @@ const initDatabaseValue: IModel = {
   needRefreshNodeTree: {},
   dblclickNodeData: null,
   aiImportSql: '',
-}
+  // showSearchResult: localStorage.getItem('showSearchResultBox') === 'true',
+  showSearchResult: false,
+  editDataSourceData: false,
+  refreshTreeNum: 0
+};
 
 export const DatabaseContext = createContext<IContext>({} as any);
 
-export default function DatabaseContextProvider({ children }: { children: React.ReactNode }) {
+export default function DatabaseContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [model, setStateModel] = useState<IModel>(initDatabaseValue);
 
-  const setCreateConsoleDialog = (createConsoleDialog: ICreateConsoleDialog) => {
+  const setCreateConsoleDialog = (
+    createConsoleDialog: ICreateConsoleDialog,
+  ) => {
     setStateModel({
       ...model,
-      createConsoleDialog
-    })
-  }
+      createConsoleDialog,
+    });
+  };
+
   const setOperationDataDialog = (operationData: IOperationDataDialog) => {
     setStateModel({
       ...model,
-      operationData
-    })
-  }
+      operationData,
+    });
+  };
+
   const setDblclickNodeData = (dblclickNodeData: ITreeNode | null) => {
     setStateModel({
       ...model,
-      dblclickNodeData
-    })
-  }
+      dblclickNodeData,
+    });
+  };
 
   const setNeedRefreshNodeTree = (needRefreshNodeTree: any) => {
     setStateModel({
       ...model,
-      needRefreshNodeTree
-    })
-  }
+      needRefreshNodeTree,
+    });
+  };
 
   const setAiImportSql = (aiImportSql: any) => {
     setStateModel({
       ...model,
-      aiImportSql
-    })
+      aiImportSql,
+    });
+  };
+
+  const setEditDataSourceData = (value: IEditDataSourceData | false) => {
+    setStateModel({
+      ...model,
+      editDataSourceData: value,
+    });
+  };
+
+  const setShowSearchResult = (showSearchResult: boolean) => {
+    setStateModel({
+      ...model,
+      showSearchResult,
+    });
+    localStorage.setItem('showSearchResultBox', showSearchResult.toString())
+  };
+
+  const setRefreshTreeNum = (refreshTreeNum: number) => {
+    setStateModel({
+      ...model,
+      refreshTreeNum,
+    });
+  };
+  const setModel = (model: IModel) => {
+    setStateModel({
+      ...model,
+    });
   }
 
-  return <DatabaseContext.Provider value={{
-    model,
-    setCreateConsoleDialog,
-    setOperationDataDialog,
-    setNeedRefreshNodeTree,
-    setDblclickNodeData,
-    setAiImportSql
-  }}>
-    {children}
-  </DatabaseContext.Provider>
+  return (
+    <DatabaseContext.Provider
+      value={{
+        model,
+        setModel,
+        setCreateConsoleDialog,
+        setOperationDataDialog,
+        setNeedRefreshNodeTree,
+        setDblclickNodeData,
+        setAiImportSql,
+        setShowSearchResult,
+        setEditDataSourceData,
+        setRefreshTreeNum
+      }}
+    >
+      {children}
+    </DatabaseContext.Provider>
+  );
 }

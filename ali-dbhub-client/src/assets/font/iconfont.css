@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3633546 */
-  src: url('iconfont.woff2?t=1672815972761') format('woff2'),
-       url('iconfont.woff?t=1672815972761') format('woff'),
-       url('iconfont.ttf?t=1672815972761') format('truetype');
+  src: url('iconfont.woff2?t=1683627839021') format('woff2'),
+       url('iconfont.woff?t=1683627839021') format('woff'),
+       url('iconfont.ttf?t=1683627839021') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,158 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-proxy:before {
+  content: "\e63f";
+}
+
+.icon-openai:before {
+  content: "\e646";
+}
+
+.icon-guanyu:before {
+  content: "\e60c";
+}
+
+.icon-yifu:before {
+  content: "\e666";
+}
+
+.icon-shujuku4:before {
+  content: "\e609";
+}
+
+.icon-shujuyuanpeizhi:before {
+  content: "\e649";
+}
+
+.icon-jurassic_server:before {
+  content: "\e6a6";
+}
+
+.icon-shujuku2:before {
+  content: "\e607";
+}
+
+.icon-shujuku3:before {
+  content: "\e625";
+}
+
+.icon-shujukushuju:before {
+  content: "\e63c";
+}
+
+.icon-shujuku1:before {
+  content: "\e636";
+}
+
+.icon-peizhishujuyuan:before {
+  content: "\e62f";
+}
+
+.icon-SQLlishichaxun:before {
+  content: "\e80a";
+}
+
+.icon-zhongmingming:before {
+  content: "\e623";
+}
+
+.icon-ico_shujuchaxunyutongji_yuyueqingkuangchaxun:before {
+  content: "\e8ff";
+}
+
+.icon-clickhouse-yunshujukuClickHouse:before {
+  content: "\e8f4";
+}
+
+.icon-rds_mariadb:before {
+  content: "\e6f5";
+}
+
+.icon-jianshaojianqujianhao:before {
+  content: "\e62a";
+}
+
+.icon-sqlserver:before {
+  content: "\e664";
+}
+
+.icon-sqlite:before {
+  content: "\e65a";
+}
+
+.icon-queshengye_zanwushuju:before {
+  content: "\e760";
+}
+
+.icon-weiwancheng:before {
+  content: "\e755";
+}
+
+.icon-wancheng-:before {
+  content: "\e62e";
+}
+
+.icon-chenggong1:before {
+  content: "\e620";
+}
+
+.icon-jiqiren:before {
+  content: "\e70e";
+}
+
+.icon-huanyihuan:before {
+  content: "\e635";
+}
+
+.icon-icon_infomation:before {
+  content: "\e65b";
+}
+
+.icon-key1:before {
+  content: "\e775";
+}
+
+.icon-mysql:before {
+  content: "\ec6d";
+}
+
+.icon-oracle:before {
+  content: "\ec48";
+}
+
+.icon-postgresql:before {
+  content: "\ec5d";
+}
+
+.icon-h2:before {
+  content: "\e61c";
+}
+
+.icon-cc-schema:before {
+  content: "\e696";
+}
+
+.icon-xinjianbiaoge:before {
+  content: "\e6b6";
+}
+
+.icon-export:before {
+  content: "\e613";
+}
+
+.icon-jiaoseguanli:before {
+  content: "\e66d";
+}
+
+.icon-console:before {
+  content: "\e619";
+}
+
+.icon-24gf-folderMinus:before {
+  content: "\eac5";
 }
 
 .icon-chakan:before {

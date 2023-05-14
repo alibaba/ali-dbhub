@@ -1,52 +1,7 @@
 version: '3'
 services:
-  # 连接地址：jdbc:mysql://localhost:3306 用户名：root  密码：ali_dbhub 端口：3306 默认数据库：ali_dbhub_test
-  mysql:
-    image: mysql:latest
-    restart: always
-    container_name: mysql-latest
-    environment:
-      MYSQL_ROOT_PASSWORD: ali_dbhub
-      MYSQL_DATABASE: ali_dbhub_test
-      TZ: Asia/Shanghai
+  chat2db:
+    image: chat2db/chat2db:latest
+    container_name: chat2db-latest
     ports:
-      - 3306:3306
-  # 连接地址：jdbc:postgresql://localhost:5432/ali_dbhub_test, 用户名:ali_dbhub, 密码:ali_dbhub 端口：5432 默认数据库：ali_dbhub_test
-  postgres:
-    image: postgres:12-alpine
-    restart: always
-    container_name: postgres-alpine
-    environment:
-      POSTGRES_USER: ali_dbhub
-      POSTGRES_PASSWORD: ali_dbhub
-      POSTGRES_DB: ali_dbhub_test
-      TZ: Asia/Shanghai
-    ports:
-      - 5432:5432
-  # 连接地址：jdbc:oracle:thin:@localhost:1521:XE,  用户名:system, 密码:ali_dbhub
-  # 默认数据库XEPDB1 启动会快很多
-  oracle:
-    image: gvenzl/oracle-xe:slim-faststart
-    restart: always
-    container_name: oracle-latest
-    environment:
-      ORACLE_DATABASE: XEPDB1
-      ORACLE_PASSWORD: ali_dbhub
-      TZ: Asia/Shanghai
-    ports:
-      - 1521:1521
-  redis:
-    image: redis:7
-    container_name: redis7
-    restart: always
-    # 挂载映射，可以让数据或配置持久化
-    volumes:
-      #＜本地配置文件＞：
-      - $PWD/redis/redis.conf:/etc/redis/redis. conf:ro
-      - $PWD/redis/data:/data
-      - $PWD/redis/logs:/logs
-   # command: redis-server/etc/redis/redis.conf
-    ports:
-      - 6379:6379
-    #服务名称
-# /
+      - "10824:10824"

@@ -30,6 +30,12 @@ public class SQLKeyConst {
     public static final String SQLSERVER_ALTER_TABLE_SIMPLE = "exec sp_addextendedproperty 'MS_Description', 'mm', 'SCHEMA', 'dbo', 'TABLE', 'table_name', 'COLUMN', 'id' go";
 
 
+    public static final String SQLITE_CREATE_TABLE_SIMPLE = "CREATE TABLE person (\n"
+        + "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+        + "    name TEXT NOT NULL,\n"
+        + "    age INTEGER\n"
+        + ");";
+    public static final String SQLITE_ALTER_TABLE_SIMPLE = "ALTER TABLE person ADD COLUMN address TEXT;";
 
 
 }

@@ -196,6 +196,11 @@
                 <version>9.8.1</version>
             </dependency>
             <dependency>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-mysql</artifactId>
+                <version>9.8.1</version>
+            </dependency>
+            <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>42.5.1</version>
@@ -225,6 +230,21 @@
                 <groupId>com.theokanning.openai-gpt3-java</groupId>
                 <artifactId>service</artifactId>
                 <version>0.12.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.oceanbase</groupId>
+                <artifactId>oceanbase-client</artifactId>
+                <version>2.4.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mariadb.jdbc</groupId>
+                <artifactId>mariadb-java-client</artifactId>
+                <version>2.4.3</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.yandex.clickhouse</groupId>
+                <artifactId>clickhouse-jdbc</artifactId>
+                <version>0.2.4</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

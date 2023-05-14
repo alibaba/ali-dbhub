@@ -5,13 +5,14 @@
   "main": "main.js",
   "scripts": {
     "start": "umi dev",
-    "build": "umi build",
+    "build": "cross-env UMI_ENV=test umi build && cp -r dist ./electron",
     "postinstall": "umi generate tmp",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
     "electron": "electron .",
-    "build2Server": "mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static && rm -rf ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front && UMI_ENV=prod umi build && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front"
+    "build:prod": "mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static && rm -rf ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front && cross-env UMI_ENV=prod cross-env UMI_PublicPath=${npm_config_publicPath}  umi build && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front",
+    "build:desktop": "cross-env UMI_ENV=desktop umi build"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
@@ -31,6 +32,7 @@
     "event-source-polyfill": "^1.0.31",
     "github-markdown-css": "^5.2.0",
     "highlight.js": "^11.7.0",
+    "lodash": "^4.17.21",
     "markdown-it": "^13.0.1",
     "markdown-it-link-attributes": "^4.0.1",
     "monaco-editor": "^0.34.0",
@@ -41,11 +43,13 @@
     "react": "17.x",
     "react-dom": "17.x",
     "sql-formatter": "^12.0.4",
+    "syntax-parser": "^1.0.17",
     "umi": "^3.5.34",
     "umi-request": "^1.4.0"
   },
   "devDependencies": {
     "@types/event-source-polyfill": "^1.0.1",
+    "@types/lodash": "^4.14.194",
     "@types/markdown-it": "^12.2.3",
     "@types/markdown-it-link-attributes": "^3.0.1",
     "@types/react": "^17.0.0",
@@ -57,6 +61,7 @@
     "lint-staged": "^10.0.7",
     "prettier": "^2.2.0",
     "typescript": "^4.1.2",
+    "webpack-bundle-analyzer": "^4.8.0",
     "yorkie": "^2.0.0"
   },
   "engines": {

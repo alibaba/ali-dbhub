@@ -1,13 +1,13 @@
 @import '../../var.less';
 
-.box{
+.box {
   .f-icon-button();
 }
 
-.backgroundList{
+.backgroundList {
   display: flex;
   margin-bottom: 20px;
-  li{
+  li {
     margin-right: 15px;
     border-radius: 6px;
     overflow: hidden;
@@ -17,20 +17,32 @@
     background-repeat: no-repeat;
     cursor: pointer;
   }
-  .current{
+  .current {
     border: 2px solid var(--custom-primary-color-active);
+  }
+  filter: brightness(var(--filter-brightness));
+}
+
+.setText {
+  color: var(--custom-primary-color);
+  &:hover {
+    text-decoration: underline;
   }
 }
 
-.title{
-  font-size: 16px;
+.title {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.content {
   margin-bottom: 15px;
 }
 
-.primaryColorList{
+.primaryColorList {
   display: flex;
   margin-bottom: 20px;
-  li{
+  li {
     margin-right: 15px;
     display: inline-flex;
     align-items: center;
@@ -40,10 +52,67 @@
     border: 2px solid transparent;
     border-radius: 50%;
     cursor: pointer;
-    i{
+    i {
       color: #fff;
       font-size: 18px;
     }
   }
 }
+.modalBox {
+  display: flex;
+  margin: -20px;
+}
 
+.menus {
+  width: 200px;
+  background-color: var(--color-bg-200);
+  padding: 20px;
+  .menusTitle {
+    font-size: 16px;
+    padding-bottom: 10px;
+  }
+
+  .menuItem {
+    margin: 10px 0px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    i {
+      font-size: 16px;
+      margin-right: 10px;
+    }
+  }
+  .activeMenu {
+    background-color: var(--color-bg-6);
+  }
+}
+
+.menuContent {
+  min-height: 400px;
+  padding: 20px;
+  flex: 1;
+  .menuContentTitle {
+    font-size: 16px;
+    padding-bottom: 20px;
+  }
+}
+
+.bottomButton {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.aboutUs {
+  .versions {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.brandLogo {
+  margin-right: 20px;
+}

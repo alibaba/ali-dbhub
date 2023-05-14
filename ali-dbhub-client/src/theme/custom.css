@@ -14453,7 +14453,7 @@ textarea.custom-input {
   font-weight: normal;
   font-size: 14px;
   text-align: center;
-  background-color: #fafafa;
+  background-color: var(--color-bg-100);
   border: 1px solid var(--color-border);
   border-radius: 4px;
   transition: all 0.3s;
@@ -18130,7 +18130,7 @@ textarea.custom-mentions {
   border-radius: 2px 2px 0 0;
 }
 .custom-modal-body {
-  padding: 12px;
+  padding: 12px 20px 20px 20px;
   font-size: 14px;
   line-height: 1.5715;
   word-wrap: break-word;
@@ -24819,7 +24819,7 @@ tr.custom-table-expanded-row .custom-descriptions-view table {
   padding: 2px 8px;
   background: var(--color-bg-200);
   border: 1px solid var(--color-bg-6);
-  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: all 0.3s;
 }
 .custom-tabs-card > .custom-tabs-nav .custom-tabs-tab-active,
 .custom-tabs-card > div > .custom-tabs-nav .custom-tabs-tab-active {
@@ -28336,3 +28336,5 @@ div.custom-typography-edit-content.custom-typography-rtl {
   margin: 8px 0 0;
   padding: 0;
 }
+
+/*  var(--color-bg-300) */
