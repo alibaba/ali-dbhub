@@ -94,9 +94,20 @@ public class ManageApplicationListener implements ApplicationListener<Applicatio
                 return;
             }
 
-            // 判断是否是正式环境
-            if (!StringUtils.equals(SystemEnvironmentEnum.RELEASE.getCode(), environment)) {
-                log.info("非正式环境需要关闭进程");
+            // 判断是否是测试环境
+            if (StringUtils.equals(SystemEnvironmentEnum.TEST.getCode(), environment) && StringUtils.equals(
+                SystemEnvironmentEnum.TEST.getCode(), environmentArgument)) {
+                log.info("测试环境需要关闭进程");
+                destroyProcess(process, command, arguments);
+                return;
+            }
+
+            // 判断是否是本地环境
+            boolean devDestroy = StringUtils.equals(SystemEnvironmentEnum.DEV.getCode(), environment) && (
+                environmentArgument == null
+                    || StringUtils.equals(SystemEnvironmentEnum.DEV.getCode(), environmentArgument));
+            if (devDestroy) {
+                log.info("本地环境需要关闭进程");
                 destroyProcess(process, command, arguments);
             }
         });
