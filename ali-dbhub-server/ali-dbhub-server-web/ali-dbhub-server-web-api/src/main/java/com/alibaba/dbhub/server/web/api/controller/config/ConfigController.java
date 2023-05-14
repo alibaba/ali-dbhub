@@ -61,15 +61,19 @@ public class ConfigController {
      */
     @PostMapping("/system_config/chatgpt")
     public ActionResult addChatGptSystemConfig(@RequestBody ChatGptSystemConfigRequest request) {
-        SystemConfigParam param = SystemConfigParam.builder().code(OpenAIClient.OPENAI_KEY).content(request.getApiKey())
-            .build();
-        configService.createOrUpdate(param);
-        SystemConfigParam httpProxyHostParam = SystemConfigParam.builder().code(OpenAIClient.PROXY_HOST).content(
-            request.getHttpProxyHost()).build();
-        configService.createOrUpdate(httpProxyHostParam);
-        SystemConfigParam httpProxyPortParam = SystemConfigParam.builder().code(OpenAIClient.PROXY_PORT).content(
+        if (StringUtils.isNotBlank(request.getApiKey())) {
+            SystemConfigParam param = SystemConfigParam.builder().code(OpenAIClient.OPENAI_KEY).content(request.getApiKey())
+                .build();
+            configService.createOrUpdate(param);
+        }
+        if (StringUtils.isNotBlank(request.getHttpProxyHost())) {
+            SystemConfigParam httpProxyHostParam = SystemConfigParam.builder().code(OpenAIClient.PROXY_HOST).content(
+                request.getHttpProxyHost()).build();
+            configService.createOrUpdate(httpProxyHostParam);
+            SystemConfigParam httpProxyPortParam = SystemConfigParam.builder().code(OpenAIClient.PROXY_PORT).content(
                 request.getHttpProxyPort()).build();
-        configService.createOrUpdate(httpProxyPortParam);
+            configService.createOrUpdate(httpProxyPortParam);
+        }
         if (StringUtils.isNotBlank(request.getApiKey())) {
             OpenAIClient.refresh();
         }
