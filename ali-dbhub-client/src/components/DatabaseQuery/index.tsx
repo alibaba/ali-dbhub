@@ -38,6 +38,7 @@ enum IPromptType {
   SQL_EXPLAIN = 'SQL_EXPLAIN',
   SQL_OPTIMIZER = 'SQL_OPTIMIZER',
   SQL_2_SQL = 'SQL_2_SQL',
+  ChatRobot = 'ChatRobot',
 }
 
 enum IPromptTypeText {
@@ -45,6 +46,7 @@ enum IPromptTypeText {
   SQL_EXPLAIN = '解释SQL',
   SQL_OPTIMIZER = 'SQL优化',
   SQL_2_SQL = 'SQL转换',
+  ChatRobot = 'Chat机器人',
 }
 
 interface IProps extends IDatabaseQueryProps {
@@ -58,8 +60,8 @@ let monacoEditorExternalList: any = {};
 const initModal = {
   open: false,
   title: '',
-  handleOk: () => { },
-  handleCancel: () => { },
+  handleOk: () => {},
+  handleCancel: () => {},
   content: <></>,
 };
 export default function DatabaseQuery(props: IProps) {
@@ -82,7 +84,7 @@ export default function DatabaseQuery(props: IProps) {
   });
   const [modalConfig, setModalConfig] = useState(initModal);
   // const [aiDropVisible, setAiDropVisible] = useState(false);
-  const isActive = windowTab.consoleId === +activeTabKey
+  const isActive = windowTab.consoleId === +activeTabKey;
 
   useEffect(() => {
     if (!isActive) {
@@ -164,7 +166,7 @@ export default function DatabaseQuery(props: IProps) {
         myEditorHintData[item.name] = [];
       });
       monacoHint.current = setEditorHint(myEditorHintData);
-    } catch { }
+    } catch {}
   };
 
   const getEditor = (editor: any) => {
@@ -175,8 +177,8 @@ export default function DatabaseQuery(props: IProps) {
       localStorage.getItem(
         `window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.consoleId}`,
       ) ||
-      windowTab.ddl ||
-      '',
+        windowTab.ddl ||
+        '',
     );
   };
 
@@ -221,7 +223,7 @@ export default function DatabaseQuery(props: IProps) {
       consoleId: +windowTab.consoleId,
       dataSourceId: windowTab?.dataSourceId as number,
       databaseName: windowTab?.databaseName,
-      schemaName: windowTab?.schemaName
+      schemaName: windowTab?.schemaName,
     };
     setManageResultDataList(null);
     mysqlServer
@@ -263,6 +265,16 @@ export default function DatabaseQuery(props: IProps) {
     model.setValue(format(value, {}));
   };
 
+  const onClickChatbot = () => {
+    const sql = getSelectionVal() || getMonacoEditorValue();
+    if (!sql) {
+      message.warning('请选择语句');
+      return;
+    }
+
+    chat2SQL(IPromptType.ChatRobot);
+  };
+
   const monacoEditorChange = () => {
     localStorage.setItem(
       `window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.consoleId}`,
@@ -273,7 +285,7 @@ export default function DatabaseQuery(props: IProps) {
   const chat2SQL = (promptType: IPromptType) => {
     const sentence = getSelectionVal();
 
-    // TODO: 自然语言转化SQL
+    // 自然语言转化SQL
     const model = monacoEditor.current.getModel(monacoEditor.current);
     const preValue = model.getValue();
 
@@ -326,8 +338,11 @@ export default function DatabaseQuery(props: IProps) {
     };
 
     // 连接到 EventSourcePolyfill 并设置回调函数
+
+    const urlBase =
+      promptType === IPromptType.ChatRobot ? '/api/ai/chat1' : '/api/ai/chat';
     const closeEventSource = connectToEventSource({
-      url: `/api/ai/chat?${params}`,
+      url: `${urlBase}?${params}`,
       uid: uid.current,
       onMessage: handleMessage,
       onError: handleError,
@@ -562,13 +577,22 @@ export default function DatabaseQuery(props: IProps) {
   const optBtn = [
     /** 基础SQL命令 */
     [
-      { name: OSnow === OSType.WIN ? '执行 Ctrl + Enter' : '执行 CMD + Enter', icon: '\ue626', onClick: executeSql },
+      {
+        name: OSnow === OSType.WIN ? '执行 Ctrl + Enter' : '执行 CMD + Enter',
+        icon: '\ue626',
+        onClick: executeSql,
+      },
       {
         name: OSnow === OSType.WIN ? '保存 Ctrl + S' : '保存 CMD + S',
         icon: '\ue645',
         onClick: saveWindowTabTab,
       },
       { name: '格式化', icon: '\ue7f8', onClick: formatValue },
+      {
+        name: 'chatbot',
+        icon: '\ue70e',
+        onClick: onClickChatbot,
+      },
     ],
     /** 自然语言转化SQL */
     [
