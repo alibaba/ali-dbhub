@@ -63,7 +63,16 @@ public class SystemController {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            SpringApplication.exit(applicationContext);
+            try {
+                SpringApplication.exit(applicationContext);
+            } catch (Exception ignore) {
+            }
+            // 有可能SpringApplication.exit 会退出失败
+            // 直接系统退出
+            try {
+                System.exit(0);
+            } catch (Exception ignore) {
+            }
         }).start();
         return DataResult.of("ok");
     }
