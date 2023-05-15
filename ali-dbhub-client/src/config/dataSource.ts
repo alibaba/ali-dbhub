@@ -179,20 +179,7 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         },
       ]
     },
-    extendInfo: [
-      {
-        key: 'useStreamLengthsInPrepStmts',
-        value: 'false',
-      },
-      {
-        key: 'useStreamLengthsInPrepStmts1',
-        value: 'false',
-      },
-      {
-        key: 'useStreamLengthsInPrepStmts2',
-        value: 'false',
-      }
-    ],
+    extendInfo: [],
     type: DatabaseTypeCode.MYSQL
   },
   // POSTGRESQL

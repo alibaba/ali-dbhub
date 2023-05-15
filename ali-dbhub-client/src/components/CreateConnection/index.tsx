@@ -333,14 +333,14 @@ function RenderForm(props: IRenderFormProps) {
         label={t.labelNameCN}
         name={t.name}
       >
-        <Input id={`${t.name}-${tab}`} />
+        <Input autoComplete='off' />
       </Form.Item>,
 
       [InputType.SELECT]: () => <Form.Item
         label={t.labelNameCN}
         name={t.name}
       >
-        <Select id={`${t.name}-${tab}`} value={t.defaultValue} onChange={(e) => { selectChange({ name: t.name, value: e }) }}>
+        <Select value={t.defaultValue} onChange={(e) => { selectChange({ name: t.name, value: e }) }}>
           {t.selects?.map((t: ISelect) => <Option key={t.value} value={t.value}>{t.label}</Option>)}
         </Select>
       </Form.Item>,
@@ -349,7 +349,7 @@ function RenderForm(props: IRenderFormProps) {
         label={t.labelNameCN}
         name={t.name}
       >
-        <Input.Password id={`${t.name}-${tab}`} />
+        <Input.Password />
       </Form.Item>
     }
 
@@ -368,9 +368,9 @@ function RenderForm(props: IRenderFormProps) {
   }
 
   return <Form
+    name={tab}
     form={form}
     initialValues={initialValues}
-    autoComplete="off"
     className={styles.form}
     onFieldsChange={onFieldsChange}
   >
