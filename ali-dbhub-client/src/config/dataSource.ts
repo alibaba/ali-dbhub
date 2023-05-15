@@ -181,16 +181,16 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     },
     extendInfo: [
       {
-        label: 'useStreamLengthsInPrepStmts',
-        value: false,
+        key: 'useStreamLengthsInPrepStmts',
+        value: 'false',
       },
       {
-        label: 'useStreamLengthsInPrepStmts1',
-        value: false,
+        key: 'useStreamLengthsInPrepStmts1',
+        value: 'false',
       },
       {
-        label: 'useStreamLengthsInPrepStmts2',
-        value: false,
+        key: 'useStreamLengthsInPrepStmts2',
+        value: 'false',
       }
     ],
     type: DatabaseTypeCode.MYSQL

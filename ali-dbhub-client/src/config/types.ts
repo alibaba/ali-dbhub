@@ -34,7 +34,7 @@ export type IDataSourceForm = {
     items: IFormItem[];
   },
   extendInfo?: {
-    label: string;
+    key: string;
     value: any;
   }[]
 };
