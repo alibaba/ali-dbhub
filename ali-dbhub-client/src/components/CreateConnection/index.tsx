@@ -495,6 +495,7 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
 
   return <div className={styles.extendTable}>
     <Table
+      bordered
       size="small"
       pagination={false}
       columns={columns}

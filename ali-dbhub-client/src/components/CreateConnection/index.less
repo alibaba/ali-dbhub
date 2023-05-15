@@ -106,10 +106,16 @@
     .custom-table-tbody > tr.custom-table-row:hover > td {
       background-color: transparent;
     }
-    .custom-table-thead
-      > tr
-      > th:not(:last-child):not(.custom-table-selection-column):not(.custom-table-row-expand-icon-cell):not([colspan])::before {
-      background-color: transparent;
+    .custom-input {
+      padding: 0px;
+    }
+    .custom-input:focus {
+      border: 0px;
+      box-shadow: none;
+    }
+    thead .custom-table-cell {
+      box-sizing: content-box;
+      height: 28px;
     }
   }
 }
