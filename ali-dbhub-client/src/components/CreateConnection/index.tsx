@@ -333,7 +333,7 @@ function RenderForm(props: IRenderFormProps) {
         label={t.labelNameCN}
         name={t.name}
       >
-        <Input autoComplete='off' />
+        <Input />
       </Form.Item>,
 
       [InputType.SELECT]: () => <Form.Item
@@ -372,6 +372,7 @@ function RenderForm(props: IRenderFormProps) {
     form={form}
     initialValues={initialValues}
     className={styles.form}
+    autoComplete='off'
     onFieldsChange={onFieldsChange}
   >
     {dataSourceFormConfig[tab]!.items.map((t => renderFormItem(t)))}
@@ -443,16 +444,19 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
         }
 
         function blur() {
-          if (index === data.length - 1) {
-            const newData = [...data]
+          const newData = []
+          data.map(t => {
+            if (t.label) {
+              newData.push(t)
+            }
+          })
+          if (index === data.length - 1 && row.label) {
             newData[index] = {
               label: row.label,
               value: ''
             }
-            setData(newData)
-            setData([...newData, { label: '', value: '' }])
           }
-          // todo
+          setData([...newData, { label: '', value: '' }])
         }
 
         if (index === data.length - 1 || isCustomLabel) {
