@@ -4,6 +4,7 @@
  */
 package com.alibaba.dbhub.server.web.api.controller;
 
+import com.alibaba.dbhub.server.domain.support.sql.SSHManager;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.common.config.AliDbhubProperties;
 
@@ -65,6 +66,7 @@ public class SystemController {
                 throw new RuntimeException(e);
             }
             log.info("开始退出Spring应用");
+            SSHManager.close();
             try {
                 SpringApplication.exit(applicationContext);
             } catch (Exception ignore) {
