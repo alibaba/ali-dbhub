@@ -4,6 +4,10 @@
  */
 package com.alibaba.dbhub.server.web.api.util;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.Objects;
+
 import com.alibaba.dbhub.server.domain.api.model.Config;
 import com.alibaba.dbhub.server.domain.api.service.ConfigService;
 
@@ -11,6 +15,8 @@ import com.google.common.collect.Lists;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.constant.OpenAIConst;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author jipengfei
@@ -20,6 +26,16 @@ import lombok.extern.slf4j.Slf4j;
 public class OpenAIClient {
 
     public static final String OPENAI_KEY = "chatgpt.apiKey";
+
+    /**
+     * 代理IP
+     */
+    public static final String PROXY_HOST = "chatgpt.proxy.host";
+
+    /**
+     * 代理端口
+     */
+    public static final String PROXY_PORT = "chatgpt.proxy.port";
 
     private static OpenAiStreamClient OPEN_AI_STREAM_CLIENT;
     private static String apiKey;
@@ -52,9 +68,27 @@ public class OpenAIClient {
         } else {
             apikey = ApplicationContextUtil.getProperty(OPENAI_KEY);
         }
+        String host = System.getProperty("http.proxyHost");
+        Config hostConfig = configService.find(PROXY_HOST).getData();
+        if (hostConfig != null) {
+            host = hostConfig.getContent();
+        }
+        Integer port = Objects.nonNull(System.getProperty("http.proxyPort")) ? Integer.valueOf(
+            System.getProperty("http.proxyPort")) : null;
+        Config portConfig = configService.find(PROXY_PORT).getData();
+        if (portConfig != null && StringUtils.isNotBlank(portConfig.getContent())) {
+            port = Integer.valueOf(portConfig.getContent());
+        }
         log.info("refresh openai apikey:{}", maskApiKey(apikey));
-        OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(OpenAIConst.OPENAI_HOST).apiKey(
-            Lists.newArrayList(apikey)).build();
+        if (Objects.nonNull(host) && Objects.nonNull(port)) {
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
+            OkHttpClient okHttpClient = new OkHttpClient.Builder().proxy(proxy).build();
+            OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(OpenAIConst.OPENAI_HOST).apiKey(
+                Lists.newArrayList(apikey)).okHttpClient(okHttpClient).build();
+        } else {
+            OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(OpenAIConst.OPENAI_HOST).apiKey(
+                Lists.newArrayList(apikey)).build();
+        }
         apiKey = apikey;
     }
 

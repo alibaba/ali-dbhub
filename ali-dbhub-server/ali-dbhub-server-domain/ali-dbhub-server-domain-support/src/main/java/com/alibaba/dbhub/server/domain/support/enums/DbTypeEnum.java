@@ -37,64 +37,67 @@ public enum DbTypeEnum implements BaseEnum<String> {
     /**
      * MySQL
      */
-    MYSQL("MySQL", "com.mysql.cj.jdbc.Driver"),
+    MYSQL("MySQL", "com.mysql.cj.jdbc.Driver","mysql-connector-j-8.0.33.jar"),
 
     /**
      * PostgreSQL
      */
-    POSTGRESQL("PostgreSQL", "org.postgresql.Driver"),
+    POSTGRESQL("PostgreSQL", "org.postgresql.Driver","postgresql-42.5.1.jar"),
 
     /**
      * Oracle
      */
-    ORACLE("Oracle", "oracle.jdbc.driver.OracleDriver"),
+    ORACLE("Oracle", "oracle.jdbc.driver.OracleDriver","ojdbc11.jar,orai18n-19.3.0.0.jar"),
 
     /**
      * SQLServer
      */
-    SQLSERVER("SQLServer", "com.microsoft.sqlserver.jdbc.SQLServerDriver"),
+    SQLSERVER("SQLServer", "com.microsoft.sqlserver.jdbc.SQLServerDriver","mssql-jdbc-11.2.1.jre17.jar"),
 
     /**
      * SQLite
      */
-    SQLITE("SQLite", "org.sqlite.JDBC"),
+    SQLITE("SQLite", "org.sqlite.JDBC","sqlite-jdbc-3.39.3.0.jar"),
 
     /**
      * H2
      */
-    H2("H2", "org.h2.Driver"),
+    H2("H2", "org.h2.Driver","h2-2.1.214.jar"),
 
     /**
      * ADB MySQL
      */
-    ADB_POSTGRESQL("PostgreSQL", "org.postgresql.Driver"),
+    ADB_POSTGRESQL("PostgreSQL", "org.postgresql.Driver",""),
 
     /**
      * ClickHouse
      */
-    CLICKHOUSE("ClickHouse", "ru.yandex.clickhouse.ClickHouseDriver"),
+    CLICKHOUSE("ClickHouse", "ru.yandex.clickhouse.ClickHouseDriver","clickhouse-jdbc-0.4.1.jar"),
 
     /**
      * OceanBase
      */
-    OCEANBASE("OceanBase", "com.alipay.oceanbase.jdbc.Driver"),
+    OCEANBASE("OceanBase", "com.oceanbase.jdbc.Driver","oceanbase-client-2.4.2.jar"),
 
     /**
      * DB2
      */
-    DB2("DB2", "com.ibm.db2.jcc.DB2Driver"),
+    DB2("DB2", "com.ibm.db2.jcc.DB2Driver",""),
 
     /**
      * MMARIADB
      */
-    MARIADB("MariaDB", "org.mariadb.jdbc.Driver");
+    MARIADB("MariaDB", "org.mariadb.jdbc.Driver","mariadb-java-client-3.0.8.jar");
 
     final String description;
     final String className;
 
-    DbTypeEnum(String description, String className) {
+    final String jar;
+
+    DbTypeEnum(String description, String className,String jar) {
         this.description = description;
         this.className = className;
+        this.jar = jar;
     }
 
     /**

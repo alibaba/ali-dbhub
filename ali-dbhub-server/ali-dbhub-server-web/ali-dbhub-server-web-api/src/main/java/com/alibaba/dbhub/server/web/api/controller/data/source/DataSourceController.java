@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
+import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
@@ -15,7 +16,7 @@ import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.domain.api.service.ConsoleService;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
+import com.alibaba.dbhub.server.domain.support.sql.SSHManager;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
@@ -24,6 +25,7 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.web.WebPageResult;
 import com.alibaba.dbhub.server.web.api.aspect.BusinessExceptionAspect;
 import com.alibaba.dbhub.server.web.api.aspect.ConnectionInfoAspect;
 import com.alibaba.dbhub.server.web.api.controller.data.source.converter.DataSourceWebConverter;
+import com.alibaba.dbhub.server.web.api.controller.data.source.converter.SSHWebConverter;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleCloseRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleConnectRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceAttachRequest;
@@ -33,9 +35,12 @@ import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourc
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceTestRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceUpdateRequest;
+import com.alibaba.dbhub.server.web.api.controller.data.source.request.SSHTestRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DataSourceVO;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DatabaseVO;
 
+import com.jcraft.jsch.Session;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +62,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ConnectionInfoAspect
 @RequestMapping("/api/connection")
 @RestController
+@Slf4j
 public class DataSourceController {
 
     @Autowired
@@ -68,16 +74,41 @@ public class DataSourceController {
     @Autowired
     private DataSourceWebConverter dataSourceWebConverter;
 
+    @Autowired
+    private SSHWebConverter sshWebConverter;
+
     /**
      * 数据库连接测试
      *
      * @param request
      * @return
      */
-    @GetMapping("/datasource/pre_connect")
-    public ActionResult preConnect(DataSourceTestRequest request) {
+    @RequestMapping("/datasource/pre_connect")
+    public ActionResult preConnect(@RequestBody DataSourceTestRequest request) {
         DataSourcePreConnectParam param = dataSourceWebConverter.testRequest2param(request);
         return dataSourceService.preConnect(param);
+    }
+
+    /**
+     * 数据库连接测试
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/ssh/pre_connect")
+    public ActionResult sshConnect(@RequestBody SSHTestRequest request) {
+        Session session = null;
+        try {
+            session = SSHManager.getSSHSession(sshWebConverter.toInfo(request));
+        } catch (Exception e) {
+            log.error("sshConnect error", e);
+            throw new RuntimeException(e);
+        } finally {
+            if (session != null) {
+                session.disconnect();
+            }
+        }
+        return ActionResult.isSuccess();
     }
 
     /**
@@ -141,9 +172,6 @@ public class DataSourceController {
         List<DataSourceVO> dataSourceVOS = dataSourceWebConverter.dto2vo(result.getData());
         return WebPageResult.of(dataSourceVOS, result.getTotal(), result.getPageNo(), result.getPageSize());
     }
-
-
-
 
     /**
      * 获取连接内容

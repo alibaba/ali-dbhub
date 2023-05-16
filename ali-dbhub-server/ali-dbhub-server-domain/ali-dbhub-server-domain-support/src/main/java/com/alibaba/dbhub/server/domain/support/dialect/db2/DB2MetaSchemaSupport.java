@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.sql.DataSource;
+import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
 
 /**
  * @author jipengfei
@@ -54,14 +54,14 @@ public class DB2MetaSchemaSupport  extends BaseMetaSchema implements MetaSchema 
     public String tableDDL(String databaseName, String schemaName, String tableName) {
         try {
             System.out.println(functionSQL);
-            DataSource.getInstance().executeSql(functionSQL.replace("tableSchema", schemaName), resultSet -> null);
+            SQLExecutor.getInstance().executeSql(functionSQL.replace("tableSchema", schemaName), resultSet -> null);
         } catch (Exception e) {
             //log.error("创建函数失败", e);
         }
 
         String ddlSql = "SELECT " + schemaName + ".ufn_GetCreateTableScript('" + schemaName + "', '" + tableName
             + "') AS sql";
-        return DataSource.getInstance().executeSql(ddlSql, resultSet -> {
+        return SQLExecutor.getInstance().executeSql(ddlSql, resultSet -> {
             try {
                 if (resultSet.next()) {
                     return resultSet.getString("sql");

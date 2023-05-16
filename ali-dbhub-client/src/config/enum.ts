@@ -9,6 +9,12 @@ export enum AuthenticationType {
   NONE = 2,
 }
 
+export enum SSHAuthenticationType {
+  PASSWORD = 1,
+  KEYPAIR = 2,
+  OPENSSH = 3
+}
+
 // 树右键支持的功能
 export enum OperationColumn {
   ShiftOut = 'shiftOut', // 移出数据源

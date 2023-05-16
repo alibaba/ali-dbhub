@@ -1,8 +1,14 @@
 package com.alibaba.dbhub.server.domain.api.param;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.model.KeyValue;
+import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
+import com.alibaba.dbhub.server.domain.support.model.SSLInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,4 +49,45 @@ public class DataSourceTestParam {
      * 密码
      */
     private String password;
+
+    /**
+     * host
+     */
+    private String host;
+
+    /**
+     * port
+     */
+    private String port;
+
+    /**
+     * ssh
+     */
+    private SSHInfo ssh;
+
+    /**
+     * ssh
+     */
+    private SSLInfo ssl;
+
+    /**
+     * sid
+     */
+    private String sid;
+
+    /**
+     * driver
+     */
+    private String driver;
+
+
+    /**
+     * jdbc版本
+     */
+    private String jdbc;
+
+    /**
+     * 扩展信息
+     */
+    private List<KeyValue> extendInfo;
 }

@@ -16,6 +16,8 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 
+import com.jcraft.jsch.JSchException;
+
 /**
  * 数据源管理服务
  *
