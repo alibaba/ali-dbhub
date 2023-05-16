@@ -179,7 +179,12 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         },
       ]
     },
-    extendInfo: [],
+    extendInfo: [
+      {
+        "key":"zeroDateTimeBehavior",
+        "value":"convertToNull"
+      }
+    ],
     type: DatabaseTypeCode.MYSQL
   },
   // POSTGRESQL

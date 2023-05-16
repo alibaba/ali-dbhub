@@ -156,7 +156,7 @@ public abstract class DataSourceConverter {
                 + ".support.model.SSLInfo"
                 + ".class))")
     @Mapping(target = "extendInfo",
-        expression = "java(com.alibaba.fastjson2.JSON.parseObject(dataSourceDO.getExtendInfo(),java.util.Map.class))")
+        expression = "java(com.alibaba.fastjson2.JSON.parseArray(dataSourceDO.getExtendInfo(),KeyValue.class))")
     public abstract DataSource do2dto(DataSourceDO dataSourceDO);
 
     /**

@@ -15,6 +15,7 @@ import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.Trigger;
 import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
+import com.alibaba.druid.sql.parser.DbhubSQLParserUtils;
 
 /**
  * @author jipengfei
@@ -97,7 +98,7 @@ public abstract class BaseMetaSchema implements MetaSchema {
 
     @Override
     public void dropTable(String databaseName, String schemaName, String tableName) {
-        String sql = "drop table " + tableName;
+        String sql = "drop table " + DbhubSQLParserUtils.format(dbType(),tableName);
         SQLExecutor.getInstance().executeSql(sql, resultSet -> null);
     }
 

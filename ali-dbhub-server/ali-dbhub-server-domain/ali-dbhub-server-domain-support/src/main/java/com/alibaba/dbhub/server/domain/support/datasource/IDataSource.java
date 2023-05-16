@@ -10,11 +10,9 @@ import java.sql.SQLException;
 import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
 import com.alibaba.dbhub.server.domain.support.sql.ConnectInfo;
-import com.alibaba.dbhub.server.domain.support.util.JSchUtils;
+import com.alibaba.dbhub.server.domain.support.sql.SSHManager;
 import com.alibaba.druid.pool.DruidDataSource;
 
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 /**
@@ -49,15 +47,11 @@ public class IDataSource extends DruidDataSource {
     private void connectSession() {
         SSHInfo ssh = connectInfo.getSsh();
         if (ssh != null && ssh.isUse()) {
-            try {
-                Session session = JSchUtils.getSession(ssh, connectInfo.getHost(), connectInfo.getPort() + "");
-                String url = connectInfo.getUrl();
-                url = url.replace(connectInfo.getHost(), "127.0.0.1").replace(connectInfo.getPort() + "",
-                    ssh.getLocalPort());
-                setUrl(url);
-            } catch (JSchException e) {
-                throw new RuntimeException(e);
-            }
+            Session session = SSHManager.getSSHSession(ssh);
+            String url = connectInfo.getUrl();
+            url = url.replace(connectInfo.getHost(), "127.0.0.1").replace(connectInfo.getPort() + "",
+                ssh.getLocalPort());
+            setUrl(url);
         }
     }
 }

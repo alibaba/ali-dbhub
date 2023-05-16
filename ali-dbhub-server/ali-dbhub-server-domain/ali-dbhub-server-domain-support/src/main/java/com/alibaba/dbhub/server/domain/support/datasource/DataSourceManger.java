@@ -72,7 +72,7 @@ public class DataSourceManger {
         dataSource.setBreakAfterAcquireFailure(true);
         if (connectInfo.getExtendInfo() != null) {
             Properties properties = new Properties();
-            properties.putAll(connectInfo.getExtendInfo());
+            properties.putAll(connectInfo.getExtendMap());
             dataSource.setConnectProperties(properties);
         }
         return dataSource;

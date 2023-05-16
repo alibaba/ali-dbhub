@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.druid.DbType;
 
 /**
@@ -171,5 +172,24 @@ public class DbhubSQLParserUtils extends SQLParserUtils {
         }
 
         return list;
+    }
+
+
+    public static String format(DbTypeEnum dbType, String tableName) {
+        if (DbTypeEnum.MYSQL.equals(dbType)) {
+            return "`" + tableName + "`";
+        } else if (DbTypeEnum.ORACLE.equals(dbType)) {
+            return "\"" + tableName + "\"";
+        } else if (DbTypeEnum.POSTGRESQL.equals(dbType)) {
+            return "\"" + tableName + "\"";
+        } else if (DbTypeEnum.SQLITE.equals(dbType)) {
+            return "\"" + tableName + "\"";
+        } else if (DbTypeEnum.SQLSERVER.equals(dbType)) {
+            return "[" + tableName + "]";
+        } else if (DbTypeEnum.H2.equals(dbType)) {
+            return "\"" + tableName + "\"";
+        } else {
+            return "\"" + tableName + "\"";
+        }
     }
 }
