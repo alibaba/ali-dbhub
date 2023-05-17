@@ -1,21 +1,19 @@
 package com.alibaba.dbhub.server.start.config.listener;
 
-import com.alibaba.dbhub.server.start.config.listener.manage.ManageMessage;
-import com.alibaba.dbhub.server.start.config.listener.manage.MessageTypeEnum;
-import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
-import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
+import java.time.Duration;
+
+import com.alibaba.dbhub.server.tools.base.enums.SystemEnvironmentEnum;
+import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.fastjson2.JSON;
+
+import com.dtflys.forest.Forest;
+import com.dtflys.forest.utils.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.util.Assert;
-
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.BindException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 /**
  * 用来管理启动
@@ -27,90 +25,102 @@ import java.net.Socket;
 @Slf4j
 public class ManageApplicationListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
 
-
-    private ServerSocket serverSocket;
-
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
-        Integer managePort = event.getEnvironment().getProperty("manage.port", Integer.class);
-        Assert.notNull(managePort, "无法获取manage.port配置信息");
-        log.info("启动管理服务：{}", managePort);
+        Integer serverPort = event.getEnvironment().getProperty("server.port", Integer.class);
+        Assert.notNull(serverPort, "server.port配置信息");
+        log.info("启动端口为：{}", serverPort);
+        String environment = event.getEnvironment().getProperty("spring.profiles.active", String.class);
 
+        // 尝试访问确认应用是否已经启动
+        DataResult<String> dataResult;
         try {
-            serverSocket = new ServerSocket(managePort);
-            // 启动一个线程来监听其他请求事件
-            new Thread(() -> {
-                while (true) {
-                    try {
-                        accept();
-                    } catch (Exception e) {
-                        log.error("处理管理消息异常", e);
-                    }
-                }
-            }).start();
-            log.info("端口:{}未被占用，继续启动", managePort);
-        } catch (BindException e) {
-            log.info("发现端口:{}已经被绑定，尝试去通讯.", managePort);
-            // 校验是否是已经有其他应用启动
-            try {
-                checkRunning(managePort);
-            } catch (Exception ex) {
-                // 要么服务器挂了 要么是其他人占用端口了
-                log.error("端口:{}被其他占用，请尝试使用-Dmanage.port= 修改端口", managePort, ex);
-                System.exit(1);
-            }
+            dataResult = Forest.get("http://127.0.0.1:" + serverPort + "/api/system/get-version-a")
+                .connectTimeout(Duration.ofMillis(50))
+                .readTimeout(Duration.ofSeconds(1))
+                .execute(new TypeReference<>() {});
         } catch (Exception e) {
-            log.error("启动服务失败", e);
-            System.exit(0);
+            // 抛出异常 代表没有旧的启动 或者旧的不靠谱
+            log.info("尝试访问旧的应用失败。本异常不重要，正常启动启动都会输出，请忽略。"+ e.getMessage());
+
+            // 尝试杀死旧的进程
+            killOldIfNecessary(environment);
+            return;
         }
 
+        if (dataResult == null || BooleanUtils.isNotTrue(dataResult.getSuccess())) {
+            // 尝试杀死旧的进程
+            killOldIfNecessary(environment);
+            return;
+        }
+
+        // 代表旧的进程是可以用的
+        log.info("当前接口已经存在启动的应用了，本应用不在启动");
+        System.exit(0);
     }
 
-    private void checkRunning(Integer managePort) throws Exception {
-        try (Socket socket = new Socket("127.0.0.1", managePort)) {
-            socket.setSoTimeout(1000);
-            try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
-                objectOutputStream.writeObject(ManageMessage.builder()
-                        .messageTypeEnum(MessageTypeEnum.HEARTBEAT)
-                        .build());
-                objectOutputStream.flush();
-                try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream())) {
-                    ActionResult result = (ActionResult) objectInputStream.readObject();
-                    // 代表已经有其他应用启动了
-                    if (result.success()) {
-                        log.info("当前接口已经存在启动的应用了，本应用不在启动");
-                        System.exit(0);
-                    }
-                    log.error("启动异常{}", JSON.toJSONString(result));
-                    System.exit(1);
+    private void killOldIfNecessary(String environment) {
+        ProcessHandle.allProcesses().forEach(process -> {
+            String command = process.info().command().orElse(null);
+            // 不是java应用
+            boolean isJava = StringUtils.endsWithIgnoreCase(command, "java") || StringUtils.endsWithIgnoreCase(command,
+                "java.exe");
+            if (!isJava) {
+                return;
+            }
+            String[] arguments = process.info().arguments().orElse(null);
+            // 没有参数
+            if (arguments == null) {
+                return;
+            }
+            // 是否是dbhub
+            boolean isDbhub = false;
+            String environmentArgument = null;
+            for (String argument : arguments) {
+                if (StringUtils.equals("ali-dbhub-server-start.jar", argument)) {
+                    isDbhub = true;
+                }
+                if (StringUtils.startsWith(argument, "-Dspring.profiles.active=")) {
+                    environmentArgument = StringUtils.substringAfter(argument, "-Dspring.profiles.active=");
                 }
             }
-        }
-    }
-
-
-    private void accept() throws Exception {
-        Socket socket = serverSocket.accept();
-        socket.setSoTimeout(1000);
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream())) {
-            ManageMessage message = (ManageMessage) objectInputStream.readObject();
-            switch (message.getMessageTypeEnum()) {
-                case HEARTBEAT:
-                    output(socket, ActionResult.isSuccess());
-                    break;
-                default:
-                    output(socket, ActionResult.fail(CommonErrorEnum.COMMON_SYSTEM_ERROR, "找不到指定消息类型：" + message.getMessageTypeEnum().name()));
-                    break;
+            // 不是dbhub
+            if (!isDbhub) {
+                return;
             }
-        }
-        log.info("启动管理服务成功");
+            // 判断是否是正式环境
+            if (StringUtils.equals(SystemEnvironmentEnum.RELEASE.getCode(), environment) && StringUtils.equals(
+                SystemEnvironmentEnum.RELEASE.getCode(), environmentArgument)) {
+                log.info("正式环境需要关闭进程");
+                destroyProcess(process, command, arguments);
+                return;
+            }
+
+            // 判断是否是测试环境
+            if (StringUtils.equals(SystemEnvironmentEnum.TEST.getCode(), environment) && StringUtils.equals(
+                SystemEnvironmentEnum.TEST.getCode(), environmentArgument)) {
+                log.info("测试环境需要关闭进程");
+                destroyProcess(process, command, arguments);
+                return;
+            }
+
+            // 判断是否是本地环境
+            boolean devDestroy = StringUtils.equals(SystemEnvironmentEnum.DEV.getCode(), environment) && (
+                environmentArgument == null
+                    || StringUtils.equals(SystemEnvironmentEnum.DEV.getCode(), environmentArgument));
+            if (devDestroy) {
+                log.info("本地环境需要关闭进程");
+                destroyProcess(process, command, arguments);
+            }
+        });
     }
 
-    private void output(Socket socket, ActionResult result) throws IOException {
-        log.info("回复消息:{}", JSON.toJSONString(result));
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
-            objectOutputStream.writeObject(result);
-            objectOutputStream.flush();
+    private void destroyProcess(ProcessHandle process, String command, String[] arguments) {
+        log.info("检查到存在需要关闭的进程:{},{}", JSON.toJSONString(command), JSON.toJSONString(arguments));
+        try {
+            process.destroy();
+        } catch (Exception e) {
+            log.error("结束进程失败", e);
         }
     }
 }

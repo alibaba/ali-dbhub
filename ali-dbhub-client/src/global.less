@@ -17,9 +17,9 @@ body {
 div,
 ul,
 li {
-  transition: border-color 0.3s, background 0.3s,
-    padding 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: border-color 0.3s, background 0.3s, padding 0.1s;
 }
+// cubic-bezier(0.215, 0.61, 0.355, 1)
 
 :root {
   /* same as vs-dark theme's bg, not pure black. */
@@ -28,6 +28,13 @@ li {
   --color-matrix-green: #00cc00;
   /* The matrix green lighter */
   --color-matrix-green-hover: #88ff88;
+}
+
+// 修改账号密码自动回填后input背景变色问题
+input:-webkit-autofill {
+  -webkit-text-fill-color: var(--color-text) !important; // 填充状态下的字体颜色
+  transition: background-color 0s 9999999999s;
+  caret-color: var(--color-text); // 光标的颜色
 }
 
 ::-webkit-scrollbar {

@@ -6,12 +6,10 @@ package com.alibaba.dbhub.server.domain.support.dialect.postgresql;
 
 import java.sql.SQLException;
 
-import javax.validation.constraints.NotEmpty;
-
 import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.sql.DataSource;
+import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -186,9 +184,9 @@ public class PostgresqlMetaSchemaSupport extends BaseMetaSchema implements MetaS
 
     @Override
     public String tableDDL(String databaseName, String schemaName, String tableName) {
-        DataSource.getInstance().executeSql(functionSQL.replaceFirst("tableSchema", schemaName), resultSet -> null);
+        SQLExecutor.getInstance().executeSql(functionSQL.replaceFirst("tableSchema", schemaName), resultSet -> null);
         String ddlSql = "select showcreatetable('" + schemaName + "','" + tableName + "') as sql";
-        return DataSource.getInstance().executeSql(ddlSql, resultSet -> {
+        return SQLExecutor.getInstance().executeSql(ddlSql, resultSet -> {
             try {
                 if (resultSet.next()) {
                     return resultSet.getString("sql");

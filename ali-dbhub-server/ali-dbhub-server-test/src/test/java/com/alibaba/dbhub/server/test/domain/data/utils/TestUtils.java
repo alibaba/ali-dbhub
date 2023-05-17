@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
-import com.alibaba.dbhub.server.domain.support.sql.DbhubContext.ConnectInfo;
+import com.alibaba.dbhub.server.domain.support.sql.ConnectInfo;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
 
 /**

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import logo from '@/assets/chatLogo.png'
+import logo from '@/assets/chatLogo.webp';
 
 interface IProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   className?: any;

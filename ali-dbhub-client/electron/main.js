@@ -1,9 +1,16 @@
 // 引入electron并创建一个Browserwindow
-const { app, BrowserWindow, shell, net } = require('electron');
+const {
+  app,
+  BrowserWindow,
+  Menu,
+  shell,
+  net,
+  ipcMain,
+  dialog,
+} = require('electron');
 const path = require('path');
-const url = require('url');
-// const isDev = require('electron-is-dev');
-// const { autoUpdater } = require('electron-updater');
+const os = require('os');
+const fs = require('fs');
 const isPro = process.env.NODE_ENV !== 'development';
 // 修改main.js实时更新
 // reloader(module);
@@ -14,7 +21,8 @@ let mainWindow;
 function createWindow() {
   //创建浏览器窗口,宽高自定义具体大小你开心就好
   let options = {};
-  if (process.platform === 'win32') { // 如果平台是win32，也即windows
+  if (process.platform === 'win32') {
+    // 如果平台是win32，也即windows
     options.show = true; // 当window创建的时候打开
     options.backgroundColor = '#3f3c37';
   }
@@ -35,7 +43,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-  
+
   // 加载应用-----  electron-quick-start中默认的加载入口
   mainWindow.loadFile(`${__dirname}/dist/index.html`);
 
@@ -62,7 +70,6 @@ process.on('uncaughtException', (error) => {
 // 当 Electron 完成初始化并准备创建浏览器窗口时调用此方法
 app.on('ready', createWindow);
 
-
 app.on('before-quit', (event) => {
   const request = net.request({
     headers: {
@@ -85,7 +92,7 @@ app.on('before-quit', (event) => {
 app.on('window-all-closed', function (event) {
   // macOS中除非用户按下 `Cmd + Q` 显式退出,否则应用与菜单栏始终处于活动状态.
   event.preventDefault();
-  app.hide()
+  app.hide();
   // if (process.platform !== 'darwin') {
   //   app.quit();
   // }
@@ -98,4 +105,107 @@ app.on('activate', function () {
   }
 });
 
-// 你可以在这个脚本中续写或者使用require引入独立的js文件.
+ipcMain.handle('get-product-name', (event) => {
+  const exePath = app.getPath('exe');
+  const { name } = path.parse(exePath);
+  return name;
+});
+
+// -------------------- 菜单栏 --------------------
+const menuBar = [
+  {
+    label: '文件',
+    submenu: [
+      {
+        label: '关于Chat2DB',
+        click() {
+          dialog.showMessageBox({
+            title: '关于Chat2DB',
+            // message: '关于Chat2DB v1.0.0',
+            detail:
+              '一款由阿里巴巴开源免费的多数据库客户端工具，支持windows、mac本地安装，也支持服务器端部署，web网页访问。',
+            icon: './logo/icon.png',
+          });
+        },
+      },
+      {
+        label: '刷新',
+        accelerator: process.platform === 'darwin' ? 'Cmd+R' : 'Ctrl+R',
+        click() {
+          const focusedWindow = BrowserWindow.getFocusedWindow();
+          if (focusedWindow) {
+            focusedWindow.reload();
+          }
+        },
+      },
+      {
+        label: '退出',
+        accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Alt+F4',
+        click() {
+          // 退出程序
+          app.quit();
+        },
+      },
+    ],
+  },
+  {
+    label: '编辑',
+    submenu: [
+      { label: '撤销', role: 'undo' },
+      { label: '重做', role: 'redo' },
+      { type: 'separator' },
+      { label: '剪切', role: 'cut' },
+      { label: '复制', role: 'copy' },
+      { label: '粘贴', role: 'paste' },
+      { label: '全选', role: 'selectAll' },
+    ],
+  },
+  {
+    label: '帮助',
+    submenu: [
+      {
+        label: '打开日志',
+        accelerator:
+          process.platform === 'darwin' ? 'Cmd+Shift+L' : 'Ctrl+Shift+L',
+        click() {
+          const fileName = '.chat2db/logs/application.log';
+          const url = path.join(os.homedir(), fileName);
+          shell.openPath(url).then((str) => console.log('err:', str));
+        },
+      },
+      {
+        label: '打开控制台',
+        accelerator:
+          process.platform === 'darwin' ? 'Cmd+Shift+I' : 'Ctrl+Shift+I',
+        click() {
+          mainWindow && mainWindow.toggleDevTools();
+        },
+      },
+      {
+        label: '访问官网',
+        click() {
+          const url = 'https://chat2db.opensource.alibaba.com/';
+          shell.openExternal(url);
+        },
+      },
+      // {
+      //   label: '关于',
+      //   role: 'about', // about （关于），此值只针对 Mac  OS X 系统
+      //   // 点击事件 role 属性能识别时 点击事件无效
+      //   click: () => {
+      //     var aboutWin = new BrowserWindow({
+      //       width: 300,
+      //       height: 200,
+      //       parent: win,
+      //       modal: true,
+      //     });
+      //     aboutWin.loadFile('about.html');
+      //   },
+      // },
+    ],
+  },
+];
+// 构建菜单项
+const menu = Menu.buildFromTemplate(menuBar);
+// 设置一个顶部菜单栏
+Menu.setApplicationMenu(menu);

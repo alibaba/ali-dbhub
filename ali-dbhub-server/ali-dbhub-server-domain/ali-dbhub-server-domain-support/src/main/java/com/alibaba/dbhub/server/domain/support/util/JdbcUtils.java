@@ -5,7 +5,6 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -13,16 +12,21 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.Map;
 
 import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Cell;
 import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
-import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
-import com.alibaba.dbhub.server.tools.base.excption.SystemException;
-import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
+import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
+import com.alibaba.dbhub.server.domain.support.sql.IDriverManager;
+import com.alibaba.dbhub.server.domain.support.sql.SSHManager;
 import com.alibaba.dbhub.server.tools.common.util.EasyOptionalUtils;
 import com.alibaba.druid.DbType;
+
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 /**
  * jdbc工具类
@@ -137,37 +141,24 @@ public class JdbcUtils {
      * @param dbType   数据库类型
      * @return
      */
-    public static DataSourceConnect testConnect(String url, String userName, String password, String dbType) {
-        DbTypeEnum dbTypeEnum = EasyEnumUtils.getEnum(DbTypeEnum.class, dbType);
-        return testConnect(url, userName, password, dbTypeEnum);
-    }
-
-    /**
-     * 测试数据库连接
-     *
-     * @param url      数据库连接
-     * @param userName 用户名
-     * @param password 密码
-     * @param dbType   数据库类型
-     * @return
-     */
-    public static DataSourceConnect testConnect(String url, String userName, String password, DbTypeEnum dbType) {
+    public static DataSourceConnect testConnect(String url, String host, String port,
+        String userName, String password, DbTypeEnum dbType,
+        String jdbc, SSHInfo ssh, Map<String, String> properties) {
         DataSourceConnect dataSourceConnect = DataSourceConnect.builder()
             .success(Boolean.TRUE)
             .build();
+        Session session = null;
+        Connection connection = null;
         // 加载驱动
         try {
-            Class.forName(dbType.getClassName());
-        } catch (ClassNotFoundException e) {
-            // 理论上不会发生
-            throw new SystemException(CommonErrorEnum.PARAM_ERROR, e);
-        }
-
-        // 创建连接
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(url, userName, password);
-        } catch (SQLException e) {
+            if (ssh.isUse()) {
+                session = SSHManager.getSSHSession(ssh);
+                url = url.replace(host, "127.0.0.1").replace(port, ssh.getLocalPort());
+            }
+            // 创建连接
+            connection = IDriverManager.getConnection(url, userName, password,
+                DriverTypeEnum.getDriver(dbType, jdbc), properties);
+        } catch (Exception e) {
             dataSourceConnect.setSuccess(Boolean.FALSE);
             // 获取最后一个异常的信息给前端
             Throwable t = e;
@@ -183,6 +174,12 @@ public class JdbcUtils {
                 } catch (SQLException e) {
                     // ignore
                 }
+            }if(session!=null){
+                try {
+                    session.delPortForwardingL(Integer.parseInt(ssh.getLocalPort()));
+                } catch (JSchException e) {
+                }
+                session.disconnect();
             }
         }
         dataSourceConnect.setDescription("成功");

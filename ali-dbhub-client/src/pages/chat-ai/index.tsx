@@ -99,11 +99,14 @@ function ChatAI(props: IChatAIProps) {
       databaseName,
       message: question,
     });
-    const url = type === 'page' ? `${window._BaseURL}/api/ai/chat1` : `${window._BaseURL}/api/ai/chat`;
+    const url =
+      type === 'page'
+        ? `${window._BaseURL}/api/ai/chat1`
+        : `${window._BaseURL}/api/ai/chat`;
     const eventSource = new EventSourcePolyfill(`${url}?${params}`, {
       headers: {
         uid: uid.current,
-        DBHUB: localStorage.getItem('DBHUB') || ''
+        DBHUB: localStorage.getItem('DBHUB') || '',
       },
     });
 
@@ -137,7 +140,7 @@ function ChatAI(props: IChatAIProps) {
     eventSource.onerror = (event) => {
       console.log('onerror', event);
       curMessageIndex.current++;
-      message.warning('服务异常请重试并联系开发者！')
+      message.warning('服务异常请重试并联系开发者！');
       if (event.readyState === EventSource.CLOSED) {
         console.log('connection is closed');
       } else {
@@ -159,7 +162,12 @@ function ChatAI(props: IChatAIProps) {
     setInputValue(event?.target?.value);
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (event) => {
+    if (event.nativeEvent.isComposing && event.key === 'Enter') {
+      event.preventDefault();
+      return;
+    }
+
     if (inputValue.trim() !== '') {
       setInputValue('');
       setQuestion(inputValue);
@@ -188,7 +196,7 @@ function ChatAI(props: IChatAIProps) {
                 className={styles.content}
                 dangerouslySetInnerHTML={{ __html: md.render(item.answer) }}
               ></div>
-              {(!isChatting && type === 'embed') ? (
+              {!isChatting && type === 'embed' ? (
                 <div
                   onClick={() => setAiImportSql(item.answer)}
                   className={styles.importBtn}

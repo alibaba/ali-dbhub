@@ -29,7 +29,11 @@ const close = createRequest<IConnectionBase, void>(
 
 const test = createRequest<IConnectionBase, boolean>(
   '/api/connection/datasource/pre_connect',
-  {},
+  {method: 'post'},
+);
+const testSSH = createRequest<any, boolean>(
+  '/api/connection/ssh/pre_connect',
+  {method: 'post'},
 );
 
 const update = createRequest<IConnectionBase, void>(
@@ -62,4 +66,5 @@ export default {
   clone,
   getDBList,
   close,
+  testSSH
 };

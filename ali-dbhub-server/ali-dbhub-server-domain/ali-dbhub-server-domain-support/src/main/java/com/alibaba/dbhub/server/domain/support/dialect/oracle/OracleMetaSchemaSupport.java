@@ -5,13 +5,11 @@
 package com.alibaba.dbhub.server.domain.support.dialect.oracle;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.sql.DataSource;
-import com.google.common.collect.Lists;
+import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
 
 /**
  * @author jipengfei
@@ -39,7 +37,7 @@ public class OracleMetaSchemaSupport extends BaseMetaSchema implements MetaSchem
     public String tableDDL(String databaseName, String schemaName, String tableName) {
         String sql = "select dbms_metadata.get_ddl('TABLE','"+tableName+"') as sql from dual,"
             + "user_tables where table_name = '" + tableName + "'";
-        return DataSource.getInstance().executeSql(sql, resultSet -> {
+        return SQLExecutor.getInstance().executeSql(sql, resultSet -> {
             try {
                 if (resultSet.next()) {
                     return resultSet.getString("sql");

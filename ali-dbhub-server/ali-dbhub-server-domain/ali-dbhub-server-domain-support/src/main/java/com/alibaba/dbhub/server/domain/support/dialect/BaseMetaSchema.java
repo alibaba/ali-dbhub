@@ -14,7 +14,8 @@ import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.Trigger;
-import com.alibaba.dbhub.server.domain.support.sql.DataSource;
+import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
+import com.alibaba.druid.sql.parser.DbhubSQLParserUtils;
 
 /**
  * @author jipengfei
@@ -24,7 +25,7 @@ public abstract class BaseMetaSchema implements MetaSchema {
 
     @Override
     public List<String> databases() {
-        return DataSource.getInstance().databases();
+        return SQLExecutor.getInstance().databases();
     }
 
     public String getSQL(SQLType sqlType, SQLParam params) {
@@ -49,45 +50,45 @@ public abstract class BaseMetaSchema implements MetaSchema {
     public void modifyDatabase(String databaseName, String newDatabaseName) {
         String sql = getSQL(SQLType.MODIFY_DATABASE, SQLParam.builder().databaseName(databaseName)
             .newDatabaseName(newDatabaseName).build());
-        DataSource.getInstance().executeSql(sql, resultSet -> null);
+        SQLExecutor.getInstance().executeSql(sql, resultSet -> null);
     }
 
     @Override
     public void createDatabase(String databaseName) {
         String sql = getSQL(SQLType.CREATE_DATABASE, SQLParam.builder().databaseName(databaseName).build());
-        DataSource.getInstance().executeSql(sql, resultSet -> null);
+        SQLExecutor.getInstance().executeSql(sql, resultSet -> null);
     }
 
     @Override
     public void dropDatabase(String databaseName) {
         String sql = getSQL(SQLType.DROP_DATABASE, SQLParam.builder().databaseName(databaseName).build());
-        DataSource.getInstance().executeSql(sql, resultSet -> null);
+        SQLExecutor.getInstance().executeSql(sql, resultSet -> null);
     }
 
     @Override
     public void createSchema(String databaseName, String schemaName) {
         String sql = getSQL(SQLType.CREATE_SCHEMA, SQLParam.builder().databaseName(databaseName).schemaName(schemaName)
             .build());
-        DataSource.getInstance().executeSql(sql, resultSet -> null);
+        SQLExecutor.getInstance().executeSql(sql, resultSet -> null);
     }
 
     @Override
     public void dropSchema(String databaseName, String schemaName) {
         String sql = getSQL(SQLType.DROP_SCHEMA, SQLParam.builder().databaseName(databaseName).schemaName(schemaName)
             .build());
-        DataSource.getInstance().executeSql(sql, resultSet -> null);
+        SQLExecutor.getInstance().executeSql(sql, resultSet -> null);
     }
 
     @Override
     public void modifySchema(String databaseName, String schemaName, String newSchemaName) {
         String sql = getSQL(SQLType.MODIFY_SCHEMA, SQLParam.builder().databaseName(databaseName).schemaName(schemaName)
             .newSchemaName(newSchemaName).build());
-        DataSource.getInstance().executeSql(sql, resultSet -> null);
+        SQLExecutor.getInstance().executeSql(sql, resultSet -> null);
     }
 
     @Override
     public List<String> schemas(String databaseName) {
-        return DataSource.getInstance().schemas(databaseName, null);
+        return SQLExecutor.getInstance().schemas(databaseName, null);
     }
 
     @Override
@@ -97,23 +98,23 @@ public abstract class BaseMetaSchema implements MetaSchema {
 
     @Override
     public void dropTable(String databaseName, String schemaName, String tableName) {
-        String sql = "drop table " + tableName;
-        DataSource.getInstance().executeSql(sql, resultSet -> null);
+        String sql = "drop table " + DbhubSQLParserUtils.format(dbType(),tableName);
+        SQLExecutor.getInstance().executeSql(sql, resultSet -> null);
     }
 
     @Override
     public List<Table> tables(String databaseName, String schemaName, String tableName) {
-        return DataSource.getInstance().tables(databaseName, schemaName, tableName, new String[] {"TABLE"});
+        return SQLExecutor.getInstance().tables(databaseName, schemaName, tableName, new String[] {"TABLE"});
     }
 
     @Override
     public List<? extends Table> views(String databaseName, String schemaName) {
-        return DataSource.getInstance().tables(databaseName, schemaName, null, new String[] {"VIEW"});
+        return SQLExecutor.getInstance().tables(databaseName, schemaName, null, new String[] {"VIEW"});
     }
 
     @Override
     public List<Function> functions(String databaseName, String schemaName) {
-        return DataSource.getInstance().functions(databaseName, schemaName);
+        return SQLExecutor.getInstance().functions(databaseName, schemaName);
     }
 
     @Override
@@ -123,22 +124,22 @@ public abstract class BaseMetaSchema implements MetaSchema {
 
     @Override
     public List<Procedure> procedures(String databaseName, String schemaName) {
-        return DataSource.getInstance().procedures(databaseName, schemaName);
+        return SQLExecutor.getInstance().procedures(databaseName, schemaName);
     }
 
     @Override
     public List<? extends TableColumn> columns(String databaseName, String schemaName, String tableName) {
-        return DataSource.getInstance().columns(databaseName, schemaName, tableName, null);
+        return SQLExecutor.getInstance().columns(databaseName, schemaName, tableName, null);
     }
 
     @Override
     public List<? extends TableColumn> columns(String databaseName, String schemaName, String tableName,
         String columnName) {
-        return DataSource.getInstance().columns(databaseName, schemaName, tableName, columnName);
+        return SQLExecutor.getInstance().columns(databaseName, schemaName, tableName, columnName);
     }
 
     @Override
     public List<? extends TableIndex> indexes(String databaseName, String schemaName, String tableName) {
-        return DataSource.getInstance().indexes(databaseName, schemaName, tableName);
+        return SQLExecutor.getInstance().indexes(databaseName, schemaName, tableName);
     }
 }

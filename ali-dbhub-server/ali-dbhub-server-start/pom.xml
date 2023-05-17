@@ -95,6 +95,11 @@
             <artifactId>mybatis-plus-generator</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.dtflys.forest</groupId>
+            <artifactId>forest-spring-boot-starter</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <finalName>ali-dbhub-server-start</finalName>

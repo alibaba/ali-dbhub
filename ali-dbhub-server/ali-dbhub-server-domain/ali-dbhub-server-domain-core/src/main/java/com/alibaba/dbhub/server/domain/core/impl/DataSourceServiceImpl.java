@@ -4,21 +4,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceCloseParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceSelector;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceTestParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
+import com.alibaba.dbhub.server.domain.api.param.DatabaseQueryAllParam;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.core.converter.DataSourceConverter;
 import com.alibaba.dbhub.server.domain.repository.entity.DataSourceDO;
 import com.alibaba.dbhub.server.domain.repository.mapper.DataSourceMapper;
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.api.param.DatabaseQueryAllParam;
-import com.alibaba.dbhub.server.domain.api.param.DataSourceCloseParam;
+import com.alibaba.dbhub.server.domain.support.model.KeyValue;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
+import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
 import com.alibaba.dbhub.server.domain.support.util.JdbcUtils;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
@@ -111,13 +114,15 @@ public class DataSourceServiceImpl implements DataSourceService {
     }
 
     @Override
-    public ActionResult preConnect(DataSourcePreConnectParam param) {
+    public ActionResult preConnect(DataSourcePreConnectParam param)  {
         DataSourceTestParam testParam
             = dataSourceConverter.param2param(param);
-        DataSourceConnect dataSourceConnect = JdbcUtils.testConnect(testParam.getUrl(),
-            testParam.getUsername(), testParam.getPassword(), testParam.getDbType());
+        DataSourceConnect dataSourceConnect = JdbcUtils.testConnect(testParam.getUrl(), testParam.getHost(),
+            testParam.getPort(),
+            testParam.getUsername(), testParam.getPassword(), DbTypeEnum.getByName(testParam.getDbType()),
+            param.getJdbc(), param.getSsh(), KeyValue.toMap(param.getExtendInfo()));
         if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
-          return   ActionResult.fail(dataSourceConnect.getMessage(), dataSourceConnect.getDescription());
+            return ActionResult.fail(dataSourceConnect.getMessage(), dataSourceConnect.getDescription());
         }
         return ActionResult.isSuccess();
     }
@@ -134,7 +139,7 @@ public class DataSourceServiceImpl implements DataSourceService {
     public ActionResult close(Long id) {
         DataSourceCloseParam closeParam = new DataSourceCloseParam();
         closeParam.setDataSourceId(id);
-        com.alibaba.dbhub.server.domain.support.sql.DataSource.getInstance().close();
+        SQLExecutor.getInstance().close();
         return ActionResult.isSuccess();
     }
 
