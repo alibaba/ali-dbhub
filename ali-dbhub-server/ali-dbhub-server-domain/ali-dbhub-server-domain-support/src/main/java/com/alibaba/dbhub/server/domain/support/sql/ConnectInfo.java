@@ -133,7 +133,7 @@ public class ConnectInfo {
      */
     public LinkedHashMap<String,Object> getExtendMap() {
         if (ObjectUtils.isEmpty(extendInfo)) {
-            return null;
+            return new LinkedHashMap<>();
         }
         LinkedHashMap<String,Object> map = new LinkedHashMap<>();
         for (KeyValue keyValue : extendInfo) {
