@@ -55,7 +55,7 @@ public enum DriverTypeEnum {
     /**
      * ClickHouse
      */
-    CLICKHOUSE_DRIVER(DbTypeEnum.CLICKHOUSE, "ru.yandex.clickhouse.ClickHouseDriver", "clickhouse-jdbc-0.4.1.jar",""),
+    CLICKHOUSE_DRIVER(DbTypeEnum.CLICKHOUSE, "com.clickhouse.jdbc.ClickHouseDriver", "clickhouse-jdbc-0.3.2-patch8-http.jar",""),
 
     /**
      * OceanBase
