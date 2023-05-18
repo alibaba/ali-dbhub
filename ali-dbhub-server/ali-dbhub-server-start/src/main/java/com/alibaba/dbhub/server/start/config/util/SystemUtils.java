@@ -1,4 +1,6 @@
-package com.alibaba.dbhub.server.tools.common.util;
+package com.alibaba.dbhub.server.start.config.util;
+
+import com.alibaba.dbhub.server.domain.support.sql.SSHManager;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +26,7 @@ public class SystemUtils {
             }
             // 直接系统退出
             log.info("开始退出系统应用");
+            SSHManager.close();
             try {
                 System.exit(0);
             } catch (Exception ignore) {

@@ -19,6 +19,7 @@ import com.alibaba.dbhub.server.domain.repository.mapper.DataSourceMapper;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
 import com.alibaba.dbhub.server.domain.support.model.Database;
+import com.alibaba.dbhub.server.domain.support.model.KeyValue;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
 import com.alibaba.dbhub.server.domain.support.util.JdbcUtils;
@@ -119,7 +120,7 @@ public class DataSourceServiceImpl implements DataSourceService {
         DataSourceConnect dataSourceConnect = JdbcUtils.testConnect(testParam.getUrl(), testParam.getHost(),
             testParam.getPort(),
             testParam.getUsername(), testParam.getPassword(), DbTypeEnum.getByName(testParam.getDbType()),
-            param.getJdbc(), param.getSsh(), param.getExtendInfo());
+            param.getJdbc(), param.getSsh(), KeyValue.toMap(param.getExtendInfo()));
         if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
             return ActionResult.fail(dataSourceConnect.getMessage(), dataSourceConnect.getDescription());
         }

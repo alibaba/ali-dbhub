@@ -71,8 +71,8 @@ const App: React.FC = () => {
         <span className="title">欢迎登陆Chat2DB</span>
         <span className="subtitle"></span>
         <div className="form-container">
-          <input type="text" onChange={(e) => { setFormData({ ...formData, userName: e.target.value }) }} className="input" placeholder="UserName" />
-          <input type="password" onChange={(e) => { setFormData({ ...formData, password: e.target.value }) }} className="input" placeholder="Password" />
+          <input autoComplete='off' type="text" onChange={(e) => { setFormData({ ...formData, userName: e.target.value }) }} className="input" placeholder="UserName" />
+          <input autoComplete='new-password' type="password" onChange={(e) => { setFormData({ ...formData, password: e.target.value }) }} className="input" placeholder="Password" />
         </div>
         <div className='button' onClick={handleLogin}>登陆</div>
       </form>

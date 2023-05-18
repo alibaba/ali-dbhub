@@ -181,16 +181,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     },
     extendInfo: [
       {
-        label: 'useStreamLengthsInPrepStmts',
-        value: false,
-      },
-      {
-        label: 'useStreamLengthsInPrepStmts1',
-        value: false,
-      },
-      {
-        label: 'useStreamLengthsInPrepStmts2',
-        value: false,
+        "key":"zeroDateTimeBehavior",
+        "value":"convertToNull"
       }
     ],
     type: DatabaseTypeCode.MYSQL
@@ -305,8 +297,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -323,8 +315,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -473,8 +465,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -491,8 +483,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -619,8 +611,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -637,8 +629,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -654,9 +646,27 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
       ]
     },
   },
-  // SQLSERVER
+  // SQLSERVER encrypt=true;trustServerCertificate=true;integratedSecurity=false;Trusted_Connection=yes
   {
     type: DatabaseTypeCode.SQLSERVER,
+    extendInfo: [
+      {
+        "key":"encrypt",
+        "value":"true"
+      },
+      {
+        "key":"trustServerCertificate",
+        "value":"true"
+      },
+      {
+        "key":"integratedSecurity",
+        "value":"false"
+      },
+      {
+        "key":"Trusted_Connection",
+        "value":"yes"
+      },
+    ],
     baseInfo: {
       items: [
         {
@@ -774,8 +784,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -792,8 +802,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -860,8 +870,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -878,8 +888,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -1006,8 +1016,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -1024,8 +1034,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -1162,8 +1172,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: 'SSH 端口',
-          labelNameEN: 'Prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },

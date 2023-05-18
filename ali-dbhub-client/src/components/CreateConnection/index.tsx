@@ -23,6 +23,7 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import Tabs, { ITab } from '@/components/Tabs';
 import Iconfont from '../Iconfont';
+import { useUpdateEffect } from '@/utils/hooks';
 
 const { Option } = Select;
 
@@ -89,10 +90,13 @@ function VisiblyCreateConnection(props: IProps) {
   function saveConnection(type: submitType) {
     const ssh = sshForm.getFieldsValue();
     const baseInfo = baseInfoForm.getFieldsValue();
-    const extendInfo: any = {}
+    const extendInfo: any = []
     extendTableData.map((t: any) => {
-      if (t.label) {
-        extendInfo[t.label] = t.value
+      if (t.label || t.value) {
+        extendInfo.push({
+          key: t.label,
+          value: t.value
+        })
       }
     })
 
@@ -215,41 +219,32 @@ function RenderForm(props: IRenderFormProps) {
 
   const [initialValues] = useState(initialValuesMemo);
 
-  useEffect(() => {
-    console.log(dataSourceFormConfig)
-  }, [dataSourceFormConfig])
+  useUpdateEffect(() => {
+    if (tab === 'baseInfo') {
+      selectChange({ name: 'authentication', value: backfillData.user ? 1 : 2 });
+      regEXFormatting({ url: backfillData.url }, backfillData)
+    }
+
+    if (tab === 'ssh') {
+      regEXFormatting({}, backfillData.ssh || {})
+    }
+  }, [backfillData])
 
   function initialFormData(dataSourceFormConfig: IFormItem[] | undefined) {
     let initValue: any = {};
-    if (dataSourceId) {
-      connectionServer.getDetails({ id: dataSourceId + '' }).then((res: any) => {
-        if (res.user) {
-          res.authentication = 1
-        } else {
-          res.authentication = 2
-        }
-        selectChange({ name: 'authentication', value: res.user ? 1 : 2 });
-        res = {
-          ...res,
-          ...res.ssh
-        }
-        regEXFormatting({ url: res.url }, res)
-      })
-    } else {
-      dataSourceFormConfig?.map(t => {
-        initValue[t.name] = t.defaultValue
-        if (t.selects?.length) {
-          t.selects?.map(item => {
-            if (item.value === t.defaultValue) {
-              initValue = {
-                ...initValue,
-                ...initialFormData(item.items)
-              }
+    dataSourceFormConfig?.map(t => {
+      initValue[t.name] = t.defaultValue
+      if (t.selects?.length) {
+        t.selects?.map(item => {
+          if (item.value === t.defaultValue) {
+            initValue = {
+              ...initValue,
+              ...initialFormData(item.items)
             }
-          })
-        }
-      })
-    }
+          }
+        })
+      }
+    })
     return initValue
   }
 
@@ -373,10 +368,11 @@ function RenderForm(props: IRenderFormProps) {
   }
 
   return <Form
+    name={tab}
     form={form}
     initialValues={initialValues}
-    autoComplete="off"
     className={styles.form}
+    autoComplete='off'
     onFieldsChange={onFieldsChange}
   >
     {dataSourceFormConfig[tab]!.items.map((t => renderFormItem(t)))}
@@ -390,7 +386,7 @@ interface IRenderExtendTableProps {
 let extendTableData: any = []
 
 function RenderExtendTable(props: IRenderExtendTableProps) {
-  const { dataSourceType, backfillData } = props
+  const { dataSourceType, backfillData } = props;
 
   const dataSourceFormConfigMemo = useMemo<IDataSourceForm>(() => {
     return deepClone(dataSourceFormConfigs).find((t: IDataSourceForm) => {
@@ -400,7 +396,7 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
 
   const extendInfo = dataSourceFormConfigMemo.extendInfo?.map(t => {
     return {
-      label: t.label,
+      label: t.key,
       value: t.value
     }
   }) || []
@@ -408,15 +404,16 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
   const [data, setData] = useState([...extendInfo, { label: '', value: '' }])
 
   useEffect(() => {
-    const backfillDataExtendInfo = Object.keys(backfillData.extendInfo || {}).map(t => {
-      console.log(backfillData.extendInfo)
-      return {
-        label: t,
-        value: backfillData.extendInfo?.[t]
-      }
-    })
-
-    setData([...backfillDataExtendInfo, { label: '', value: '' }])
+    const list = Object.keys(backfillData.extendInfo || {})
+    if (list.length) {
+      const backfillDataExtendInfo = list.map(t => {
+        return {
+          label: backfillData.extendInfo?.[t]?.key,
+          value: backfillData.extendInfo?.[t]?.value
+        }
+      })
+      setData([...backfillDataExtendInfo, { label: '', value: '' }])
+    }
   }, [backfillData])
 
   useEffect(() => {
@@ -427,13 +424,12 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
     {
       title: '名称',
       dataIndex: 'label',
-      key: 'label',
       width: '60%',
       render: (value: any, row: any, index: number) => {
         let isCustomLabel = true
 
         dataSourceFormConfigMemo.extendInfo?.map(item => {
-          if (item.label === row.label) {
+          if (item.key === row.label) {
             isCustomLabel = false
           }
         })
@@ -448,29 +444,31 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
         }
 
         function blur() {
-          if (index === data.length - 1) {
-            const newData = [...data]
+          const newData = []
+          data.map(t => {
+            if (t.label) {
+              newData.push(t)
+            }
+          })
+          if (index === data.length - 1 && row.label) {
             newData[index] = {
               label: row.label,
               value: ''
             }
-            setData(newData)
-            setData([...newData, { label: '', value: '' }])
           }
-          // todo
+          setData([...newData, { label: '', value: '' }])
         }
 
         if (index === data.length - 1 || isCustomLabel) {
           return <Input onBlur={blur} placeholder={index === data.length - 1 ? '自定义' : ''} onChange={change} value={value}></Input>
         } else {
-          return value
+          return <span>{value}</span>
         }
       }
     },
     {
       title: '值',
       dataIndex: 'value',
-      key: 'value',
       width: '40%',
       render: (value: any, row: any, index: number) => {
         function change(e: any) {
@@ -497,6 +495,7 @@ function RenderExtendTable(props: IRenderExtendTableProps) {
 
   return <div className={styles.extendTable}>
     <Table
+      bordered
       size="small"
       pagination={false}
       columns={columns}

@@ -5,6 +5,7 @@
 package com.alibaba.dbhub.server.domain.support.datasource;
 
 import java.net.MalformedURLException;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,6 +15,8 @@ import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
 import com.alibaba.dbhub.server.domain.support.sql.ConnectInfo;
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import com.alibaba.dbhub.server.domain.support.sql.IDriverManager;
+
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author jipengfei
@@ -70,9 +73,9 @@ public class DataSourceManger {
         dataSource.setPassword(connectInfo.getPassword());
         dataSource.setConnectionErrorRetryAttempts(2);
         dataSource.setBreakAfterAcquireFailure(true);
-        if (connectInfo.getExtendInfo() != null) {
+        if (!ObjectUtils.isEmpty(connectInfo.getExtendMap())) {
             Properties properties = new Properties();
-            properties.putAll(connectInfo.getExtendInfo());
+            properties.putAll(connectInfo.getExtendMap());
             dataSource.setConnectProperties(properties);
         }
         return dataSource;

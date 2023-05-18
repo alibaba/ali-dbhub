@@ -1,7 +1,9 @@
 package com.alibaba.dbhub.server.web.api.controller.data.source.vo;
 
+import java.util.List;
 import java.util.Map;
 
+import com.alibaba.dbhub.server.domain.support.model.KeyValue;
 import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
 import com.alibaba.dbhub.server.domain.support.model.SSLInfo;
 
@@ -84,6 +86,6 @@ public class DataSourceVO {
     /**
      * 扩展信息
      */
-    private Map<String,String> extendInfo;
+    private List<KeyValue> extendInfo;
 
 }

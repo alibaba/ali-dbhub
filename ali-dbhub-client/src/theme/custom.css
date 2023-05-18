@@ -5965,7 +5965,7 @@ a.custom-btn-sm {
   opacity: 1;
 }
 .custom-picker-input > input::placeholder {
-  color: #bfbfbf;
+  color: var(--color-text-25);
   user-select: none;
 }
 .custom-picker-input > input:placeholder-shown {
@@ -14305,7 +14305,7 @@ textarea.custom-input-affix-wrapper {
   opacity: 1;
 }
 .custom-input::placeholder {
-  color: #bfbfbf;
+  color: var(--color-text-25);
   user-select: none;
 }
 .custom-input:placeholder-shown {
@@ -15870,7 +15870,7 @@ textarea.custom-input-number {
   opacity: 1;
 }
 .custom-input-number-input::placeholder {
-  color: #bfbfbf;
+  color: var(--color-text-25);
   user-select: none;
 }
 .custom-input-number-input:placeholder-shown {
@@ -18984,7 +18984,7 @@ textarea.custom-mentions {
   opacity: 1;
 }
 .custom-pagination-options-quick-jumper input::placeholder {
-  color: #bfbfbf;
+  color: var(--color-text-25);
   user-select: none;
 }
 .custom-pagination-options-quick-jumper input:placeholder-shown {

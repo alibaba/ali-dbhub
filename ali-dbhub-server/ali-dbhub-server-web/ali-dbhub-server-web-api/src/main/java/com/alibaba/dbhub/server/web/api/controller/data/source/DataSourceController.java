@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
+import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
@@ -15,9 +16,7 @@ import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
 import com.alibaba.dbhub.server.domain.api.service.ConsoleService;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.support.model.Database;
-import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
-import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
-import com.alibaba.dbhub.server.domain.support.util.JSchUtils;
+import com.alibaba.dbhub.server.domain.support.sql.SSHManager;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
@@ -40,7 +39,6 @@ import com.alibaba.dbhub.server.web.api.controller.data.source.request.SSHTestRe
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DataSourceVO;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DatabaseVO;
 
-import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,7 +99,7 @@ public class DataSourceController {
     public ActionResult sshConnect(@RequestBody SSHTestRequest request) {
         Session session = null;
         try {
-            session = JSchUtils.getSession(sshWebConverter.toInfo(request));
+            session = SSHManager.getSSHSession(sshWebConverter.toInfo(request));
         } catch (Exception e) {
             log.error("sshConnect error", e);
             throw new RuntimeException(e);

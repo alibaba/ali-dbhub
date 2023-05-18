@@ -1,16 +1,22 @@
-## 1.0.2
+# 1.0.4
+* 修复ClickHouse jdbc问题 [Issue #135](https://github.com/alibaba/Chat2DB/issues/135)
+* 修复连接池管理的NPE [Issue #136](https://github.com/alibaba/Chat2DB/issues/136)
+* 修复前端编辑数据源报错问题 
+* 增加数据库默认属性配置
+
+# 1.0.3
 * 🔥 支持SSH连接数据库
 * 🎉 支持客户端查看日志
 * 🎉 支持在Console中聊天对话
 * 支持在客户端内设置OPENAI代理 [Issue #84](https://github.com/alibaba/Chat2DB/issues/84)
 * 已经启动过应用不会再重复启动 [Issue #96](https://github.com/alibaba/Chat2DB/issues/96)
 
-## 1.0.1
+# 1.0.1
 * 修复oracle连接配置编辑、以及连接查询问题
 * 修复Apikey输出到日志可能存在的风险
 * 修复web版本登录的bug
 
-## 1.0.0
+# 1.0.0
 Chat2DB的 1.0.0 正式版来啦🎉🎉🎉🎉🎉🎉🎉🎉🎉
 
 * 🌈 AI智能助手，支持自然语言转SQL、SQL转自然语言、SQL优化建议

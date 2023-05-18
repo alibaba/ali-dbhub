@@ -1,6 +1,6 @@
 package com.alibaba.dbhub.server.start.config.listener;
 
-import com.alibaba.dbhub.server.tools.common.util.SystemUtils;
+import com.alibaba.dbhub.server.start.config.util.SystemUtils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.LifecycleState;

@@ -6,12 +6,17 @@ package com.alibaba.dbhub.server.domain.support.sql;
 
 import java.sql.Connection;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.model.KeyValue;
 import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
 import com.alibaba.dbhub.server.domain.support.model.SSLInfo;
+import com.alibaba.fastjson2.JSON;
 
 import org.springframework.util.ObjectUtils;
 
@@ -114,12 +119,28 @@ public class ConnectInfo {
     /**
      * 扩展信息
      */
-    private Map<String, String> extendInfo;
+    private List<KeyValue> extendInfo;
 
 
 
     public Connection connection;
 
+
+    /**
+     * Getter method for property <tt>extendInfo</tt>.
+     *
+     * @return property value of extendInfo
+     */
+    public LinkedHashMap<String,Object> getExtendMap() {
+        if (ObjectUtils.isEmpty(extendInfo)) {
+            return new LinkedHashMap<>();
+        }
+        LinkedHashMap<String,Object> map = new LinkedHashMap<>();
+        for (KeyValue keyValue : extendInfo) {
+            map.put(keyValue.getKey(),keyValue.getValue());
+        }
+        return map;
+    }
 
 
     public void setDatabase(String database) {
@@ -467,18 +488,21 @@ public class ConnectInfo {
      *
      * @return property value of extendInfo
      */
-    public Map<String, String> getExtendInfo() {
+    public List<KeyValue> getExtendInfo() {
         return extendInfo;
     }
+
+
 
     /**
      * Setter method for property <tt>extendInfo</tt>.
      *
      * @param extendInfo value to be assigned to property extendInfo
      */
-    public void setExtendInfo(Map<String, String> extendInfo) {
+    public void setExtendInfo(List<KeyValue> extendInfo) {
         this.extendInfo = extendInfo;
     }
+
     /**
      * Getter method for property <tt>connection</tt>.
      *

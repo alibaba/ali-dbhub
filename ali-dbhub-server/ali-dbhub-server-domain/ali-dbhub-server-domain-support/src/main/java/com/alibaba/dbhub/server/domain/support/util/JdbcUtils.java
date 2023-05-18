@@ -5,7 +5,6 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -22,13 +21,10 @@ import com.alibaba.dbhub.server.domain.support.model.Cell;
 import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
 import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
 import com.alibaba.dbhub.server.domain.support.sql.IDriverManager;
-import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
-import com.alibaba.dbhub.server.tools.base.excption.SystemException;
-import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
+import com.alibaba.dbhub.server.domain.support.sql.SSHManager;
 import com.alibaba.dbhub.server.tools.common.util.EasyOptionalUtils;
 import com.alibaba.druid.DbType;
 
-import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
@@ -156,7 +152,7 @@ public class JdbcUtils {
         // 加载驱动
         try {
             if (ssh.isUse()) {
-                session = JSchUtils.getSession(ssh,host,port);
+                session = SSHManager.getSSHSession(ssh);
                 url = url.replace(host, "127.0.0.1").replace(port, ssh.getLocalPort());
             }
             // 创建连接
@@ -179,6 +175,10 @@ public class JdbcUtils {
                     // ignore
                 }
             }if(session!=null){
+                try {
+                    session.delPortForwardingL(Integer.parseInt(ssh.getLocalPort()));
+                } catch (JSchException e) {
+                }
                 session.disconnect();
             }
         }
