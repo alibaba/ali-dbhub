@@ -1,6 +1,6 @@
 # 1.0.4
-* 修复ClickHouse jbdc问题[Issue #135](https://github.com/alibaba/Chat2DB/issues/135)
-* 修复连接池管理的NPE  [Issue #136](https://github.com/alibaba/Chat2DB/issues/136)
+* 修复ClickHouse jdbc问题 [Issue #135](https://github.com/alibaba/Chat2DB/issues/135)
+* 修复连接池管理的NPE [Issue #136](https://github.com/alibaba/Chat2DB/issues/136)
 * 修复前端编辑数据源报错问题 
 * 增加数据库默认属性配置
 
