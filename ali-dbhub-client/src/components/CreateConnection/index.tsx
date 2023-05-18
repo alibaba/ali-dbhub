@@ -226,7 +226,7 @@ function RenderForm(props: IRenderFormProps) {
     }
 
     if (tab === 'ssh') {
-      regEXFormatting({}, backfillData.ssh)
+      regEXFormatting({}, backfillData.ssh || {})
     }
   }, [backfillData])
 
