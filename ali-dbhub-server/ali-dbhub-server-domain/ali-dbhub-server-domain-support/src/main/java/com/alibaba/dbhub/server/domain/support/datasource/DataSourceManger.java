@@ -76,6 +76,7 @@ public class DataSourceManger {
         dataSource.setRemoveAbandoned(true);
         dataSource.setRemoveAbandonedTimeout(1800);
         dataSource.setTestOnBorrow(true);
+        dataSource.setValidationQuery("select 1");
         if (!ObjectUtils.isEmpty(connectInfo.getExtendMap())) {
             Properties properties = new Properties();
             properties.putAll(connectInfo.getExtendMap());
