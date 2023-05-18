@@ -64,7 +64,7 @@ public class DataSourceManger {
         dataSource.setDriverClassLoader(classLoader);
         dataSource.setDriverClassName(driverTypeEnum.getDriverClass());
         dataSource.setUrl(connectInfo.getUrl());
-        dataSource.setInitialSize(1);
+        dataSource.setInitialSize(2);
         dataSource.setMinIdle(0);
         dataSource.setMaxActive(5);
         dataSource.setMaxWait(3000L);
@@ -73,6 +73,9 @@ public class DataSourceManger {
         dataSource.setPassword(connectInfo.getPassword());
         dataSource.setConnectionErrorRetryAttempts(2);
         dataSource.setBreakAfterAcquireFailure(true);
+        dataSource.setRemoveAbandoned(true);
+        dataSource.setRemoveAbandonedTimeout(1800);
+        dataSource.setTestOnBorrow(true);
         if (!ObjectUtils.isEmpty(connectInfo.getExtendMap())) {
             Properties properties = new Properties();
             properties.putAll(connectInfo.getExtendMap());
