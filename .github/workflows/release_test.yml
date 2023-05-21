@@ -46,13 +46,13 @@ jobs:
           cache: "maven"
 
       # 复制jre Windows
-      - name: Copy Jre Windows
+      - name: Copy Jre for Windows
         if: ${{ runner.os == 'Windows' }}
         run: |
           cp -r "${{ env.JAVA_HOME }}" ali-dbhub-client/electron/jre
 
       # 复制jre macOS
-      - name: Copy Jre macOS
+      - name: Copy Jre for macOS
         if: ${{ runner.os == 'macOS' }}
         run: |
           cp -r $JAVA_HOME ali-dbhub-client/electron/jre
