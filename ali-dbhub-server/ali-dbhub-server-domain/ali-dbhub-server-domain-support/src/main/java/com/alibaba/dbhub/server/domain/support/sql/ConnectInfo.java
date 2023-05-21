@@ -8,16 +8,14 @@ import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Properties;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.KeyValue;
 import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
 import com.alibaba.dbhub.server.domain.support.model.SSLInfo;
-import com.alibaba.fastjson2.JSON;
 
+import com.jcraft.jsch.Session;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -124,6 +122,26 @@ public class ConnectInfo {
 
 
     public Connection connection;
+
+    /**
+     * Getter method for property <tt>session</tt>.
+     *
+     * @return property value of session
+     */
+    public Session getSession() {
+        return session;
+    }
+
+    /**
+     * Setter method for property <tt>session</tt>.
+     *
+     * @param session value to be assigned to property session
+     */
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    public Session session;
 
 
     /**
