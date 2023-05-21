@@ -24,10 +24,10 @@ jobs:
           java-version: '17'
           distribution: "temurin"
           cache: 'maven'
-
-      # 编译服务端java版本
-      - name: Build Java
-        run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
+#
+#      # 编译服务端java版本
+#      - name: Build Java
+#        run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
 
       - name: Test with Maven
         run: mvn test -B -Dmaven.test.skip=false -pl ali-dbhub-server-test -am -f ali-dbhub-server/pom.xml
