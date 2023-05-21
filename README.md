@@ -52,7 +52,7 @@
 
 ```bash
   docker pull chat2db/chat2db:latest
-  docker run --rm -ti -p 10824:10824  chat2db/chat2db:latest
+  docker run -ti --name=chat2db -p 10824:10824 chat2db/chat2db:latest
 ```
 ## 🎯 运行环境
 注意：

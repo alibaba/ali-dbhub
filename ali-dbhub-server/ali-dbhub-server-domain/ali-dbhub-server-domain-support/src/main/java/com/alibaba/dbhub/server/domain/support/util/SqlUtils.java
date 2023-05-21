@@ -429,4 +429,8 @@ public class SqlUtils {
             }
         });
     }
+
+    public static String formatSQLString(Object para) {
+        return para != null ? " '" + para + "' " : null;
+    }
 }
