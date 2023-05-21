@@ -4,6 +4,7 @@
  */
 package com.alibaba.dbhub.server.domain.support.datasource;
 
+import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,14 +14,17 @@ import javax.sql.DataSource;
 import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
 import com.alibaba.dbhub.server.domain.support.sql.ConnectInfo;
 import com.alibaba.dbhub.server.domain.support.sql.IDriverManager;
+import com.alibaba.fastjson2.JSON;
 
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 
 /**
  * @author jipengfei
  * @version : DataSourceManger.java
  */
+@Slf4j
 public class DataSourceManger {
 
     protected static final ConcurrentHashMap<String, MyDataSource> DATA_SOURCE_MAP = new ConcurrentHashMap();
@@ -83,7 +87,8 @@ public class DataSourceManger {
         //}
         //return dataSource;
         Thread.currentThread().setContextClassLoader(classLoader);
-
+        log.info("createDataSource classLoader  hashCode:{}"+ classLoader.hashCode());
+        log.info("createDataSource classLoader url :{}"+ JSON.toJSONString (((URLClassLoader)classLoader).getURLs()));
         HikariDataSource myDataSource = (HikariDataSource)classLoader.loadClass("com.zaxxer.hikari.HikariDataSource")
             .newInstance();
         myDataSource.setDriverClassName(driverTypeEnum.getDriverClass());
