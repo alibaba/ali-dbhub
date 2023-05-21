@@ -1,39 +1,39 @@
-name: Test
-
-on: [ push, pull_request ]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@main
-      - name: Install Java and Maven
-        uses: actions/setup-java@main
-        with:
-          java-version: '17'
-          distribution: "temurin"
-          cache: 'maven'
-          java-package: 'jre'
-      # test
-      - name: test
-        run: |
-          echo $JAVA_HOME
-          java -version
-          cd $JAVA_HOME
-          ls $JAVA_HOME/bin
-          ls $JAVA_HOME/lib
-      - name: Install Java and Maven2
-        uses: actions/setup-java@main
-        with:
-          java-version: '17'
-          distribution: "temurin"
-          cache: 'maven'
-      # test
-      - name: test2
-        run: |
-          echo $JAVA_HOME
-          java -version
-          cd $JAVA_HOME
-          ls $JAVA_HOME/bin
-          ls $JAVA_HOME/lib
+#name: Test
+#
+#on: [ push, pull_request ]
+#
+#jobs:
+#  test:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Check out Git repository
+#        uses: actions/checkout@main
+#      - name: Install Java and Maven
+#        uses: actions/setup-java@main
+#        with:
+#          java-version: '17'
+#          distribution: "temurin"
+#          cache: 'maven'
+#          java-package: 'jre'
+#      # test
+#      - name: test
+#        run: |
+#          echo $JAVA_HOME
+#          java -version
+#          cd $JAVA_HOME
+#          ls $JAVA_HOME/bin
+#          ls $JAVA_HOME/lib
+#      - name: Install Java and Maven2
+#        uses: actions/setup-java@main
+#        with:
+#          java-version: '17'
+#          distribution: "temurin"
+#          cache: 'maven'
+#      # test
+#      - name: test2
+#        run: |
+#          echo $JAVA_HOME
+#          java -version
+#          cd $JAVA_HOME
+#          ls $JAVA_HOME/bin
+#          ls $JAVA_HOME/lib
