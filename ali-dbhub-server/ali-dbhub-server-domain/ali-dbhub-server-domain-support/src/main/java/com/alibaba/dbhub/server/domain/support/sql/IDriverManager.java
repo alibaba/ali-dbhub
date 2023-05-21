@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.DriverEntry;
 import com.alibaba.dbhub.server.domain.support.util.JdbcJarUtils;
+import com.alibaba.fastjson2.JSON;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -139,7 +140,9 @@ public class IDriverManager {
                 }
                 urls[jarPaths.length] = new File(JdbcJarUtils.getFullPath("HikariCP-4.0.3.jar")).toURI().toURL();
 
-                ClassLoader cl = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+                URLClassLoader cl = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+                log.info("ClassLoader class:{}", cl.hashCode());
+                log.info("ClassLoader URLs:{}", JSON.toJSONString(cl.getURLs()));
                 try {
                     cl.loadClass(driverTypeEnum.getDriverClass());
                 } catch (ClassNotFoundException e) {

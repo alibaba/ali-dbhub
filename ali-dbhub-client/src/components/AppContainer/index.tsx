@@ -28,6 +28,7 @@ declare global {
 window._ENV = process.env.UMI_ENV!
 
 export default memo<IProps>(function AppContainer({ className, children }) {
+  console.log(process.env.UMI_PORT)
   const [startSchedule, setStartSchedule] = useState(0); // 0 初始状态 1 服务启动中 2 启动成功
   const [serviceFail, setServiceFail] = useState(false);
   // const scrollTimer = useRef<any>();
