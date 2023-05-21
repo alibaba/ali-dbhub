@@ -13,7 +13,7 @@ import com.zaxxer.hikari.HikariDataSource;
  * @author jipengfei
  * @version : MyDataSource.java
  */
-public class MyDataSource extends HikariDataSource {
+public class MyDataSource {
 
     public ConnectInfo getConnectInfo() {
         return connectInfo;
@@ -21,8 +21,14 @@ public class MyDataSource extends HikariDataSource {
 
     private ConnectInfo connectInfo;
 
-    public MyDataSource(ConnectInfo connectInfo) {
-        super();
+    public HikariDataSource getHikariDataSource() {
+        return hikariDataSource;
+    }
+
+    private HikariDataSource hikariDataSource;
+
+    public MyDataSource(ConnectInfo connectInfo, HikariDataSource hikariDataSource) {
         this.connectInfo = connectInfo;
+        this.hikariDataSource = hikariDataSource;
     }
 }

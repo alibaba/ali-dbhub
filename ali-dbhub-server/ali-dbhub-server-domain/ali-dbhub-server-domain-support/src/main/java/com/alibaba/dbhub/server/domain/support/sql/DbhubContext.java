@@ -51,7 +51,6 @@ public class DbhubContext {
         CONNECT_INFO_THREAD_LOCAL.set(info);
         if (connectInfo == null) {
             try {
-                DruidDataSource druidDataSource = new DruidDataSource();
                 Connection connection = DataSourceManger.getDataSource(info).getConnection();
                 info.setConnection(connection);
             } catch (SQLException e) {
