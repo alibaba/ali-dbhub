@@ -24,7 +24,7 @@ public class AliDbhubProperties {
     private String version;
 
     /**
-     * 版本
+     * jdbc 需要下载的jar包
      */
     private List<String> jdbcJarDownLoadUrls;
 }
