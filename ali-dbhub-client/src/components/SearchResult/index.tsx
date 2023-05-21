@@ -181,6 +181,7 @@ export function TableBox(props: ITableProps) {
       open={!!viewTableCellData?.name}
       onCancel={handleCancel}
       width='60vw'
+      maskClosable={false}
       footer={
         <>
           {
