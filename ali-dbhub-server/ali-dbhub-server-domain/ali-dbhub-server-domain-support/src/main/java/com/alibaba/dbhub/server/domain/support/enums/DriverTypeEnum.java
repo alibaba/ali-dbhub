@@ -70,7 +70,14 @@ public enum DriverTypeEnum {
     /**
      * MMARIADB
      */
-    MARIADB_DRIVER(DbTypeEnum.MARIADB, "org.mariadb.jdbc.Driver", "mariadb-java-client-3.0.8.jar","");
+    MARIADB_DRIVER(DbTypeEnum.MARIADB, "org.mariadb.jdbc.Driver", "mariadb-java-client-3.0.8.jar",""),
+
+
+
+    /**
+     * DM_DRIVER
+     */
+    DM_DRIVER(DbTypeEnum.DM, "dm.jdbc.driver.DmDriver", "Dm7JdbcDriver18.jar","");
 
     final DbTypeEnum dbTypeEnum;
 
