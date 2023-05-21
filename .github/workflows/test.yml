@@ -23,3 +23,17 @@ jobs:
           cd $JAVA_HOME
           ls $JAVA_HOME/bin
           ls $JAVA_HOME/lib
+      - name: Install Java and Maven2
+        uses: actions/setup-java@main
+        with:
+          java-version: '17'
+          distribution: "temurin"
+          cache: 'maven'
+      # test
+      - name: test2
+        run: |
+          echo $JAVA_HOME
+          java -version
+          cd $JAVA_HOME
+          ls $JAVA_HOME/bin
+          ls $JAVA_HOME/lib
