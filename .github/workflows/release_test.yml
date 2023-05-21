@@ -43,7 +43,7 @@ jobs:
       - name: Copy Jre Windows
         if: ${{ runner.os == 'Windows' }}
         run: |
-          cp -r %JAVA_HOME% ali-dbhub-client/electron/jre
+          cp -r "${{ env.JAVA_HOME }}" ali-dbhub-client/electron/jre
 
       # 复制jre macOS
       - name: Copy Jre macOS
