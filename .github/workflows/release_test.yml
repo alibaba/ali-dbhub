@@ -31,27 +31,6 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@main
 
-      # 安装jre
-      - name: Install Jre
-        uses: actions/setup-java@main
-        with:
-          java-version: "17"
-          distribution: "temurin"
-          java-package: 'jre'
-
-      # 复制jre Windows
-      - name: Copy Jre Windows
-        if: ${{ runner.os == 'Windows' }}
-        run: |
-          cp -r "${{ env.JAVA_HOME }}" ali-dbhub-client/electron/jre
-
-      # 复制jre macOS
-      - name: Copy Jre macOS
-        if: ${{ runner.os == 'macOS' }}
-        run: |
-          cp -r $JAVA_HOME ali-dbhub-client/electron/jre
-          chmod -R 777 ali-dbhub-client/electron/jre/
-
       # 安装node
       - name: Install Node.js
         uses: actions/setup-node@main
@@ -65,6 +44,19 @@ jobs:
           java-version: "17"
           distribution: "temurin"
           cache: "maven"
+
+      # 复制jre Windows
+      - name: Copy Jre Windows
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          cp -r "${{ env.JAVA_HOME }}" ali-dbhub-client/electron/jre
+
+      # 复制jre macOS
+      - name: Copy Jre macOS
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          cp -r $JAVA_HOME ali-dbhub-client/electron/jre
+          chmod -R 777 ali-dbhub-client/electron/jre/
 
       # 构建静态文件信息
       - name: Npm install & build & copy
