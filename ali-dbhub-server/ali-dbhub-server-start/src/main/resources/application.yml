@@ -28,6 +28,20 @@ spring:
 ali:
   dbhub:
     version: 1.0.0
+    jdbc-jar-downLoad-urls:
+      - https://oss-chat2db.alibaba.com/lib/mysql-connector-java-8.0.30.jar
+      - https://oss-chat2db.alibaba.com/lib/mysql-connector-java-5.1.47.jar
+      - https://oss-chat2db.alibaba.com/lib/clickhouse-jdbc-0.3.2-patch8-http.jar
+      - https://oss-chat2db.alibaba.com/lib/mariadb-java-client-3.0.8.jar
+      - https://oss-chat2db.alibaba.com/lib/mssql-jdbc-11.2.1.jre17.jar
+      - https://oss-chat2db.alibaba.com/lib/oceanbase-client-2.4.2.jar
+      - https://oss-chat2db.alibaba.com/lib/postgresql-42.5.1.jar
+      - https://oss-chat2db.alibaba.com/lib/sqlite-jdbc-3.39.3.0.jar
+      - https://oss-chat2db.alibaba.com/lib/ojdbc11.jar
+      - https://oss-chat2db.alibaba.com/lib/orai18n-19.3.0.0.jar
+      - https://oss-chat2db.alibaba.com/lib/h2-2.1.214.jar
+      - https://oss-chat2db.alibaba.com/lib/Dm7JdbcDriver18.jar
+      - https://oss-chat2db.alibaba.com/lib/HikariCP-4.0.3.jar
 # flywaydb 输出执行sql的日志
 logging:
   level:
@@ -57,7 +71,3 @@ chatgpt:
   version: GPT35
   context:
     length: 4
-jdbc:
-  jar:
-    download:
-      url: https://oss-chat2db.alibaba.com/lib/mysql-connector-java-8.0.30.jar,https://oss-chat2db.alibaba.com/lib/mysql-connector-java-5.1.47.jar,https://oss-chat2db.alibaba.com/lib/clickhouse-jdbc-0.3.2-patch8-http.jar,https://oss-chat2db.alibaba.com/lib/mariadb-java-client-3.0.8.jar,https://oss-chat2db.alibaba.com/lib/mssql-jdbc-11.2.1.jre17.jar,https://oss-chat2db.alibaba.com/lib/oceanbase-client-2.4.2.jar,https://oss-chat2db.alibaba.com/lib/postgresql-42.5.1.jar,https://oss-chat2db.alibaba.com/lib/sqlite-jdbc-3.39.3.0.jar,https://oss-chat2db.alibaba.com/lib/ojdbc11.jar,https://oss-chat2db.alibaba.com/lib/orai18n-19.3.0.0.jar,https://oss-chat2db.alibaba.com/lib/h2-2.1.214.jar,https://oss-chat2db.alibaba.com/lib/Dm7JdbcDriver18.jar,https://oss-chat2db.alibaba.com/lib/HikariCP-4.0.3.jar

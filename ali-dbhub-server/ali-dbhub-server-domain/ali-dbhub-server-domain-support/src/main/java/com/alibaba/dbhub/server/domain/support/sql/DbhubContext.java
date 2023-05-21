@@ -6,11 +6,10 @@ package com.alibaba.dbhub.server.domain.support.sql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import com.alibaba.dbhub.server.domain.support.datasource.DataSourceManger;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
-import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
-import com.alibaba.druid.pool.DruidDataSource;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,7 +21,7 @@ public class DbhubContext {
 
     private static final ThreadLocal<ConnectInfo> CONNECT_INFO_THREAD_LOCAL = new ThreadLocal<>();
 
-    public static String JDBC_JAR_DOWNLOAD_URL;
+    public static List<String> JDBC_JAR_DOWNLOAD_URL_LIST;
 
     /**
      * 获取当前线程的ContentContext
