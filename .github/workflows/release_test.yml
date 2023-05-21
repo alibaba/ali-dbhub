@@ -31,19 +31,13 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@main
 
-      # 安装node
-      - name: Install Node.js
-        uses: actions/setup-node@main
-        with:
-          node-version: 16
-
-      # 安装java
-      - name: Install Java and Maven
+      # 安装jre
+      - name: Install Jre
         uses: actions/setup-java@main
         with:
           java-version: "17"
           distribution: "temurin"
-          cache: "maven"
+          java-package: 'jre'
 
       # 复制jre Windows
       - name: Copy Jre for Windows
@@ -57,6 +51,20 @@ jobs:
         run: |
           cp -r $JAVA_HOME ali-dbhub-client/electron/jre
           chmod -R 777 ali-dbhub-client/electron/jre/
+
+      # 安装node
+      - name: Install Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 16
+
+      # 安装java
+      - name: Install Java and Maven
+        uses: actions/setup-java@main
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
 
       # 构建静态文件信息
       - name: Npm install & build & copy
