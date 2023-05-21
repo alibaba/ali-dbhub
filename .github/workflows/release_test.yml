@@ -50,7 +50,7 @@ jobs:
         if: ${{ runner.os == 'macOS' }}
         run: |
           cp -r $JAVA_HOME ali-dbhub-client/electron/jre
-          chmod 777 -R ali-dbhub-client/electron/jre
+          chmod -R 777 ali-dbhub-client/electron/jre/
 
       # 安装node
       - name: Install Node.js
