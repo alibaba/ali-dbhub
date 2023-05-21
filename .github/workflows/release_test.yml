@@ -70,7 +70,7 @@ jobs:
         run: |
           cd ali-dbhub-client
           npm install 
-          npm run build:desktop
+          npm run build:desktop --appPort=10822
           cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
 
       # 编译服务端java版本
@@ -97,7 +97,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test"
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --win --x64"
 
       # macos amd64
       - name: Build/release Electron app for MacOS X64
@@ -108,7 +108,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.win.publisherName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.win.publisherName=Chat2DB-Test -c.nsis.shortcutName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --mac --x64"
 
       # macos amd64
       - name: Build/release Electron app for MacOS arm64
@@ -119,7 +119,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --arm64"
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --mac --arm64"
 
       # 准备要需要的数据 Windows
       - name: Prepare upload for Windows
@@ -127,6 +127,7 @@ jobs:
         run: |
           mkdir oss_temp_file
           cp -r ali-dbhub-client/electron-build/*Setup*.exe ./oss_temp_file
+          ls ali-dbhub-client/electron-build/
 
       # 准备要需要的数据 MacOS amd64
       - name: Prepare upload for MacOS amd64
@@ -135,6 +136,7 @@ jobs:
           mkdir oss_temp_file
           cp ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file
           cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
+          ls ali-dbhub-client/electron-build/
 
       # 准备要需要的数据 MacOS arm64
       - name: Prepare upload for MacOS arm64
@@ -142,6 +144,7 @@ jobs:
         run: |
           mkdir oss_temp_file
           cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
+          ls ali-dbhub-client/electron-build/
 
       # 把文件上传到OSS 方便下载
       - name: Set up oss utils
