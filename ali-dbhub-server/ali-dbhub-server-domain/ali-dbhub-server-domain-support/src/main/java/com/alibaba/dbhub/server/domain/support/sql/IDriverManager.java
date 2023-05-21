@@ -57,7 +57,7 @@ public class IDriverManager {
     }
 
     public static Connection getConnection(String url, String user, String password, DriverTypeEnum driverTypeEnum,
-        Map<String, String> properties)
+        Map<String, Object> properties)
         throws SQLException {
         Properties info = new Properties();
         if (user != null) {

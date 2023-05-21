@@ -27,11 +27,11 @@ public class KeyValue {
      */
     private Object value;
 
-    public static Map<String, String> toMap(List<KeyValue> keyValues) {
+    public static Map<String, Object> toMap(List<KeyValue> keyValues) {
         if (CollectionUtils.isEmpty(keyValues)) {
             return Maps.newHashMap();
         } else {
-            Map<String, String> map = Maps.newHashMap();
+            Map<String, Object> map = Maps.newHashMap();
             keyValues.forEach(keyValue -> map.put(keyValue.getKey(), String.valueOf(keyValue.getValue())));
             return map;
         }
