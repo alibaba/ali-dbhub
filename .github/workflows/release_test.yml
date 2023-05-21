@@ -31,32 +31,31 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@main
 
-      - name: Install Node.js
-        uses: actions/setup-node@main
-        with:
-          node-version: 16
-
-      # 构建静态文件信息
-      - name: Npm install & build & copy
-        run: |
-          cd ali-dbhub-client
-          npm install 
-          npm run build:desktop
-          cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
-
       # 安装jre
       - name: Install Jre
         uses: actions/setup-java@main
         with:
           java-version: "17"
           distribution: "temurin"
-          cache: "maven"
           java-package: 'jre'
 
-      # 复制jre
-      - name: Copy jre
+      # 复制jre Windows
+      - name: Copy Jre Windows
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          cp -r %JAVA_HOME% ali-dbhub-client/electron/jre
+
+      # 复制jre macOS
+      - name: Copy Jre macOS
+        if: ${{ runner.os == 'macOS' }}
         run: |
           cp -r $JAVA_HOME ali-dbhub-client/electron/jre
+
+      # 安装node
+      - name: Install Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 16
 
       # 安装java
       - name: Install Java and Maven
@@ -66,11 +65,19 @@ jobs:
           distribution: "temurin"
           cache: "maven"
 
+      # 构建静态文件信息
+      - name: Npm install & build & copy
+        run: |
+          cd ali-dbhub-client
+          npm install 
+          npm run build:desktop
+          cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
+
       # 编译服务端java版本
       - name: Build Java
         run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
 
-      # 复制jre & 服务端java 到制修订位置
+      # 复制服务端java 到指定位置
       - name: Copy app
         run: |
           mkdir ali-dbhub-client/electron/app
