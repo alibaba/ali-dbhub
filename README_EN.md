@@ -31,12 +31,12 @@ Languages： English | [中文](README.md)
 
 ## ⏬ Download and Install
 
-| Description | Size | Download                                                                                                                                                                                                                                        |
-|-------------|------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows     | 361M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test%20Setup%201.0.4819968180-Test.exe">https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test%20Setup%201.0.4796588172-Test.exe </a> |
-| MacOS ARM64 | 207M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test-1.0.4819968180-Test-arm64.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test-arm64.dmg </a> |
-| MacOS X64   | 210M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test-1.0.4819968180-Test.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test.dmg </a>  |       
-| Jar package | 88M  | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/ali-dbhub-server-start.jar"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/ali-dbhub-server-start.jar </a>  |                                                                                                                
+| Description   | Size                                                                                                                                                   | Download                                                                                                                                                                                                                                        |
+|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
+| Windows       | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB%20Setup%201.0.5.exe](https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB%20Setup%201.0.3.exe) |
+| MacOS ARM64   | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB-1.0.3-arm64.dmg)         |
+| MacOS X64     | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5.dmg](https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB-1.0.3.dmg)                     |
+| Jar package   | [https://oss-chat2db.alibaba.com/release/1.0.5/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.3/ali-dbhub-server-start.jar)   |
 
 
 ## 🌰 Demo

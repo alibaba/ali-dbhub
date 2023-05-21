@@ -36,7 +36,8 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
-          java-package: 'jre'
+          java-package: "jre"
+          architecture: "aarch64"
 
       # 复制jre Windows
       - name: Copy Jre for Windows
@@ -78,7 +79,7 @@ jobs:
         run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
 
       # 复制服务端java 到指定位置
-      - name: Copy app
+      - name: Copy App
         run: |
           mkdir ali-dbhub-client/electron/app
           cp ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar ali-dbhub-client/electron/app/
