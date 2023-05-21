@@ -1,28 +1,35 @@
-#name: Test
-#
-#on: [ push, pull_request ]
-#
-#jobs:
-#  test:
-#    runs-on: windows-latest
-#    steps:
-#      - name: Check out Git repository
-#        uses: actions/checkout@main
-#      - name: Install Java and Maven
-#        uses: actions/setup-java@main
-#        with:
-#          java-version: '17'
-#          distribution: "temurin"
-#          cache: 'maven'
-#          java-package: 'jre'
-#      # test
-#      - name: test
-#        run: |
-#          echo "---"
-#          echo "${ env.JAVA_HOME }"
-#          echo "---"
-#          java -version
-#          echo "---"
-#          echo "${{ env.JAVA_HOME }}"
-#          echo "---"
-#
+name: Test
+
+on: [ push, pull_request ]
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+          - os: macos-latest
+            arch: amd64
+          - os: macos-latest
+            arch: arm64
+            variant: v8
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@main
+      - name: Install Java and Maven
+        uses: actions/setup-java@main
+        with:
+          java-version: '17'
+          distribution: "temurin"
+          cache: 'maven'
+
+      # 编译服务端java版本
+      - name: Build Java
+        run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
+
+      # 构建静态文件信息
+      - name: start
+        run: |
+          java -jar ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar
