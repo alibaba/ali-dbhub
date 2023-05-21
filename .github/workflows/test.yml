@@ -29,7 +29,5 @@ jobs:
       - name: Build Java
         run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
 
-      # 构建静态文件信息
-      - name: start
-        run: |
-          java -jar ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar
+      - name: Test with Maven
+        run: mvn test -B -Dmaven.test.skip=false -pl ali-dbhub-server-test -am -f ali-dbhub-server/pom.xml
