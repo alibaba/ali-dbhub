@@ -6,16 +6,13 @@ package com.alibaba.dbhub.server.domain.support.sql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
-import com.alibaba.dbhub.server.domain.support.datasource.DataSourceManger;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
-import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
 import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
-import com.alibaba.druid.pool.DruidDataSource;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
