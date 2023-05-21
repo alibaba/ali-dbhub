@@ -31,12 +31,6 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@main
 
-      # 安装node
-      - name: Install Node.js
-        uses: actions/setup-node@main
-        with:
-          node-version: 16
-
       # 安装jre
       - name: Install Jre
         uses: actions/setup-java@main
@@ -49,6 +43,12 @@ jobs:
       - name: Copy jre
         run: |
           cp -r $JAVA_HOME ali-dbhub-client/electron/jre
+
+      # 安装node
+      - name: Install Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version: 16
 
       # 安装java
       - name: Install Java and Maven
