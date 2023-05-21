@@ -1,0 +1,28 @@
+#name: Test
+#
+#on: [ push, pull_request ]
+#
+#jobs:
+#  test:
+#    runs-on: windows-latest
+#    steps:
+#      - name: Check out Git repository
+#        uses: actions/checkout@main
+#      - name: Install Java and Maven
+#        uses: actions/setup-java@main
+#        with:
+#          java-version: '17'
+#          distribution: "temurin"
+#          cache: 'maven'
+#          java-package: 'jre'
+#      # test
+#      - name: test
+#        run: |
+#          echo "---"
+#          echo "${ env.JAVA_HOME }"
+#          echo "---"
+#          java -version
+#          echo "---"
+#          echo "${{ env.JAVA_HOME }}"
+#          echo "---"
+#

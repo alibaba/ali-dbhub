@@ -31,18 +31,11 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@main
 
+      # 安装node
       - name: Install Node.js
         uses: actions/setup-node@main
         with:
           node-version: 16
-
-      # 构建静态文件信息
-      - name: Npm install & build & copy
-        run: |
-          cd ali-dbhub-client
-          npm install 
-          npm run build:desktop
-          cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
 
       # 安装java
       - name: Install Java and Maven
@@ -52,18 +45,34 @@ jobs:
           distribution: "temurin"
           cache: "maven"
 
+      # 复制jre Windows
+      - name: Copy Jre for Windows
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          cp -r "${{ env.JAVA_HOME }}" ali-dbhub-client/electron/jre
+
+      # 复制jre macOS
+      - name: Copy Jre for macOS
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          cp -r $JAVA_HOME ali-dbhub-client/electron/jre
+          chmod -R 777 ali-dbhub-client/electron/jre/
+
+      # 构建静态文件信息
+      - name: Npm install & build & copy
+        run: |
+          cd ali-dbhub-client
+          npm install 
+          npm run build:desktop
+          cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
+
       # 编译服务端java版本
       - name: Build Java
         run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
 
-      # 打包jre
-      - name: Build jre
-        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument,jdk.crypto.ec --output jre --no-man-pages --no-header-files --compress=2
-
-      # 复制jre & 服务端java 到制修订位置
-      - name: Copy app &  jre
+      # 复制服务端java 到指定位置
+      - name: Copy app
         run: |
-          cp -r jre ali-dbhub-client/electron/
           mkdir ali-dbhub-client/electron/app
           cp ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar ali-dbhub-client/electron/app/
 
@@ -92,7 +101,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.win.publisherName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --x64"
 
       # macos amd64
       - name: Build/release Electron app for MacOS arm64
