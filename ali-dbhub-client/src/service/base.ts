@@ -36,7 +36,7 @@ const noNeedToastErrorCode = [ErrorCode.NEED_LOGGED_IN];
 
 const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
 
-const desktopServiceUrl = 'http://127.0.0.1:10824';
+const desktopServiceUrl = `http://127.0.0.1:${window._PORT || '10824'}`;
 const prodServiceUrl = location.origin;
 
 window._BaseURL = localStorage.getItem('_BaseURL') || (location.href.indexOf('dist/index.html') > -1

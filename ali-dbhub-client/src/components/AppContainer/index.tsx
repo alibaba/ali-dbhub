@@ -21,11 +21,13 @@ const restartCount = 200;
 declare global {
   interface Window {
     _ENV: string;
+    _PORT: string | undefined;
     _BaseURL: string;
   }
 }
 
 window._ENV = process.env.UMI_ENV!
+window._PORT = process.env.UMI_PORT
 
 export default memo<IProps>(function AppContainer({ className, children }) {
   const [startSchedule, setStartSchedule] = useState(0); // 0 初始状态 1 服务启动中 2 启动成功
