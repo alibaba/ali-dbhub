@@ -24,7 +24,6 @@ jobs:
             arch: amd64
           - os: macos-latest
             arch: arm64
-            variant: v8
     runs-on: ${{ matrix.os }}
 
     steps:
