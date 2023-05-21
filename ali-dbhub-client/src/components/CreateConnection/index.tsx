@@ -149,6 +149,7 @@ function VisiblyCreateConnection(props: IProps) {
       onCancel={onCancel}
       footer={false}
       width={560}
+      maskClosable={false}
     >
       <Tabs className={styles.tabsBox} tabs={tabsConfig} onChange={changeTabs}></Tabs>
       <div className={classnames(styles.baseInfoBox, { [styles.showFormBox]: currentTab.key === 'baseInfo' })}>
