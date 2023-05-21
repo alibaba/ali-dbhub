@@ -52,7 +52,16 @@
 
 ```bash
   docker pull chat2db/chat2db:latest
+  // 前台运行,运行后不能关闭命令行
   docker run -ti --name=chat2db -p 10824:10824 chat2db/chat2db:latest
+  // 后台运行,运行后可以关闭命令行
+  docker run --name=chat2db -p 10824:10824 chat2db/chat2db:latest
+  // 这里正常会提示 Tomcat started on port(s): 10824 (http) with context path 就可以结束了
+  
+  // 如果这里提示  The container name "/chat2db" is already in use by container, 代表已经存在容器了 运行
+  dcoker run chat2db
+  // 如果想更新chat2db 则需要先rm 再运行
+  dcoker rm chat2db
 ```
 ## 🎯 运行环境
 注意：
