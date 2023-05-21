@@ -98,7 +98,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --win"
+          args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --win --x64"
 
       # macos amd64
       - name: Build/release Electron app for MacOS X64
