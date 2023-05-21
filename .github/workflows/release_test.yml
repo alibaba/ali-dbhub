@@ -44,6 +44,20 @@ jobs:
           npm run build:desktop
           cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
 
+      # 安装jre
+      - name: Install Jre
+        uses: actions/setup-java@main
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+          java-package: 'jre'
+
+      # 复制jre
+      - name: Copy jre
+        run: |
+          cp -r $JAVA_HOME ali-dbhub-client/electron/jre
+
       # 安装java
       - name: Install Java and Maven
         uses: actions/setup-java@main
@@ -56,14 +70,9 @@ jobs:
       - name: Build Java
         run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
 
-      # 打包jre
-      - name: Build jre
-        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument,jdk.crypto.ec --output jre --no-man-pages --no-header-files --compress=2
-
       # 复制jre & 服务端java 到制修订位置
-      - name: Copy app &  jre
+      - name: Copy app
         run: |
-          cp -r jre ali-dbhub-client/electron/
           mkdir ali-dbhub-client/electron/app
           cp ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar ali-dbhub-client/electron/app/
 
