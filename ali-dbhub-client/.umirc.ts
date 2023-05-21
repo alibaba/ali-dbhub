@@ -3,6 +3,7 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin');
 const UMI_ENV = process.env.UMI_ENV || 'local'; 
+const UMI_PORT = process.env.UMI_PORT || undefined; 
 const assetDir = "static";
 
 const chainWebpack = (config: any, { webpack }: any) => {
@@ -82,5 +83,6 @@ export default defineConfig({
   },
   define: {
     'process.env.UMI_ENV': UMI_ENV,
+    'process.env.UMI_PORT': UMI_PORT,
   }
 });
