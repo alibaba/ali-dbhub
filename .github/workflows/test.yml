@@ -18,8 +18,6 @@ jobs:
       # test
       - name: test
         run: |
-          echo %JAVA_HOME%
+          echo "${env.JAVA_HOME}"
+          echo "---"
           java -version
-          cd %JAVA_HOME%
-          ls %JAVA_HOME%/bin
-          ls %JAVA_HOME%/lib
