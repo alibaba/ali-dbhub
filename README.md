@@ -32,10 +32,10 @@
 ## ⏬ 下载安装
 | 描述                   | 下载地址                                                                                                                                                                                                                                       |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB%20Setup%201.0.4.exe](https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB%20Setup%201.0.4.exe) |
-| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB-1.0.4-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB-1.0.4-arm64.dmg) |
-| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB-1.0.4.dmg](https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB-1.0.4.dmg) |       
-| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.4/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.4/ali-dbhub-server-start.jar) |                                                                                                                
+| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB%20Setup%201.0.3.exe](https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB%20Setup%201.0.3.exe) |
+| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB-1.0.3-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB-1.0.3-arm64.dmg) |
+| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB-1.0.3.dmg](https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB-1.0.3.dmg) |       
+| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.3/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.3/ali-dbhub-server-start.jar) |                                                                                                                
 
 ## 🌰 使用Demo
 - 创建数据源
@@ -52,7 +52,7 @@
 
 ```bash
   docker pull chat2db/chat2db:latest
-  docker run --rm -ti -p 10824:10824  chat2db/chat2db:latest
+  docker run -ti --name=chat2db -p 10824:10824 chat2db/chat2db:latest
 ```
 ## 🎯 运行环境
 注意：

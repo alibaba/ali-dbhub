@@ -727,6 +727,7 @@ export default function DatabaseQuery(props: IProps) {
           open={modalConfig.open}
           onOk={modalConfig.handleOk}
           onCancel={modalConfig.handleCancel}
+          maskClosable={false}
         >
           {modalConfig.content}
         </Modal>
