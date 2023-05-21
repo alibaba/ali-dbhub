@@ -18,6 +18,11 @@ jobs:
       # test
       - name: test
         run: |
-          echo "${env.JAVA_HOME}"
+          echo "---"
+          echo "${ env.JAVA_HOME }"
           echo "---"
           java -version
+          echo "---"
+          echo "${{ env.JAVA_HOME }}"
+          echo "---"
+
