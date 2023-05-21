@@ -285,6 +285,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '主机',
@@ -453,6 +470,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '主机',
@@ -598,6 +632,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     },
     ssh: {
       items: [
+        {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
         {
           defaultValue: '',
           inputType: InputType.INPUT,
@@ -772,6 +823,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '主机',
@@ -857,6 +925,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     },
     ssh: {
       items: [
+        {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
         {
           defaultValue: '',
           inputType: InputType.INPUT,
@@ -1004,6 +1089,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '主机',
@@ -1150,6 +1252,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     },
     ssh: {
       items: [
+        {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
         {
           defaultValue: '',
           inputType: InputType.INPUT,
