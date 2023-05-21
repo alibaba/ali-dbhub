@@ -137,6 +137,7 @@ export default memo<IProps>(function Setting({ className, text }) {
         onCancel={handleCancel}
         footer={false}
         width={600}
+        maskClosable={false}
       >
         <div className={styles.modalBox}>
           <div className={styles.menus}>

@@ -183,6 +183,7 @@ export default memo<IOperationTableModalProps>(function OperationTableModal(
       onOk={handleOk}
       onCancel={handleCancel}
       width="60vw"
+      maskClosable={false}
       footer={
         <>
           {operationData.type !== 'export' && (

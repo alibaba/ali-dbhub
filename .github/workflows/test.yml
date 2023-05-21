@@ -4,7 +4,17 @@
 #
 #jobs:
 #  test:
-#    runs-on: windows-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        include:
+#          - os: windows-latest
+#          - os: macos-latest
+#            arch: amd64
+#          - os: macos-latest
+#            arch: arm64
+#            variant: v8
+#    runs-on: ${{ matrix.os }}
 #    steps:
 #      - name: Check out Git repository
 #        uses: actions/checkout@main
@@ -14,15 +24,10 @@
 #          java-version: '17'
 #          distribution: "temurin"
 #          cache: 'maven'
-#          java-package: 'jre'
-#      # test
-#      - name: test
-#        run: |
-#          echo "---"
-#          echo "${ env.JAVA_HOME }"
-#          echo "---"
-#          java -version
-#          echo "---"
-#          echo "${{ env.JAVA_HOME }}"
-#          echo "---"
+##
+##      # 编译服务端java版本
+##      - name: Build Java
+##        run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
 #
+#      - name: Test with Maven
+#        run: mvn test -B -Dmaven.test.skip=false -pl ali-dbhub-server-test -am -f ali-dbhub-server/pom.xml
