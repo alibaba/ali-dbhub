@@ -50,7 +50,6 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
-          cache: "maven"
           java-package: 'jre'
 
       # 复制jre
