@@ -40,7 +40,7 @@ jobs:
           java-package: 'jre'
 
       # 复制jre
-      - name: Copy jre
+      - name: Copy Jre
         run: |
           cp -r $JAVA_HOME ali-dbhub-client/electron/jre
 
