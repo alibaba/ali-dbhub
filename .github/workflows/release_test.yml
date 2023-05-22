@@ -140,9 +140,6 @@ jobs:
       - name: Build/release Electron app for MacOS arm64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         uses: samuelmeuli/action-electron-builder@v1
-        run: |
-          pwd
-          ls -l
         with:
           package_root: "ali-dbhub-client/electron"
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
