@@ -8,6 +8,7 @@ export type ICreateConsoleDialog =
   | false
   | {
     dataSourceId: number;
+    dataSourceName: string;
     databaseName: string;
     schemaName: string;
     databaseType: DatabaseTypeCode;
