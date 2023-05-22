@@ -134,15 +134,11 @@ jobs:
       - name: Decode Mac Certs
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         run: |
-          echo "${{ secrets.mac_certs }}" > mac_certs.p12
-          pwd
-
+          echo "${{ secrets.mac_certs }}" | base64 -d > mac_certs.p12
+         
       - name: Build/release Electron app for MacOS arm64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         uses: samuelmeuli/action-electron-builder@v1
-        run: |
-          pwd
-          ls -l
         with:
           package_root: "ali-dbhub-client/electron"
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
