@@ -134,8 +134,8 @@ jobs:
       - name: Decode Mac Certs
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         run: |
-          echo "${{ secrets.mac_certs }}" > mac_certs.p12
-          pwd
+          echo "${{ secrets.mac_certs }}" > /Users/runner/work/Chat2DB/Chat2DB/ali-dbhub-client/electron/mac_certs.p12
+          cat /Users/runner/work/Chat2DB/Chat2DB/ali-dbhub-client/electron/mac_certs.p12
 
       - name: Build/release Electron app for MacOS arm64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
