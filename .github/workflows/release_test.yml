@@ -130,20 +130,14 @@ jobs:
           mac_certs_password: ${{ secrets.mac_certs_password }}
           args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.win.publisherName=Chat2DB-Test -c.nsis.shortcutName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --mac --x64"
 
-      # macos arm64
-      - name: Decode Mac Certs
-        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
-        run: |
-          echo "${{ secrets.mac_certs }}" > /Users/runner/work/Chat2DB/Chat2DB/ali-dbhub-client/electron/mac_certs.p12
-          cat /Users/runner/work/Chat2DB/Chat2DB/ali-dbhub-client/electron/mac_certs.p12
-
+      # macos amd64
       - name: Build/release Electron app for MacOS arm64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
           package_root: "ali-dbhub-client/electron"
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          mac_certs: mac_certs.p12
+          mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
           args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --mac --arm64"
 
