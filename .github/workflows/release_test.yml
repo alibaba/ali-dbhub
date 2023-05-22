@@ -158,6 +158,7 @@ jobs:
           cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
           ls ali-dbhub-client/electron-build/
 
+          
       # 准备要需要的数据 MacOS arm64
       - name: Prepare upload for MacOS arm64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
