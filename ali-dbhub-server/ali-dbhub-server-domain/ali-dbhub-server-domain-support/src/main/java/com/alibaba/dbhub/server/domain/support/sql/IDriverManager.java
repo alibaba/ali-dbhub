@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.DriverEntry;
 import com.alibaba.dbhub.server.domain.support.util.JdbcJarUtils;
+import com.alibaba.fastjson2.JSON;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -56,7 +57,7 @@ public class IDriverManager {
     }
 
     public static Connection getConnection(String url, String user, String password, DriverTypeEnum driverTypeEnum,
-        Map<String, String> properties)
+        Map<String, Object> properties)
         throws SQLException {
         Properties info = new Properties();
         if (user != null) {
@@ -132,12 +133,16 @@ public class IDriverManager {
                     return CLASS_LOADER_MAP.get(jarPath);
                 }
                 String[] jarPaths = jarPath.split(",");
-                URL[] urls = new URL[jarPaths.length];
+                URL[] urls = new URL[jarPaths.length+1];
                 for (int i = 0; i < jarPaths.length; i++) {
                     File driverFile = new File(JdbcJarUtils.getFullPath(jarPaths[i]));
                     urls[i] = driverFile.toURI().toURL();
                 }
-                ClassLoader cl = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+                urls[jarPaths.length] = new File(JdbcJarUtils.getFullPath("HikariCP-4.0.3.jar")).toURI().toURL();
+
+                URLClassLoader cl = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+                log.info("ClassLoader class:{}", cl.hashCode());
+                log.info("ClassLoader URLs:{}", JSON.toJSONString(cl.getURLs()));
                 try {
                     cl.loadClass(driverTypeEnum.getDriverClass());
                 } catch (ClassNotFoundException e) {
@@ -146,6 +151,7 @@ public class IDriverManager {
                         File driverFile = new File(JdbcJarUtils.getNewFullPath(jarPaths[i]));
                         urls[i] = driverFile.toURI().toURL();
                     }
+                    urls[jarPaths.length] = new File(JdbcJarUtils.getFullPath("HikariCP-4.0.3.jar")).toURI().toURL();
                     cl = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
                 }
                 CLASS_LOADER_MAP.put(jarPath, cl);
@@ -153,4 +159,6 @@ public class IDriverManager {
             }
         }
     }
+
+
 }

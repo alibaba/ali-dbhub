@@ -208,6 +208,7 @@ function TreeNodeRightClick(props: IProps) {
       </Menu>
     </div>
     <Modal
+      maskClosable={false}
       title="删除确认"
       open={verifyDialog}
       onOk={handleOk}

@@ -143,7 +143,7 @@ public class JdbcUtils {
      */
     public static DataSourceConnect testConnect(String url, String host, String port,
         String userName, String password, DbTypeEnum dbType,
-        String jdbc, SSHInfo ssh, Map<String, String> properties) {
+        String jdbc, SSHInfo ssh, Map<String, Object> properties) {
         DataSourceConnect dataSourceConnect = DataSourceConnect.builder()
             .success(Boolean.TRUE)
             .build();

@@ -1,3 +1,9 @@
+# 1.0.5
+* 🔥 优化Apple芯片的启动速度
+* 修复Windows端数据库连接问题 [Issue #150](https://github.com/alibaba/Chat2DB/issues/150) [Issue #147](https://github.com/alibaba/Chat2DB/issues/147)
+* 修改database不生效 [Issue #141](https://github.com/alibaba/Chat2DB/issues/141)
+* NullPointerException [Issue #136](https://github.com/alibaba/Chat2DB/issues/136)
+
 # 1.0.4
 * 修复ClickHouse jdbc问题 [Issue #135](https://github.com/alibaba/Chat2DB/issues/135)
 * 修复连接池管理的NPE [Issue #136](https://github.com/alibaba/Chat2DB/issues/136)

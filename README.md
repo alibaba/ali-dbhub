@@ -32,10 +32,10 @@
 ## ⏬ 下载安装
 | 描述                   | 下载地址                                                                                                                                                                                                                                       |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB%20Setup%201.0.4.exe](https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB%20Setup%201.0.4.exe) |
-| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB-1.0.4-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB-1.0.4-arm64.dmg) |
-| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB-1.0.4.dmg](https://oss-chat2db.alibaba.com/release/1.0.4/Chat2DB-1.0.4.dmg) |       
-| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.4/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.4/ali-dbhub-server-start.jar) |                                                                                                                
+| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB%20Setup%201.0.5.exe](https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB%20Setup%201.0.5.exe) |
+| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5-arm64.dmg) |
+| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5.dmg](https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5.dmg) |       
+| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.5/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.5/ali-dbhub-server-start.jar) |                                                                                                                
 
 ## 🌰 使用Demo
 - 创建数据源
@@ -52,7 +52,16 @@
 
 ```bash
   docker pull chat2db/chat2db:latest
-  docker run --rm -ti -p 10824:10824  chat2db/chat2db:latest
+  // 前台运行,运行后不能关闭命令行
+  docker run -ti --name=chat2db -p 10824:10824 chat2db/chat2db:latest
+  // 后台运行,运行后可以关闭命令行
+  docker run --name=chat2db -p 10824:10824 chat2db/chat2db:latest
+  // 这里正常会提示 Tomcat started on port(s): 10824 (http) with context path 就可以结束了
+  
+  // 如果这里提示  The container name "/chat2db" is already in use by container, 代表已经存在容器了 运行
+  dcoker run chat2db
+  // 如果想更新chat2db 则需要先rm 再运行
+  dcoker rm chat2db
 ```
 ## 🎯 运行环境
 注意：

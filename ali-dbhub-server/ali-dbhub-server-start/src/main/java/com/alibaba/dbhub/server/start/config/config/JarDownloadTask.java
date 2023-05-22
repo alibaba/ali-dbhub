@@ -4,10 +4,13 @@
  */
 package com.alibaba.dbhub.server.start.config.config;
 
+import javax.annotation.Resource;
+
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import com.alibaba.dbhub.server.domain.support.util.JdbcJarUtils;
+import com.alibaba.dbhub.server.tools.common.config.AliDbhubProperties;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -16,17 +19,15 @@ import org.springframework.stereotype.Component;
  * @version : JarDownloadTask.java
  */
 @Component
+@Slf4j
 public class JarDownloadTask implements CommandLineRunner {
 
-    @Value("${jdbc.jar.download.url}")
-    private String jdbcJarDownLoadUrl;
+    @Resource
+    private AliDbhubProperties aliDbhubProperties;
 
     @Override
     public void run(String... args) throws Exception {
-        DbhubContext.JDBC_JAR_DOWNLOAD_URL = jdbcJarDownLoadUrl;
-        String[] urls = jdbcJarDownLoadUrl.split(",");
-        if (urls != null && urls.length >= 1) {
-            JdbcJarUtils.asyncDownload(urls);
-        }
+        DbhubContext.JDBC_JAR_DOWNLOAD_URL_LIST = aliDbhubProperties.getJdbcJarDownLoadUrls();
+        JdbcJarUtils.asyncDownload(aliDbhubProperties.getJdbcJarDownLoadUrls());
     }
 }
