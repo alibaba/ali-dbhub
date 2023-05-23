@@ -130,7 +130,7 @@ jobs:
           mac_certs_password: ${{ secrets.mac_certs_password }}
           args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.win.publisherName=Chat2DB-Test -c.nsis.shortcutName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --mac --x64"
 
-      # macos amd64
+      # macos arm64
       - name: Build/release Electron app for MacOS arm64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         uses: samuelmeuli/action-electron-builder@v1
@@ -140,6 +140,13 @@ jobs:
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
           args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --mac --arm64"
+
+      # arm notarization
+      - name: Notarization arm64 App
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
+        run: |
+          xcrun altool --notarize-app --primary-bundle-id "${{secrets.MAC_PRIMARY_BUNDLE_ID}}" --username "${{secrets.MAC_APPLE_ID}}" --password "${{secrets.MAC_APPLE_PASSWORD}}" --asc-provider "${{secrets.MAC_ASC_PROVIDER}}" -t osx --file ali-dbhub-client/electron-build/Chat2DB-Test-1.0.${{ github.run_id }}-Test-arm64.dmg
+
 
       # 准备要需要的数据 Windows
       - name: Prepare upload for Windows
