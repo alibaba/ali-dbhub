@@ -6,7 +6,6 @@ package com.alibaba.dbhub.server.domain.support.sql;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.Connection;
@@ -22,11 +21,10 @@ import com.alibaba.dbhub.server.domain.support.model.DriverEntry;
 import com.alibaba.dbhub.server.domain.support.util.JdbcJarUtils;
 import com.alibaba.fastjson2.JSON;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.alibaba.dbhub.server.domain.support.util.JdbcJarUtils.getNewFullPath;
+import static com.alibaba.dbhub.server.domain.support.util.JdbcJarUtils.getFullPath;
 
 /**
  * @author jipengfei
@@ -133,26 +131,28 @@ public class IDriverManager {
                     return CLASS_LOADER_MAP.get(jarPath);
                 }
                 String[] jarPaths = jarPath.split(",");
-                URL[] urls = new URL[jarPaths.length+1];
+                URL[] urls = new URL[jarPaths.length];
                 for (int i = 0; i < jarPaths.length; i++) {
-                    File driverFile = new File(JdbcJarUtils.getFullPath(jarPaths[i]));
+                    File driverFile = new File(getFullPath(jarPaths[i]));
                     urls[i] = driverFile.toURI().toURL();
                 }
-                urls[jarPaths.length] = new File(JdbcJarUtils.getFullPath("HikariCP-4.0.3.jar")).toURI().toURL();
+                //urls[jarPaths.length] = new File(JdbcJarUtils.getFullPath("HikariCP-4.0.3.jar")).toURI().toURL();
 
                 URLClassLoader cl = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
                 log.info("ClassLoader class:{}", cl.hashCode());
                 log.info("ClassLoader URLs:{}", JSON.toJSONString(cl.getURLs()));
+
                 try {
                     cl.loadClass(driverTypeEnum.getDriverClass());
-                } catch (ClassNotFoundException e) {
+                } catch (Exception e) {
                     //如果报错删除目录重试一次
                     for (int i = 0; i < jarPaths.length; i++) {
                         File driverFile = new File(JdbcJarUtils.getNewFullPath(jarPaths[i]));
                         urls[i] = driverFile.toURI().toURL();
                     }
-                    urls[jarPaths.length] = new File(JdbcJarUtils.getFullPath("HikariCP-4.0.3.jar")).toURI().toURL();
+                    //urls[jarPaths.length] = new File(JdbcJarUtils.getFullPath("HikariCP-4.0.3.jar")).toURI().toURL();
                     cl = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+
                 }
                 CLASS_LOADER_MAP.put(jarPath, cl);
                 return cl;
@@ -160,5 +160,26 @@ public class IDriverManager {
         }
     }
 
+    //private static List<Class> loadClass(String jarPath, ClassLoader classLoader) throws IOException {
+    //    Long s1 = System.currentTimeMillis();
+    //    JarFile jarFile = new JarFile(getFullPath(jarPath));
+    //    Enumeration<JarEntry> entries = jarFile.entries();
+    //    List<Class> classes = new ArrayList();
+    //    while (entries.hasMoreElements()) {
+    //        JarEntry jarEntry = entries.nextElement();
+    //        if (jarEntry.getName().endsWith(".class") && !jarEntry.getName().contains("$")) {
+    //            String className = jarEntry.getName().substring(0, jarEntry.getName().length() - 6).replaceAll("/",
+    //                ".");
+    //            try {
+    //                classes.add(classLoader.loadClass(className));
+    //               // log.info("loadClass:{}", className);
+    //            } catch (Throwable var7) {
+    //                //log.error("getClasses error "+className, var7);
+    //            }
+    //        }
+    //    }
+    //    log.info("loadClass cost:{}", System.currentTimeMillis() - s1);
+    //    return classes;
+    //}
 
 }
