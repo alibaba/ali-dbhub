@@ -129,6 +129,13 @@ jobs:
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
           args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.win.publisherName=Chat2DB-Test -c.nsis.shortcutName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --mac --x64"
+      
+          # amd64 notarization
+      - name: Notarization amd64 App
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
+        run: |
+          xcrun altool --notarize-app --primary-bundle-id "${{secrets.MAC_PRIMARY_BUNDLE_ID}}" --username "${{secrets.MAC_APPLE_ID}}" --password "${{secrets.MAC_APPLE_PASSWORD}}" --asc-provider "${{secrets.MAC_ASC_PROVIDER}}" -t osx --file ali-dbhub-client/electron-build/Chat2DB-Test-1.0.${{ github.run_id }}-Test-arm64.dmg
+
 
       # macos arm64
       - name: Build/release Electron app for MacOS arm64
@@ -224,3 +231,4 @@ jobs:
               "title": "MacOS-arm64-test-构建完成通知",
               "text": "# MacOS-arm64-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang100.gif)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})   \n ### Apple芯片下载地址：[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-Test-1.0.${{ github.run_id }}-Test-arm64.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-Test-1.0.${{ github.run_id }}-Test-arm64.dmg) "
             }
+
