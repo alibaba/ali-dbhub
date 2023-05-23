@@ -70,6 +70,10 @@ function VisiblyCreateConnection(props: IProps) {
   const [sshForm] = Form.useForm();
   const [currentTab, setCurrentTab] = useState<ITab>(tabsConfig[0]);
   const [backfillData, setBackfillData] = useState({});
+  const [loadings, setLoading] = useState({
+    confirmButton: false,
+    testButton: false,
+  });
 
   useEffect(() => {
     if (dataSourceId) {
@@ -90,7 +94,8 @@ function VisiblyCreateConnection(props: IProps) {
   function saveConnection(type: submitType) {
     const ssh = sshForm.getFieldsValue();
     const baseInfo = baseInfoForm.getFieldsValue();
-    const extendInfo: any = []
+    const extendInfo: any = [];
+    const loadingsButton = type === submitType.TEST ? 'testButton' : 'confirmButton';
     extendTableData.map((t: any) => {
       if (t.label || t.value) {
         extendInfo.push({
@@ -107,13 +112,17 @@ function VisiblyCreateConnection(props: IProps) {
       // ...values,
       EnvType: EnvType.DAILY,
       type: dataSourceType!
-    };
+    }
 
     if (type === submitType.UPDATE) {
       p.id = dataSourceId;
     }
 
-    const api: any = connectionServer[type](p)
+    const api: any = connectionServer[type](p);
+    setLoading({
+      ...loadings,
+      [loadingsButton]: true
+    })
     api.then((res: any) => {
       if (type === submitType.TEST) {
         message.success(res === false ? '测试连接失败' : '测试连接成功');
@@ -124,6 +133,11 @@ function VisiblyCreateConnection(props: IProps) {
           refreshTreeNum: new Date().getTime(),
         })
       }
+    }).finally(() => {
+      setLoading({
+        ...loadings,
+        [loadingsButton]: false
+      })
     })
   }
 
@@ -170,8 +184,8 @@ function VisiblyCreateConnection(props: IProps) {
       <div className={styles.formFooter}>
         <div className={styles.test}>
           {
-            // !dataSourceId &&
             <Button
+              loading={loadings.testButton}
               onClick={saveConnection.bind(null, submitType.TEST)}
               className={styles.test}>
               测试连接
@@ -182,7 +196,12 @@ function VisiblyCreateConnection(props: IProps) {
           <Button onClick={onCancel} className={styles.cancel}>
             取消
           </Button>
-          <Button className={styles.save} theme="primary" onClick={saveConnection.bind(null, dataSourceId ? submitType.UPDATE : submitType.SAVE)}>
+          <Button
+            className={styles.save}
+            theme="primary"
+            loading={loadings.confirmButton}
+            onClick={saveConnection.bind(null, dataSourceId ? submitType.UPDATE : submitType.SAVE)}
+          >
             {
               dataSourceId ? '修改' : '连接'
             }
