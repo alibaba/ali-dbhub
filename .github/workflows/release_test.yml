@@ -134,7 +134,7 @@ jobs:
       - name: Notarization amd64 App
         if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
         run: |
-          xcrun altool --notarize-app --primary-bundle-id "${{secrets.MAC_PRIMARY_BUNDLE_ID}}" --username "${{secrets.MAC_APPLE_ID}}" --password "${{secrets.MAC_APPLE_PASSWORD}}" --asc-provider "${{secrets.MAC_ASC_PROVIDER}}" -t osx --file ali-dbhub-client/electron-build/Chat2DB-Test-1.0.${{ github.run_id }}-Test-arm64.dmg
+          xcrun altool --notarize-app --primary-bundle-id "${{secrets.MAC_PRIMARY_BUNDLE_ID}}" --username "${{secrets.MAC_APPLE_ID}}" --password "${{secrets.MAC_APPLE_PASSWORD}}" --asc-provider "${{secrets.MAC_ASC_PROVIDER}}" -t osx --file ali-dbhub-client/electron-build/Chat2DB-Test-1.0.${{ github.run_id }}-Test.dmg
 
 
       # macos arm64
