@@ -21,11 +21,17 @@ const restartCount = 200;
 declare global {
   interface Window {
     _ENV: string;
+    _VERSION: string;
+    _BUILD_TIME: string;
     _BaseURL: string;
   }
+  const __APP_VERSION__: string
+  const __BUILD_TIME__: string
 }
 
-window._ENV = process.env.UMI_ENV!
+window._ENV = process.env.UMI_ENV! || 'local';
+window._VERSION = process.env.UMI_VERSION! || '0.0.0';
+window._BUILD_TIME = process.env.UMI_VERSION! || '0.0.0';
 
 export default memo<IProps>(function AppContainer({ className, children }) {
   console.log(process.env.UMI_PORT)
