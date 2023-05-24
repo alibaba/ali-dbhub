@@ -51,7 +51,7 @@ public enum DbTypeEnum implements BaseEnum<String> {
     /**
      * Oracle
      */
-    ORACLE("Oracle", "oracle.jdbc.driver.OracleDriver", "ojdbc11.jar,orai18n-19.3.0.0.jar"),
+    ORACLE("Oracle", "oracle.jdbc.driver.OracleDriver", "ojdbc8-19.3.0.0.jar,orai18n-19.3.0.0.jar"),
 
     /**
      * SQLServer
