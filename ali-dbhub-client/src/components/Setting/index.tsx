@@ -85,14 +85,18 @@ export default memo<IProps>(function Setting({ className, text }) {
       icon: '\ue60c',
       body: <>
         <div className={styles.aboutUs}>
-          <div className={styles.versions}>
-            <BrandLogo className={styles.brandLogo} />
-            <div>
-              <div>Chat2DB</div>
-              <div>
-                当前环境：{window._ENV}
-              </div>
+          <BrandLogo size={60} className={styles.brandLogo} />
+          <div className={styles.brief}>
+            <div className={styles.appName}>Chat2DB</div>
+            <div className={styles.env}>
+              当前环境:{window._ENV} 
             </div>
+            <div className={styles.version}>
+              当前版本:{__APP_VERSION__} build {__BUILD_TIME__}
+            </div>
+            <a target='blank' href='https://github.com/alibaba/Chat2DB/blob/main/CHANGELOG.md' className={styles.log}>
+              查看更新日志
+            </a>
           </div>
         </div>
       </>

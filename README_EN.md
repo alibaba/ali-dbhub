@@ -70,8 +70,8 @@ $ git clone git@github.com:alibaba/Chat2DB.git
 - Front-End installation
 ```bash
 $ cd Chat2DB/ali-dbhub-client
-$ npm install # 安装npm 
-$ npm run build:prod # 把js打包生成到后端的source目录
+$ npm install # Mounting front-end dependency
+$ npm run build # Package js to the source directory on the back end
 ```
 - Backend debug
 ```bash
@@ -79,34 +79,40 @@ $ cd ../ali-dbhub-server
 $ mvn clean install # maven 3.8 or later needs to be installed
 $ cd ali-dbhub-server/ali-dbhub-server-start/target/
 $ java -jar -Dchatgpt.apiKey=xxxxx ali-dbhub-server-start.jar  # To launch the chat application, you need to enter the ChatGPT key for the chatgpt.apiKey. Without entering it, you won't be able to use the AIGC function.
-$ # open http://localhost:7001 to start debug
+$ # open http://127.0.0.1:10821 to start debug Note: Front-end installation is required
 ```
 
 - Front-End debug
 ```bash
 $ cd Chat2DB/ali-dbhub-client
 $ npm install 
-$ npm run start
-$ # open http://localhost:8001  to start Front-End debug
+$ npm run start 
+$ # open http://127.0.0.1:10821  to start Front-End debug
+$ # Note Front-end page completely depends on the service, so front-end students need to debug the back-end project
 ```
 But front debugging need mapping of resources, you can download [XSwitch](https://chrome.google.com/webstore/detail/idkjhjggpffolpidfkikidcokdkdaogg), add the following configuration file
 ``` json
 {
   "proxy": [
     [
-      "http://127.0.0.1:7001/static/front/(.*)",
-      "http://127.0.0.1:8001/$1",
-    ],
-    [
-      "http://127.0.0.1:7001/(.*).js$",
+      "http://127.0.0.1:10821/(.*).js$",
       "http://127.0.0.1:8001/$1.js",
     ],
     [
-      "http://127.0.0.1:7001/(.*).css$",
+      "http://127.0.0.1:10821/(.*).css$",
       "http://127.0.0.1:8001/$1.css",
-    ]
+    ],
+    [
+      "http://127.0.0.1:10821/static/front/(.*)",
+      "http://127.0.0.1:8001/$1",
+    ],
+    [
+      "http://127.0.0.1:10821/static/(.*)$",
+      "http://127.0.0.1:8001/static/$1",
+    ],
   ],
 }
+
 ```
 
 ## 📑 Documentation

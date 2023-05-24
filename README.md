@@ -76,8 +76,8 @@ $ git clone git@github.com:alibaba/Chat2DB.git
 - 前端安装
 ```bash
 $ cd Chat2DB/ali-dbhub-client
-$ npm install # 安装npm 
-$ npm run build:prod # 把js打包生成到后端的source目录
+$ npm install # 安装前端依赖
+$ npm run build # 把js打包生成到后端的source目录
 ```
 - 后端调试
 ```bash
@@ -85,7 +85,7 @@ $ cd ../ali-dbhub-server
 $ mvn clean install # 需要安装maven 3.8以上版本
 $ cd ali-dbhub-server/ali-dbhub-server-start/target/
 $ java -jar -Dchatgpt.apiKey=xxxxx ali-dbhub-server-start.jar  # 启动应用 chatgpt.apiKey 需要输入ChatGPT的key,如果不输入无法使用AIGC功能
-$ # 打开 http://localhost:7001 开启调试
+$ # 打开 http://127.0.0.1:10821 开启调试 注：需要进行前端安装
 ```
 
 - 前端调试
@@ -93,24 +93,29 @@ $ # 打开 http://localhost:7001 开启调试
 $ cd Chat2DB/ali-dbhub-client
 $ npm install 
 $ npm run start
-$ # 打开 http://localhost:8001 开启前端调试
+$ # 打开 http://127.0.0.1:10821 开启前端调试
+$ # 注：前端页面完全赖服务，所以前端同学调试也需要把后端项目跑起来
 ```
 但是前端调试需要映射下资源，可以下载[XSwitch](https://chrome.google.com/webstore/detail/idkjhjggpffolpidfkikidcokdkdaogg),添加以下配置文件
 ``` json
 {
   "proxy": [
     [
-      "http://127.0.0.1:7001/static/front/(.*)",
-      "http://127.0.0.1:8001/$1",
-    ],
-    [
-      "http://127.0.0.1:7001/(.*).js$",
+      "http://127.0.0.1:10821/(.*).js$",
       "http://127.0.0.1:8001/$1.js",
     ],
     [
-      "http://127.0.0.1:7001/(.*).css$",
+      "http://127.0.0.1:10821/(.*).css$",
       "http://127.0.0.1:8001/$1.css",
-    ]
+    ],
+    [
+      "http://127.0.0.1:10821/static/front/(.*)",
+      "http://127.0.0.1:8001/$1",
+    ],
+    [
+      "http://127.0.0.1:10821/static/(.*)$",
+      "http://127.0.0.1:8001/static/$1",
+    ],
   ],
 }
 ```
