@@ -1,11 +1,13 @@
 {
-  "name": "ali-dbhub-web",
+  "name": "chat2db",
+  "license": "MIT",
+  "author": "yuqin, hexi",
   "version": "1.0.0",
   "private": true,
   "main": "main.js",
   "scripts": {
     "start": "umi dev",
-    "build": "cross-env UMI_ENV=test umi build && cp -r dist ./electron && mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static && rm -rf ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front",
+    "build": "cross-env UMI_ENV=test umi build",
     "postinstall": "umi generate tmp",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",

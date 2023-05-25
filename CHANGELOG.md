@@ -1,3 +1,6 @@
+# 1.0.6
+* 修复Oracle数据库字符集问题 [Issue #205](https://github.com/alibaba/Chat2DB/issues/205) [Issue #181](https://github.com/alibaba/Chat2DB/issues/181) [Issue #182](https://github.com/alibaba/Chat2DB/issues/182)
+
 # 1.0.5
 * 🔥 优化Apple芯片的启动速度
 * 修复Windows端数据库连接问题 [Issue #150](https://github.com/alibaba/Chat2DB/issues/150) [Issue #147](https://github.com/alibaba/Chat2DB/issues/147)

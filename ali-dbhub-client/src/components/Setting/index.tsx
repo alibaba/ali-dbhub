@@ -14,7 +14,7 @@ import themeDefaultImg from '@/assets/theme-default.webp';
 
 interface IProps {
   className?: string;
-  text: string;
+  text?: string;
 }
 
 const colorList = [
@@ -92,7 +92,7 @@ export default memo<IProps>(function Setting({ className, text }) {
               当前环境:{window._ENV} 
             </div>
             <div className={styles.version}>
-              当前版本:{__APP_VERSION__} build {__BUILD_TIME__}
+              当前版本:v{__APP_VERSION__} build {__BUILD_TIME__}
             </div>
             <a target='blank' href='https://github.com/alibaba/Chat2DB/blob/main/CHANGELOG.md' className={styles.log}>
               查看更新日志
