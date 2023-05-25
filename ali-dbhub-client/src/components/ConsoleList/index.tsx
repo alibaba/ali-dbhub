@@ -32,8 +32,7 @@ interface IProps {
 export default memo<IProps>(function ConsoleList(props) {
   const { windowListChange } = props;
   const { consoleId } = qs<{ consoleId: string }>();
-  const { model, setCreateConsoleDialog, setDblclickNodeData } =
-    useContext(DatabaseContext);
+  const { model, setCreateConsoleDialog, setDblclickNodeData } = useContext(DatabaseContext);
   const [windowList, setWindowList] = useState<IConsole[]>([]);
   const [activeKey, setActiveKey] = useState<string>(consoleId);
   const { dblclickNodeData, createConsoleDialog } = model;
@@ -46,10 +45,7 @@ export default memo<IProps>(function ConsoleList(props) {
     if (dblclickNodeData) {
       let flag = false;
       windowList.map((i) => {
-        if (
-          i.databaseName === dblclickNodeData.databaseName &&
-          i.dataSourceId === dblclickNodeData.dataSourceId
-        ) {
+        if (i.databaseName === dblclickNodeData.databaseName && i.dataSourceId === dblclickNodeData.dataSourceId) {
           flag = true;
           setActiveKey(i.key);
         }
@@ -74,6 +70,7 @@ export default memo<IProps>(function ConsoleList(props) {
             DBType: dblclickNodeData.dataType! as DatabaseTypeCode,
             databaseName: dblclickNodeData.databaseName!,
             dataSourceId: dblclickNodeData.dataSourceId!,
+            dataSourceName: dblclickNodeData.dataSourceName!,
             schemaName: dblclickNodeData.schemaName!,
             consoleId: res,
             ddl: `${consoleTopComment}SELECT * FROM`,
@@ -115,6 +112,7 @@ export default memo<IProps>(function ConsoleList(props) {
         DBType: createConsoleDialog.databaseType,
         databaseName: createConsoleDialog.databaseName,
         dataSourceId: createConsoleDialog.dataSourceId,
+        dataSourceName: createConsoleDialog.dataSourceName,
         schemaName: createConsoleDialog.schemaName!,
         consoleId: res,
         ddl: `${consoleTopComment}SELECT * FROM`,

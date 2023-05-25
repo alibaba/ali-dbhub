@@ -29,7 +29,7 @@ public enum DriverTypeEnum {
     /**
      * Oracle
      */
-    ORACLE_DRIVER(DbTypeEnum.ORACLE, "oracle.jdbc.driver.OracleDriver", "ojdbc11.jar",""),
+    ORACLE_DRIVER(DbTypeEnum.ORACLE, "oracle.jdbc.driver.OracleDriver", "ojdbc8-19.3.0.0.jar,orai18n-19.3.0.0.jar",""),
 
     /**
      * SQLServer

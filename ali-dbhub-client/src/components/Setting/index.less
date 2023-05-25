@@ -107,12 +107,31 @@
 }
 
 .aboutUs {
-  .versions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .brief {
     display: flex;
+    flex-direction: column;
     align-items: center;
+    .appName{
+      font-size: 20px;
+    }
+    .env,.version{
+      margin: 4px 0px;
+      color: var(--color-text-45);
+    }
+    .log{
+      margin-top: 4px;
+      color: var(--custom-primary-color);
+      cursor: pointer;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
   }
 }
 
 .brandLogo {
-  margin-right: 20px;
+  margin-bottom: 15px;
 }
