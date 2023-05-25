@@ -126,7 +126,8 @@ $ # 打开 http://localhost:8001 开启前端调试
 
 如果觉得对你有帮助请点个star吧。
 
-<a><img src="https://gw.alicdn.com/imgextra/i1/O1CN01VBaYST1MFzhUY9QP6_!!6000000001406-0-tps-723-731.jpg" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat.PNG" width="40%"/></a>
+
 
 微信：yxccw132  钉钉：9135032392
 
