@@ -104,7 +104,7 @@ jobs:
         run: |
           cd ali-dbhub-client
           npm install 
-          npm run build:desktop --version=${{ steps.chat2db_version.outputs.substring }}
+          npm run build:desktop
           cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
 
       # 编译服务端java版本
