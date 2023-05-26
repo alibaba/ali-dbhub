@@ -5,8 +5,8 @@
 package com.alibaba.dbhub.server.web.api.controller.user;
 
 import com.alibaba.dbhub.server.domain.api.model.User;
-import com.alibaba.dbhub.server.domain.api.service.UserService;
 import com.alibaba.dbhub.server.domain.api.param.UserQueryParam;
+import com.alibaba.dbhub.server.domain.api.service.UserService;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -75,7 +75,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @PutMapping("/update")
+    @RequestMapping(value = "/update",method = {RequestMethod.POST, RequestMethod.PUT})
     public ActionResult update(@RequestBody UserUpdateRequest request) {
         DataResult<Boolean> result = userService.update(userWebConverter.updateRequest2dto(request));
         return ActionResult.isSuccess();

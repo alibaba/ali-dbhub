@@ -16,9 +16,9 @@ import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -79,7 +79,7 @@ public class RdbDmlController {
      * @param request
      * @return
      */
-    @PutMapping("/execute")
+    @RequestMapping(value = "/execute",method = {RequestMethod.POST, RequestMethod.PUT})
     public ListResult<ExecuteResultVO> manage(@RequestBody DmlRequest request) {
         DlExecuteParam param = rdbWebConverter.request2param(request);
         ListResult<ExecuteResult> resultDTOListResult = dlTemplateService.execute(param);
