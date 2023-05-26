@@ -147,6 +147,12 @@ jobs:
           args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }} --mac --x64"
           release: true
 
+      # amd64 notarization
+      - name: Notarization amd64 App
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
+        run: |
+          xcrun altool --notarize-app --primary-bundle-id "${{secrets.MAC_PRIMARY_BUNDLE_ID}}" --username "${{secrets.MAC_APPLE_ID}}" --password "${{secrets.MAC_APPLE_PASSWORD}}" --asc-provider "${{secrets.MAC_ASC_PROVIDER}}" -t osx --file ali-dbhub-client/electron-build/Chat2DB-${{ steps.chat2db_version.outputs.substring }}.dmg
+
       # macos amd64
       - name: Build/release Electron app for MacOS arm64
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
@@ -158,6 +164,12 @@ jobs:
           mac_certs_password: ${{ secrets.mac_certs_password }}
           args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }} --mac --arm64"
           release: true
+
+      # arm notarization
+      - name: Notarization arm64 App
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
+        run: |
+          xcrun altool --notarize-app --primary-bundle-id "${{secrets.MAC_PRIMARY_BUNDLE_ID}}" --username "${{secrets.MAC_APPLE_ID}}" --password "${{secrets.MAC_APPLE_PASSWORD}}" --asc-provider "${{secrets.MAC_ASC_PROVIDER}}" -t osx --file ali-dbhub-client/electron-build/Chat2DB-${{ steps.chat2db_version.outputs.substring }}-arm64.dmg
 
       # 准备要需要的数据 Windows
       - name: Prepare upload for Windows
