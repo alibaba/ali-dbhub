@@ -130,7 +130,7 @@ jobs:
           mac_certs_password: ${{ secrets.mac_certs_password }}
           args: "-c.appId=com.chat2db.test -c.productName=Chat2DB-Test -c.win.publisherName=Chat2DB-Test -c.nsis.shortcutName=Chat2DB-Test -c.extraMetadata.version=1.0.${{ github.run_id }}-Test --mac --x64"
       
-          # amd64 notarization
+      # amd64 notarization
       - name: Notarization amd64 App
         if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
         run: |
