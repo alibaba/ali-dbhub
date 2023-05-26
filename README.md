@@ -78,7 +78,7 @@ $ git clone git@github.com:alibaba/Chat2DB.git
 ```bash
 $ cd Chat2DB/ali-dbhub-client
 $ npm install # 安装前端依赖
-$ npm run build # 把js打包生成到后端的source目录
+$ npm run build:prod # 把js打包生成到后端的source目录
 ```
 - 后端调试
 ```bash

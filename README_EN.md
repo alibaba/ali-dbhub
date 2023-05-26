@@ -71,7 +71,7 @@ $ git clone git@github.com:alibaba/Chat2DB.git
 ```bash
 $ cd Chat2DB/ali-dbhub-client
 $ npm install # Mounting front-end dependency
-$ npm run build # Package js to the source directory on the back end
+$ npm run build:prod # Package js to the source directory on the back end
 ```
 - Backend debug
 ```bash
