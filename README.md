@@ -38,14 +38,15 @@
 | Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.6/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.6/ali-dbhub-server-start.jar) |                                                                                                                
 
 ## 🌰 使用Demo
-- 创建数据源
-<a><img src="https://gw.alicdn.com/imgextra/i3/O1CN01PlpLYy1hIq5aMugpg_!!6000000004255-0-tps-3446-1750.jpg" width="100%"/></a>
-- 数据源管理
-<a><img src="https://gw.alicdn.com/imgextra/i2/O1CN01DpzZJL1T7w2Xv9VMl_!!6000000002336-0-tps-3410-1662.jpg" width="100%"/></a>
-- SQL控制台
-<a><img src="https://gw.alicdn.com/imgextra/i2/O1CN01aidnkx1Oo0LJ1Pdty_!!6000000001751-0-tps-3440-1736.jpg" width="100%"/></a>
-- AI智能助手
-<a><img src="https://gw.alicdn.com/imgextra/i4/O1CN01iaSXot1W6VeaDFbK2_!!6000000002739-0-tps-3430-1740.jpg" width="100%"/></a>
+### 创建数据源
+<a><img src="./document/img1.webp"/></a>
+
+### 数据源管理
+<a><img src="./document/img2.webp"/></a>
+
+### SQL控制台 及 AI智能助手
+<a><img src="./document/img3.webp"/></a>
+
 
 
 ## 📦 Docker部署

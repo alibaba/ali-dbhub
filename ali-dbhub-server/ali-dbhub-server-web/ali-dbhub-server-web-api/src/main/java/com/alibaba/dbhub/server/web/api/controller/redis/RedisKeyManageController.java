@@ -12,9 +12,9 @@ import com.alibaba.dbhub.server.web.api.controller.redis.vo.KeyVO;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -57,7 +57,7 @@ public class RedisKeyManageController {
      * @param request
      * @return
      */
-    @PutMapping("/update")
+    @RequestMapping(value = "/update",method = {RequestMethod.POST, RequestMethod.PUT})
     public ActionResult update(@RequestBody KeyUpdateRequest request) {
         return null;
     }
