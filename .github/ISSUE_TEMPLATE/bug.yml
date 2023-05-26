@@ -1,6 +1,6 @@
-name: Bug Report
+name: 💣 Bug
 title: 'Bug: '
-description: bug 模板
+description: bug template
 labels: bug
 body:
   - type: input
