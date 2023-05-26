@@ -48,9 +48,9 @@ import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -300,7 +300,7 @@ public class RdbDdlController {
      * @param request
      * @return
      */
-    @PutMapping("/execute")
+    @RequestMapping(value = "/execute",method = {RequestMethod.POST, RequestMethod.PUT})
     public ListResult<ExecuteResultVO> manage(@RequestBody DdlRequest request) {
         DlExecuteParam param = rdbWebConverter.tableManageRequest2param(request);
         return dlTemplateService.execute(param).map(rdbWebConverter::dto2vo);

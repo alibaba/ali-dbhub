@@ -106,7 +106,6 @@ export default memo<IProps>(function Setting({ className, text }) {
   const [currentMenu, setCurrentMenu] = useState(menusList[0]);
 
   useLayoutEffect(() => {
-
   }, [])
 
   const showModal = () => {
