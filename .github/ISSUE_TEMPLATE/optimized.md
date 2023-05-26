@@ -1,6 +1,6 @@
 ---
-name: "💫 suggest"
+name: "💫 Optimized"
 about: optimized template
 title: '优化: '
-labels: 'Status: Unconfirmed'
+labels: 'optimized'
 ---
