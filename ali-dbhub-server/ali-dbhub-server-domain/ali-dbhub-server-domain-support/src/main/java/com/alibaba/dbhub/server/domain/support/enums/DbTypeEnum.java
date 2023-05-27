@@ -96,7 +96,7 @@ public enum DbTypeEnum implements BaseEnum<String> {
     /**
      * DM 达梦
      */
-    DM("DM", "dm.jdbc.driver.DmDriver", "Dm7JdbcDriver18.jar");
+    DM("DM", "dm.jdbc.driver.DmDriver", "DmJdbcDriver18-8.1.2.141.jar");
 
     final String description;
     final String className;

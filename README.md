@@ -1,13 +1,13 @@
 <p align="center">
   <a href="https://github.com/alibaba/Chat2DB">
-    <img width="100" src="document/logo.ico">
+    <img width="100" src="document/image/logo.ico">
   </a>
 </p>
 <h1 align="center">Chat2DB</h1>
 
 <div align="center">
 
-一个集成了AIGC的数据库客户端工具
+智能的通用数据库工具和SQL客户端
 
 [![License](https://img.shields.io/github/license/alibaba/fastjson2?color=4D7A97&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Java support](https://img.shields.io/badge/Java-17+-green?logo=java&logoColor=white)](https://openjdk.java.net/)
@@ -39,13 +39,13 @@
 
 ## 🌰 使用Demo
 ### 创建数据源
-<a><img src="./document/img1.webp"/></a>
+<a><img src="./document/image/img1.webp"/></a>
 
 ### 数据源管理
-<a><img src="./document/img2.webp"/></a>
+<a><img src="./document/image/img2.webp"/></a>
 
 ### SQL控制台 及 AI智能助手
-<a><img src="./document/img3.webp"/></a>
+<a><img src="./document/image/img3.webp"/></a>
 
 
 
@@ -78,7 +78,7 @@ $ git clone git@github.com:alibaba/Chat2DB.git
 ```bash
 $ cd Chat2DB/ali-dbhub-client
 $ npm install # 安装前端依赖
-$ npm run build # 把js打包生成到后端的source目录
+$ npm run build:prod # 把js打包生成到后端的source目录
 ```
 - 后端调试
 ```bash

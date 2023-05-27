@@ -82,11 +82,11 @@ export default defineConfig({
     port: 8001,
     host: '127.0.0.1',
   },
-  // define: {
-  //   'process.env.UMI_ENV': UMI_ENV,
-  //   'process.env.UMI_PORT': UMI_PORT,
-  //   'process.env.UMI_VERSION': UMI_VERSION
-  // }
+  define: {
+    'process.env.UMI_ENV': process.env.UMI_ENV,
+    'process.env.APP_PORT': process.env.APP_PORT,
+    'process.env.APP_VERSION': process.env.APP_VERSION,
+  }
 });
 
 function formatDate(date:any, fmt = 'yyyy-MM-dd') {

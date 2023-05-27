@@ -77,7 +77,7 @@ public enum DriverTypeEnum {
     /**
      * DM_DRIVER
      */
-    DM_DRIVER(DbTypeEnum.DM, "dm.jdbc.driver.DmDriver", "Dm7JdbcDriver18.jar","");
+    DM_DRIVER(DbTypeEnum.DM, "dm.jdbc.driver.DmDriver", "DmJdbcDriver18-8.1.2.141.jar","");
 
     final DbTypeEnum dbTypeEnum;
 

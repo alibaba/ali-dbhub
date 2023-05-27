@@ -1,13 +1,13 @@
 <p align="center">
   <a href="https://github.com/alibaba/Chat2DB">
-    <img width="100" src="document/logo.ico">
+    <img width="100" src="document/image/logo.ico">
   </a>
 </p>
 <h1 align="center">Chat2DB</h1>
 
 <div align="center">
 
-A database client tool with integrated AIGC
+General-purpose database tools and SQL clients with AGI (ChatGPT)
 
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/alibaba/ali-dbhub/blob/main/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/alibaba/ali-dbhub)](https://github.com/alibaba/ali-dbhub/releases)
@@ -71,7 +71,7 @@ $ git clone git@github.com:alibaba/Chat2DB.git
 ```bash
 $ cd Chat2DB/ali-dbhub-client
 $ npm install # Mounting front-end dependency
-$ npm run build # Package js to the source directory on the back end
+$ npm run build:prod # Package js to the source directory on the back end
 ```
 - Backend debug
 ```bash

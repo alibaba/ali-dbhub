@@ -71,6 +71,10 @@ public class OpenAIClient {
             apiHost = OpenAIConst.OPENAI_HOST;
         }
         ConfigService configService = ApplicationContextUtil.getBean(ConfigService.class);
+        Config apiHostConfig = configService.find(OPENAI_HOST).getData();
+        if (apiHostConfig != null) {
+            apiHost = apiHostConfig.getContent();
+        }
         Config config = configService.find(OPENAI_KEY).getData();
         if (config != null) {
             apikey = config.getContent();

@@ -52,19 +52,19 @@ export default memo<IProps>(function ConsoleList(props) {
       });
       if (!flag) {
         let p = {
-          name: `${dblclickNodeData?.databaseName}${dblclickNodeData.schemaName && ('-' + dblclickNodeData.schemaName)}-console`,
+          name: `${dblclickNodeData?.databaseName}${!!dblclickNodeData.schemaName ? ('-' + dblclickNodeData.schemaName) : ''}-console`,
           type: dblclickNodeData.dataType as DatabaseTypeCode,
           dataSourceId: dblclickNodeData.dataSourceId!,
           databaseName: dblclickNodeData?.databaseName!,
           schemaName: dblclickNodeData.schemaName!,
           status: ConsoleStatus.DRAFT,
-          ddl: `${consoleTopComment}SELECT * FROM`,
+          ddl: `${consoleTopComment}`,
           tabOpened: TabOpened.IS_OPEN,
         };
 
         historyService.saveWindowTab(p).then((res) => {
           const newConsole: IConsole = {
-            name: `${dblclickNodeData?.databaseName}${dblclickNodeData.schemaName && ('-' + dblclickNodeData.schemaName)}-console`,
+            name: `${dblclickNodeData?.databaseName}${!!dblclickNodeData.schemaName ? ('-' + dblclickNodeData.schemaName) : ''}-console`,
             key: res.toString(),
             type: ConsoleType.SQLQ,
             DBType: dblclickNodeData.dataType! as DatabaseTypeCode,
@@ -73,10 +73,11 @@ export default memo<IProps>(function ConsoleList(props) {
             dataSourceName: dblclickNodeData.dataSourceName!,
             schemaName: dblclickNodeData.schemaName!,
             consoleId: res,
-            ddl: `${consoleTopComment}SELECT * FROM`,
+            ddl: `${consoleTopComment}`,
           };
           setActiveKey(newConsole.key);
           setWindowList([...windowList, newConsole]);
+          console.log([...windowList, newConsole])
         });
       }
     }
@@ -94,19 +95,19 @@ export default memo<IProps>(function ConsoleList(props) {
     }
 
     let p = {
-      name: `${createConsoleDialog?.databaseName}${createConsoleDialog.schemaName && ('-' + createConsoleDialog.schemaName)}-console`,
+      name: `${createConsoleDialog?.databaseName}${!!createConsoleDialog.schemaName ? ('-' + createConsoleDialog.schemaName) : ''}-console`,
       type: createConsoleDialog.databaseType,
       dataSourceId: createConsoleDialog.dataSourceId,
       databaseName: createConsoleDialog?.databaseName,
       schemaName: createConsoleDialog.schemaName!,
       status: ConsoleStatus.DRAFT,
-      ddl: `${consoleTopComment}SELECT * FROM`,
+      ddl: `${consoleTopComment}`,
       tabOpened: TabOpened.IS_OPEN,
     };
 
     historyService.saveWindowTab(p).then((res) => {
       const newConsole: IConsole = {
-        name: `${createConsoleDialog.databaseName}${createConsoleDialog.schemaName && ('-' + createConsoleDialog.schemaName)}-console`,
+        name: `${createConsoleDialog.databaseName}${!!createConsoleDialog.schemaName ? ('-' + createConsoleDialog.schemaName) : ''}-console`,
         key: res.toString(),
         type: ConsoleType.SQLQ,
         DBType: createConsoleDialog.databaseType,
@@ -115,7 +116,7 @@ export default memo<IProps>(function ConsoleList(props) {
         dataSourceName: createConsoleDialog.dataSourceName,
         schemaName: createConsoleDialog.schemaName!,
         consoleId: res,
-        ddl: `${consoleTopComment}SELECT * FROM`,
+        ddl: `${consoleTopComment}`,
       };
       setActiveKey(newConsole.key);
       setWindowList([...windowList, newConsole]);
