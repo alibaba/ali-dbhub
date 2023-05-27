@@ -93,6 +93,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             }
           })
           r(data);
+        }).catch(error => {
+          j()
         })
       })
     },
@@ -117,6 +119,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             }
           })
           r(data);
+        }).catch(error => {
+          j()
         })
       })
     },
@@ -163,6 +167,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             ]
             r(data);
           }
+        }).catch(error => {
+          j()
         })
       })
     },
@@ -221,6 +227,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             }
           })
           r(tableList);
+        }).catch(error => {
+          j()
         })
       })
     },
@@ -306,6 +314,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             }
           })
           r(tableList);
+        }).catch(error => {
+          j()
         })
       })
     }
@@ -341,6 +351,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             }
           })
           r(tableList);
+        }).catch(error => {
+          j()
         })
       })
     }
@@ -376,6 +388,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             }
           })
           r(tableList);
+        }).catch(error => {
+          j()
         })
       })
     }
