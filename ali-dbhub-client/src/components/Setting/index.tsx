@@ -227,25 +227,25 @@ export function SettingAI() {
           Api Key
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
-          <Input placeholder='OpenAi APIKEY 使用OpenAi接口时必填，可前往OpenAI官网查看APIKEY' value={chatgptConfig.apiKey} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, apiKey: e.target.value }) }} />
+          <Input placeholder='使用OpenAi接口时必填，可前往OpenAI官网查看APIKEY' value={chatgptConfig.apiKey} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, apiKey: e.target.value }) }} />
         </div>
         <div className={styles.title}>
           Api Host
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
-          <Input placeholder='OpenAi APIHOST 非必填，默认值为 https://api.openai.com' value={chatgptConfig.apiHost} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, apiHost: e.target.value }) }} />
+          <Input placeholder='非必填，默认值为 https://api.openai.com' value={chatgptConfig.apiHost} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, apiHost: e.target.value }) }} />
         </div>
         <div className={styles.title}>
           HTTP Proxy Host
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
-          <Input placeholder='http代理Host非必填，用于设置请求OPENAI接口时的HTTP代理host' value={chatgptConfig.httpProxyHost} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, httpProxyHost: e.target.value }) }} />
+          <Input placeholder='非必填，用于设置请求OPENAI接口时的HTTP代理host' value={chatgptConfig.httpProxyHost} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, httpProxyHost: e.target.value }) }} />
         </div>
         <div className={styles.title}>
           HTTP Proxy Prot
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
-          <Input placeholder='http代理Port非必填，用于设置请求OPENAI接口时的HTTP代理port' value={chatgptConfig.httpProxyPort} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, httpProxyPort: e.target.value }) }} />
+          <Input placeholder='非必填，用于设置请求OPENAI接口时的HTTP代理port' value={chatgptConfig.httpProxyPort} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, httpProxyPort: e.target.value }) }} />
         </div>
       </div>
     }
@@ -255,7 +255,7 @@ export function SettingAI() {
           自定义接口Url
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
-          <Input placeholder='自定义AI接口选择自定义AI时必填，用于设置自定义AI的REST接口URL' value={chatgptConfig.restAiUrl} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, restAiUrl: e.target.value }) }} />
+          <Input placeholder='选择自定义AI时必填，用于设置自定义AI的REST接口URL' value={chatgptConfig.restAiUrl} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, restAiUrl: e.target.value }) }} />
         </div>
         <div className={styles.title}>
           接口是否流式输出
@@ -371,7 +371,7 @@ export function ProxyBody() {
       <Input value={apiPrefix} onChange={updateApi} />
     </div>
     <div className={styles.bottomButton}>
-      <Button theme='default' onClick={affirmUpdateApi}>更新</Button>
+      <Button theme='default' onClick={affirmUpdateApi}>应用</Button>
     </div>
   </>
 }

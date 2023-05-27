@@ -31,7 +31,7 @@ const saveWindowTab = createRequest<ISaveConsole, number>('/api/operation/saved/
 
 const getWindowTab = createRequest<{id:string}, number>('/api/operation/saved/:id',{method: 'get'});
 
-const updateWindowTab = createRequest<IUpdateWindowParams, number>('/api/operation/saved/update',{method: 'put'});
+const updateWindowTab = createRequest<IUpdateWindowParams, number>('/api/operation/saved/update',{method: 'post'});
 
 const getSaveList = createRequest<IGetHistoryListParams, IPageResponse<ISavedConsole>>('/api/operation/saved/list',{});
 

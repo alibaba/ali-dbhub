@@ -14305,7 +14305,7 @@ textarea.custom-input-affix-wrapper {
   opacity: 1;
 }
 .custom-input::placeholder {
-  color: var(--color-text-25);
+  color: var(--color-text-45);
   user-select: none;
 }
 .custom-input:placeholder-shown {
