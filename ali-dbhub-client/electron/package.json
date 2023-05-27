@@ -50,11 +50,7 @@
     },
     "mac": {
       "icon": "logo/logo.icns",
-      "target": [
-        {
-          "target": "dmg"
-        }
-      ]
+      "target": "default"
     },
     "win": {
       "target": [
