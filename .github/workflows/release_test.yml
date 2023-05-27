@@ -160,6 +160,8 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           mkdir oss_temp_file
+          mkdir oss_temp_file/win
+          mkdir oss_temp_file/win/x64
           cp -r ali-dbhub-client/electron-build/* ./oss_temp_file/win/x64
           ls ali-dbhub-client/electron-build/
 
@@ -169,6 +171,8 @@ jobs:
         run: |
           mkdir oss_temp_file
           mkdir oss_temp_file/jar
+          mkdir oss_temp_file/mac
+          mkdir oss_temp_file/mac/amd
           cp ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file/jar/ali-dbhub-server-start-${{ github.run_id }}.jar
           cp -r ali-dbhub-client/electron-build/* ./oss_temp_file/mac/amd
           ls ali-dbhub-client/electron-build/
@@ -179,6 +183,8 @@ jobs:
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         run: |
           mkdir oss_temp_file
+          mkdir oss_temp_file/mac
+          mkdir oss_temp_file/mac/arm
           cp -r ali-dbhub-client/electron-build/* ./oss_temp_file/mac/arm
           ls ali-dbhub-client/electron-build/
 
