@@ -27,7 +27,7 @@ public class DMMetaSchemaSupport extends BaseMetaSchema implements MetaSchema {
     public String tableDDL(String databaseName, String schemaName, String tableName) {
         String selectObjectDDLSQL = String.format(
             "select dbms_metadata.get_ddl(%s, %s, %s) AS \"sql\" from dual",
-            SqlUtils.formatSQLString(dbType().getCode()), SqlUtils.formatSQLString(tableName),
+            SqlUtils.formatSQLString("TABLE"), SqlUtils.formatSQLString(tableName),
             SqlUtils.formatSQLString(schemaName));
         return SQLExecutor.getInstance().executeSql(selectObjectDDLSQL, resultSet -> {
             try {
