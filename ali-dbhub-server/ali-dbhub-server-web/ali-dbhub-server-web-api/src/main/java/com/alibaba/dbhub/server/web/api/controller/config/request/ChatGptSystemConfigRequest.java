@@ -52,8 +52,8 @@ public class ChatGptSystemConfigRequest {
     private String restAiUrl;
 
     /**
-     * 自定义AI接口HTTP请求方法:POST/GET
-     * 非必填，默认值为POST
+     * Rest接口是否流式输出
+     * 非必填，默认值为TRUE
      */
-    private String restAiHttpMethod;
+    private Boolean restAiStream = Boolean.TRUE;
 }

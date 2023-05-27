@@ -42,21 +42,6 @@ public class OpenAIClient {
      */
     public static final String PROXY_PORT = "chatgpt.proxy.port";
 
-    /**
-     * AI SQL选择的接口来源
-     */
-    public static final String AI_SQL_SOURCE = "ai.sql.source";
-
-    /**
-     * 自定义AI接口地址
-     */
-    public static final String REST_AI_URL = "rest.ai.url";
-
-    /**
-     * 自定义AI接口请求方法
-     */
-    public static final String REST_AI_HTTP_METHOD = "rest.ai.http.method";
-
     private static OpenAiStreamClient OPEN_AI_STREAM_CLIENT;
     private static String apiKey;
 
