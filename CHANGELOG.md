@@ -1,3 +1,7 @@
+# 1.0.7
+* 支持国产达梦数据库 [Issue #148](https://github.com/alibaba/Chat2DB/issues/147)
+
+
 # 1.0.6
 * 修复Oracle数据库字符集问题 [Issue #205](https://github.com/alibaba/Chat2DB/issues/205) [Issue #181](https://github.com/alibaba/Chat2DB/issues/181) [Issue #182](https://github.com/alibaba/Chat2DB/issues/182)
 * 修复mac安装提示的安全问题

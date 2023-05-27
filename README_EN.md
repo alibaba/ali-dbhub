@@ -7,7 +7,7 @@
 
 <div align="center">
 
-A database client tool with integrated AIGC
+General-purpose database tools and SQL clients with AGI (ChatGPT)
 
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/alibaba/ali-dbhub/blob/main/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/alibaba/ali-dbhub)](https://github.com/alibaba/ali-dbhub/releases)
