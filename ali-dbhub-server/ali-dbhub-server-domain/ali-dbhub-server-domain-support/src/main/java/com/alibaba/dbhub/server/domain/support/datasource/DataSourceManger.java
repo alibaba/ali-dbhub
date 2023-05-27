@@ -68,7 +68,8 @@ public class DataSourceManger {
         if (driverTypeEnum == null) {
             throw new RuntimeException("Unrecognized database type, type is " + connectInfo.getDbType());
         }
-        ClassLoader classLoader = IDriverManager.getClassLoader(driverTypeEnum);
+
+        // Config the data source
         HikariDataSource myDataSource = new HikariDataSource();
         myDataSource.setJdbcUrl(connectInfo.getUrl());
         myDataSource.setUsername(connectInfo.getUser());
@@ -85,10 +86,12 @@ public class DataSourceManger {
             properties.putAll(connectInfo.getExtendMap());
             myDataSource.setDataSourceProperties(properties);
         }
+
+        // Let the connection pool use the specified classloader to load the driver.
         Thread thread = Thread.currentThread();
         ClassLoader contextClassLoader = thread.getContextClassLoader();
-        // Let the connection pool use the specified classloader to load the driver.
         try {
+            ClassLoader classLoader = IDriverManager.getClassLoader(driverTypeEnum);
             thread.setContextClassLoader(classLoader);
             myDataSource.setDriverClassName(driverTypeEnum.getDriverClass());
             myDataSource.getConnection().close();
