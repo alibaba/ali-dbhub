@@ -52,7 +52,7 @@ export default memo<IProps>(function ConsoleList(props) {
       });
       if (!flag) {
         let p = {
-          name: `${dblclickNodeData?.databaseName}${dblclickNodeData.schemaName && ('-' + dblclickNodeData.schemaName)}-console`,
+          name: `${dblclickNodeData?.databaseName}${!!dblclickNodeData.schemaName ? ('-' + dblclickNodeData.schemaName) : ''}-console`,
           type: dblclickNodeData.dataType as DatabaseTypeCode,
           dataSourceId: dblclickNodeData.dataSourceId!,
           databaseName: dblclickNodeData?.databaseName!,
@@ -64,7 +64,7 @@ export default memo<IProps>(function ConsoleList(props) {
 
         historyService.saveWindowTab(p).then((res) => {
           const newConsole: IConsole = {
-            name: `${dblclickNodeData?.databaseName}${dblclickNodeData.schemaName && ('-' + dblclickNodeData.schemaName)}-console`,
+            name: `${dblclickNodeData?.databaseName}${!!dblclickNodeData.schemaName ? ('-' + dblclickNodeData.schemaName) : ''}-console`,
             key: res.toString(),
             type: ConsoleType.SQLQ,
             DBType: dblclickNodeData.dataType! as DatabaseTypeCode,
@@ -77,6 +77,7 @@ export default memo<IProps>(function ConsoleList(props) {
           };
           setActiveKey(newConsole.key);
           setWindowList([...windowList, newConsole]);
+          console.log([...windowList, newConsole])
         });
       }
     }
@@ -94,7 +95,7 @@ export default memo<IProps>(function ConsoleList(props) {
     }
 
     let p = {
-      name: `${createConsoleDialog?.databaseName}${createConsoleDialog.schemaName && ('-' + createConsoleDialog.schemaName)}-console`,
+      name: `${createConsoleDialog?.databaseName}${!!createConsoleDialog.schemaName ? ('-' + createConsoleDialog.schemaName) : ''}-console`,
       type: createConsoleDialog.databaseType,
       dataSourceId: createConsoleDialog.dataSourceId,
       databaseName: createConsoleDialog?.databaseName,
@@ -106,7 +107,7 @@ export default memo<IProps>(function ConsoleList(props) {
 
     historyService.saveWindowTab(p).then((res) => {
       const newConsole: IConsole = {
-        name: `${createConsoleDialog.databaseName}${createConsoleDialog.schemaName && ('-' + createConsoleDialog.schemaName)}-console`,
+        name: `${createConsoleDialog.databaseName}${!!createConsoleDialog.schemaName ? ('-' + createConsoleDialog.schemaName) : ''}-console`,
         key: res.toString(),
         type: ConsoleType.SQLQ,
         DBType: createConsoleDialog.databaseType,
