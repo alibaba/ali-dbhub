@@ -171,9 +171,10 @@ jobs:
         run: |
           mkdir oss_temp_file
           mkdir oss_temp_file/jar
+          mkdir oss_temp_file/jar/${{ github.run_id }}
           mkdir oss_temp_file/mac
           mkdir oss_temp_file/mac/amd
-          cp ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file/jar/ali-dbhub-server-start-${{ github.run_id }}.jar
+          cp ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file/jar/${{ github.run_id }}
           cp -r ali-dbhub-client/electron-build/* ./oss_temp_file/mac/amd
           ls ali-dbhub-client/electron-build/
 
@@ -210,7 +211,7 @@ jobs:
           content: |
             {
               "title": "Windows-test-打包完成通知",
-              "text": "# Windows-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang100.gif)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})   \n ### Windows下载地址：[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-Test%20Setup%201.0.${{ github.run_id }}-Test.exe](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-Test%20Setup%201.0.${{ github.run_id }}-Test.exe) "
+              "text": "# Windows-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang100.gif)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})   \n ### Windows下载地址：[https://oss-chat2db.alibaba.com/test/win/x64/Chat2DB-Test%20Setup%201.0.${{ github.run_id }}-Test.exe](https://oss-chat2db.alibaba.com/test/win/x64/Chat2DB-Test%20Setup%201.0.${{ github.run_id }}-Test.exe) "
             }
 
       # 构建完成通知
@@ -223,7 +224,7 @@ jobs:
           content: |
             {
               "title": "MacOS-amd64-test-构建完成通知",
-              "text": "# MacOS-amd64-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang100.gif)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})    \n ### Intel芯片下载地址：[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-Test-1.0.${{ github.run_id }}-Test.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-Test-1.0.${{ github.run_id }}-Test.dmg)   \n ### jar包下载地址：[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/ali-dbhub-server-start.jar) "
+              "text": "# MacOS-amd64-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang100.gif)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})    \n ### Intel芯片下载地址：[https://oss-chat2db.alibaba.com/test/mac/amd/Chat2DB-Test-1.0.${{ github.run_id }}-Test.dmg](https://oss-chat2db.alibaba.com/test/mac/amd/Chat2DB-Test-1.0.${{ github.run_id }}-Test.dmg)   \n ### jar包下载地址：[https://oss-chat2db.alibaba.com/test/jar/${{ github.run_id }}/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/test/jar/${{ github.run_id }}/ali-dbhub-server-start.jar) "
             }
 
       # 构建完成通知
@@ -236,6 +237,6 @@ jobs:
           content: |
             {
               "title": "MacOS-arm64-test-构建完成通知",
-              "text": "# MacOS-arm64-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang100.gif)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})   \n ### Apple芯片下载地址：[https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-Test-1.0.${{ github.run_id }}-Test-arm64.dmg](https://oss-chat2db.alibaba.com/test/${{ github.run_id }}/Chat2DB-Test-1.0.${{ github.run_id }}-Test-arm64.dmg) "
+              "text": "# MacOS-arm64-test-打包完成通知   \n ![bang](https://oss-chat2db.alibaba.com/static/bang100.gif)   \n ###  任务id：[${{ github.run_id }}](https://github.com/alibaba/Chat2DB/actions/runs/${{ github.run_id }})   \n ### Apple芯片下载地址：[https://oss-chat2db.alibaba.com/test/mac/arm/Chat2DB-Test-1.0.${{ github.run_id }}-Test-arm64.dmg](https://oss-chat2db.alibaba.com/test/mac/arm/Chat2DB-Test-1.0.${{ github.run_id }}-Test-arm64.dmg) "
             }
 
