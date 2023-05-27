@@ -1,5 +1,6 @@
 # 1.0.6
 * 修复Oracle数据库字符集问题 [Issue #205](https://github.com/alibaba/Chat2DB/issues/205) [Issue #181](https://github.com/alibaba/Chat2DB/issues/181) [Issue #182](https://github.com/alibaba/Chat2DB/issues/182)
+* 修复mac安装提示的安全问题
 
 # 1.0.5
 * 🔥 优化Apple芯片的启动速度

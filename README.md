@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/alibaba/Chat2DB">
-    <img width="100" src="document/logo.ico">
+    <img width="100" src="document/image/logo.ico">
   </a>
 </p>
 <h1 align="center">Chat2DB</h1>
@@ -32,20 +32,21 @@
 ## ⏬ 下载安装
 | 描述                   | 下载地址                                                                                                                                                                                                                                       |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB%20Setup%201.0.5.exe](https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB%20Setup%201.0.5.exe) |
-| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5-arm64.dmg) |
-| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5.dmg](https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5.dmg) |       
-| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.5/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.5/ali-dbhub-server-start.jar) |                                                                                                                
+| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.6/Chat2DB%20Setup%201.0.6.exe](https://oss-chat2db.alibaba.com/release/1.0.6/Chat2DB%20Setup%201.0.6.exe) |
+| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.6/Chat2DB-1.0.6-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.6/Chat2DB-1.0.6-arm64.dmg) |
+| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.6/Chat2DB-1.0.6.dmg](https://oss-chat2db.alibaba.com/release/1.0.6/Chat2DB-1.0.6.dmg) |       
+| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.6/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.6/ali-dbhub-server-start.jar) |                                                                                                                
 
 ## 🌰 使用Demo
-- 创建数据源
-<a><img src="https://gw.alicdn.com/imgextra/i3/O1CN01PlpLYy1hIq5aMugpg_!!6000000004255-0-tps-3446-1750.jpg" width="100%"/></a>
-- 数据源管理
-<a><img src="https://gw.alicdn.com/imgextra/i2/O1CN01DpzZJL1T7w2Xv9VMl_!!6000000002336-0-tps-3410-1662.jpg" width="100%"/></a>
-- SQL控制台
-<a><img src="https://gw.alicdn.com/imgextra/i2/O1CN01aidnkx1Oo0LJ1Pdty_!!6000000001751-0-tps-3440-1736.jpg" width="100%"/></a>
-- AI智能助手
-<a><img src="https://gw.alicdn.com/imgextra/i4/O1CN01iaSXot1W6VeaDFbK2_!!6000000002739-0-tps-3430-1740.jpg" width="100%"/></a>
+### 创建数据源
+<a><img src="./document/image/img1.webp"/></a>
+
+### 数据源管理
+<a><img src="./document/image/img2.webp"/></a>
+
+### SQL控制台 及 AI智能助手
+<a><img src="./document/image/img3.webp"/></a>
+
 
 
 ## 📦 Docker部署
@@ -77,7 +78,7 @@ $ git clone git@github.com:alibaba/Chat2DB.git
 ```bash
 $ cd Chat2DB/ali-dbhub-client
 $ npm install # 安装前端依赖
-$ npm run build # 把js打包生成到后端的source目录
+$ npm run build:prod # 把js打包生成到后端的source目录
 ```
 - 后端调试
 ```bash

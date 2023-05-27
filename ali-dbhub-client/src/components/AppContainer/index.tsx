@@ -34,7 +34,6 @@ window._VERSION = process.env.UMI_VERSION! || '0.0.0';
 window._BUILD_TIME = process.env.UMI_VERSION! || '0.0.0';
 
 export default memo<IProps>(function AppContainer({ className, children }) {
-  console.log(process.env.UMI_PORT)
   const [startSchedule, setStartSchedule] = useState(0); // 0 初始状态 1 服务启动中 2 启动成功
   const [serviceFail, setServiceFail] = useState(false);
   // const scrollTimer = useRef<any>();

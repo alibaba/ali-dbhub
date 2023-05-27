@@ -1,14 +1,12 @@
 package com.alibaba.dbhub.server.web.api.controller.operation.saved;
 
 import java.util.List;
-import java.util.Objects;
 
 import com.alibaba.dbhub.server.domain.api.model.Operation;
 import com.alibaba.dbhub.server.domain.api.param.OperationPageQueryParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationSavedParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationUpdateParam;
 import com.alibaba.dbhub.server.domain.api.service.OperationService;
-import com.alibaba.dbhub.server.tools.base.enums.StatusEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
@@ -20,15 +18,14 @@ import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.Opera
 import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.OperationUpdateRequest;
 import com.alibaba.dbhub.server.web.api.controller.operation.saved.vo.OperationVO;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -94,7 +91,7 @@ public class OperationSavedController {
      * @param request
      * @return
      */
-    @PutMapping("/update")
+    @RequestMapping(value = "/update", method = {RequestMethod.POST, RequestMethod.PUT})
     public ActionResult update(@RequestBody OperationUpdateRequest request) {
         OperationUpdateParam param = operationWebConverter.updateReq2param(request);
         return operationService.update(param);
