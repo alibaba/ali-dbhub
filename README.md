@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/alibaba/Chat2DB">
-    <img width="100" src="document/logo.ico">
+    <img width="100" src="document/image/logo.ico">
   </a>
 </p>
 <h1 align="center">Chat2DB</h1>
@@ -39,13 +39,13 @@
 
 ## 🌰 使用Demo
 ### 创建数据源
-<a><img src="./document/img1.webp"/></a>
+<a><img src="./document/image/img1.webp"/></a>
 
 ### 数据源管理
-<a><img src="./document/img2.webp"/></a>
+<a><img src="./document/image/img2.webp"/></a>
 
 ### SQL控制台 及 AI智能助手
-<a><img src="./document/img3.webp"/></a>
+<a><img src="./document/image/img3.webp"/></a>
 
 
 
