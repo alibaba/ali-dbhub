@@ -11,6 +11,7 @@ import miscService from '@/service/misc';
 import BrandLogo from '@/components/BrandLogo';
 import themeDarkImg from '@/assets/theme-dark.webp';
 import themeDefaultImg from '@/assets/theme-default.webp';
+import themeFollowImg from '@/assets/theme-follow.webp';
 
 const { Option } = Select;
 
@@ -58,6 +59,11 @@ const backgroundList = [
     code: 'default',
     name: '亮色',
     img: themeDefaultImg
+  },
+  {
+    code: 'followOs',
+    name: '跟随系统',
+    img: themeFollowImg
   },
   // {
   //   code: 'eyeshield',
@@ -113,6 +119,20 @@ export default memo<IProps>(function Setting({ className, text }) {
   const [currentMenu, setCurrentMenu] = useState(menusList[0]);
 
   useLayoutEffect(() => {
+    function change(e: any) {
+      if (e.matches) {
+        document.documentElement.setAttribute('theme', 'dark');
+        colorSchemeListeners.forEach(t => t('dark'));
+      } else {
+        document.documentElement.setAttribute('theme', 'default');
+        colorSchemeListeners.forEach(t => t('default'));
+      }
+    }
+    const themeMedia = window.matchMedia("(prefers-color-scheme: dark)");
+    themeMedia.addListener(change);
+    return () => {
+      themeMedia.removeListener(change)
+    }
   }, [])
 
   const showModal = () => {
@@ -281,11 +301,16 @@ export function BaseBody() {
   const [currentPrimaryColor, setCurrentPrimaryColor] = useState(localStorage.getItem('primary-color'));
 
   function changeTheme(item: any) {
+    let theme = item.code
+    if (theme === 'followOs') {
+      theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default'
+    }
+
     const html = document.documentElement;
-    html.setAttribute('theme', item.code);
+    html.setAttribute('theme', theme);
     localStorage.setItem('theme', item.code);
-    setCurrentTheme(item.code)
-    colorSchemeListeners.forEach(t => t(item.code));
+    setCurrentTheme(item.code);
+    colorSchemeListeners.forEach(t => t(theme));
   }
 
   const changePrimaryColor = (item: any) => {
@@ -308,7 +333,10 @@ export function BaseBody() {
     <ul className={styles.backgroundList}>
       {backgroundList.map((item) => {
         return (
-          <li key={item.code} className={classnames({ [styles.current]: currentTheme == item.code })} onClick={changeTheme.bind(null, item)} style={{ backgroundImage: `url(${item.img})` }} />
+          <div className={styles.themeItemBox}>
+            <li key={item.code} className={classnames({ [styles.current]: currentTheme == item.code })} onClick={changeTheme.bind(null, item)} style={{ backgroundImage: `url(${item.img})` }} />
+            {item.name}
+          </div>
         );
       })}
     </ul>

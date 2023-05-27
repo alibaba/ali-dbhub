@@ -80,9 +80,12 @@ export default memo<IProps>(function AppContainer({ className, children }) {
   }
 
   function settings() {
-    const theme = localStorage.getItem('theme') || ThemeType.dark;
+    let theme = localStorage.getItem('theme') || ThemeType.dark;
+    if (theme === 'followOs') {
+      theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default'
+    }
     document.documentElement.setAttribute('theme', theme);
-    localStorage.setItem('theme', theme);
+
     document.documentElement.setAttribute(
       'primary-color',
       localStorage.getItem('primary-color') || 'polar-blue',

@@ -38,9 +38,11 @@ export function useUpdateEffect(fn: Function, arr: any[]) {
 }
 
 export function useTheme() {
-  const [currentColorScheme, setCurrentColorScheme] = useState(
-    localStorage.getItem('theme'),
-  );
+  let theme = localStorage.getItem('theme')
+  if (theme === 'followOs') {
+    theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default'
+  }
+  const [currentColorScheme, setCurrentColorScheme] = useState(theme);
   useEffect(() => {
     addColorSchemeListener(setCurrentColorScheme);
   }, []);

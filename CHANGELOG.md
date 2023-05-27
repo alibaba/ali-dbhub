@@ -2,6 +2,7 @@
 * 支持国产达梦数据库 [Issue #148](https://github.com/alibaba/Chat2DB/issues/147)
 * 支持自定义OPEN AI API_HOST [Issue #173](https://github.com/alibaba/Chat2DB/issues/173)
 * 🔥 支持自定义AI接口
+* 支持主题色跟随系统
 
 # 1.0.6
 * 修复Oracle数据库字符集问题 [Issue #205](https://github.com/alibaba/Chat2DB/issues/205) [Issue #181](https://github.com/alibaba/Chat2DB/issues/181) [Issue #182](https://github.com/alibaba/Chat2DB/issues/182)
