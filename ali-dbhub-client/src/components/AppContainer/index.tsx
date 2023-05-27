@@ -21,20 +21,17 @@ const restartCount = 200;
 declare global {
   interface Window {
     _ENV: string;
-    _VERSION: string;
+    _APP_PORT: string;
     _BUILD_TIME: string;
     _BaseURL: string;
   }
-  const __APP_VERSION__: string
-  const __BUILD_TIME__: string
+  const __APP_VERSION__: string;
+  const __BUILD_TIME__: string;
 }
 
 window._ENV = process.env.UMI_ENV! || 'local';
-window._VERSION = process.env.UMI_VERSION! || '0.0.0';
-window._BUILD_TIME = process.env.UMI_VERSION! || '0.0.0';
 
 export default memo<IProps>(function AppContainer({ className, children }) {
-  console.log(process.env.UMI_PORT)
   const [startSchedule, setStartSchedule] = useState(0); // 0 初始状态 1 服务启动中 2 启动成功
   const [serviceFail, setServiceFail] = useState(false);
   // const scrollTimer = useRef<any>();

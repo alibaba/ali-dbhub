@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/alibaba/Chat2DB">
-    <img width="100" src="document/logo.ico">
+    <img width="100" src="document/image/logo.ico">
   </a>
 </p>
 <h1 align="center">Chat2DB</h1>
@@ -71,7 +71,7 @@ $ git clone git@github.com:alibaba/Chat2DB.git
 ```bash
 $ cd Chat2DB/ali-dbhub-client
 $ npm install # Mounting front-end dependency
-$ npm run build # Package js to the source directory on the back end
+$ npm run build:prod # Package js to the source directory on the back end
 ```
 - Backend debug
 ```bash

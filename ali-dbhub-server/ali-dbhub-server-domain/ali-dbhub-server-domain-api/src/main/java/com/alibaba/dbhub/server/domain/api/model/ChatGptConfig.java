@@ -16,6 +16,11 @@ public class ChatGptConfig {
     private String apiKey;
 
     /**
+     * OpenAi APIHOST
+     */
+    private String apiHost;
+
+    /**
      * http代理Host
      */
     private String httpProxyHost;
@@ -24,4 +29,20 @@ public class ChatGptConfig {
      * http代理Port
      */
     private String httpProxyPort;
+
+    /**
+     * AI类型
+     * @see com.alibaba.dbhub.server.domain.api.enums.AiSqlSourceEnum
+     */
+    private String aiSqlSource;
+
+    /**
+     * 自定义AI接口
+     */
+    private String restAiUrl;
+
+    /**
+     * 自定义AI接口HTTP请求方法:POST/GET
+     */
+    private String restAiHttpMethod;
 }
