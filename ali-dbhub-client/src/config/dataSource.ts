@@ -1415,23 +1415,6 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           required: true,
           width: 100,
         },
-        {
-          defaultValue: '8.0',
-          inputType: InputType.SELECT,
-          labelNameCN: 'JDBC驱动',
-          labelNameEN: 'JDBC Driver',
-          name: 'jdbc',
-          required: true,
-          selects: [
-            {
-              value: '8.0',
-            },
-            {
-              value: '5.0',
-            },
-          ],
-          width: 100,
-        }
       ],
       pattern: /jdbc:dm:\/\/(.*):(\d+)(\/(\w+))?/,
       template: 'jdbc:dm://{host}:{port}/{database}',
