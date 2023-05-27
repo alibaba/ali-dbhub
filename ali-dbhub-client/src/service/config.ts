@@ -6,6 +6,9 @@ export interface IChatgptConfig {
   apiKey: string;
   httpProxyHost: string;
   httpProxyPort: string;
+  restAiUrl: string,
+  apiHost: string,
+  restAiHttpMethod: 'POST' | 'GET'
 }
 const getChatGptSystemConfig = createRequest<void, IChatgptConfig>('/api/config/system_config/chatgpt', { errorLevel: false });
 

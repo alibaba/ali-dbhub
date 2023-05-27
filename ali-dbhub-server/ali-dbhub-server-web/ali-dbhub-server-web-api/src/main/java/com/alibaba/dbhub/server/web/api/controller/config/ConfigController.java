@@ -6,9 +6,9 @@ package com.alibaba.dbhub.server.web.api.controller.config;
 
 import java.util.Objects;
 
+import com.alibaba.dbhub.server.domain.api.enums.AiSqlSourceEnum;
 import com.alibaba.dbhub.server.domain.api.model.ChatGptConfig;
 import com.alibaba.dbhub.server.domain.api.model.Config;
-import com.alibaba.dbhub.server.domain.api.param.DatabaseOperationParam;
 import com.alibaba.dbhub.server.domain.api.param.SystemConfigParam;
 import com.alibaba.dbhub.server.domain.api.service.ConfigService;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
@@ -61,8 +61,34 @@ public class ConfigController {
      */
     @PostMapping("/system_config/chatgpt")
     public ActionResult addChatGptSystemConfig(@RequestBody ChatGptSystemConfigRequest request) {
+        String sqlSource = StringUtils.isNotBlank(request.getAiSqlSource()) ? request.getAiSqlSource()
+            : AiSqlSourceEnum.OPENAI.getCode();
+        SystemConfigParam param = SystemConfigParam.builder().code(OpenAIClient.AI_SQL_SOURCE).content(sqlSource)
+            .build();
+        configService.createOrUpdate(param);
+        if (AiSqlSourceEnum.OPENAI.getCode().equals(sqlSource)) {
+            saveOpenAIConfig(request);
+        } else {
+            saveRestAIConfig(request);
+        }
+        return ActionResult.isSuccess();
+    }
+
+    /**
+     * 保存OPENAI相关配置
+     *
+     * @param request
+     */
+    private void saveOpenAIConfig(ChatGptSystemConfigRequest request) {
         if (StringUtils.isNotBlank(request.getApiKey())) {
-            SystemConfigParam param = SystemConfigParam.builder().code(OpenAIClient.OPENAI_KEY).content(request.getApiKey())
+            SystemConfigParam param = SystemConfigParam.builder().code(OpenAIClient.OPENAI_KEY).content(
+                    request.getApiKey())
+                .build();
+            configService.createOrUpdate(param);
+        }
+        if (StringUtils.isNotBlank(request.getApiHost())) {
+            SystemConfigParam param = SystemConfigParam.builder().code(OpenAIClient.OPENAI_HOST).content(
+                    request.getApiHost())
                 .build();
             configService.createOrUpdate(param);
         }
@@ -79,9 +105,22 @@ public class ConfigController {
         if (StringUtils.isNotBlank(request.getApiKey())) {
             OpenAIClient.refresh();
         }
-        return ActionResult.isSuccess();
     }
 
+    /**
+     * 保存RESTAI接口相关配置
+     *
+     * @param request
+     */
+    private void saveRestAIConfig(ChatGptSystemConfigRequest request) {
+        SystemConfigParam restParam = SystemConfigParam.builder().code(OpenAIClient.REST_AI_URL).content(
+                request.getRestAiUrl())
+            .build();
+        configService.createOrUpdate(restParam);
+        SystemConfigParam methodParam = SystemConfigParam.builder().code(OpenAIClient.REST_AI_HTTP_METHOD).content(
+            request.getRestAiHttpMethod()).build();
+        configService.createOrUpdate(methodParam);
+    }
 
     @GetMapping("/system_config/{code}")
     public DataResult<Config> getSystemConfig(@PathVariable("code") String code) {
@@ -97,9 +136,17 @@ public class ConfigController {
     @GetMapping("/system_config/chatgpt")
     public DataResult<ChatGptConfig> getChatGptSystemConfig() {
         DataResult<Config> apiKey = configService.find(OpenAIClient.OPENAI_KEY);
+        DataResult<Config> apiHost = configService.find(OpenAIClient.OPENAI_HOST);
         DataResult<Config> httpProxyHost = configService.find(OpenAIClient.PROXY_HOST);
         DataResult<Config> httpProxyPort = configService.find(OpenAIClient.PROXY_PORT);
+        DataResult<Config> aiSqlSource = configService.find(OpenAIClient.AI_SQL_SOURCE);
+        DataResult<Config> restAiUrl = configService.find(OpenAIClient.REST_AI_URL);
+        DataResult<Config> restAiHttpMethod = configService.find(OpenAIClient.REST_AI_HTTP_METHOD);
         ChatGptConfig config = new ChatGptConfig();
+        config.setApiHost(Objects.nonNull(apiHost.getData()) ? apiHost.getData().getContent() : null);
+        config.setAiSqlSource(Objects.nonNull(aiSqlSource.getData()) ? aiSqlSource.getData().getContent() : null);
+        config.setRestAiUrl(Objects.nonNull(restAiUrl.getData()) ? restAiUrl.getData().getContent() : null);
+        config.setRestAiHttpMethod(Objects.nonNull(restAiHttpMethod.getData()) ? restAiHttpMethod.getData().getContent() : null);
         config.setApiKey(Objects.nonNull(apiKey.getData()) ? apiKey.getData().getContent() : null);
         config.setHttpProxyHost(Objects.nonNull(httpProxyHost.getData()) ? httpProxyHost.getData().getContent() : null);
         config.setHttpProxyPort(Objects.nonNull(httpProxyPort.getData()) ? httpProxyPort.getData().getContent() : null);

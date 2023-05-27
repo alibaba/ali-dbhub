@@ -61,6 +61,7 @@
 .modalBox {
   display: flex;
   margin: -20px;
+  height: 70vh;
 }
 
 .menus {
@@ -114,18 +115,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    .appName{
+    .appName {
       font-size: 20px;
     }
-    .env,.version{
+    .env,
+    .version {
       margin: 4px 0px;
       color: var(--color-text-45);
     }
-    .log{
+    .log {
       margin-top: 4px;
       color: var(--custom-primary-color);
       cursor: pointer;
-      &:hover{
+      &:hover {
         text-decoration: underline;
       }
     }
@@ -134,4 +136,13 @@
 
 .brandLogo {
   margin-bottom: 15px;
+}
+
+.aiSqlSource {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.aiSqlSourceTitle {
+  margin-right: 20px;
 }
