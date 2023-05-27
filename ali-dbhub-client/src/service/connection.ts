@@ -38,7 +38,7 @@ const testSSH = createRequest<any, boolean>(
 
 const update = createRequest<IConnectionBase, void>(
   '/api/connection/datasource/update',
-  { method: 'put' },
+  { method: 'post' },
 );
 
 const remove = createRequest<{ id: number }, void>(

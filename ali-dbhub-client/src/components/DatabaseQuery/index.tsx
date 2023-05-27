@@ -60,8 +60,8 @@ let monacoEditorExternalList: any = {};
 const initModal = {
   open: false,
   title: '',
-  handleOk: () => {},
-  handleCancel: () => {},
+  handleOk: () => { },
+  handleCancel: () => { },
   content: <></>,
 };
 export default function DatabaseQuery(props: IProps) {
@@ -166,7 +166,7 @@ export default function DatabaseQuery(props: IProps) {
         myEditorHintData[item.name] = [];
       });
       monacoHint.current = setEditorHint(myEditorHintData);
-    } catch {}
+    } catch { }
   };
 
   const getEditor = (editor: any) => {
@@ -177,8 +177,8 @@ export default function DatabaseQuery(props: IProps) {
       localStorage.getItem(
         `window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.consoleId}`,
       ) ||
-        windowTab.ddl ||
-        '',
+      windowTab.ddl ||
+      '',
     );
   };
 
@@ -728,8 +728,12 @@ export default function DatabaseQuery(props: IProps) {
           onOk={modalConfig.handleOk}
           onCancel={modalConfig.handleCancel}
           maskClosable={false}
+          okText='确认'
+          cancelText='取消'
         >
-          {modalConfig.content}
+          <div className={styles.modalBox}>
+            {modalConfig.content}
+          </div>
         </Modal>
       )}
     </>
