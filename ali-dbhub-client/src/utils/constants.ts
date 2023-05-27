@@ -93,7 +93,7 @@ export const databaseType: {
     img: moreDBLogo,
     code: DatabaseTypeCode.DM,
     port: 5236,
-    icon: '\uea30',
+    icon: '\ue655',
   },
 };
 

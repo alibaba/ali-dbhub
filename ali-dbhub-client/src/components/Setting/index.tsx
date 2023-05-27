@@ -17,6 +17,11 @@ interface IProps {
   text?: string;
 }
 
+export enum AiSqlSourceType {
+  OPENAI = 'OPENAI',
+  RESTAI = 'RESTAI'
+}
+
 const colorList = [
   {
     code: 'polar-green',
@@ -71,9 +76,9 @@ export default memo<IProps>(function Setting({ className, text }) {
       body: <BaseBody />
     },
     {
-      label: 'OpenAI',
+      label: 'Setting AI',
       icon: '\ue646',
-      body: <OpenAiBody />,
+      body: <SettingAI />,
     },
     {
       label: '代理设置',
@@ -89,7 +94,7 @@ export default memo<IProps>(function Setting({ className, text }) {
           <div className={styles.brief}>
             <div className={styles.appName}>Chat2DB</div>
             <div className={styles.env}>
-              当前环境:{window._ENV} 
+              当前环境:{window._ENV}
             </div>
             <div className={styles.version}>
               当前版本:v{__APP_VERSION__} build {__BUILD_TIME__}
@@ -139,7 +144,7 @@ export default memo<IProps>(function Setting({ className, text }) {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={false}
-        width={600}
+        width={800}
         maskClosable={false}
       >
         <div className={styles.modalBox}>
@@ -173,19 +178,27 @@ export function addColorSchemeListener(callback: (theme: string) => void) {
 }
 
 // openAI 的设置项
-export function OpenAiBody() {
+export function SettingAI() {
+  const [aiSqlSource, setAiSqlSource] = useState<AiSqlSourceType>(AiSqlSourceType.OPENAI)
   const [chatgptConfig, setChatgptConfig] = useState<IChatgptConfig>({
     apiKey: '',
     httpProxyHost: '',
-    httpProxyPort: ''
+    httpProxyPort: '',
+    restAiUrl: '',
+    apiHost: '',
+    restAiHttpMethod: 'POST'
   });
+
 
   useEffect(() => {
     configService.getChatGptSystemConfig().then(res => {
       setChatgptConfig(res || {
         apiKey: '',
+        apiHost: '',
         httpProxyHost: '',
-        httpProxyPort: ''
+        httpProxyPort: '',
+        restAiUrl: '',
+        restAiHttpMethod: 'POST'
       })
     })
   }, [])
@@ -200,28 +213,69 @@ export function OpenAiBody() {
     })
   }
 
+  function changeAiSqlSource(value: any) {
+    setAiSqlSource(value.target.value)
+  }
+
   return <>
-    <div className={styles.title}>
-      Api Key
+    <div className={styles.aiSqlSource}>
+      <div className={styles.aiSqlSourceTitle}>
+        AI来源:
+      </div>
+      <Radio.Group onChange={changeAiSqlSource} value={aiSqlSource}>
+        <Radio value={AiSqlSourceType.OPENAI}>Open Ai</Radio>
+        <Radio value={AiSqlSourceType.RESTAI}>自定义</Radio>
+      </Radio.Group>
     </div>
-    <div className={classnames(styles.content, styles.chatGPTKey)}>
-      <Input value={chatgptConfig.apiKey} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, apiKey: e.target.value }) }} />
-    </div>
-    <div className={styles.title}>
-      HTTP Proxy Host
-    </div>
-    <div className={classnames(styles.content, styles.chatGPTKey)}>
-      <Input value={chatgptConfig.httpProxyHost} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, httpProxyHost: e.target.value }) }} />
-    </div>
-    <div className={styles.title}>
-      HTTP Proxy Prot
-    </div>
-    <div className={classnames(styles.content, styles.chatGPTKey)}>
-      <Input value={chatgptConfig.httpProxyPort} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, httpProxyPort: e.target.value }) }} />
-    </div>
-    <div className={styles.bottomButton}>
-      <Button theme='default' onClick={changeChatgptApiKey}>更新</Button>
-    </div>
+    {
+      aiSqlSource === AiSqlSourceType.OPENAI && <div>
+        <div className={styles.title}>
+          Api Key
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          <Input value={chatgptConfig.apiKey} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, apiKey: e.target.value }) }} />
+        </div>
+        <div className={styles.title}>
+          Api Host
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          <Input value={chatgptConfig.apiKey} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, apiHost: e.target.value }) }} />
+        </div>
+        <div className={styles.title}>
+          HTTP Proxy Host
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          <Input value={chatgptConfig.httpProxyHost} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, httpProxyHost: e.target.value }) }} />
+        </div>
+        <div className={styles.title}>
+          HTTP Proxy Prot
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          <Input value={chatgptConfig.httpProxyPort} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, httpProxyPort: e.target.value }) }} />
+        </div>
+        <div className={styles.bottomButton}>
+          <Button theme='default' onClick={changeChatgptApiKey}>更新</Button>
+        </div>
+      </div>
+    }
+    {
+      aiSqlSource === AiSqlSourceType.RESTAI && <div>
+        <div className={styles.title}>
+          自定义Ai Url
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          <Input value={chatgptConfig.apiKey} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, restAiUrl: e.target.value }) }} />
+        </div>
+        <div className={styles.title}>
+          自定义AI接口HTTP请求方法
+        </div>
+        <div className={classnames(styles.content, styles.chatGPTKey)}>
+          {/* <Select value={t.defaultValue} onChange={(e) => { selectChange({ name: t.name, value: e }) }}>
+            {t.selects?.map((t: ISelect) => <Option key={t.value} value={t.value}>{t.label}</Option>)}
+          </Select> */}
+        </div>
+      </div>
+    }
   </>
 }
 
