@@ -26,6 +26,7 @@ export enum DatabaseTypeCode {
   SQLITE = 'SQLITE',
   MARIADB = 'MARIADB',
   CLICKHOUSE = 'CLICKHOUSE',
+  DM="DM",
 }
 
 export const databaseType: {
@@ -86,6 +87,13 @@ export const databaseType: {
     code: DatabaseTypeCode.CLICKHOUSE,
     port: 8123,
     icon: '\ue8f4',
+  },
+  [DatabaseTypeCode.DM]: {
+    name: 'dm',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.DM,
+    port: 5236,
+    icon: '\uea30',
   },
 };
 
