@@ -160,7 +160,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           mkdir oss_temp_file
-          cp -r ali-dbhub-client/electron-build/*Setup*.exe ./oss_temp_file
+          cp -r ali-dbhub-client/electron-build/* ./oss_temp_file/win/x64
           ls ali-dbhub-client/electron-build/
 
       # 准备要需要的数据 MacOS amd64
@@ -168,8 +168,8 @@ jobs:
         if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
         run: |
           mkdir oss_temp_file
-          cp ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file
-          cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
+          cp ali-dbhub-client/electron/app/ali-dbhub-server-start.jar ./oss_temp_file/jar/ali-dbhub-server-start-${{ github.run_id }}.jar
+          cp -r ali-dbhub-client/electron-build/* ./oss_temp_file/mac/amd
           ls ali-dbhub-client/electron-build/
 
           
@@ -178,7 +178,7 @@ jobs:
         if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
         run: |
           mkdir oss_temp_file
-          cp -r ali-dbhub-client/electron-build/*.dmg ./oss_temp_file
+          cp -r ali-dbhub-client/electron-build/* ./oss_temp_file/mac/arm
           ls ali-dbhub-client/electron-build/
 
       # 把文件上传到OSS 方便下载

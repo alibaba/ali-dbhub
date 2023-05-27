@@ -26,6 +26,7 @@ export enum DatabaseTypeCode {
   SQLITE = 'SQLITE',
   MARIADB = 'MARIADB',
   CLICKHOUSE = 'CLICKHOUSE',
+  DM="DM",
 }
 
 export const databaseType: {
@@ -74,18 +75,25 @@ export const databaseType: {
     icon: '\ue65a',
   },
   [DatabaseTypeCode.MARIADB]: {
-    name: 'mariadb',
+    name: 'Mariadb',
     img: moreDBLogo,
     code: DatabaseTypeCode.MARIADB,
     port: 3306,
     icon: '\ue6f5',
   },
   [DatabaseTypeCode.CLICKHOUSE]: {
-    name: 'clickHouse',
+    name: 'ClickHouse',
     img: moreDBLogo,
     code: DatabaseTypeCode.CLICKHOUSE,
     port: 8123,
     icon: '\ue8f4',
+  },
+  [DatabaseTypeCode.DM]: {
+    name: 'DM',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.DM,
+    port: 5236,
+    icon: '\ue655',
   },
 };
 
