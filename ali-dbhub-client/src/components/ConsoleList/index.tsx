@@ -58,7 +58,7 @@ export default memo<IProps>(function ConsoleList(props) {
           databaseName: dblclickNodeData?.databaseName!,
           schemaName: dblclickNodeData.schemaName!,
           status: ConsoleStatus.DRAFT,
-          ddl: `${consoleTopComment}SELECT * FROM`,
+          ddl: `${consoleTopComment}`,
           tabOpened: TabOpened.IS_OPEN,
         };
 
@@ -73,7 +73,7 @@ export default memo<IProps>(function ConsoleList(props) {
             dataSourceName: dblclickNodeData.dataSourceName!,
             schemaName: dblclickNodeData.schemaName!,
             consoleId: res,
-            ddl: `${consoleTopComment}SELECT * FROM`,
+            ddl: `${consoleTopComment}`,
           };
           setActiveKey(newConsole.key);
           setWindowList([...windowList, newConsole]);
@@ -101,7 +101,7 @@ export default memo<IProps>(function ConsoleList(props) {
       databaseName: createConsoleDialog?.databaseName,
       schemaName: createConsoleDialog.schemaName!,
       status: ConsoleStatus.DRAFT,
-      ddl: `${consoleTopComment}SELECT * FROM`,
+      ddl: `${consoleTopComment}`,
       tabOpened: TabOpened.IS_OPEN,
     };
 
@@ -116,7 +116,7 @@ export default memo<IProps>(function ConsoleList(props) {
         dataSourceName: createConsoleDialog.dataSourceName,
         schemaName: createConsoleDialog.schemaName!,
         consoleId: res,
-        ddl: `${consoleTopComment}SELECT * FROM`,
+        ddl: `${consoleTopComment}`,
       };
       setActiveKey(newConsole.key);
       setWindowList([...windowList, newConsole]);

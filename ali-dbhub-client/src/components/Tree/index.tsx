@@ -131,6 +131,8 @@ function TreeNode(props: TreeNodeIProps) {
           setIsLoading(false);
         }
       }
+    }).catch(error => {
+      setIsLoading(false);
     });
   }
 
