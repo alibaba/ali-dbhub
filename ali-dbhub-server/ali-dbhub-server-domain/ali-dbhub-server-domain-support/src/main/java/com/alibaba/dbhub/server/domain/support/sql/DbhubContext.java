@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.dbhub.server.domain.support.datasource.DataSourceManger;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
@@ -56,7 +57,12 @@ public class DbhubContext {
         ConnectInfo connectInfo = CONNECT_INFO_THREAD_LOCAL.get();
         CONNECT_INFO_THREAD_LOCAL.set(info);
         if (connectInfo == null) {
-            setConnectInfoThreadLocal(info);
+            try {
+                Connection connection = DataSourceManger.getDataSource(info).getConnection();
+                info.setConnection(connection);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             if (StringUtils.isNotBlank(info.getDatabaseName())) {
                 SQLExecutor.getInstance().connectDatabase(info.getDatabaseName());
             }

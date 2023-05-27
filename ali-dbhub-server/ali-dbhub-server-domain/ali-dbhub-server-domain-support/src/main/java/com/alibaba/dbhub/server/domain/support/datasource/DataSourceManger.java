@@ -4,8 +4,10 @@
  */
 package com.alibaba.dbhub.server.domain.support.datasource;
 
+import java.net.MalformedURLException;
 import java.net.URLClassLoader;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,7 +29,7 @@ import org.springframework.util.ObjectUtils;
 @Slf4j
 public class DataSourceManger {
 
-    protected static final ConcurrentHashMap<String, MyDataSource> DATA_SOURCE_MAP = new ConcurrentHashMap();
+    protected static final ConcurrentHashMap<String, MyDataSource> DATA_SOURCE_MAP = new ConcurrentHashMap<>();
 
     public static DataSource getDataSource(ConnectInfo connectInfo) {
         String key = connectInfo.getDataSourceId().toString();
@@ -38,12 +40,13 @@ public class DataSourceManger {
                     dataSource.getHikariDataSource().close();
                     DATA_SOURCE_MAP.remove(key);
                 } catch (Exception e) {
+                    log.error("Exception occurred when closing the database connection pool.", e);
                 }
             } else {
                 return dataSource.getHikariDataSource();
             }
         }
-        synchronized (key) {
+        synchronized (key.intern()) {
             dataSource = DATA_SOURCE_MAP.get(key);
             if (dataSource != null) {
                 return dataSource.getHikariDataSource();
@@ -59,8 +62,12 @@ public class DataSourceManger {
         }
     }
 
-    private static MyDataSource createDataSource(ConnectInfo connectInfo) throws Exception {
+    private static MyDataSource createDataSource(ConnectInfo connectInfo)
+            throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         DriverTypeEnum driverTypeEnum = DriverTypeEnum.getDriver(connectInfo.getDbType(), connectInfo.getJdbc());
+        if (driverTypeEnum == null) {
+            throw new RuntimeException("Unrecognized database type, type is " + connectInfo.getDbType());
+        }
         ClassLoader classLoader = IDriverManager.getClassLoader(driverTypeEnum);
         //IDataSource dataSource = new IDataSource(connectInfo, driverTypeEnum, classLoader);
         //dataSource.setName(connectInfo.getAlias());
@@ -87,10 +94,10 @@ public class DataSourceManger {
         //}
         //return dataSource;
         Thread.currentThread().setContextClassLoader(classLoader);
-        log.info("createDataSource classLoader  hashCode:{}"+ classLoader.hashCode());
-        log.info("createDataSource classLoader url :{}"+ JSON.toJSONString (((URLClassLoader)classLoader).getURLs()));
-        HikariDataSource myDataSource = (HikariDataSource)classLoader.loadClass("com.zaxxer.hikari.HikariDataSource")
-            .newInstance();
+        log.info("ClassLoader class: {}", classLoader.hashCode());
+        log.info("ClassLoader URLs: {}", JSON.toJSONString(((URLClassLoader)classLoader).getURLs()));
+        HikariDataSource myDataSource = (HikariDataSource) classLoader.loadClass("com.zaxxer.hikari.HikariDataSource")
+                .newInstance();
         myDataSource.setDriverClassName(driverTypeEnum.getDriverClass());
         myDataSource.setJdbcUrl(connectInfo.getUrl());
         myDataSource.setUsername(connectInfo.getUser());
@@ -107,8 +114,6 @@ public class DataSourceManger {
             properties.putAll(connectInfo.getExtendMap());
             myDataSource.setDataSourceProperties(properties);
         }
-        Connection connection = myDataSource.getConnection();
-        if (connection != null) {connection.close();}
         return new MyDataSource(connectInfo, myDataSource);
     }
 
