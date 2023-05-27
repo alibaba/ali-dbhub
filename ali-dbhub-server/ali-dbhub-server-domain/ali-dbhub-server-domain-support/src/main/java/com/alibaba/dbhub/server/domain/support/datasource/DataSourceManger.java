@@ -63,17 +63,13 @@ public class DataSourceManger {
     }
 
     private static MyDataSource createDataSource(ConnectInfo connectInfo)
-            throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+            throws MalformedURLException, SQLException {
         DriverTypeEnum driverTypeEnum = DriverTypeEnum.getDriver(connectInfo.getDbType(), connectInfo.getJdbc());
         if (driverTypeEnum == null) {
             throw new RuntimeException("Unrecognized database type, type is " + connectInfo.getDbType());
         }
         ClassLoader classLoader = IDriverManager.getClassLoader(driverTypeEnum);
-        log.info("ClassLoader class: {}", classLoader.hashCode());
-        log.info("ClassLoader URLs: {}", JSON.toJSONString(((URLClassLoader)classLoader).getURLs()));
-
-        HikariDataSource myDataSource = (HikariDataSource) classLoader.loadClass("com.zaxxer.hikari.HikariDataSource")
-                .newInstance();
+        HikariDataSource myDataSource = new HikariDataSource();
         myDataSource.setJdbcUrl(connectInfo.getUrl());
         myDataSource.setUsername(connectInfo.getUser());
         myDataSource.setPassword(connectInfo.getPassword());

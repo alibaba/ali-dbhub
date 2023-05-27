@@ -136,11 +136,9 @@ public class IDriverManager {
                     File driverFile = new File(getFullPath(jarPaths[i]));
                     urls[i] = driverFile.toURI().toURL();
                 }
-                //urls[jarPaths.length] = new File(JdbcJarUtils.getFullPath("HikariCP-4.0.3.jar")).toURI().toURL();
 
-                URLClassLoader cl = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
-                log.info("ClassLoader class: {}", cl.hashCode());
-                log.info("ClassLoader URLs: {}", JSON.toJSONString(cl.getURLs()));
+                ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+                URLClassLoader cl = new URLClassLoader(urls, systemClassLoader);
 
                 try {
                     cl.loadClass(driverTypeEnum.getDriverClass());
@@ -150,7 +148,6 @@ public class IDriverManager {
                         File driverFile = new File(JdbcJarUtils.getNewFullPath(jarPaths[i]));
                         urls[i] = driverFile.toURI().toURL();
                     }
-                    //urls[jarPaths.length] = new File(JdbcJarUtils.getFullPath("HikariCP-4.0.3.jar")).toURI().toURL();
                     cl = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
 
                 }
