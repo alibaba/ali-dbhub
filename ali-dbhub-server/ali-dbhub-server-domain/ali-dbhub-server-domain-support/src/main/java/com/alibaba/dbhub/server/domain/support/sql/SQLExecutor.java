@@ -49,7 +49,8 @@ public class SQLExecutor {
      */
     private static final SQLExecutor INSTANCE = new SQLExecutor();
 
-    private SQLExecutor() {}
+    private SQLExecutor() {
+    }
 
     public static SQLExecutor getInstance() {
         return INSTANCE;
@@ -137,7 +138,7 @@ public class SQLExecutor {
                     executeResult.setHeaderList(headerList);
                     for (int i = 1; i <= col; i++) {
                         headerList.add(Cell.builder().type(CellTypeEnum.STRING.getCode())
-                            .stringValue(resultSetMetaData.getColumnName(i)).build());
+                                .stringValue(resultSetMetaData.getColumnName(i)).build());
                     }
 
                     // 获取数据信息
@@ -195,7 +196,7 @@ public class SQLExecutor {
         }
         ConnectInfo info = DbhubContext.getConnectInfo();
         switch (info.getDbType()) {
-            case MYSQL -> {
+            case MYSQL, MARIADB -> {
                 try {
                     execute("use `" + database + "`;", null);
                 } catch (SQLException e) {
@@ -281,7 +282,7 @@ public class SQLExecutor {
         List<Table> tables = Lists.newArrayList();
         try {
             ResultSet resultSet = getConnection().getMetaData().getTables(databaseName, schemaName, tableName,
-                types);
+                    types);
             while (resultSet.next()) {
                 tables.add(buildTable(resultSet));
             }
@@ -305,7 +306,7 @@ public class SQLExecutor {
         List<TableColumn> tableColumns = Lists.newArrayList();
         try {
             ResultSet resultSet = getConnection().getMetaData().getColumns(databaseName, schemaName, tableName,
-                columnName);
+                    columnName);
             while (resultSet.next()) {
                 tableColumns.add(buildColumn(resultSet));
             }
@@ -329,23 +330,23 @@ public class SQLExecutor {
         try {
             List<TableIndexColumn> tableIndexColumns = Lists.newArrayList();
             ResultSet resultSet = getConnection().getMetaData().getIndexInfo(databaseName, schemaName, tableName, false,
-                false);
+                    false);
             while (resultSet.next()) {
                 tableIndexColumns.add(buildTableIndexColumn(resultSet));
             }
             tableIndexColumns.stream().filter(c -> c.getIndexName() != null).collect(
-                    Collectors.groupingBy(TableIndexColumn::getIndexName)).entrySet()
-                .stream().forEach(entry -> {
-                    TableIndex tableIndex = new TableIndex();
-                    TableIndexColumn column = entry.getValue().get(0);
-                    tableIndex.setName(entry.getKey());
-                    tableIndex.setTableName(column.getTableName());
-                    tableIndex.setSchemaName(column.getSchemaName());
-                    tableIndex.setDatabaseName(column.getDatabaseName());
-                    tableIndex.setUnique(!column.getNonUnique());
-                    tableIndex.setColumnList(entry.getValue());
-                    tableIndices.add(tableIndex);
-                });
+                            Collectors.groupingBy(TableIndexColumn::getIndexName)).entrySet()
+                    .stream().forEach(entry -> {
+                        TableIndex tableIndex = new TableIndex();
+                        TableIndexColumn column = entry.getValue().get(0);
+                        tableIndex.setName(entry.getKey());
+                        tableIndex.setTableName(column.getTableName());
+                        tableIndex.setSchemaName(column.getSchemaName());
+                        tableIndex.setDatabaseName(column.getDatabaseName());
+                        tableIndex.setUnique(!column.getNonUnique());
+                        tableIndex.setColumnList(entry.getValue());
+                        tableIndices.add(tableIndex);
+                    });
         } catch (SQLException e) {
             close();
             throw new RuntimeException(e);
@@ -361,7 +362,7 @@ public class SQLExecutor {
      * @return
      */
     public List<com.alibaba.dbhub.server.domain.support.model.Function> functions(String databaseName,
-        String schemaName) {
+                                                                                  String schemaName) {
         List<com.alibaba.dbhub.server.domain.support.model.Function> functions = Lists.newArrayList();
         try {
             ResultSet resultSet = getConnection().getMetaData().getFunctions(databaseName, schemaName, null);
