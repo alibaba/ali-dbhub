@@ -126,7 +126,7 @@ public class IDriverManager {
         if (CLASS_LOADER_MAP.containsKey(jarPath)) {
             return CLASS_LOADER_MAP.get(jarPath);
         } else {
-            synchronized (jarPath.intern()) {
+            synchronized (jarPath) {
                 if (CLASS_LOADER_MAP.containsKey(jarPath)) {
                     return CLASS_LOADER_MAP.get(jarPath);
                 }
@@ -139,8 +139,8 @@ public class IDriverManager {
                 //urls[jarPaths.length] = new File(JdbcJarUtils.getFullPath("HikariCP-4.0.3.jar")).toURI().toURL();
 
                 URLClassLoader cl = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
-                log.info("ClassLoader class: {}", cl.hashCode());
-                log.info("ClassLoader URLs: {}", JSON.toJSONString(cl.getURLs()));
+                log.info("ClassLoader class:{}", cl.hashCode());
+                log.info("ClassLoader URLs:{}", JSON.toJSONString(cl.getURLs()));
 
                 try {
                     cl.loadClass(driverTypeEnum.getDriverClass());

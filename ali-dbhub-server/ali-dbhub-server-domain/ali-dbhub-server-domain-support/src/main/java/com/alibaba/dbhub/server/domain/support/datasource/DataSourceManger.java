@@ -4,10 +4,8 @@
  */
 package com.alibaba.dbhub.server.domain.support.datasource;
 
-import java.net.MalformedURLException;
 import java.net.URLClassLoader;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +27,7 @@ import org.springframework.util.ObjectUtils;
 @Slf4j
 public class DataSourceManger {
 
-    protected static final ConcurrentHashMap<String, MyDataSource> DATA_SOURCE_MAP = new ConcurrentHashMap<>();
+    protected static final ConcurrentHashMap<String, MyDataSource> DATA_SOURCE_MAP = new ConcurrentHashMap();
 
     public static DataSource getDataSource(ConnectInfo connectInfo) {
         String key = connectInfo.getDataSourceId().toString();
@@ -40,13 +38,12 @@ public class DataSourceManger {
                     dataSource.getHikariDataSource().close();
                     DATA_SOURCE_MAP.remove(key);
                 } catch (Exception e) {
-                    log.error("Exception occurred when closing the database connection pool.", e);
                 }
             } else {
                 return dataSource.getHikariDataSource();
             }
         }
-        synchronized (key.intern()) {
+        synchronized (key) {
             dataSource = DATA_SOURCE_MAP.get(key);
             if (dataSource != null) {
                 return dataSource.getHikariDataSource();
@@ -62,18 +59,39 @@ public class DataSourceManger {
         }
     }
 
-    private static MyDataSource createDataSource(ConnectInfo connectInfo)
-            throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+    private static MyDataSource createDataSource(ConnectInfo connectInfo) throws Exception {
         DriverTypeEnum driverTypeEnum = DriverTypeEnum.getDriver(connectInfo.getDbType(), connectInfo.getJdbc());
-        if (driverTypeEnum == null) {
-            throw new RuntimeException("Unrecognized database type, type is " + connectInfo.getDbType());
-        }
         ClassLoader classLoader = IDriverManager.getClassLoader(driverTypeEnum);
-        log.info("ClassLoader class: {}", classLoader.hashCode());
-        log.info("ClassLoader URLs: {}", JSON.toJSONString(((URLClassLoader)classLoader).getURLs()));
-
-        HikariDataSource myDataSource = (HikariDataSource) classLoader.loadClass("com.zaxxer.hikari.HikariDataSource")
-                .newInstance();
+        //IDataSource dataSource = new IDataSource(connectInfo, driverTypeEnum, classLoader);
+        //dataSource.setName(connectInfo.getAlias());
+        //dataSource.setDriverClassLoader(classLoader);
+        //dataSource.setDriverClassName(driverTypeEnum.getDriverClass());
+        //dataSource.setUrl(connectInfo.getUrl());
+        //dataSource.setInitialSize(2);
+        //dataSource.setMinIdle(0);
+        //dataSource.setMaxActive(5);
+        //dataSource.setMaxWait(3000L);
+        //dataSource.setMinEvictableIdleTimeMillis(300000L);
+        //dataSource.setUsername(connectInfo.getUser());
+        //dataSource.setPassword(connectInfo.getPassword());
+        //dataSource.setConnectionErrorRetryAttempts(2);
+        //dataSource.setBreakAfterAcquireFailure(true);
+        //dataSource.setRemoveAbandoned(true);
+        //dataSource.setRemoveAbandonedTimeout(1800);
+        //dataSource.setTestOnBorrow(true);
+        //dataSource.setValidationQuery("select 1");
+        //if (!ObjectUtils.isEmpty(connectInfo.getExtendMap())) {
+        //    Properties properties = new Properties();
+        //    properties.putAll(connectInfo.getExtendMap());
+        //    dataSource.setConnectProperties(properties);
+        //}
+        //return dataSource;
+        Thread.currentThread().setContextClassLoader(classLoader);
+        log.info("createDataSource classLoader  hashCode:{}"+ classLoader.hashCode());
+        log.info("createDataSource classLoader url :{}"+ JSON.toJSONString (((URLClassLoader)classLoader).getURLs()));
+        HikariDataSource myDataSource = (HikariDataSource)classLoader.loadClass("com.zaxxer.hikari.HikariDataSource")
+            .newInstance();
+        myDataSource.setDriverClassName(driverTypeEnum.getDriverClass());
         myDataSource.setJdbcUrl(connectInfo.getUrl());
         myDataSource.setUsername(connectInfo.getUser());
         myDataSource.setPassword(connectInfo.getPassword());
@@ -89,17 +107,8 @@ public class DataSourceManger {
             properties.putAll(connectInfo.getExtendMap());
             myDataSource.setDataSourceProperties(properties);
         }
-        Thread thread = Thread.currentThread();
-        ClassLoader contextClassLoader = thread.getContextClassLoader();
-        // Let the connection pool use the specified classloader to load the driver.
-        try {
-            thread.setContextClassLoader(classLoader);
-            myDataSource.setDriverClassName(driverTypeEnum.getDriverClass());
-            myDataSource.getConnection().close();
-        } finally {
-            thread.setContextClassLoader(contextClassLoader);
-        }
-
+        Connection connection = myDataSource.getConnection();
+        if (connection != null) {connection.close();}
         return new MyDataSource(connectInfo, myDataSource);
     }
 
