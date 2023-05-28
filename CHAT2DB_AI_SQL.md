@@ -1,71 +1,71 @@
-# Chat2DB AI SQL功能使用说明
-Chat2DB包含一系列基于ChatGPT的AI SQL使用功能，主要包括自然语言转SQL、SQL解释、SQL优化和SQL转换。 使用这些AI功能，可以将自然语言转换成本地查询SQL，而不仅仅是SQL查询伪代码；可以将SQL解释成自然语言，帮助用户理解复杂的SQL；可以针对慢SQL提供全方位的优化建议，提升查询效率；可以转换不同数据库类型的SQL语言，降低数据库迁移难度等等。
-## 使用配置
-### 点击设置
+# Chat2db AI SQL Function Instructions 
+ Chat2DB contains a series of AI SQL usage functions based on Chatgpt, mainly including SQL, SQL interpretation, SQL optimization and SQL conversion. Using these AI functions, you can check the SQL cost of natural language, not just SQL to query the pseudo code; you can interpret SQL as a natural language to help users understand complex SQL; Improve query efficiency; can convert different database types of SQL language, reduce database migration difficulty, and so on. 
+ ## Use configuration 
+ ### Click Settings
 <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01hecdtO1acLegtiP9k_!!6000000003350-2-tps-2400-1600.png" width="100%"/></a>
-### 配置OPENAI_API_KEY
-使用ChatSql功能之前必须配置OPENAI_API_KEY，也可在客户端中设置代理HOST和PORT
+### Configure Openai_api_key 
+ Before using the ChatSQL function
 <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01mkVmEd1FTY7SBG6Lq_!!6000000000488-0-tps-1212-788.jpg" width="100%"/></a>
 
-## 自然语言转SQL
-### 功能描述
-输入自然语言，选中执行并传入查询相关的表结构信息，则会返回相应的SQL
-- 输入样例：查询学生小明的各科目成绩，并传入关联数据表course,score,student,student_course
-- 输出样例：
-```sql
-SELECT score.score
-FROM score
-INNER JOIN student_course ON score.course_id = student_course.course_id
-INNER JOIN student ON student_course.student_id = student.id
-WHERE student.name = '小明'
-```
-## SQL解释
-### 功能描述
-输入SQL，选中执行并传入附加信息，附加信息可以添加希望解释《输入SQL》哪方面的信息，如SQL执行目标，则会返回此条SQL附加信息相关的解释
-- 输入样例：SELECT department_name FROM departments WHERE department_id IN (SELECT department_id FROM employees GROUP BY department_id HAVING COUNT(*) > 10)
-- 输出样例：这个SQL查询语句的意思是：从departments表中选择department_name列，其中department_id列的值在employees表中department_id列的值分组后，如果该组中的记录数大于10，则返回该department_id。换句话说，这个查询语句返回的是在employees表中有超过10个员工的部门名称。
-## SQL优化
-### 功能描述
-输入SQL，选中执行并传入优化附加信息，附加信息可以添加希望具体优化方面和要求，则会返回此条SQL附加信息相关的优化建议
-- 输入样例：SELECT * FROM department ORDER BY gmt_create DESC
-- 输出样例：
-  1. 尽量避免使用SELECT *，应该明确指定需要查询的列，以减少不必要的数据传输和提高查询效率。
-  2. 对于ORDER BY语句，如果查询的结果集比较大，可以考虑添加LIMIT限制返回的行数，以减少排序的开销。
-  3. 对于gmt_create字段，可以考虑添加索引以提高排序的效率。
-  4. 如果查询的结果集经常被访问，可以考虑使用缓存技术，如Redis等，以减少数据库的访问次数。
-## SQL转换
-### 功能描述
-输入SQL，选中执行并传入目标SQL类型和附加信息，附加信息中可以添加转换的自定义要求，则会返回目标SQL类型且符合附加要求的SQL语言
-- 输入样例：SELECT IFNULL(NULL, "W3Schools.com")，目标SQL类型为Oracle SQL
-- 输出样例：SELECT NVL(NULL, 'W3Schools.com') FROM dual;
-## CHATBOT
-### 功能描述
-输入任意prompt，点击ChatRobot按钮即可根据prompt返回相应的结果，此处聊天对话默认支持上下文，默认上下文长度为4，可在application.yml文件中修改上下文长度
-- 输入样例：针对第二条优化建议给出具体实现方法
-- 输出样例：针对第二条优化建议，可以考虑在student表中添加一个索引，以加快查询速度。具体实现方法如下：
+## Natural language to SQL 
+ ### function description 
+ Enter the natural language, select and pass the inquiry related table structure information, and return the corresponding SQL 
+ -Enter a sample example: query the scores of students Xiaoming's subjects, and introduce Course, Score, Student, Student_course 
+ -Outage sample: 
+ `` `SQL 
+ Select score.score 
+ From score 
+ Inner job state_course on score.course_id = student_course.course_id_id 
+ Inner Join Student on Student_Course.Student_id = Student.id 
+ Where Student.name = 'Xiao Ming' 
+ `` ` 
+ ## SQL Explanation 
+ ### function description 
+ Enter SQL, select and pass the additional information. The additional information can add information to explain which aspect of "Enter SQL". If SQL executes the target, it will return this SQL additional information related explanation 
+ -Enter a sample: Select department_name from departments where department_id in (select department_id from embipeees group by department_id having count (*)> 10) 
+ -Outing sample: This SQL query statement means: select the department_name column from the departments table, where the value of the department_id column is in the value group of the department_id column in the Emplayees table, and if the number of records in the group is greater than 10, it returns to this. department_id. In other words, this query statement returns the name of more than 10 employees in the Employees table. 
+ ## SQL Optimization 
+ ### function description 
+ Enter the SQL, select and pass the optimization additional information. The additional information can add the aspect and requirements for specific optimization, and it will return this strip SQL additional information related optimization suggestions 
+ -Enter sample example: Select * from department order by gmt_create desc 
+ -Outage sample: 
+   1. Try to avoid using Select *, you should clearly specify columns that need to be queried to reduce unnecessary data transmission and improve query efficiency. 
+   2. For the Order By statement, if the results of the query are relatively large, you can consider adding the number of rows returned to the Limit limit to reduce the amount of sorting. 
+   3. For the GMT_CREATE field, you can consider adding indexes to improve the efficiency of sorting. 
+   4. If the results of the query are often accessed, you can consider using cache technology, such as Redis to reduce the number of database access. 
+ ## SQL conversion 
+ ### function description 
+ Enter the SQL, select the execution and pass the target SQL type and additional information. You can add the custom requirements of conversion to the additional information, which will return the target SQL type and meet the additional requirements of the SQL language. 
+ -Enter sample example: Select ifnull (null, "w3schools.com"), the target SQL type is Oracle SQL 
+ -Outage sample: select nvl (null, 'w3Schools.com') from dual; 
+ ## Chatbot 
+ ### function description 
+ Enter any Prompt, click the Chatrobot button to return the corresponding results according to the Prompt. Here is the default support context of the chat and dialogue. 
+ -Enter sample example: give specific implementation methods for the second optimization suggestion 
+ -Outage sample: For the second optimization suggestion, you can consider adding an index in the Student table to speed up the query speed. The specific implementation method is as follows: 
 
-1. 查看student表中是否已经存在索引。可以使用以下命令查看：
+ 1. View whether there are already indexes in the Student table. You can use the following command to view: 
 
-   ```sql
-   SHOW INDEX FROM student;
-   ```
+    `` `SQL 
+    Show index from student; 
+    `` ` 
 
-   如果已经存在索引，则可以跳过下一步。
+    If you already have indexes, you can skip the next step. 
 
-2. 在student表中添加索引。可以使用以下命令添加：
+ 2. Add indexes to the Student table. You can use the following command to add: 
 
-   ```sql
-   ALTER TABLE student ADD INDEX name_index (name);
-   ```
+    `` `SQL 
+    Alter Table Student add index name_index (name); 
+    `` ` 
 
-   这里的name_index是索引的名称，name是需要建立索引的列名。
+    The name_index here is the name of the index, and name is the name of the index. 
 
-   注意：如果student表中的数据量很大，添加索引可能需要一些时间。
+    Note: If the amount of data in the Student table is large, it may take some time to add an index. 
 
-3. 重新执行原始SQL语句，查看查询速度是否有所提升。
+ 3. Re -execute the original SQL statement and check whether the query speed has improved. 
 
-   ```sql
-   SELECT score.score FROM score INNER JOIN student ON score.student_id = student.id WHERE student.name = '小明';
-   ```
+    `` `SQL 
+    Select score.score from score inner join Student on score.Student_id = Student.id WHERE Student.name = 'Xiao Ming'; 
+    `` ` 
 
-   如果查询速度有所提升，则说明索引建立成功。
+    If the query speed is improved, the index is successful.

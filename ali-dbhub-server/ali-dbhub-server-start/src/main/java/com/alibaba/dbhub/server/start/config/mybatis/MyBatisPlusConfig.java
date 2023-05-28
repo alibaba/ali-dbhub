@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author moji
- * @version MyBatisPlusConfig.java, v 0.1 2022年09月29日 17:38 moji Exp $
+ * @version MyBatisPlusConfig.java, v 0.1September 29, 2022 17:38 Moji EXP $
  * @date 2022/09/29
  */
 @Configuration

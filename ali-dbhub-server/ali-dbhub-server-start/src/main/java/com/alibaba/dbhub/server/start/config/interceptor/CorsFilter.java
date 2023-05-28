@@ -13,14 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-/**
- * Cors跨域的拦截器，任何情况都允许跨域
- *
- * 通过CorsRegistry策略的跨域 在登录的情况下会有有问题，但是本地没有复现，可能原因是：bean 的加载顺序的问题。
- * 临时通过CorsFilter解决，后续可以研究下：CorsRegistry
- *
- * @author 是仪
- */
+/** 
+  * CORS cross -domain interceptor, any situation allows cross -domain 
+  * 
+  * There will be problems with the cross -domain of the CORSRegistry strategy, but there is no problem in the local area, but there is no local recovery. The reason may be: the problem of the loading order of the bean. 
+  * Temporary solution through CORSFILTER, follow -up can be studied: Corsregistry 
+  * 
+  * @Author is the instrument 
+  */
 @Component
 public class CorsFilter implements Filter {
 
