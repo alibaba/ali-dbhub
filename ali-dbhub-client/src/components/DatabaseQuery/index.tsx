@@ -23,6 +23,7 @@ import { OSnow } from '@/utils';
 import { DatabaseContext } from '@/context/database';
 import { formatParams, uuid } from '@/utils/common';
 import connectToEventSource from '@/utils/eventSource';
+import configService from '@/service/config';
 
 import styles from './index.less';
 const { Option } = Select;
@@ -60,8 +61,8 @@ let monacoEditorExternalList: any = {};
 const initModal = {
   open: false,
   title: '',
-  handleOk: () => { },
-  handleCancel: () => { },
+  handleOk: () => {},
+  handleCancel: () => {},
   content: <></>,
 };
 export default function DatabaseQuery(props: IProps) {
@@ -166,7 +167,7 @@ export default function DatabaseQuery(props: IProps) {
         myEditorHintData[item.name] = [];
       });
       monacoHint.current = setEditorHint(myEditorHintData);
-    } catch { }
+    } catch {}
   };
 
   const getEditor = (editor: any) => {
@@ -177,8 +178,8 @@ export default function DatabaseQuery(props: IProps) {
       localStorage.getItem(
         `window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.consoleId}`,
       ) ||
-      windowTab.ddl ||
-      '',
+        windowTab.ddl ||
+        '',
     );
   };
 
@@ -350,31 +351,60 @@ export default function DatabaseQuery(props: IProps) {
     extendParams.current = { tableNames: [], ext: '', destSqlType: '' };
   };
 
+  const handleAIRelativeOperation = async (
+    type: 'lang2SQL' | 'explainSQL' | 'optimizeSQL' | 'changeSQL',
+  ) => {
+    const sentence = getSelectionVal();
+    if (!sentence) {
+      message.warning('请选中需要处理的语句');
+      return;
+    }
+
+    const { apiKey } = await configService.getChatGptSystemConfig();
+    if(!apiKey){
+      message.warning('请在设置中配置AI的apiKey！')
+      return;
+    }
+
+    switch (type) {
+      case 'lang2SQL':
+        lang2SQL('withParams');
+        break;
+      case 'explainSQL':
+        explainSQL('withParams');
+        break;
+      case 'optimizeSQL':
+        optimizeSQL('withParams');
+        break;
+      case 'changeSQL':
+        changeSQL('withParams');
+        break;
+      default:
+        break;
+    }
+  };
+
   /**
    * 自然语言转化SQL
    */
   const lang2SQL = async (type?: 'withParams') => {
-    const sentence = getSelectionVal();
-    if (!sentence) {
-      message.warning('请选择输入信息');
-      return;
-    }
-
     if (!type) {
       chat2SQL(IPromptType.NL_2_SQL);
     } else {
       // ---拉取下数据库表----
-      const p = {
-        dataSourceId: windowTab.dataSourceId!,
-        databaseName: windowTab.databaseName!,
-        pageNo: 1,
-        pageSize: 999,
-      };
-      let res = await mysqlServer.getList(p);
-      tableListRef.current = res.data?.map((item) => ({
-        label: item.name,
-        value: item.name,
-      }));
+      try {
+        const p = {
+          dataSourceId: windowTab.dataSourceId!,
+          databaseName: windowTab.databaseName!,
+          pageNo: 1,
+          pageSize: 999,
+        };
+        let res = await mysqlServer.getList(p);
+        tableListRef.current = res.data?.map((item) => ({
+          label: item.name,
+          value: item.name,
+        }));
+      } catch (error) {}
       // --------
 
       setModalConfig({
@@ -410,12 +440,6 @@ export default function DatabaseQuery(props: IProps) {
    * 解释SQL
    */
   const explainSQL = (type?: 'withParams') => {
-    const sentence = getSelectionVal();
-    if (!sentence) {
-      message.warning('请选择输入信息');
-      return;
-    }
-
     if (!type) {
       chat2SQL(IPromptType.SQL_EXPLAIN);
     } else {
@@ -462,12 +486,6 @@ export default function DatabaseQuery(props: IProps) {
    * 优化SQL
    */
   const optimizeSQL = (type?: 'withParams') => {
-    const sentence = getSelectionVal();
-    if (!sentence) {
-      message.warning('请选择输入信息');
-      return;
-    }
-
     if (!type) {
       chat2SQL(IPromptType.SQL_OPTIMIZER);
     } else {
@@ -512,11 +530,6 @@ export default function DatabaseQuery(props: IProps) {
   };
 
   const changeSQL = (type?: 'withParams') => {
-    const sentence = getSelectionVal();
-    if (!sentence) {
-      message.warning('请选择输入信息');
-      return;
-    }
     if (!type) {
       chat2SQL(IPromptType.SQL_2_SQL);
     } else {
@@ -600,7 +613,7 @@ export default function DatabaseQuery(props: IProps) {
       {
         name: '自然语言转SQL',
         icon: '\ue626',
-        onClick: () => lang2SQL('withParams'),
+        onClick: () => handleAIRelativeOperation('lang2SQL'),
       },
     ],
     // /** 解释SQL */
@@ -609,7 +622,7 @@ export default function DatabaseQuery(props: IProps) {
       {
         name: 'SQL解释',
         icon: '\ue626',
-        onClick: () => explainSQL('withParams'),
+        onClick: () => handleAIRelativeOperation('explainSQL'),
       },
     ],
     // /** 优化SQL */
@@ -618,7 +631,7 @@ export default function DatabaseQuery(props: IProps) {
       {
         name: 'SQL优化',
         icon: '\ue626',
-        onClick: () => optimizeSQL('withParams'),
+        onClick: () => handleAIRelativeOperation('optimizeSQL'),
       },
     ],
     // /** SQL转化 */
@@ -627,7 +640,7 @@ export default function DatabaseQuery(props: IProps) {
       {
         name: 'SQL转化',
         icon: '\ue626',
-        onClick: () => changeSQL('withParams'),
+        onClick: () => handleAIRelativeOperation('changeSQL'),
       },
     ],
   ];
@@ -728,12 +741,10 @@ export default function DatabaseQuery(props: IProps) {
           onOk={modalConfig.handleOk}
           onCancel={modalConfig.handleCancel}
           maskClosable={false}
-          okText='确认'
-          cancelText='取消'
+          okText="确认"
+          cancelText="取消"
         >
-          <div className={styles.modalBox}>
-            {modalConfig.content}
-          </div>
+          <div className={styles.modalBox}>{modalConfig.content}</div>
         </Modal>
       )}
     </>
