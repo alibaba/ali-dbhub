@@ -1,43 +1,43 @@
 # 1.0.7
-* 支持国产达梦数据库 [Issue #148](https://github.com/alibaba/Chat2DB/issues/147)
-* 支持自定义OPEN AI API_HOST [Issue #173](https://github.com/alibaba/Chat2DB/issues/173)
-* 🔥 支持自定义AI接口
-* 支持主题色跟随系统
+* Support domestic Da Meng database [Issue #148](https://github.com/alibaba/Chat2DB/issues/147)
+* Support custom Open AI API_HOST [Issue #173](https://github.com/alibaba/Chat2DB/issues/173)
+*catch Support custom AI interface 
+ * Support the theme color follow -up system
 
-# 1.0.6
-* 修复Oracle数据库字符集问题 [Issue #205](https://github.com/alibaba/Chat2DB/issues/205) [Issue #181](https://github.com/alibaba/Chat2DB/issues/181) [Issue #182](https://github.com/alibaba/Chat2DB/issues/182)
-* 修复mac安装提示的安全问题
+# 1.0.6 
+ * Fix the problem of the Oracle Database State Collection [Issue #205](https://github.com/alibaba/Chat2DB/issues/205) [Issue #181](https://github.com/alibaba/Chat2DB/issues/181) [Issue #182](https://github.com/alibaba/Chat2DB/issues/182)
+*Fix the safety issues of MAC installation prompts 
 
-# 1.0.5
-* 🔥 优化Apple芯片的启动速度
-* 修复Windows端数据库连接问题 [Issue #150](https://github.com/alibaba/Chat2DB/issues/150) [Issue #147](https://github.com/alibaba/Chat2DB/issues/147)
-* 修改database不生效 [Issue #141](https://github.com/alibaba/Chat2DB/issues/141)
+ # 1.0.5 
+ * P Optimize the startup speed of the Apple chip 
+ * Fix the problem of the connection of the Windows database [Issue #150](https://github.com/alibaba/Chat2DB/issues/150) [Issue #147](https://github.com/alibaba/Chat2DB/issues/147)
+* Modify database without taking effect [Issue #141](https://github.com/alibaba/Chat2DB/issues/141)
 * NullPointerException [Issue #136](https://github.com/alibaba/Chat2DB/issues/136)
 
 # 1.0.4
-* 修复ClickHouse jdbc问题 [Issue #135](https://github.com/alibaba/Chat2DB/issues/135)
-* 修复连接池管理的NPE [Issue #136](https://github.com/alibaba/Chat2DB/issues/136)
-* 修复前端编辑数据源报错问题 
-* 增加数据库默认属性配置
+* Fix the problem [Issue #135](https://github.com/alibaba/Chat2DB/issues/135)
+* Fix the NPE management of the connection pool management[Issue #136](https://github.com/alibaba/Chat2DB/issues/136)
+* Repair the front -end editing data source report error issues 
+ * Add database default attribute configuration 
 
-# 1.0.3
-* 🔥 支持SSH连接数据库
-* 🎉 支持客户端查看日志
-* 🎉 支持在Console中聊天对话
-* 支持在客户端内设置OPENAI代理 [Issue #84](https://github.com/alibaba/Chat2DB/issues/84)
-* 已经启动过应用不会再重复启动 [Issue #96](https://github.com/alibaba/Chat2DB/issues/96)
+ # 1.0.3 
+ * H Support SSH connection database 
+ * Support the client to view the log 
+ * On Support chatting and dialogue in Console 
+ * Support to set up Openai proxy in the client[Issue #84](https://github.com/alibaba/Chat2DB/issues/84)
+*The application has been activated and will not be repeatedly started [Issue #96](https://github.com/alibaba/Chat2DB/issues/96)
 
-# 1.0.1
-* 修复oracle连接配置编辑、以及连接查询问题
-* 修复Apikey输出到日志可能存在的风险
-* 修复web版本登录的bug
+# 1.0.1 
+ * Fix Oracle connection configuration editing and connection query issues 
+ * Fix the risks that may exist to the log out of the Apikey output 
+ * Fix the BUG of the web version login 
 
-# 1.0.0
-Chat2DB的 1.0.0 正式版来啦🎉🎉🎉🎉🎉🎉🎉🎉🎉
+ # 1.0.0 
+ Chat2db's 1.0.0 official version is here 🎉🎉🎉🎉🎉🎉🎉🎉🎉 
 
-* 🌈 AI智能助手，支持自然语言转SQL、SQL转自然语言、SQL优化建议
-* 👭 支持团队协作，研发无需知道线上数据库密码，解决企业数据库账号安全问题
-* ⚙️ 强大的数据管理能力，支持数据表、视图、存储过程、函数、触发器、索引、序列、用户、角色、授权等管理
-* 🔌 强大的扩展能力，目前已经支持Mysql、PostgreSQL、Oracle、SQLServer、ClickHouse、Oceanbase、H2、SQLite等等，未来会支持更多的数据库
-* 🛡 前端使用 Electron 开发，提供 Windows、Mac、Linux 客户端、网页版本一体化的解决方案
-* 🎁 支持环境隔离、线上、日常数据权限分离
+ * able AI smart assistant, supports natural language to SQL, SQL to natural language, SQL optimization suggestion 
+ * Associate Support team collaboration, research and development does not need to know online database passwords, solve the security problem of corporate database accounts 
+ *️ ️ strong data management capabilities, support data tables, views, storage procedures, functions, triggers, indexes, sequences, users, characters, authorization and other management 
+ * The strong expansion capabilities, currently supports MySQL, PostgreSQL, Oracle, SQLServer, CLICKHOUSE, Oceanbase, H2, SQLITE, etc., and will support more databases in the future 
+ * eThe front end is developed with Electron, providing Windows, Mac, Linux clients, and web version integration solutions 
+ * SeparateSupport environmental isolation, online, daily data permissions separation

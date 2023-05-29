@@ -1,10 +1,10 @@
 spring:
   datasource:
-    # 配置自带数据库的相对路径
+    # Configure the relative path with a database
     url: jdbc:h2:~/.chat2db/db/chat2db_test;MODE=MYSQL
     driver-class-name: org.h2.Driver
-  # 用于数据库表结构版本管理
-  # 测试的表结构还是用dev的 ，但是有自己单独的库 确保多个客户端运行
+  #Used for database table structure version management
+  # The test of the test is still DEV, but there is a separate library to ensure that multiple clients are running
   flyway:
     locations: classpath:db/migration/dev
   h2:
@@ -14,6 +14,6 @@ spring:
       settings:
         trace: true
         web-allow-others: true
-# 端口号
+# The port number
 server:
   port: 10824

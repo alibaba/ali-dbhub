@@ -19,7 +19,7 @@
 .DS_Store
 /ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front/*
 
-### docker 数据不用上传
+### docker data does not need to be uploaded
 /docker/redis/data/*
 /ali-dbhub-server/ali-dbhub-server-domain/ali-dbhub-server-domain-support/src/main/resources/lib/*
 /ali-dbhub-server/ali-dbhub-server-domain/ali-dbhub-server-domain-support/lib/*

@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <!-- 引入spring的启动项目 -->
+    <!-- Introducing Spring's launch project -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -16,17 +16,17 @@
     <name>ali-dbhub-server-parent</name>
 
     <properties>
-        <!-- 当前项目的版本 用了flatten 仅修改这一个地方即可-->
+        <!-- The version of the current project uses Flatten only to modify this place-->
         <revision>1.0.0-SNAPSHOT</revision>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- 定义包版本 -->
+        <!--D definition package version -->
         <spring-boot.version>2.5.7</spring-boot.version>
 
-        <!-- 跳过测试 -->
+        <!-- Skip test -->
         <maven.test.skip>true</maven.test.skip>
     </properties>
 
@@ -40,7 +40,7 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- 自带的包 -->
+            <!-- Built -in bag -->
             <dependency>
                 <groupId>com.alibaba.dbhub</groupId>
                 <artifactId>ali-dbhub-server-tools-base</artifactId>
@@ -107,7 +107,7 @@
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
-                <version>5.8.5</version>
+                <version>5.8.18</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.fastjson2</groupId>
@@ -127,7 +127,7 @@
                 <version>1.5.2.Final</version>
             </dependency>
 
-            <!-- 自带数据库 -->
+            <!-- Eap database -->
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
@@ -158,13 +158,13 @@
                 <version>1.2.15</version>
             </dependency>
 
-            <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
+            <!-- Sa-Token Permanent certification, online documentation：https://sa-token.cc -->
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-spring-boot-starter</artifactId>
                 <version>1.34.0</version>
             </dependency>
-            <!-- Sa-Token 整合 jwt -->
+            <!-- Sa-Token Integrate jwt -->
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-jwt</artifactId>
@@ -178,7 +178,7 @@
                 <version>1.5.31</version>
             </dependency>
 
-            <!-- 数据库版本管理 -->
+            <!-- Database version management -->
             <dependency>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
@@ -219,13 +219,13 @@
 
     <build>
         <plugins>
-            <!-- 编译 -->
+            <!-- Compile -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.2</version>
                 <configuration>
-                    <!-- 配置 mapstruct 禁用builer-->
+                    <!-- Configure MapStruct disable Builder-->
                     <compilerArgs>
                         <arg>
                             -Amapstruct.disableBuilders=true
@@ -234,7 +234,7 @@
                 </configuration>
             </plugin>
 
-            <!-- 支持maven revision 来配置统版本-->
+            <!-- Support Maven Revision to configure the uniform version-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
@@ -261,7 +261,7 @@
                 </executions>
             </plugin>
 
-            <!-- 运行测试案例 -->
+            <!-- Run test case -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

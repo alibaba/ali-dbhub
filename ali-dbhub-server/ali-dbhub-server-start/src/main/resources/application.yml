@@ -1,9 +1,9 @@
 spring:
-  # 默认开发环境
+  # Default development environment
   profiles:
     active: dev
   jpa:
-    # 展示sql
+    # Show SQL
     show-sql: true
   messages:
     basename: i18n/messages/messages
@@ -19,7 +19,7 @@ spring:
     servlet:
       content-type: text/html
     mode: HTML5
-  # 静态文件
+  # Static file
   mvc:
     static-path-pattern: /static/**
   web:
@@ -43,32 +43,32 @@ ali:
       - https://oss-chat2db.alibaba.com/lib/h2-2.1.214.jar
       - https://oss-chat2db.alibaba.com/lib/DmJdbcDriver18-8.1.2.141.jar
       - https://oss-chat2db.alibaba.com/lib/HikariCP-4.0.3.jar
-# flywaydb 输出执行sql的日志
+# FlywayDB output execution of SQL log
 logging:
   level:
     org:
       flywaydb: debug
-# 登录功能
+# Login function
 sa-token:
-  # token名称 (同时也是cookie名称)
+  # Token name (also the cookie name)
   token-name: DBHUB
   timeout: 2592000
-  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  # Whether the same account is allowed to be published (allowed to log in together when True is allowed to squeeze the old login when it is for False)
   is-concurrent: true
-  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  # When multiple people log in to the same account, whether to share a token (when you log in to all token when you are for True, you will log in to FALSE each time you log in to create a new token)
   is-share: true
-  # token风格
+  # Token style
   token-style: uuid
-  # 是否输出操作日志
+  # Whether to output operation log
   is-log: true
-  # jwt秘钥 部署的时候需要改掉，不然可以随便破解登录
+  # JWT secrets need to be changed when deploying, otherwise you can crack login casually
   jwt-secret-key: jwt_dbhub
   is-write-header: true
 
 chatgpt:
   apiKey: sk-xxxx
   apiHost: https://api.openai.com/
-  # 可以选择GPT3或GPT35
+  # You can choose GPT3 or GPT35
   version: GPT35
   context:
     length: 4
