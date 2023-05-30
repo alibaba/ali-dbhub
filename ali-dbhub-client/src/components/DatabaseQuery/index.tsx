@@ -290,7 +290,7 @@ export default function DatabaseQuery(props: IProps) {
     const preValue = model.getValue();
 
     model.setValue(
-      `${preValue}\n\n## ---BEGIN---\n## ${sentence}\n## ---${IPromptTypeText[promptType]}:---\n`,
+      `${preValue}\n\n--- BEGIN ---\n${sentence}\n--- ${IPromptTypeText[promptType]} ---\n`,
     );
 
     const { dataSourceId, databaseName } = windowTab || {};
@@ -324,7 +324,7 @@ export default function DatabaseQuery(props: IProps) {
             lineCount,
             model.getLineMaxColumn(lineCount),
           ),
-          text: isEOF ? '\n## --- END --- \n' : JSON.parse(message).content,
+          text: isEOF ? '\n--- END --- \n' : JSON.parse(message).content,
         },
       ]);
 
