@@ -1,5 +1,5 @@
 # 1.0.8
-* 数据库连接支持tls1
+* 数据库连接支持TLSv1
 
 # 1.0.7
 * 支持国产达梦数据库 [Issue #148](https://github.com/alibaba/Chat2DB/issues/147)
