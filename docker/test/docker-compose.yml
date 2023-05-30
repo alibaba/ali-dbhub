@@ -3,7 +3,6 @@ services:
   # 连接地址：jdbc:mysql://localhost:3306 用户名：root  密码：ali_dbhub 端口：3306 默认数据库：ali_dbhub_test
   mysql:
     image: mysql:latest
-    restart: always
     container_name: mysql-latest
     environment:
       MYSQL_ROOT_PASSWORD: ali_dbhub
@@ -14,7 +13,6 @@ services:
   # 连接地址：jdbc:postgresql://localhost:5432/ali_dbhub_test, 用户名:ali_dbhub, 密码:ali_dbhub 端口：5432 默认数据库：ali_dbhub_test
   postgres:
     image: postgres:12-alpine
-    restart: always
     container_name: postgres-alpine
     environment:
       POSTGRES_USER: ali_dbhub
@@ -27,7 +25,6 @@ services:
   # 默认数据库XEPDB1 启动会快很多
   oracle:
     image: gvenzl/oracle-xe:slim-faststart
-    restart: always
     container_name: oracle-latest
     environment:
       ORACLE_DATABASE: XEPDB1
@@ -38,7 +35,6 @@ services:
   redis:
     image: redis:7
     container_name: redis7
-    restart: always
     # 挂载映射，可以让数据或配置持久化
     volumes:
       #＜本地配置文件＞：
@@ -54,7 +50,6 @@ services:
   mariadb:
     image: mariadb:10.5.5
     container_name: "mariadb1"
-    restart: always
     environment:
       MYSQL_USER: "root"
       MYSQL_PASSWORD: "ali_dbhub"
