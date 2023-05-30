@@ -66,8 +66,7 @@ const initModal = {
   content: <></>,
 };
 export default function DatabaseQuery(props: IProps) {
-  const { model, setDblclickNodeData, setShowSearchResult } =
-    useContext(DatabaseContext);
+  const { model, setDblclickNodeData, setShowSearchResult } = useContext(DatabaseContext);
   const { activeTabKey, windowTab } = props;
   const params: { id: string; type: string } = useParams();
   const [manageResultDataList, setManageResultDataList] = useState<any>([]);

@@ -50,9 +50,10 @@ export default memo<IProps>(function ConsoleList(props) {
           setActiveKey(i.key);
         }
       });
+      const name = [dblclickNodeData?.databaseName,dblclickNodeData.schemaName,'console'].filter(t=>t).join('-')
       if (!flag) {
         let p = {
-          name: `${dblclickNodeData?.databaseName}${!!dblclickNodeData.schemaName ? ('-' + dblclickNodeData.schemaName) : ''}-console`,
+          name: name,
           type: dblclickNodeData.dataType as DatabaseTypeCode,
           dataSourceId: dblclickNodeData.dataSourceId!,
           databaseName: dblclickNodeData?.databaseName!,
@@ -64,7 +65,7 @@ export default memo<IProps>(function ConsoleList(props) {
 
         historyService.saveWindowTab(p).then((res) => {
           const newConsole: IConsole = {
-            name: `${dblclickNodeData?.databaseName}${!!dblclickNodeData.schemaName ? ('-' + dblclickNodeData.schemaName) : ''}-console`,
+            name: name,
             key: res.toString(),
             type: ConsoleType.SQLQ,
             DBType: dblclickNodeData.dataType! as DatabaseTypeCode,
@@ -93,9 +94,9 @@ export default memo<IProps>(function ConsoleList(props) {
     if (!createConsoleDialog) {
       return;
     }
-
+    const name = [createConsoleDialog?.databaseName,createConsoleDialog.schemaName,'console'].filter(t=>t).join('-')
     let p = {
-      name: `${createConsoleDialog?.databaseName}${!!createConsoleDialog.schemaName ? ('-' + createConsoleDialog.schemaName) : ''}-console`,
+      name: name,
       type: createConsoleDialog.databaseType,
       dataSourceId: createConsoleDialog.dataSourceId,
       databaseName: createConsoleDialog?.databaseName,
@@ -107,7 +108,7 @@ export default memo<IProps>(function ConsoleList(props) {
 
     historyService.saveWindowTab(p).then((res) => {
       const newConsole: IConsole = {
-        name: `${createConsoleDialog.databaseName}${!!createConsoleDialog.schemaName ? ('-' + createConsoleDialog.schemaName) : ''}-console`,
+        name: name,
         key: res.toString(),
         type: ConsoleType.SQLQ,
         DBType: createConsoleDialog.databaseType,
