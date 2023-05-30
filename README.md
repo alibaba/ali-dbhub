@@ -133,6 +133,7 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 如果觉得对你有帮助请点个star吧。
 
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat.PNG" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding.PNG" width="40%"/></a>
 
 
 微信：yxccw132  钉钉：9135032392
