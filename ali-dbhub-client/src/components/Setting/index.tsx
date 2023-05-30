@@ -9,9 +9,9 @@ import { imghub } from '@/utils/imghub';
 import configService, { IChatgptConfig } from '@/service/config';
 import miscService from '@/service/misc';
 import BrandLogo from '@/components/BrandLogo';
-import themeDarkImg from '@/assets/theme-dark.webp';
-import themeDefaultImg from '@/assets/theme-default.webp';
-import themeFollowImg from '@/assets/theme-follow.webp';
+import themeDarkImg from '@/assets/theme-dark.png';
+import themeLightImg from '@/assets/theme-light.png';
+import themeAutoImg from '@/assets/theme-auto.png';
 
 const { Option } = Select;
 
@@ -54,16 +54,16 @@ const backgroundList = [
     code: 'dark',
     name: '暗色',
     img: themeDarkImg
-  },
+   },
   {
     code: 'default',
     name: '亮色',
-    img: themeDefaultImg
+    img: themeLightImg
   },
   {
     code: 'followOs',
-    name: '跟随系统',
-    img: themeFollowImg
+    name: '自动',
+    img: themeAutoImg
   },
   // {
   //   code: 'eyeshield',
