@@ -285,6 +285,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '主机',
@@ -297,8 +314,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -315,8 +332,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -453,6 +470,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '主机',
@@ -465,8 +499,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -483,8 +517,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -599,6 +633,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '主机',
@@ -611,8 +662,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -629,8 +680,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -646,9 +697,27 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
       ]
     },
   },
-  // SQLSERVER
+  // SQLSERVER encrypt=true;trustServerCertificate=true;integratedSecurity=false;Trusted_Connection=yes
   {
     type: DatabaseTypeCode.SQLSERVER,
+    extendInfo: [
+      {
+        "key":"encrypt",
+        "value":"true"
+      },
+      {
+        "key":"trustServerCertificate",
+        "value":"true"
+      },
+      {
+        "key":"integratedSecurity",
+        "value":"false"
+      },
+      {
+        "key":"Trusted_Connection",
+        "value":"yes"
+      },
+    ],
     baseInfo: {
       items: [
         {
@@ -754,6 +823,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '主机',
@@ -766,8 +852,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -784,8 +870,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -840,6 +926,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '主机',
@@ -852,8 +955,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -870,8 +973,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -986,6 +1089,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '主机',
@@ -998,8 +1118,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '端口',
-          labelNameEN: 'prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -1016,8 +1136,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '本地端口',
-          labelNameEN: 'locaProt',
-          name: 'locaProt',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
           required: false,
           width: 28,
         },
@@ -1133,6 +1253,23 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
     ssh: {
       items: [
         {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: '使用SSH',
@@ -1154,8 +1291,8 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
           defaultValue: '',
           inputType: InputType.INPUT,
           labelNameCN: 'SSH 端口',
-          labelNameEN: 'Prot',
-          name: 'prot',
+          labelNameEN: 'Port',
+          name: 'port',
           required: false,
           width: 28,
         },
@@ -1188,5 +1325,172 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         },
       ]
     }
+  },
+  // DM
+  {
+    baseInfo: {
+      items: [
+        {
+          defaultValue: '@localhost',
+          inputType: InputType.INPUT,
+          labelNameCN: '名称',
+          labelNameEN: 'Name',
+          name: 'alias',
+          required: true,
+          width: 100,
+        },
+        {
+          defaultValue: 'localhost',
+          inputType: InputType.INPUT,
+          labelNameCN: '主机',
+          labelNameEN: 'Host',
+          name: 'host',
+          required: true,
+          width: 70,
+        },
+        {
+          defaultValue: '5236',
+          inputType: InputType.INPUT,
+          labelNameCN: '端口',
+          labelNameEN: 'Port',
+          name: 'port',
+          labelTextAlign: 'right',
+          required: true,
+          width: 30,
+        },
+        {
+          defaultValue: AuthenticationType.USERANDPASSWORD,
+          inputType: InputType.SELECT,
+          labelNameCN: '身份验证',
+          labelNameEN: 'Authentication',
+          name: 'authentication',
+          required: true,
+          selects: [
+            {
+              items: [
+                {
+                  defaultValue: 'root',
+                  inputType: InputType.INPUT,
+                  labelNameCN: '用户名',
+                  labelNameEN: 'User',
+                  name: 'user',
+                  required: true,
+                  width: 100,
+                },
+                {
+                  defaultValue: '',
+                  inputType: InputType.PASSWORD,
+                  labelNameCN: '密码',
+                  labelNameEN: 'Password',
+                  name: 'password',
+                  required: true,
+                  width: 100,
+                },
+              ],
+              label: 'User&Password',
+              value: AuthenticationType.USERANDPASSWORD,
+            },
+            {
+              label: 'NONE',
+              value: AuthenticationType.NONE,
+            },
+          ],
+          width: 50,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '数据库',
+          labelNameEN: 'Database',
+          name: 'database',
+          required: false,
+          width: 100,
+        },
+        {
+          defaultValue: 'jdbc:dm://localhost:5236',
+          inputType: InputType.INPUT,
+          labelNameCN: 'URL',
+          labelNameEN: 'URL',
+          name: 'url',
+          required: true,
+          width: 100,
+        },
+      ],
+      pattern: /jdbc:dm:\/\/(.*):(\d+)(\/(\w+))?/,
+      template: 'jdbc:dm://{host}:{port}/{database}',
+    },
+    ssh: {
+      items: [
+        {
+          defaultValue: 'false',
+          inputType: InputType.SELECT,
+          labelNameCN: '使用SSH',
+          labelNameEN: 'USE SSH',
+          name: 'use',
+          required: false,
+          selects: [
+            {
+              value: 'false',
+            },
+            {
+              value: 'true',
+            },
+          ],
+          width: 100,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: 'SSH 主机',
+          labelNameEN: 'SSH Hostname',
+          name: 'hostName',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: 'SSH 端口',
+          labelNameEN: 'Port',
+          name: 'port',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '用户名',
+          labelNameEN: 'SSH UserName',
+          name: 'userName',
+          required: false,
+          width: 70,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.INPUT,
+          labelNameCN: '本地端口',
+          labelNameEN: 'LocalPort',
+          name: 'localPort',
+          required: false,
+          width: 28,
+        },
+        {
+          defaultValue: '',
+          inputType: InputType.PASSWORD,
+          labelNameCN: '密码',
+          labelNameEN: 'Password',
+          name: 'password',
+          required: true,
+          width: 100,
+        },
+      ]
+    },
+    extendInfo: [
+      {
+        "key":"zeroDateTimeBehavior",
+        "value":"convertToNull"
+      },
+    ],
+    type: DatabaseTypeCode.DM
   },
 ];

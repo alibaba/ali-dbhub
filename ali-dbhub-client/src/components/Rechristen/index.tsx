@@ -14,6 +14,7 @@ interface IProps {
 export default memo<IProps>(function Rechristen(props) {
   const { className, operationOpen, data } = props;
   return <Modal
+    maskClosable={false}
     title={`将数据源${data.name} 重命名`}
     open={operationOpen[0]}
     onCancel={() => { operationOpen[1](false) }}

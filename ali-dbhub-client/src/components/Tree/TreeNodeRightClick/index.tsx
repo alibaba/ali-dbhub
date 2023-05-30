@@ -102,6 +102,7 @@ function TreeNodeRightClick(props: IProps) {
           console.log(data)
           setCreateConsoleDialog({
             dataSourceId: data.dataSourceId!,
+            dataSourceName: data.dataSourceName!,
             databaseName: data.databaseName!,
             schemaName: data.schemaName!,
             databaseType: data.dataType! as DatabaseTypeCode
@@ -116,6 +117,7 @@ function TreeNodeRightClick(props: IProps) {
         handle: () => {
           setCreateConsoleDialog({
             dataSourceId: data.dataSourceId!,
+            dataSourceName: data.dataSourceName!,
             databaseName: data.databaseName!,
             schemaName: data.schemaName!,
             databaseType: data.dataType! as DatabaseTypeCode
@@ -208,6 +210,7 @@ function TreeNodeRightClick(props: IProps) {
       </Menu>
     </div>
     <Modal
+      maskClosable={false}
       title="删除确认"
       open={verifyDialog}
       onOk={handleOk}

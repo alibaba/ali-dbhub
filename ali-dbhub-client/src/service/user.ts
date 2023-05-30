@@ -33,7 +33,7 @@ const createUser = createRequest<IUser, boolean>('/api/user/create', {
 
 /** 更新用户信息 */
 const updateUser = createRequest<IUser, boolean>('/api/user/update', {
-  method: 'put',
+  method: 'post',
 });
 
 /** 查询用户 */

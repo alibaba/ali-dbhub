@@ -1,13 +1,13 @@
 <p align="center">
   <a href="https://github.com/alibaba/Chat2DB">
-    <img width="100" src="document/logo.ico">
+    <img width="100" src="document/image/logo.ico">
   </a>
 </p>
 <h1 align="center">Chat2DB</h1>
 
 <div align="center">
 
-A database client tool with integrated AIGC
+General-purpose database tools and SQL clients with AGI (ChatGPT)
 
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/alibaba/ali-dbhub/blob/main/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/alibaba/ali-dbhub)](https://github.com/alibaba/ali-dbhub/releases)
@@ -31,12 +31,12 @@ Languages： English | [中文](README.md)
 
 ## ⏬ Download and Install
 
-| Description | Size | Download                                                                                                                                                                                                                                        |
-|-------------|------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows     | 361M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test%20Setup%201.0.4819968180-Test.exe">https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test%20Setup%201.0.4796588172-Test.exe </a> |
-| MacOS ARM64 | 207M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test-1.0.4819968180-Test-arm64.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test-arm64.dmg </a> |
-| MacOS X64   | 210M | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/Chat2DB-Test-1.0.4819968180-Test.dmg"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/Chat2DB-Test-1.0.4796588172-Test.dmg </a>  |       
-| Jar package | 88M  | <a href="https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4819968180/ali-dbhub-server-start.jar"> https://chat2db.oss-cn-zhangjiakou.aliyuncs.com/test/4796588172/ali-dbhub-server-start.jar </a>  |                                                                                                                
+| Description   | Size                                                                                                                                                   | Download                                                                                                                                                                                                                                        |
+|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
+| Windows       | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB%20Setup%201.0.5.exe](https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB%20Setup%201.0.3.exe) |
+| MacOS ARM64   | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB-1.0.3-arm64.dmg)         |
+| MacOS X64     | [https://oss-chat2db.alibaba.com/release/1.0.5/Chat2DB-1.0.5.dmg](https://oss-chat2db.alibaba.com/release/1.0.3/Chat2DB-1.0.3.dmg)                     |
+| Jar package   | [https://oss-chat2db.alibaba.com/release/1.0.5/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.3/ali-dbhub-server-start.jar)   |
 
 
 ## 🌰 Demo
@@ -70,8 +70,8 @@ $ git clone git@github.com:alibaba/Chat2DB.git
 - Front-End installation
 ```bash
 $ cd Chat2DB/ali-dbhub-client
-$ npm install # 安装npm 
-$ npm run build:prod # 把js打包生成到后端的source目录
+$ npm install # Mounting front-end dependency
+$ npm run build:prod # Package js to the source directory on the back end
 ```
 - Backend debug
 ```bash
@@ -79,34 +79,40 @@ $ cd ../ali-dbhub-server
 $ mvn clean install # maven 3.8 or later needs to be installed
 $ cd ali-dbhub-server/ali-dbhub-server-start/target/
 $ java -jar -Dchatgpt.apiKey=xxxxx ali-dbhub-server-start.jar  # To launch the chat application, you need to enter the ChatGPT key for the chatgpt.apiKey. Without entering it, you won't be able to use the AIGC function.
-$ # open http://localhost:7001 to start debug
+$ # open http://127.0.0.1:10821 to start debug Note: Front-end installation is required
 ```
 
 - Front-End debug
 ```bash
 $ cd Chat2DB/ali-dbhub-client
 $ npm install 
-$ npm run start
-$ # open http://localhost:8001  to start Front-End debug
+$ npm run start 
+$ # open http://127.0.0.1:10821  to start Front-End debug
+$ # Note Front-end page completely depends on the service, so front-end students need to debug the back-end project
 ```
 But front debugging need mapping of resources, you can download [XSwitch](https://chrome.google.com/webstore/detail/idkjhjggpffolpidfkikidcokdkdaogg), add the following configuration file
 ``` json
 {
   "proxy": [
     [
-      "http://127.0.0.1:7001/static/front/(.*)",
-      "http://127.0.0.1:8001/$1",
-    ],
-    [
-      "http://127.0.0.1:7001/(.*).js$",
+      "http://127.0.0.1:10821/(.*).js$",
       "http://127.0.0.1:8001/$1.js",
     ],
     [
-      "http://127.0.0.1:7001/(.*).css$",
+      "http://127.0.0.1:10821/(.*).css$",
       "http://127.0.0.1:8001/$1.css",
-    ]
+    ],
+    [
+      "http://127.0.0.1:10821/static/front/(.*)",
+      "http://127.0.0.1:8001/$1",
+    ],
+    [
+      "http://127.0.0.1:10821/static/(.*)$",
+      "http://127.0.0.1:8001/static/$1",
+    ],
   ],
 }
+
 ```
 
 ## 📑 Documentation
@@ -115,7 +121,8 @@ But front debugging need mapping of resources, you can download [XSwitch](https:
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
 
 ## ☎️ Contact Us
-<a><img src="https://gw.alicdn.com/imgextra/i1/O1CN01VBaYST1MFzhUY9QP6_!!6000000001406-0-tps-723-731.jpg" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat.PNG" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding.PNG" width="40%"/></a>
 
 微信：yxccw132  钉钉：9135032392
 

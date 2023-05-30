@@ -24,7 +24,6 @@ jobs:
             arch: amd64
           - os: macos-latest
             arch: arm64
-            variant: v8
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -39,25 +38,58 @@ jobs:
           value: ${{ github.ref }}
           index_of_str: "refs/tags/v"
 
-
       # 输出基础信息
       - name: Print basic information
         run: |
           echo "current environment: ${{ env.CHAT2DB_ENVIRONMENT }}"
           echo "current version: ${{ steps.chat2db_version.outputs.substring }}"
 
+      # 安装jre Windows
+      - name: Install Jre for Windows
+        if: ${{ runner.os == 'Windows' }}
+        uses: actions/setup-java@main
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          java-package: "jre"
+
+      # 安装jre MacOS X64
+      - name: Install Jre MacOS X64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
+        uses: actions/setup-java@main
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          java-package: "jre"
+
+      # 安装jre MacOS arm64
+      - name: Install Jre MacOS arm64
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
+        uses: actions/setup-java@main
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          java-package: "jre"
+          architecture: "aarch64"
+
+      # 复制jre Windows
+      - name: Copy Jre for Windows
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          cp -r "${{ env.JAVA_HOME }}" ali-dbhub-client/electron/jre
+
+      # 复制jre macOS
+      - name: Copy Jre for macOS
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          cp -r $JAVA_HOME ali-dbhub-client/electron/jre
+          chmod -R 777 ali-dbhub-client/electron/jre/
+
+      # 安装node
       - name: Install Node.js
         uses: actions/setup-node@main
         with:
           node-version: 16
-
-      # 构建静态文件信息
-      - name: Npm install & build & copy
-        run: |
-          cd ali-dbhub-client
-          npm install 
-          npm run build:desktop
-          cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
 
       # 安装java
       - name: Install Java and Maven
@@ -67,18 +99,21 @@ jobs:
           distribution: "temurin"
           cache: "maven"
 
+      # 构建静态文件信息
+      - name: Npm install & build & copy
+        run: |
+          cd ali-dbhub-client
+          npm install 
+          npm run build:desktop
+          cp -r dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front
+
       # 编译服务端java版本
       - name: Build Java
         run: mvn clean package -B '-Dmaven.test.skip=true' -f ali-dbhub-server/pom.xml
 
-      # 打包jre
-      - name: Build jre
-        run: jlink --add-modules java.base,java.management,java.naming,java.net.http,java.desktop,java.security.jgss,java.security.sasl,java.sql,jdk.httpserver,jdk.unsupported,java.instrument,jdk.crypto.ec --output jre --no-man-pages --no-header-files --compress=2
-
-      # 复制jre & 服务端java 到制修订位置
-      - name: Copy app &  jre
+      # 复制服务端java 到指定位置
+      - name: Copy App
         run: |
-          cp -r jre ali-dbhub-client/electron/
           mkdir ali-dbhub-client/electron/app
           cp ali-dbhub-server/ali-dbhub-server-start/target/ali-dbhub-server-start.jar ali-dbhub-client/electron/app/
 
@@ -97,7 +132,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }}"
+          args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }} --win --x64"
           release: true
 
       # macos amd64
@@ -109,8 +144,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }} --x64"
+          args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }} --mac --x64"
           release: true
+
+      # amd64 notarization
+      - name: Notarization amd64 App
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'amd64' }}
+        run: |
+          xcrun altool --notarize-app --primary-bundle-id "${{secrets.MAC_PRIMARY_BUNDLE_ID}}" --username "${{secrets.MAC_APPLE_ID}}" --password "${{secrets.MAC_APPLE_PASSWORD}}" --asc-provider "${{secrets.MAC_ASC_PROVIDER}}" -t osx --file ali-dbhub-client/electron-build/Chat2DB-${{ steps.chat2db_version.outputs.substring }}.dmg
 
       # macos amd64
       - name: Build/release Electron app for MacOS arm64
@@ -121,8 +162,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }} --arm64"
+          args: "-c.extraMetadata.version=${{ steps.chat2db_version.outputs.substring }} --mac --arm64"
           release: true
+
+      # arm notarization
+      - name: Notarization arm64 App
+        if: ${{ runner.os == 'macOS' && matrix.arch == 'arm64' }}
+        run: |
+          xcrun altool --notarize-app --primary-bundle-id "${{secrets.MAC_PRIMARY_BUNDLE_ID}}" --username "${{secrets.MAC_APPLE_ID}}" --password "${{secrets.MAC_APPLE_PASSWORD}}" --asc-provider "${{secrets.MAC_ASC_PROVIDER}}" -t osx --file ali-dbhub-client/electron-build/Chat2DB-${{ steps.chat2db_version.outputs.substring }}-arm64.dmg
 
       # 准备要需要的数据 Windows
       - name: Prepare upload for Windows

@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
@@ -41,7 +42,7 @@ public class JdbcJarUtils {
         }
     }
 
-    public static void asyncDownload(String[] urls) throws Exception {
+    public static void asyncDownload(List<String> urls) throws Exception {
         for (String url : urls) {
             String outputPath = PATH + url.substring(url.lastIndexOf("/") + 1);
             File file = new File(outputPath);
@@ -69,7 +70,9 @@ public class JdbcJarUtils {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {throw new IOException("Unexpected code " + response);}
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
                 try (InputStream is = response.body().byteStream();
                      FileOutputStream fos = new FileOutputStream(outputPath)) {
                     byte[] buffer = new byte[2048];
@@ -94,7 +97,9 @@ public class JdbcJarUtils {
             .url(url)
             .build();
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {throw new IOException("Unexpected code " + response);}
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected code " + response);
+            }
             try (InputStream is = response.body().byteStream();
                  FileOutputStream fos = new FileOutputStream(outputPath)) {
 
@@ -137,9 +142,7 @@ public class JdbcJarUtils {
     }
 
     private static String getDownloadUrl(String jarPath) {
-        String[] paths = DbhubContext.JDBC_JAR_DOWNLOAD_URL.split(",");
-        for (int i = 0; i < paths.length; i++) {
-            String path = paths[i];
+        for (String path : DbhubContext.JDBC_JAR_DOWNLOAD_URL_LIST) {
             if (path.contains(jarPath)) {
                 return path.trim();
             }

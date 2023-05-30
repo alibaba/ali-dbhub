@@ -121,7 +121,7 @@ const menuBar = [
         click() {
           dialog.showMessageBox({
             title: '关于Chat2DB',
-            // message: '关于Chat2DB v1.0.0',
+            message: `关于Chat2DB v${app.getVersion()}`,
             detail:
               '一款由阿里巴巴开源免费的多数据库客户端工具，支持windows、mac本地安装，也支持服务器端部署，web网页访问。',
             icon: './logo/icon.png',

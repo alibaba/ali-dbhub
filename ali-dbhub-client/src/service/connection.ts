@@ -19,7 +19,7 @@ const getDetails = createRequest<{ id: string }, IConnectionBase>(
 
 const save = createRequest<IConnectionBase, string>(
   '/api/connection/datasource/create',
-  { method: 'post' },
+  { method: 'post',  delayTime: true},
 );
 
 const close = createRequest<IConnectionBase, void>(
@@ -29,16 +29,16 @@ const close = createRequest<IConnectionBase, void>(
 
 const test = createRequest<IConnectionBase, boolean>(
   '/api/connection/datasource/pre_connect',
-  {method: 'post'},
+  {method: 'post', delayTime: true},
 );
 const testSSH = createRequest<any, boolean>(
   '/api/connection/ssh/pre_connect',
-  {method: 'post'},
+  {method: 'post', delayTime: true},
 );
 
 const update = createRequest<IConnectionBase, void>(
   '/api/connection/datasource/update',
-  { method: 'put' },
+  { method: 'post' },
 );
 
 const remove = createRequest<{ id: number }, void>(

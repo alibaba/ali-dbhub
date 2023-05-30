@@ -1,18 +1,22 @@
 {
-  "name": "ali-dbhub-web",
+  "name": "chat2db",
+  "license": "MIT",
+  "author": "yuqin, hexi",
   "version": "1.0.0",
   "private": true,
   "main": "main.js",
   "scripts": {
     "start": "umi dev",
-    "build": "cross-env UMI_ENV=test umi build && cp -r dist ./electron",
+    "build": "cross-env UMI_ENV=test umi build",
+    "build:electron": "cross-env UMI_ENV=desktop umi build && cp -r ./dist ./electron ",
     "postinstall": "umi generate tmp",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
     "electron": "electron .",
     "build:prod": "mkdir -p ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static && rm -rf ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front && cross-env UMI_ENV=prod cross-env UMI_PublicPath=${npm_config_publicPath} umi build && mv dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front",
-    "build:desktop": "cross-env UMI_ENV=desktop umi build"
+    "build:prod-window": "mkdir ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static && rmdir ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front && cross-env UMI_ENV=prod cross-env UMI_PublicPath=${npm_config_publicPath} umi build && move dist ../ali-dbhub-server/ali-dbhub-server-start/src/main/resources/static/front",
+    "build:desktop": "cross-env UMI_ENV=desktop cross-env APP_VERSION=${npm_config_appVersion} cross-env APP_PORT=${npm_config_appPort} umi build"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

@@ -1,9 +1,13 @@
 package com.alibaba.dbhub.server.domain.support.enums;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.clickhouse.ClickhouseMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiExample;
 import com.alibaba.dbhub.server.domain.support.dialect.db2.DB2MetaSchemaSupport;
+import com.alibaba.dbhub.server.domain.support.dialect.dm.DMMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.h2.H2MetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.mariadb.MariaDBMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.mysql.MysqlMetaSchemaSupport;
@@ -37,64 +41,85 @@ public enum DbTypeEnum implements BaseEnum<String> {
     /**
      * MySQL
      */
-    MYSQL("MySQL", "com.mysql.cj.jdbc.Driver","mysql-connector-j-8.0.33.jar"),
+    MYSQL("MySQL", "com.mysql.cj.jdbc.Driver", "mysql-connector-j-8.0.33.jar"),
 
     /**
      * PostgreSQL
      */
-    POSTGRESQL("PostgreSQL", "org.postgresql.Driver","postgresql-42.5.1.jar"),
+    POSTGRESQL("PostgreSQL", "org.postgresql.Driver", "postgresql-42.5.1.jar"),
 
     /**
      * Oracle
      */
-    ORACLE("Oracle", "oracle.jdbc.driver.OracleDriver","ojdbc11.jar,orai18n-19.3.0.0.jar"),
+    ORACLE("Oracle", "oracle.jdbc.driver.OracleDriver", "ojdbc8-19.3.0.0.jar,orai18n-19.3.0.0.jar"),
 
     /**
      * SQLServer
      */
-    SQLSERVER("SQLServer", "com.microsoft.sqlserver.jdbc.SQLServerDriver","mssql-jdbc-11.2.1.jre17.jar"),
+    SQLSERVER("SQLServer", "com.microsoft.sqlserver.jdbc.SQLServerDriver", "mssql-jdbc-11.2.1.jre17.jar"),
 
     /**
      * SQLite
      */
-    SQLITE("SQLite", "org.sqlite.JDBC","sqlite-jdbc-3.39.3.0.jar"),
+    SQLITE("SQLite", "org.sqlite.JDBC", "sqlite-jdbc-3.39.3.0.jar"),
 
     /**
      * H2
      */
-    H2("H2", "org.h2.Driver","h2-2.1.214.jar"),
+    H2("H2", "org.h2.Driver", "h2-2.1.214.jar"),
 
     /**
      * ADB MySQL
      */
-    ADB_POSTGRESQL("PostgreSQL", "org.postgresql.Driver",""),
+    ADB_POSTGRESQL("PostgreSQL", "org.postgresql.Driver", ""),
 
     /**
      * ClickHouse
      */
-    CLICKHOUSE("ClickHouse", "ru.yandex.clickhouse.ClickHouseDriver","clickhouse-jdbc-0.4.1.jar"),
+    CLICKHOUSE("ClickHouse", "ru.yandex.clickhouse.ClickHouseDriver", "clickhouse-jdbc-0.4.1.jar"),
 
     /**
      * OceanBase
      */
-    OCEANBASE("OceanBase", "com.oceanbase.jdbc.Driver","oceanbase-client-2.4.2.jar"),
+    OCEANBASE("OceanBase", "com.oceanbase.jdbc.Driver", "oceanbase-client-2.4.2.jar"),
 
     /**
      * DB2
      */
-    DB2("DB2", "com.ibm.db2.jcc.DB2Driver",""),
+    DB2("DB2", "com.ibm.db2.jcc.DB2Driver", ""),
 
     /**
      * MMARIADB
      */
-    MARIADB("MariaDB", "org.mariadb.jdbc.Driver","mariadb-java-client-3.0.8.jar");
+    MARIADB("MariaDB", "org.mariadb.jdbc.Driver", "mariadb-java-client-3.0.8.jar"),
+
+    /**
+     * DM 达梦
+     */
+    DM("DM", "dm.jdbc.driver.DmDriver", "DmJdbcDriver18-8.1.2.141.jar");
 
     final String description;
     final String className;
 
     final String jar;
 
-    DbTypeEnum(String description, String className,String jar) {
+    private static Map<DbTypeEnum, MetaSchema> META_SCHEMA_MAP = new HashMap<>();
+
+    static {
+        META_SCHEMA_MAP.put(H2, new H2MetaSchemaSupport());
+        META_SCHEMA_MAP.put(MYSQL, new MysqlMetaSchemaSupport());
+        META_SCHEMA_MAP.put(POSTGRESQL, new PostgresqlMetaSchemaSupport());
+        META_SCHEMA_MAP.put(ORACLE, new OracleMetaSchemaSupport());
+        META_SCHEMA_MAP.put(SQLSERVER, new SqlServerMetaSchemaSupport());
+        META_SCHEMA_MAP.put(SQLITE, new SQLiteMetaSchemaSupport());
+        META_SCHEMA_MAP.put(OCEANBASE, new OceanBaseMetaSchemaSupport());
+        META_SCHEMA_MAP.put(MARIADB, new MariaDBMetaSchemaSupport());
+        META_SCHEMA_MAP.put(CLICKHOUSE, new ClickhouseMetaSchemaSupport());
+        META_SCHEMA_MAP.put(DB2, new DB2MetaSchemaSupport());
+        META_SCHEMA_MAP.put(DM, new DMMetaSchemaSupport());
+    }
+
+    DbTypeEnum(String description, String className, String jar) {
         this.description = description;
         this.className = className;
         this.jar = jar;
@@ -121,42 +146,7 @@ public enum DbTypeEnum implements BaseEnum<String> {
     }
 
     public MetaSchema metaSchema() {
-        MetaSchema metaSchema = null;
-        switch (this) {
-            case H2:
-                metaSchema = new H2MetaSchemaSupport();
-                break;
-            case MYSQL:
-                metaSchema = new MysqlMetaSchemaSupport();
-                break;
-            case POSTGRESQL:
-                metaSchema = new PostgresqlMetaSchemaSupport();
-                break;
-            case ORACLE:
-                metaSchema = new OracleMetaSchemaSupport();
-                break;
-            case SQLSERVER:
-                metaSchema = new SqlServerMetaSchemaSupport();
-                break;
-            case SQLITE:
-                metaSchema = new SQLiteMetaSchemaSupport();
-                break;
-            case OCEANBASE:
-                metaSchema = new OceanBaseMetaSchemaSupport();
-                break;
-            case MARIADB:
-                metaSchema = new MariaDBMetaSchemaSupport();
-                break;
-            case CLICKHOUSE:
-                metaSchema = new ClickhouseMetaSchemaSupport();
-                break;
-            case DB2:
-                metaSchema = new DB2MetaSchemaSupport();
-                break;
-
-            default:
-        }
-        return metaSchema;
+        return META_SCHEMA_MAP.get(this);
     }
 
     public SpiExample example() {
@@ -199,6 +189,10 @@ public enum DbTypeEnum implements BaseEnum<String> {
                     MYSQL_ALTER_TABLE_SIMPLE).build();
                 break;
             case DB2:
+                SpiExample = SpiExample.builder().createTable(MYSQL_CREATE_TABLE_SIMPLE).alterTable(
+                    MYSQL_ALTER_TABLE_SIMPLE).build();
+                break;
+            case DM:
                 SpiExample = SpiExample.builder().createTable(MYSQL_CREATE_TABLE_SIMPLE).alterTable(
                     MYSQL_ALTER_TABLE_SIMPLE).build();
                 break;

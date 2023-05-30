@@ -6,6 +6,7 @@ export interface IOptions {
   method?: 'get' | 'post' | 'put' | 'delete';
   mock?: boolean;
   errorLevel?: 'toast' | 'prompt' | 'critical' | false;
+  delayTime?: number | true;
 }
 
 // TODO:
@@ -34,16 +35,20 @@ enum ErrorCode {
 
 const noNeedToastErrorCode = [ErrorCode.NEED_LOGGED_IN];
 
+// yapi mock地址
 const mockUrl = 'https://yapi.alibaba.com/mock/1000160';
 
-const desktopServiceUrl = 'http://127.0.0.1:10824';
+// 桌面端的服务器地址
+const desktopServiceUrl = `http://127.0.0.1:${process.env.APP_PORT || '10824'}`;
+
+// 非桌面端的服务器地址
 const prodServiceUrl = location.origin;
 
-window._BaseURL = localStorage.getItem('_BaseURL') || (location.href.indexOf('dist/index.html') > -1
-  ? desktopServiceUrl
-  : prodServiceUrl)
+// 是否自定义了 _BaseURL || 是否为桌面端地址
+const baseURL = localStorage.getItem('_BaseURL')
+  || (location.href.indexOf('dist/index.html') > -1 ? desktopServiceUrl : prodServiceUrl);
 
-export const baseURL = window._BaseURL;
+window._BaseURL = baseURL;
 
 const errorHandler = (error: ResponseError, errorLevel: IErrorLevel) => {
   const { response } = error;
@@ -102,10 +107,12 @@ export default function createRequest<P = void, R = {}>(
   url: string,
   options: IOptions,
 ) {
-  // mock
-  const { method = 'get', mock = false, errorLevel = 'toast' } = options;
+  const { method = 'get', mock = false, errorLevel = 'toast', delayTime } = options;
+
+  // 是否需要mock
   const _baseURL = mock ? mockUrl : baseURL;
   return function (params: P) {
+    // 在url上按照定义规则拼接params
     const paramsInUrl: string[] = [];
     const _url = url.replace(/:(.+?)\b/, (_, name: string) => {
       const value = params[name];
@@ -136,25 +143,44 @@ export default function createRequest<P = void, R = {}>(
           break;
       }
 
-      request[method](`${_baseURL}${_url}`, { [dataName]: params })
-        .then((res) => {
-          if (!res) return;
-          const { success, errorCode, errorMessage, data } = res;
-          if (
-            !success &&
-            errorLevel === 'toast' &&
-            !noNeedToastErrorCode.includes(errorCode)
-          ) {
+      request[method](`${_baseURL}${_url}`, { [dataName]: params }).then((res) => {
+        if (!res) return;
+        const { success, errorCode, errorMessage, data } = res;
+        if (
+          !success &&
+          errorLevel === 'toast' &&
+          !noNeedToastErrorCode.includes(errorCode)
+        ) {
+          delayTimeFn(() => {
             message.error(`${errorCode}: ${errorMessage}`);
             reject(`${errorCode}: ${errorMessage}`);
-          }
+          }, delayTime)
+          return
+        }
+        // 有些loding效果添加强制延时效果可能会更好看, 可行性待商榷
+        delayTimeFn(() => {
           resolve(data);
-        })
-        .catch((error) => {
-          console.log('catch error', error);
+        }, delayTime)
+      })
+      .catch((error) => {
+        console.log('catch error', error);
+        delayTimeFn(() => {
           errorHandler(error, errorLevel);
           reject(error);
-        });
+        }, delayTime)
+      });
     });
   };
+}
+
+// 简单的延时函数
+function delayTimeFn(callback: Function, time: number | true | undefined) {
+  if (time) {
+    const timer = setTimeout(() => {
+      callback();
+      clearInterval(timer);
+    }, time && 500);
+  } else {
+    callback();
+  }
 }

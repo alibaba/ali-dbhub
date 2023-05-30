@@ -78,6 +78,7 @@ export default memo<IProps>(function NewConsole(props) {
       open={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
+      maskClosable={false}
       footer={
         <>
           <Button onClick={handleCancel} className={styles.cancel}>

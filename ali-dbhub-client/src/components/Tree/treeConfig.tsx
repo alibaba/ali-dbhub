@@ -88,16 +88,20 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
               key: t.id!.toString(),
               nodeType: TreeNodeType.DATASOURCE,
               dataSourceId: t.id,
+              dataSourceName: t.alias,
               dataType: t.type,
             }
           })
           r(data);
+        }).catch(error => {
+          j()
         })
       })
     },
   },
   [TreeNodeType.DATASOURCE]: {
     getChildren: (parentData: ITreeNode) => {
+      console.log(parentData)
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let p = {
           id: parentData.dataSourceId!
@@ -109,11 +113,14 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
               name: t.name,
               nodeType: TreeNodeType.DATABASE,
               dataType: parentData.dataType,
-              dataSourceId: +parentData.key,
+              dataSourceId: +parentData.dataSourceId!,
+              dataSourceName: parentData.dataSourceName!,
               databaseName: t.name
             }
           })
           r(data);
+        }).catch(error => {
+          j()
         })
       })
     },
@@ -139,6 +146,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
               dataType: parentData.dataType,
               schemaName: t.name,
               dataSourceId: parentData.dataSourceId!,
+              dataSourceName: parentData.dataSourceName!,
               databaseName: parentData.databaseName!
             }
           })
@@ -151,6 +159,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
                 name: 'tables',
                 nodeType: TreeNodeType.TABLES,
                 dataSourceId: parentData.dataSourceId,
+                dataSourceName: parentData.dataSourceName!,
                 databaseName: parentData.databaseName,
                 dataType: parentData.dataType,
                 schemaName: parentData.schemaName,
@@ -158,6 +167,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             ]
             r(data);
           }
+        }).catch(error => {
+          j()
         })
       })
     },
@@ -176,6 +187,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             name: 'tables',
             nodeType: TreeNodeType.TABLES,
             dataSourceId: parentData.dataSourceId,
+            dataSourceName: parentData.dataSourceName!,
             databaseName: parentData.databaseName,
             dataType: parentData.dataType,
             schemaName: parentData.schemaName,
@@ -207,6 +219,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
               nodeType: TreeNodeType.TABLE,
               key: item.name,
               dataSourceId: parentData.dataSourceId!,
+              dataSourceName: parentData.dataSourceName!,
               databaseName: parentData.databaseName!,
               dataType: parentData.dataType,
               tableName: item.name,
@@ -214,6 +227,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             }
           })
           r(tableList);
+        }).catch(error => {
+          j()
         })
       })
     },
@@ -232,6 +247,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             key: 'columns',
             tableName: parentData.tableName,
             dataSourceId: parentData.dataSourceId!,
+            dataSourceName: parentData.dataSourceName!,
             databaseName: parentData.databaseName!,
             dataType: parentData.dataType,
             schemaName: parentData.schemaName,
@@ -242,6 +258,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             key: 'keys',
             tableName: parentData.tableName,
             dataSourceId: parentData.dataSourceId!,
+            dataSourceName: parentData.dataSourceName!,
             databaseName: parentData.databaseName!,
             dataType: parentData.dataType,
             schemaName: parentData.schemaName,
@@ -252,6 +269,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             key: 'indexs',
             tableName: parentData.tableName,
             dataSourceId: parentData.dataSourceId!,
+            dataSourceName: parentData.dataSourceName!,
             databaseName: parentData.databaseName!,
             dataType: parentData.dataType,
             schemaName: parentData.schemaName,
@@ -271,6 +289,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
       return new Promise((r: (value: ITreeNode[]) => void, j) => {
         let p = {
           dataSourceId: parentData.dataSourceId!,
+          dataSourceName: parentData.dataSourceName!,
           databaseName: parentData.databaseName!,
           tableName: parentData.tableName!,
           dataType: parentData.dataType,
@@ -287,6 +306,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
               isLeaf: true,
               columnType: item.columnType,
               dataSourceId: parentData.dataSourceId!,
+              dataSourceName: parentData.dataSourceName!,
               databaseName: parentData.databaseName!,
               tableName: parentData.tableName!,
               dataType: parentData.dataType,
@@ -294,6 +314,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             }
           })
           r(tableList);
+        }).catch(error => {
+          j()
         })
       })
     }
@@ -321,6 +343,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
               key: item.name,
               isLeaf: true,
               dataSourceId: parentData.dataSourceId!,
+              dataSourceName: parentData.dataSourceName!,
               databaseName: parentData.databaseName!,
               tableName: parentData.tableName!,
               dataType: parentData.dataType,
@@ -328,6 +351,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             }
           })
           r(tableList);
+        }).catch(error => {
+          j()
         })
       })
     }
@@ -355,6 +380,7 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
               key: item.name,
               isLeaf: true,
               dataSourceId: parentData.dataSourceId!,
+              dataSourceName: parentData.dataSourceName!,
               databaseName: parentData.databaseName!,
               tableName: parentData.tableName!,
               dataType: parentData.dataType,
@@ -362,6 +388,8 @@ export const treeConfig: { [key in TreeNodeType]: ITreeConfigItem } = {
             }
           })
           r(tableList);
+        }).catch(error => {
+          j()
         })
       })
     }

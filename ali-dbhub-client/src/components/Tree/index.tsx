@@ -64,6 +64,7 @@ function Tree(props: IProps, ref: any) {
           key: t.id!.toString(),
           nodeType: TreeNodeType.DATASOURCE,
           dataSourceId: t.id,
+          dataSourceName: t.alias,
           dataType: t.type,
         }
       })
@@ -101,6 +102,7 @@ function Tree(props: IProps, ref: any) {
 
 function TreeNode(props: TreeNodeIProps) {
   const { setTreeData, data, level, show = false, showAllChildrenPenetrate = false } = props;
+  console.log(data)
   const [showChildren, setShowChildren] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const indentArr = new Array(level).fill('indent');
@@ -129,6 +131,8 @@ function TreeNode(props: TreeNodeIProps) {
           setIsLoading(false);
         }
       }
+    }).catch(error => {
+      setIsLoading(false);
     });
   }
 

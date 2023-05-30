@@ -142,7 +142,6 @@ function DatabasePage({ className }: IProps) {
               <Iconfont code='&#xeb93;' />
             </div>
           }
-
         </div>
       </div>
     </DraggableContainer>

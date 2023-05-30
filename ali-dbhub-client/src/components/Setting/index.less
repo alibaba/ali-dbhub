@@ -6,13 +6,20 @@
 
 .backgroundList {
   display: flex;
-  margin-bottom: 20px;
+  margin: 0px 0px 20px -7px;
+
+  .themeItemBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px 7px;
+  }
   li {
-    margin-right: 15px;
-    border-radius: 6px;
-    overflow: hidden;
+    margin-bottom: 6px;
     width: 64px;
     height: 48px;
+    overflow: hidden;
+    border-radius: 6px;
     background-size: cover;
     background-repeat: no-repeat;
     cursor: pointer;
@@ -33,6 +40,10 @@
 .title {
   font-size: 14px;
   margin-bottom: 10px;
+  i {
+    margin-left: 10px;
+    color: var(--custom-primary-color);
+  }
 }
 
 .content {
@@ -61,6 +72,7 @@
 .modalBox {
   display: flex;
   margin: -20px;
+  height: 70vh;
 }
 
 .menus {
@@ -107,12 +119,41 @@
 }
 
 .aboutUs {
-  .versions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .brief {
     display: flex;
+    flex-direction: column;
     align-items: center;
+    .appName {
+      font-size: 20px;
+    }
+    .env,
+    .version {
+      margin: 4px 0px;
+      color: var(--color-text-45);
+    }
+    .log {
+      margin-top: 4px;
+      color: var(--custom-primary-color);
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }
 
 .brandLogo {
+  margin-bottom: 15px;
+}
+
+.aiSqlSource {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.aiSqlSourceTitle {
   margin-right: 20px;
 }

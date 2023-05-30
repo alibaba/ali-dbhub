@@ -28,6 +28,11 @@ public class OpenAIClient {
     public static final String OPENAI_KEY = "chatgpt.apiKey";
 
     /**
+     * OPENAI接口域名
+     */
+    public static final String OPENAI_HOST = "chatgpt.apiHost";
+
+    /**
      * 代理IP
      */
     public static final String PROXY_HOST = "chatgpt.proxy.host";
@@ -61,7 +66,15 @@ public class OpenAIClient {
 
     public static void refresh() {
         String apikey;
+        String apiHost = ApplicationContextUtil.getProperty(OPENAI_HOST);
+        if (StringUtils.isBlank(apiHost)) {
+            apiHost = OpenAIConst.OPENAI_HOST;
+        }
         ConfigService configService = ApplicationContextUtil.getBean(ConfigService.class);
+        Config apiHostConfig = configService.find(OPENAI_HOST).getData();
+        if (apiHostConfig != null) {
+            apiHost = apiHostConfig.getContent();
+        }
         Config config = configService.find(OPENAI_KEY).getData();
         if (config != null) {
             apikey = config.getContent();
@@ -83,10 +96,10 @@ public class OpenAIClient {
         if (Objects.nonNull(host) && Objects.nonNull(port)) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
             OkHttpClient okHttpClient = new OkHttpClient.Builder().proxy(proxy).build();
-            OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(OpenAIConst.OPENAI_HOST).apiKey(
+            OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(apiHost).apiKey(
                 Lists.newArrayList(apikey)).okHttpClient(okHttpClient).build();
         } else {
-            OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(OpenAIConst.OPENAI_HOST).apiKey(
+            OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(apiHost).apiKey(
                 Lists.newArrayList(apikey)).build();
         }
         apiKey = apikey;
