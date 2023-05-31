@@ -3,7 +3,7 @@ import styles from './index.less';
 import classnames from 'classnames';
 import Iconfont from '@/components/Iconfont';
 import Button from '@/components/Button';
-import { Modal, Radio, Input, message, Select, Tooltip } from 'antd';
+import { Modal, Radio, Input, message, Select, Tooltip, RadioChangeEvent } from 'antd';
 import i18n from '@/i18n';
 import { imghub } from '@/utils/imghub';
 import configService, { IChatgptConfig } from '@/service/config';
@@ -320,9 +320,10 @@ export function BaseBody() {
     setCurrentPrimaryColor(item.code)
   };
 
-  function changeLang() {
-    const lang = localStorage.getItem('lang') === 'en' ? 'zh-cn' : 'en'
-    localStorage.setItem('lang', lang);
+  function changeLang(e: RadioChangeEvent) {
+
+    // const lang = localStorage.getItem('lang') === 'en' ? 'zh-cn' : 'en'
+    localStorage.setItem('lang', e.target.value);
     location.reload();
   }
 
@@ -346,6 +347,7 @@ export function BaseBody() {
     <div>
       <Radio.Group onChange={changeLang} value={lang}>
         <Radio value='zh-cn'>{i18n('common.text.zh-cn')}</Radio>
+        <Radio value='zh-tw'>{i18n('common.text.zh-tw')}</Radio>
         <Radio value='en'>{i18n('common.text.en')}</Radio>
       </Radio.Group>
     </div>

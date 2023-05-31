@@ -1,0 +1,46 @@
+export default {
+  lang: 'zh-tw',
+
+  'common.data.hour': '{1}小時',
+  'common.data.minute': '{1}分鐘',
+  'common.tip.yesterday': '昨天{1}',
+  'common.tip.tomorrow': '明天{1}',
+  'common.tip.ago': '前',
+  'common.tip.later': '後',
+  'common.tip.now': '現在',
+  'common.tip.justNow': '剛剛',
+  'common.text.search': '搜尋',
+  'common.placeholder.select': '請選擇{1}',
+  'common.text.serviceStarting': '服務啟動中...',
+  'common.text.serviceFail': '服務啟動失敗',
+  'common.text.column': '列',
+  'common.text.indexes': '索引',
+  'common.button.save': '保存',
+  'common.button.execute': '執行',
+  'common.text.background': '背景',
+  'common.text.language': '語言',
+  'common.text.en': '英文',
+  'common.text.zh-cn': '中文',
+  'common.text.zh-tw': '繁體中文',
+
+  'home.nav.database': '連線管理',
+  'home.nav.myHistory': '歷史紀錄',
+  'home.nav.github': 'GitHub',
+  'home.text.visitedTime': '最近訪問時間：',
+
+  'history.title.myHistory': '我的SQL',
+  'history.tab.mySave': '我的保存',
+  'history.tab.executionHistory': '執行紀錄',
+
+  'home.title.name': '資料庫',
+  'home.title.link': '連線',
+  'home.title.setting': '設定',
+  'home.title.query': '查詢',
+
+  'connection.buttonn.colorSwitch': '顏色切換',
+  'connection.button.overview': '連線概覽',
+  'connection.input.newLink': '新建連線',
+  'connection.button.edit': '修改連線',
+  'connection.button.clone': '複製連線',
+  'connection.button.delete': '刪除連線'
+}
