@@ -1,5 +1,6 @@
 # 1.0.8
 * 数据库连接支持TLSv1 [Issue #252](https://github.com/alibaba/Chat2DB/issues/252)
+* 修复格式化sql后无法撤销 [Issue #251](https://github.com/alibaba/Chat2DB/issues/251)
 * 修复console里会拼接undefind
 
 # 1.0.7
