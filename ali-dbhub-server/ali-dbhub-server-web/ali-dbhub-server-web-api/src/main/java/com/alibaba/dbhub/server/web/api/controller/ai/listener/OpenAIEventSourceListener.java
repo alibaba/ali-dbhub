@@ -90,7 +90,7 @@ public class OpenAIEventSourceListener extends EventSourceListener {
         }
         eventSource.cancel();
         Message message = new Message();
-        message.setContent("出现异常,请检查是否网络能访问chatgpt或者在左下角的设置里面修改OpenAI Api Key：" + bodyString);
+        message.setContent("出现异常,请在帮助中查看详细日志：" + bodyString);
         sseEmitter.send(SseEmitter.event()
             .id("[ERROR]")
             .data(message));

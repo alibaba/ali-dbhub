@@ -72,13 +72,16 @@ public class RestAiStreamClient {
     public void restCompletions(String prompt,
         EventSourceListener eventSourceListener,
         SseEmitter sseEmitter) {
+        log.info("开始调用自定义AI, prompt:{}", prompt);
         RestAiCompletion completion = new RestAiCompletion();
         completion.setPrompt(prompt);
         if (Objects.isNull(stream) || stream) {
             streamCompletions(completion, eventSourceListener);
+            log.info("结束调用流式输出自定义AI");
             return;
         }
         nonStreamCompletions(completion, sseEmitter);
+        log.info("结束调用飞流式输出自定义AI");
     }
 
     /**
