@@ -163,9 +163,9 @@ public class ConnectInfo {
 
     public void setDatabase(String database) {
         this.databaseName = database;
-        if (!ObjectUtils.isEmpty(this.urlWithOutDatabase) && !ObjectUtils.isEmpty(this.databaseName)) {
-            this.url = this.urlWithOutDatabase + "/" + database;
-        }
+        //if (!ObjectUtils.isEmpty(this.urlWithOutDatabase) && !ObjectUtils.isEmpty(this.databaseName)) {
+        //    this.url = this.urlWithOutDatabase + "/" + database;
+        //}
     }
 
     public String key() {
@@ -174,37 +174,37 @@ public class ConnectInfo {
 
     public void setUrl(String url) {
         this.url = url;
-        if (this.dbType != DbTypeEnum.MYSQL && this.dbType != DbTypeEnum.POSTGRESQL) {
-            return;
-        }
-        if (!ObjectUtils.isEmpty(url)) {
-            //jdbc:postgresql://localhost:5432/postgres
-            String[] array = getUrl().split(":");
-            if (array.length == 4) {
-                String str = array[3];
-                boolean isDigit = true;
-                StringBuffer sb = new StringBuffer();
-                StringBuffer sb1 = new StringBuffer();
-                for (int i = 0; i < str.length(); i++) {
-                    char c = str.charAt(i);
-                    if (isDigit == true) {
-                        if (!Character.isDigit(c)) {
-                            isDigit = false;
-                        } else {
-                            sb1.append(c);
-                        }
-                    } else {
-                        sb.append(c);
-                    }
-                }
-                String s = sb.toString();
-                if (!ObjectUtils.isEmpty(s)) {
-                    this.databaseName = s;
-                }
-                this.port = Integer.parseInt(sb1.toString());
-                this.urlWithOutDatabase = array[0] + ":" + array[1] + ":" + array[2] + ":" + port;
-            }
-        }
+        //if (this.dbType != DbTypeEnum.MYSQL && this.dbType != DbTypeEnum.POSTGRESQL) {
+        //    return;
+        //}
+        //if (!ObjectUtils.isEmpty(url)) {
+        //    //jdbc:postgresql://localhost:5432/postgres
+        //    String[] array = getUrl().split(":");
+        //    if (array.length == 4) {
+        //        String str = array[3];
+        //        boolean isDigit = true;
+        //        StringBuffer sb = new StringBuffer();
+        //        StringBuffer sb1 = new StringBuffer();
+        //        for (int i = 0; i < str.length(); i++) {
+        //            char c = str.charAt(i);
+        //            if (isDigit == true) {
+        //                if (!Character.isDigit(c)) {
+        //                    isDigit = false;
+        //                } else {
+        //                    sb1.append(c);
+        //                }
+        //            } else {
+        //                sb.append(c);
+        //            }
+        //        }
+        //        String s = sb.toString();
+        //        if (!ObjectUtils.isEmpty(s)) {
+        //            this.databaseName = s;
+        //        }
+        //        this.port = Integer.parseInt(sb1.toString());
+        //        this.urlWithOutDatabase = array[0] + ":" + array[1] + ":" + array[2] + ":" + port;
+        //    }
+        //}
     }
 
     @Override

@@ -12,7 +12,7 @@ import { ISQLQueryConsole } from '@/types';
 import { Button, Divider, Input, message, Modal, Select, Tooltip } from 'antd';
 import { TreeNodeType, WindowTabStatus, OSType } from '@/utils/constants';
 import Iconfont from '@/components/Iconfont';
-import MonacoEditor, { setEditorHint } from '@/components/MonacoEditor';
+import MonacoEditor, { setEditorHint, setMonacoValue } from '@/components/MonacoEditor';
 import DraggableContainer from '@/components/DraggableContainer';
 import SearchResult from '@/components/SearchResult';
 import LoadingContent from '@/components/Loading/LoadingContent';
@@ -262,7 +262,7 @@ export default function DatabaseQuery(props: IProps) {
   const formatValue = () => {
     const model = monacoEditor.current.getModel(monacoEditor.current);
     const value = model.getValue();
-    model.setValue(format(value, {}));
+    setMonacoValue(monacoEditor.current,format(value, {}))
   };
 
   const onClickChatbot = () => {
@@ -290,7 +290,7 @@ export default function DatabaseQuery(props: IProps) {
     const preValue = model.getValue();
 
     model.setValue(
-      `${preValue}\n\n## ---BEGIN---\n## ${sentence}\n## ---${IPromptTypeText[promptType]}:---\n`,
+      `${preValue}\n\n--- BEGIN ---\n${sentence}\n--- ${IPromptTypeText[promptType]} ---\n`,
     );
 
     const { dataSourceId, databaseName } = windowTab || {};
@@ -324,7 +324,7 @@ export default function DatabaseQuery(props: IProps) {
             lineCount,
             model.getLineMaxColumn(lineCount),
           ),
-          text: isEOF ? '\n## --- END --- \n' : JSON.parse(message).content,
+          text: isEOF ? '\n--- END --- \n' : JSON.parse(message).content,
         },
       ]);
 

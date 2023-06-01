@@ -73,7 +73,7 @@ export default memo(function MonacoEditor(props: IProps) {
         ...option,
       },
     );
-    setValue(editor, value);
+    setMonacoValue(editor, value, true);
 
     // Editor onChange
     editor.onDidChangeModelContent(() => {
@@ -126,25 +126,12 @@ export default memo(function MonacoEditor(props: IProps) {
   }, [editor, isActive])
 
   useEffect(() => {
-    setValue(editor, value);
+    setMonacoValue(editor, value, true);
   }, [value]);
 
   useEffect(() => {
     monaco.editor.setTheme(themeColor == 'dark' ? 'BlackTheme' : 'Default');
   }, [themeColor]);
-
-  // 设置编辑器的值
-  const setValue = (editor: any, value: any) => {
-    if (value !== undefined && value !== null) {
-      if (value.constructor === Number) {
-        value = value.toString();
-      }
-    } else {
-      value = '';
-    }
-    const model = editor?.getModel && editor.getModel(editor);
-    model?.setValue && model.setValue(value);
-  };
 
   const pushValue = (editor: any, value: any) => {
     const v = value.toString();
@@ -241,4 +228,62 @@ export function setEditorHint(hintData: IHintData) {
   );
 
   return editorHintExamples;
+}
+
+// editor编辑器实例 
+// text需要添加的文本 
+// revocable是否覆盖，覆盖以后无法执行撤销操作
+export const setMonacoValue = (editor: any, text: any, revocable: boolean = false) => {
+  const model = editor?.getModel && editor.getModel(editor);
+
+  // set后是否需要保留撤回记录
+  if(revocable){
+    if (text !== undefined && text !== null) {
+      if (text.constructor === Number) {
+        text = text.toString();
+      }
+    } else {
+      text = '';
+    }
+    model?.setValue && model.setValue(text);
+  }else{
+    appendMonacoValue(editor, text, 'all');
+  }
+};
+
+
+// 向编辑器中追加文本
+// editor 编辑器实例
+// text 需要添加的文本
+// range 添加到的位置
+// 'end' 末尾 
+// 'front' 开头
+// 'cover' 覆盖掉原有的文字
+// new monaco.Range 自定义位置 
+export const appendMonacoValue =  (editor: any, text: any, range: 'end' | 'front' | 'cover' | any = 'end') => {
+  const model = editor?.getModel && editor.getModel(editor);
+  // 创建编辑操作，将当前文档内容替换为新内容
+  let newRange = range;
+  switch(range){
+    case 'cover':
+      newRange = model.getFullModelRange();
+      break;
+    case 'front':
+      newRange = new monaco.Range(1,1,1,1);
+      break;
+    case 'end':
+      const lastLine = model.getLineCount();
+      const lastColumn = model.getLineMaxColumn(lastLine);   
+      newRange = new monaco.Range(lastLine, lastColumn, lastLine, lastColumn);
+      break;
+    default:
+      break;
+  }
+  const op = { 
+    range: newRange,
+    text, 
+    forceMoveMarkers: true 
+  };
+  // 将编辑操作添加到撤销历史记录中
+  editor.executeEdits('setValue', [op]);
 }
