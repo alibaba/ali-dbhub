@@ -39,10 +39,10 @@
 ## ⏬ 下载安装
 | 描述                   | 下载地址                                                                                                                                                                                                                                       |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.8/Chat2DB%20Setup%201.0.8.exe](https://oss-chat2db.alibaba.com/release/1.0.8/Chat2DB%20Setup%201.0.8.exe) |
-| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.8/Chat2DB-1.0.8-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.8/Chat2DB-1.0.8-arm64.dmg) |
-| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.8/Chat2DB-1.0.8.dmg](https://oss-chat2db.alibaba.com/release/1.0.8/Chat2DB-1.0.8.dmg) |       
-| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.8/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.8/ali-dbhub-server-start.jar) |                                                                                                                
+| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB%20Setup%201.0.9.exe](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB%20Setup%201.0.9.exe) |
+| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9-arm64.dmg) |
+| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9.dmg](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9.dmg) |       
+| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.9/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.9/ali-dbhub-server-start.jar) |                                                                                                                
 
 ## 🌰 使用Demo
 ### 创建数据源
