@@ -121,8 +121,8 @@ But front debugging need mapping of resources, you can download [XSwitch](https:
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
 
 ## ☎️ Contact Us
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat.PNG" width="40%"/></a>
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding.PNG" width="40%"/></a>
+<a><img src="https://oss-chat2db.alibaba.com/static/weichat.PNG" width="40%"/></a>
+<a><img src="https://oss-chat2db.alibaba.com/static/dingding.PNG" width="40%"/></a>
 
 微信：yxccw132  钉钉：9135032392
 
