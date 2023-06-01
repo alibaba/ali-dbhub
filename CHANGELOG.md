@@ -1,9 +1,6 @@
-# 1.0.8
-* 数据库连接支持TLSv1 [Issue #252](https://github.com/alibaba/Chat2DB/issues/252)
-* 修复格式化sql后无法撤销 [Issue #251](https://github.com/alibaba/Chat2DB/issues/251)
-* 修复console里会拼接undefind
+# 1.0.9
+* 修复Open Ai 无法连接的问题
 
-# 1.0.7
 * 支持国产达梦数据库 [Issue #148](https://github.com/alibaba/Chat2DB/issues/147)
 * 支持自定义OPEN AI API_HOST [Issue #173](https://github.com/alibaba/Chat2DB/issues/173)
 * 🔥 支持自定义AI接口
