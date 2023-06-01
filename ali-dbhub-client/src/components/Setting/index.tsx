@@ -228,7 +228,7 @@ export function SettingAI() {
     // }
     // apiHost的最后必须为/
     const newChatgptConfig = {...chatgptConfig}
-    if(!newChatgptConfig.apiHost.endsWith('/')){
+    if(newChatgptConfig.apiHost && !newChatgptConfig.apiHost?.endsWith('/')){
       newChatgptConfig.apiHost = newChatgptConfig.apiHost + '/'
     }
     configService.setChatGptSystemConfig(newChatgptConfig).then(res => {
