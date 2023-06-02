@@ -7,7 +7,7 @@
 
 <div align="center">
 
-General-purpose database tools and SQL clients with AGI (ChatGPT)
+An intelligent and versatile general-purpose SQL client and reporting tool for databases which integrates ChatGPT capabilities
 
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/alibaba/ali-dbhub/blob/main/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/alibaba/ali-dbhub)](https://github.com/alibaba/ali-dbhub/releases)
