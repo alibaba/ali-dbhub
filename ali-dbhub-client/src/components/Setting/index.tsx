@@ -9,9 +9,9 @@ import { imghub } from '@/utils/imghub';
 import configService, { IChatgptConfig } from '@/service/config';
 import miscService from '@/service/misc';
 import BrandLogo from '@/components/BrandLogo';
-import themeDarkImg from '@/assets/theme-dark.webp';
-import themeDefaultImg from '@/assets/theme-default.webp';
-import themeFollowImg from '@/assets/theme-follow.webp';
+import themeDarkImg from '@/assets/theme-dark.png';
+import themeLightImg from '@/assets/theme-light.png';
+import themeAutoImg from '@/assets/theme-auto.png';
 
 const { Option } = Select;
 
@@ -54,16 +54,16 @@ const backgroundList = [
     code: 'dark',
     name: '暗色',
     img: themeDarkImg
-  },
+   },
   {
     code: 'default',
     name: '亮色',
-    img: themeDefaultImg
+    img: themeLightImg
   },
   {
     code: 'followOs',
-    name: '跟随系统',
-    img: themeFollowImg
+    name: '自动',
+    img: themeAutoImg
   },
   // {
   //   code: 'eyeshield',
@@ -226,7 +226,12 @@ export function SettingAI() {
     //   message.error('请输入ChatGPT-apiKey')
     //   return
     // }
-    configService.setChatGptSystemConfig(chatgptConfig).then(res => {
+    // apiHost的最后必须为/
+    const newChatgptConfig = {...chatgptConfig}
+    if(newChatgptConfig.apiHost && !newChatgptConfig.apiHost?.endsWith('/')){
+      newChatgptConfig.apiHost = newChatgptConfig.apiHost + '/'
+    }
+    configService.setChatGptSystemConfig(newChatgptConfig).then(res => {
       message.success('配置成功')
     })
   }
@@ -253,7 +258,7 @@ export function SettingAI() {
           Api Host
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
-          <Input placeholder='非必填，默认值为 https://api.openai.com' value={chatgptConfig.apiHost} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, apiHost: e.target.value }) }} />
+          <Input placeholder='非必填，默认值为 https://api.openai.com/' value={chatgptConfig.apiHost} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, apiHost: e.target.value }) }} />
         </div>
         <div className={styles.title}>
           HTTP Proxy Host

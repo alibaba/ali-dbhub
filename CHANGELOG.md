@@ -1,4 +1,6 @@
-# 1.0.7
+# 1.0.9
+* 修复Open Ai 无法连接的问题
+
 * 支持国产达梦数据库 [Issue #148](https://github.com/alibaba/Chat2DB/issues/147)
 * 支持自定义OPEN AI API_HOST [Issue #173](https://github.com/alibaba/Chat2DB/issues/173)
 * 🔥 支持自定义AI接口
