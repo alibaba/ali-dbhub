@@ -156,7 +156,7 @@ public class JdbcUtils {
     public static String getResultSetValue(ResultSet rs, int index) throws SQLException {
         Object obj = rs.getObject(index);
         if (obj == null) {
-            return "";
+            return null;
         }
 
         if (obj instanceof Blob blob) {
