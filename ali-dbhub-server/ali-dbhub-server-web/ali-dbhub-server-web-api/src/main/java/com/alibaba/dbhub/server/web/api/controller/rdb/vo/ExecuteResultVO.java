@@ -35,10 +35,10 @@ public class ExecuteResultVO {
     /**
      * 展示头的列表
      */
-    private List<CellVO> headerList;
+    private List<HeaderVO> headerList;
 
     /**
      * 数据的列表
      */
-    private List<List<CellVO>> dataList;
+    private List<List<String>> dataList;
 }

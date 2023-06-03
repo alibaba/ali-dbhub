@@ -1,6 +1,5 @@
 package com.alibaba.dbhub.server.test.domain.data.service;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -13,14 +12,16 @@ import com.alibaba.dbhub.server.domain.api.service.ConsoleService;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
 import com.alibaba.dbhub.server.domain.api.service.DlTemplateService;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.model.Cell;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
+import com.alibaba.dbhub.server.domain.support.model.Header;
 import com.alibaba.dbhub.server.test.common.BaseTest;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
 import com.alibaba.dbhub.server.test.domain.data.utils.TestUtils;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.fastjson2.JSON;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
@@ -102,18 +103,19 @@ public class JdbcOperationsTest extends BaseTest {
             executeResult = dlTemplateService.execute(templateQueryParam);
             log.info("返回数据:{}", JSON.toJSONString(executeResult));
             Assertions.assertTrue(executeResult.getSuccess(), "查询数据失败");
-            List<Cell> headerList = executeResult.getData().get(0).getHeaderList();
+            List<Header> headerList = executeResult.getData().get(0).getHeaderList();
             Assertions.assertEquals(4L, headerList.size(), "查询数据失败");
-            Assertions.assertEquals(dialectProperties.toCase("ID"), headerList.get(0).getStringValue(), "查询数据失败");
+            Assertions.assertEquals(dialectProperties.toCase("ID"), headerList.get(0).getName(), "查询数据失败");
 
-            List<List<Cell>> dataList = executeResult.getData().get(0).getDataList();
+            List<List<String>> dataList = executeResult.getData().get(0).getDataList();
             Assertions.assertEquals(1L, dataList.size(), "查询数据失败");
-            List<Cell> data1 = dataList.get(0);
-            Assertions.assertEquals(BigDecimal.ONE, data1.get(0).getBigDecimalValue(), "查询数据失败");
-            log.info("date:{},{}", DATE, new Date(data1.get(1).getDateValue()));
-            Assertions.assertEquals(DATE.getTime(), data1.get(1).getDateValue(), "查询数据失败");
-            Assertions.assertEquals(NUMBER, data1.get(2).getBigDecimalValue().longValue(), "查询数据失败");
-            Assertions.assertEquals(STRING, data1.get(3).getStringValue(), "查询数据失败");
+            List<String> data1 = dataList.get(0);
+            Assertions.assertEquals(Long.toString(NUMBER), data1.get(0), "查询数据失败");
+            log.info("date:{},{}", DATE, data1.get(1));
+            Assertions.assertEquals(DateUtil.format(DATE, DatePattern.NORM_DATETIME_FORMAT), data1.get(1),
+                "查询数据失败");
+            Assertions.assertEquals(Long.toString(NUMBER), data1.get(2), "查询数据失败");
+            Assertions.assertEquals(STRING, data1.get(3), "查询数据失败");
 
             // 异常sql
             templateQueryParam = new DlExecuteParam();

@@ -13,9 +13,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
-import com.alibaba.dbhub.server.domain.support.model.Cell;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
+import com.alibaba.dbhub.server.domain.support.model.Header;
 import com.alibaba.dbhub.server.domain.support.model.Procedure;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
@@ -49,7 +48,8 @@ public class SQLExecutor {
      */
     private static final SQLExecutor INSTANCE = new SQLExecutor();
 
-    private SQLExecutor() {}
+    private SQLExecutor() {
+    }
 
     public static SQLExecutor getInstance() {
         return INSTANCE;
@@ -133,15 +133,18 @@ public class SQLExecutor {
                     int col = resultSetMetaData.getColumnCount();
 
                     // 获取header信息
-                    List<Cell> headerList = Lists.newArrayListWithExpectedSize(col);
+                    List<Header> headerList = Lists.newArrayListWithExpectedSize(col);
                     executeResult.setHeaderList(headerList);
                     for (int i = 1; i <= col; i++) {
-                        headerList.add(Cell.builder().type(CellTypeEnum.STRING.getCode())
-                            .stringValue(resultSetMetaData.getColumnName(i)).build());
+                        headerList.add(Header.builder()
+                            .dataType(com.alibaba.dbhub.server.domain.support.util.JdbcUtils.resolveDataType(
+                                resultSetMetaData.getColumnTypeName(i), resultSetMetaData.getColumnType(i)).getCode())
+                            .name(resultSetMetaData.getColumnName(i))
+                            .build());
                     }
 
                     // 获取数据信息
-                    List<List<Cell>> dataList = Lists.newArrayList();
+                    List<List<String>> dataList = Lists.newArrayList();
                     executeResult.setDataList(dataList);
 
                     // 分页大小
@@ -151,7 +154,7 @@ public class SQLExecutor {
                     }
                     int rsSize = 0;
                     while (rs.next()) {
-                        List<Cell> row = Lists.newArrayListWithExpectedSize(col);
+                        List<String> row = Lists.newArrayListWithExpectedSize(col);
                         dataList.add(row);
                         for (int i = 1; i <= col; i++) {
                             row.add(com.alibaba.dbhub.server.domain.support.util.JdbcUtils.getResultSetValue(rs, i));

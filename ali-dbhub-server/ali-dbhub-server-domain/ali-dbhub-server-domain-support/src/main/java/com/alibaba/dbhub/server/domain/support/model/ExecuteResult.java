@@ -47,12 +47,12 @@ public class ExecuteResult {
     /**
      * 展示头的列表
      */
-    private List<Cell> headerList;
+    private List<Header> headerList;
 
     /**
      * 数据的列表
      */
-    private List<List<Cell>> dataList;
+    private List<List<String>> dataList;
 
     /**
      * 是否存在下一页

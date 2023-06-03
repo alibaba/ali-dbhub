@@ -1,6 +1,5 @@
 package com.alibaba.dbhub.server.domain.support.util;
 
-import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
@@ -8,23 +7,25 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Map;
 
-import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.DataTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
-import com.alibaba.dbhub.server.domain.support.model.Cell;
 import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
 import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
 import com.alibaba.dbhub.server.domain.support.sql.IDriverManager;
 import com.alibaba.dbhub.server.domain.support.sql.SSHManager;
-import com.alibaba.dbhub.server.tools.common.util.EasyOptionalUtils;
 import com.alibaba.druid.DbType;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,18 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class JdbcUtils {
+
+    private static final String DEFAULT_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
+    private static final DateTimeFormatter DEFAULT_DATETIME_FORMAT = DateTimeFormatter
+        .ofPattern(DEFAULT_DATETIME_PATTERN, Locale.getDefault())
+        .withZone(ZoneId.systemDefault());
+
+    private static final DateTimeFormatter DEFAULT_DATE_FORMAT = DateTimeFormatter
+        .ofPattern("yyyy-MM-dd", Locale.getDefault())
+        .withZone(ZoneId.systemDefault());
+    private static final DateTimeFormatter DEFAULT_DATETIME_TZ_FORMAT = DateTimeFormatter
+        .ofPattern("yyyy-MM-dd HH:mm:ss.SSS Z", Locale.getDefault())
+        .withZone(ZoneId.systemDefault());
 
     /**
      * 获取德鲁伊的的数据库类型
@@ -51,6 +64,88 @@ public class JdbcUtils {
     }
 
     /**
+     * 解析字段的类型
+     *
+     * @param typeName
+     * @param type
+     * @return
+     */
+    public static DataTypeEnum resolveDataType(String typeName, int type) {
+        switch (getTypeByTypeName(typeName, type)) {
+            case Types.BOOLEAN:
+                return DataTypeEnum.BOOLEAN;
+            case Types.CHAR:
+            case Types.VARCHAR:
+            case Types.NVARCHAR:
+            case Types.LONGVARCHAR:
+            case Types.LONGNVARCHAR:
+                return DataTypeEnum.STRING;
+            case Types.BIGINT:
+            case Types.DECIMAL:
+            case Types.DOUBLE:
+            case Types.FLOAT:
+            case Types.INTEGER:
+            case Types.NUMERIC:
+            case Types.REAL:
+            case Types.SMALLINT:
+                return DataTypeEnum.NUMERIC;
+            case Types.BIT:
+            case Types.TINYINT:
+                if (typeName.toLowerCase().contains("bool")) {
+                    // Declared as numeric but actually it's a boolean
+                    return DataTypeEnum.BOOLEAN;
+                }
+                return DataTypeEnum.NUMERIC;
+            case Types.DATE:
+            case Types.TIME:
+            case Types.TIME_WITH_TIMEZONE:
+            case Types.TIMESTAMP:
+            case Types.TIMESTAMP_WITH_TIMEZONE:
+                return DataTypeEnum.DATETIME;
+            case Types.BINARY:
+            case Types.VARBINARY:
+            case Types.LONGVARBINARY:
+                return DataTypeEnum.BINARY;
+            case Types.BLOB:
+            case Types.CLOB:
+            case Types.NCLOB:
+            case Types.SQLXML:
+                return DataTypeEnum.CONTENT;
+            case Types.STRUCT:
+                return DataTypeEnum.STRUCT;
+            case Types.ARRAY:
+                return DataTypeEnum.ARRAY;
+            case Types.ROWID:
+                return DataTypeEnum.ROWID;
+            case Types.REF:
+                return DataTypeEnum.REFERENCE;
+            case Types.OTHER:
+                return DataTypeEnum.OBJECT;
+            default:
+                return DataTypeEnum.UNKNOWN;
+        }
+    }
+
+    private static int getTypeByTypeName(String typeName, int type) {
+        // [JDBC: SQLite driver uses VARCHAR value type for all LOBs]
+        if (type == Types.OTHER || type == Types.VARCHAR) {
+            if ("BLOB".equalsIgnoreCase(typeName)) {
+                return Types.BLOB;
+            } else if ("CLOB".equalsIgnoreCase(typeName)) {
+                return Types.CLOB;
+            } else if ("NCLOB".equalsIgnoreCase(typeName)) {
+                return Types.NCLOB;
+            }
+        } else if (type == Types.BIT) {
+            // Workaround for MySQL (and maybe others) when TINYINT(1) == BOOLEAN
+            if ("TINYINT".equalsIgnoreCase(typeName)) {
+                return Types.TINYINT;
+            }
+        }
+        return type;
+    }
+
+    /**
      * 获取一个返回值
      *
      * @param rs
@@ -58,80 +153,50 @@ public class JdbcUtils {
      * @return
      * @throws SQLException
      */
-    public static Cell getResultSetValue(ResultSet rs, int index) throws SQLException {
-        Cell cell = new Cell();
+    public static String getResultSetValue(ResultSet rs, int index) throws SQLException {
         Object obj = rs.getObject(index);
         if (obj == null) {
-            cell.setType(CellTypeEnum.EMPTY.getCode());
-            return cell;
+            return "";
         }
 
-        if (obj instanceof Blob) {
-            Blob blob = (Blob)obj;
-            cell.setType(CellTypeEnum.BYTE.getCode());
-            cell.setByteValue(blob.getBytes(1, (int)blob.length()));
-            return cell;
+        if (obj instanceof Blob blob) {
+            return "(BLOB " + blob.length() + ")";
         }
-        if (obj instanceof Clob) {
-            Clob clob = (Clob)obj;
-            cell.setType(CellTypeEnum.STRING.getCode());
-            cell.setStringValue(clob.getSubString(1, (int)clob.length()));
-            return cell;
+        if (obj instanceof Clob clob) {
+            return "(CLOB " + clob.length() + ")";
         }
-        if (obj instanceof Timestamp) {
-            Timestamp timestamp = (Timestamp)obj;
-            cell.setType(CellTypeEnum.DATE.getCode());
-            cell.setDateValue(EasyOptionalUtils.mapTo(timestamp, Timestamp::getTime));
-            return cell;
+        if (obj instanceof Timestamp timestamp) {
+            return DateUtil.format(timestamp, DEFAULT_DATETIME_FORMAT);
         }
 
         String className = obj.getClass().getName();
         if ("oracle.sql.TIMESTAMP".equals(className) || "oracle.sql.TIMESTAMPTZ".equals(className)) {
-            cell.setType(CellTypeEnum.DATE.getCode());
-            cell.setDateValue(EasyOptionalUtils.mapTo(rs.getTimestamp(index), Timestamp::getTime));
-            return cell;
+            return DateUtil.format(rs.getTimestamp(index), DEFAULT_DATETIME_TZ_FORMAT);
         }
         if (className.startsWith("oracle.sql.DATE")) {
             String metaDataClassName = rs.getMetaData().getColumnClassName(index);
-            cell.setType(CellTypeEnum.DATE.getCode());
             if ("java.sql.Timestamp".equals(metaDataClassName) || "oracle.sql.TIMESTAMP".equals(metaDataClassName)) {
-                cell.setDateValue(EasyOptionalUtils.mapTo(rs.getTimestamp(index), Timestamp::getTime));
+                return DateUtil.format(rs.getTimestamp(index), DEFAULT_DATETIME_FORMAT);
             } else {
-                cell.setDateValue(EasyOptionalUtils.mapTo(rs.getDate(index), Date::getTime));
+                return DateUtil.format(rs.getDate(index), DEFAULT_DATETIME_FORMAT);
             }
-            return cell;
         }
-        if (obj instanceof java.sql.Date) {
+        if (obj instanceof Date date) {
             if ("java.sql.Timestamp".equals(rs.getMetaData().getColumnClassName(index))) {
-                cell.setType(CellTypeEnum.DATE.getCode());
-                cell.setDateValue(EasyOptionalUtils.mapTo(rs.getDate(index), Date::getTime));
-                return cell;
+                return DateUtil.format(rs.getDate(index), DEFAULT_DATETIME_FORMAT);
             }
-            Date date = (Date)obj;
-            cell.setType(CellTypeEnum.DATE.getCode());
-            cell.setDateValue(date.getTime());
-            return cell;
+            return DateUtil.format(date, DEFAULT_DATETIME_FORMAT);
         }
-        if (obj instanceof LocalDateTime) {
-            LocalDateTime localDateTime = (LocalDateTime)obj;
-            cell.setType(CellTypeEnum.DATE.getCode());
-            cell.setDateValue(localDateTime.toInstant(ZoneOffset.ofHours(+8)).toEpochMilli());
-            return cell;
+        if (obj instanceof LocalDateTime localDateTime) {
+            return LocalDateTimeUtil.format(localDateTime, DEFAULT_DATETIME_PATTERN);
         }
-        if (obj instanceof LocalDate) {
-            LocalDate localDate = (LocalDate)obj;
-            cell.setType(CellTypeEnum.DATE.getCode());
-            cell.setDateValue(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
-            return cell;
+        if (obj instanceof LocalDate localDate) {
+            return LocalDateTimeUtil.format(localDate, DEFAULT_DATE_FORMAT);
         }
         if (obj instanceof Number) {
-            cell.setType(CellTypeEnum.BIG_DECIMAL.getCode());
-            cell.setBigDecimalValue(new BigDecimal(obj.toString()));
-            return cell;
+            return obj.toString();
         }
-        cell.setType(CellTypeEnum.STRING.getCode());
-        cell.setStringValue(obj.toString());
-        return cell;
+        return obj.toString();
     }
 
     /**
@@ -177,7 +242,8 @@ public class JdbcUtils {
                 } catch (SQLException e) {
                     // ignore
                 }
-            }if(session!=null){
+            }
+            if (session != null) {
                 try {
                     session.delPortForwardingL(Integer.parseInt(ssh.getLocalPort()));
                 } catch (JSchException e) {

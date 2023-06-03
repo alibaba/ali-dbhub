@@ -3,17 +3,16 @@ package com.alibaba.dbhub.server.web.api.controller.rdb.converter;
 import java.util.List;
 
 import com.alibaba.dbhub.server.domain.api.param.DlExecuteParam;
-import com.alibaba.dbhub.server.domain.support.model.Cell;
+import com.alibaba.dbhub.server.domain.api.param.DropParam;
+import com.alibaba.dbhub.server.domain.api.param.ShowCreateTableParam;
+import com.alibaba.dbhub.server.domain.api.param.TablePageQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.TableQueryParam;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
 import com.alibaba.dbhub.server.domain.support.model.Schema;
 import com.alibaba.dbhub.server.domain.support.model.Sql;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
-import com.alibaba.dbhub.server.domain.api.param.DropParam;
-import com.alibaba.dbhub.server.domain.api.param.ShowCreateTableParam;
-import com.alibaba.dbhub.server.domain.api.param.TablePageQueryParam;
-import com.alibaba.dbhub.server.domain.api.param.TableQueryParam;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DdlExportRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DdlRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DmlRequest;
@@ -21,7 +20,6 @@ import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableBriefQueryRe
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDeleteRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableDetailQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.TableRequest;
-import com.alibaba.dbhub.server.web.api.controller.rdb.vo.CellVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ColumnVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.IndexVO;
@@ -105,21 +103,6 @@ public abstract class RdbWebConverter {
      */
     public abstract DropParam tableDelete2dropParam(TableDeleteRequest request);
 
-    /**
-     * 模型转换
-     *
-     * @param cell
-     * @return
-     */
-    public abstract CellVO cellDto2vo(Cell cell);
-
-    /**
-     * 模型转换
-     *
-     * @param cells
-     * @return
-     */
-    public abstract List<CellVO> cellDto2vo(List<Cell> cells);
 
     /**
      * 模型转换
