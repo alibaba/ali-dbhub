@@ -125,6 +125,12 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 * <a href="https://github.com/alibaba/ali-dbhub/wiki">WIKI</a>
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
 
+## Stargazers
+[![Stargazers repo roster for @alibaba/Chat2DB](https://reporoster.com/stars/alibaba/Chat2DB)](https://github.com/alibaba/Chat2DB/stargazers)
+
+## Forkers
+[![Forkers repo roster for @alibaba/Chat2DB](https://reporoster.com/forks/alibaba/Chat2DB)](https://github.com/alibaba/Chat2DB/network/members)
+
 ## ☎️ 联系我们
 
 加群前请先Star和Fork，谢谢~
@@ -134,6 +140,8 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 
 微信：yxccw132  钉钉：9135032392
+
+
 
 ## ❤️ 致谢
 感谢所有为Chat2DB贡献力量的同学们~

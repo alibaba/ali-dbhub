@@ -118,6 +118,12 @@ But front debugging need mapping of resources, you can download [XSwitch](https:
 * <a href="https://github.com/alibaba/ali-dbhub/wiki">WIKI</a>
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
 
+## Stargazers
+[![Stargazers repo roster for @alibaba/Chat2DB](https://reporoster.com/stars/alibaba/Chat2DB)](https://github.com/alibaba/Chat2DB/stargazers)
+
+## Forkers
+[![Forkers repo roster for @alibaba/Chat2DB](https://reporoster.com/forks/alibaba/Chat2DB)](https://github.com/alibaba/Chat2DB/network/members)
+
 ## ☎️ Contact Us
 Please star and fork on GitHub before joining the group.
 
@@ -133,6 +139,7 @@ Thanks to all the students who contributed to Chat2DB~
 <a href="https://github.com/alibaba/ali-dbhub/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=alibaba/ali-dbhub" />
 </a>
+
 
 ## Star History
 
