@@ -115,8 +115,8 @@ But front debugging need mapping of resources, you can download [XSwitch](https:
 
 ## 📑 Documentation
 
-* <a href="https://github.com/alibaba/ali-dbhub/wiki">WIKI</a>
-* <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
+* <a href="https://chat2db.opensource.alibaba.com">Official website document</a>
+* <a href="https://github.com/alibaba/ali-dbhub/issues">Issue </a>
 
 ## Stargazers
 [![Stargazers repo roster for @alibaba/Chat2DB](https://reporoster.com/stars/alibaba/Chat2DB)](https://github.com/alibaba/Chat2DB/stargazers)

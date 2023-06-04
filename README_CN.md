@@ -122,8 +122,30 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 ## 📑 文档
 
-* <a href="https://github.com/alibaba/ali-dbhub/wiki">WIKI</a>
-* <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
+* <a href="https://chat2db.opensource.alibaba.com">官方文档</a>
+* <a href="https://github.com/alibaba/ali-dbhub/issues">Issue</a>
+
+##  常见问题
+
+### 1、无法获取数据源驱动:getJDBCDriver error: null
+
+问题原因：无法联网导致下载数据库驱动包失败。
+
+解决办法：手动下载相关驱动放入到 ~/.chat2db/jdbc-lib 目录下
+
+下载链接 参考：<a href="https://github.com/alibaba/Chat2DB/blob/main/ali-dbhub-server/ali-dbhub-server-start/src/main/resources/application.yml">Application jdbc-jar-downLoad-urls</a> 
+- https://oss-chat2db.alibaba.com/lib/mysql-connector-java-8.0.30.jar
+- https://oss-chat2db.alibaba.com/lib/mysql-connector-java-5.1.47.jar
+- https://oss-chat2db.alibaba.com/lib/clickhouse-jdbc-0.3.2-patch8-http.jar
+- https://oss-chat2db.alibaba.com/lib/mariadb-java-client-3.0.8.jar
+- https://oss-chat2db.alibaba.com/lib/mssql-jdbc-11.2.1.jre17.jar
+- https://oss-chat2db.alibaba.com/lib/oceanbase-client-2.4.2.jar
+- https://oss-chat2db.alibaba.com/lib/postgresql-42.5.1.jar
+- https://oss-chat2db.alibaba.com/lib/sqlite-jdbc-3.39.3.0.jar
+- https://oss-chat2db.alibaba.com/lib/ojdbc11.jar
+
+
+ 
 
 ## Stargazers
 [![Stargazers repo roster for @alibaba/Chat2DB](https://reporoster.com/stars/alibaba/Chat2DB)](https://github.com/alibaba/Chat2DB/stargazers)
