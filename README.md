@@ -121,8 +121,8 @@ But front debugging need mapping of resources, you can download [XSwitch](https:
 ## ☎️ Contact Us
 Please star and fork on GitHub before joining the group.
 
-<a><img src="https://oss-chat2db.alibaba.com/static/weichat.PNG" width="40%"/></a>
-<a><img src="https://oss-chat2db.alibaba.com/static/dingding.PNG" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat.PNG" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding.PNG" width="40%"/></a>
 
 微信：yxccw132  钉钉：9135032392
 
