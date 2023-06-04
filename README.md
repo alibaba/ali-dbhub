@@ -1,8 +1,4 @@
-<p align="center">
-  <a href="https://github.com/alibaba/Chat2DB">
-    <img width="100" src="document/image/logo.ico">
-  </a>
-</p>
+
 <h1 align="center">Chat2DB</h1>
 
 <div align="center">
@@ -18,15 +14,7 @@
 Languages： English | [中文](README_CN.md)
 </div>
 
-## Star History
 
-<a href="https://star-history.com/#alibaba/chat2db&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date" />
-  </picture>
-</a>
 
 ## 📖 Introduction
 &emsp; &emsp;Chat2DB is a multi-database client tool that is open-source and free from Alibaba. It supports local installation on Windows and Mac, as well as server-side deployment and web page access. Compared to traditional database client software such as Navicat and DBeaver, Chat2DB integrates AIGC's capabilities and is able to convert natural language into SQL. It can also convert SQL into natural language and provide optimization suggestions for SQL to greatly enhance the efficiency of developers. It is a tool for database developers in the AI era, and even non-SQL business operators in the future can use it to quickly query business data and generate reports.
@@ -131,8 +119,10 @@ But front debugging need mapping of resources, you can download [XSwitch](https:
 * <a href="https://github.com/alibaba/ali-dbhub/issues">Issue tracker</a>
 
 ## ☎️ Contact Us
-<a><img src="https://oss-chat2db.alibaba.com/static/weichat.PNG" width="40%"/></a>
-<a><img src="https://oss-chat2db.alibaba.com/static/dingding.PNG" width="40%"/></a>
+Please star and fork on GitHub before joining the group.
+
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat.PNG" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding.PNG" width="40%"/></a>
 
 微信：yxccw132  钉钉：9135032392
 
@@ -143,4 +133,13 @@ Thanks to all the students who contributed to Chat2DB~
   <img src="https://contrib.rocks/image?repo=alibaba/ali-dbhub" />
 </a>
 
+## Star History
+
+<a href="https://star-history.com/#alibaba/chat2db&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date" />
+  </picture>
+</a>
 

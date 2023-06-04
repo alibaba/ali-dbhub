@@ -1,8 +1,4 @@
-<p align="center">
-  <a href="https://github.com/alibaba/Chat2DB">
-    <img width="100" src="document/image/logo.ico">
-  </a>
-</p>
+
 <h1 align="center">Chat2DB</h1>
 
 <div align="center">
@@ -18,13 +14,7 @@
 
 语言： 中文 | [English](README_CN.md)
 </div>
-<a href="https://star-history.com/#alibaba/chat2db&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date" />
-  </picture>
-</a>
+
 
 ## 📖 简介
 &emsp; &emsp;Chat2DB 是一款有开源免费的多数据库客户端工具，支持windows、mac本地安装，也支持服务器端部署，web网页访问。和传统的数据库客户端软件Navicat、DBeaver 相比Chat2DB集成了AIGC的能力，能够将自然语言转换为SQL，也可以将SQL转换为自然语言，可以给出研发人员SQL的优化建议，极大的提升人员的效率，是AI时代数据库研发人员的利器，未来即使不懂SQL的运营业务也可以使用快速查询业务数据、生成报表能力。
@@ -137,10 +127,10 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 ## ☎️ 联系我们
 
-如果觉得对你有帮助请点个star吧。
+加群前请先Star和Fork，谢谢~
 
-<a><img src="https://oss-chat2db.alibaba.com/static/weichat.PNG" width="40%"/></a>
-<a><img src="https://oss-chat2db.alibaba.com/static/dingding.PNG" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_1.PNG" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
 
 微信：yxccw132  钉钉：9135032392
@@ -152,5 +142,13 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
   <img src="https://contrib.rocks/image?repo=alibaba/Chat2DB" />
 </a>
 
+## Star History
 
+<a href="https://star-history.com/#alibaba/chat2db&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=alibaba/chat2db&type=Date" />
+  </picture>
+</a>
 
