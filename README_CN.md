@@ -1,13 +1,9 @@
-<p align="center">
-  <a href="https://github.com/alibaba/Chat2DB">
-    <img width="100" src="document/image/logo.ico">
-  </a>
-</p>
+
 <h1 align="center">Chat2DB</h1>
 
 <div align="center">
 
-智能的通用数据库工具和SQL客户端
+🔥🔥🔥 智能且多功能的SQL客户端和报表工具，适用于各种数据库
 
 [![License](https://img.shields.io/github/license/alibaba/fastjson2?color=4D7A97&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Java support](https://img.shields.io/badge/Java-17+-green?logo=java&logoColor=white)](https://openjdk.java.net/)

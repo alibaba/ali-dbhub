@@ -1,13 +1,9 @@
-<p align="center">
-  <a href="https://github.com/alibaba/Chat2DB">
-    <img width="100" src="document/image/logo.ico">
-  </a>
-</p>
+
 <h1 align="center">Chat2DB</h1>
 
 <div align="center">
 
-General-purpose database tools and SQL clients with AGI (ChatGPT)
+🔥🔥🔥 An intelligent and versatile general-purpose SQL client and reporting tool for databases which integrates ChatGPT capabilities.
 
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/alibaba/ali-dbhub/blob/main/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/alibaba/ali-dbhub)](https://github.com/alibaba/ali-dbhub/releases)
