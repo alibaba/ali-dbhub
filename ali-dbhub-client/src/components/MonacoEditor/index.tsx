@@ -246,7 +246,7 @@ export const setMonacoValue = (editor: any, text: any, revocable: boolean = fals
     }
     model?.setValue && model.setValue(text);
   } else {
-    appendMonacoValue(editor, text, 'all');
+    appendMonacoValue(editor, text, 'cover');
   }
 };
 
