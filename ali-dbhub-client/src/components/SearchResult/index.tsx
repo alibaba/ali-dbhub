@@ -8,7 +8,7 @@ import StateIndicator from '@/components/StateIndicator';
 import LoadingContent from '@/components/Loading/LoadingContent';
 import MonacoEditor from '@/components/MonacoEditor';
 import { Button, DatePicker, Input, Table, Modal, message } from 'antd';
-import { StatusType, TableDataType, TableDataTypeCorresValue } from '@/utils/constants';
+import { StatusType, TableDataType } from '@/utils/constants';
 import { formatDate } from '@/utils';
 import { IManageResultData, ITableHeaderItem, ITableCellItem } from '@/types';
 import Item from 'antd/lib/list/Item';
@@ -119,15 +119,16 @@ export function TableBox(props: ITableProps) {
     }
     const columns: any = headerList?.map((item: any, index) => {
       const data = {
-        title: item.stringValue,
-        dataIndex: item.stringValue,
-        key: item.stringValue,
-        sorter: (a: any, b: any) => a[item.stringValue] - b[item.stringValue],
+        title: item.name,
+        dataIndex: item.name,
+        key: item.name,
+        type: item.dataType,
+        sorter: (a: any, b: any) => a[item.name] - b[item.name],
         render: (value: any) => (
           <div className={styles.tableItem}>
             <div className={styles.tableHoverBox}>
-              <Iconfont code="&#xe606;" onClick={viewTableCell.bind(null, { name: item.stringValue, value })} />
-              <Iconfont code="&#xeb4e;" onClick={copyTableCell.bind(null, { name: item.stringValue, value })} />
+              <Iconfont code="&#xe606;" onClick={viewTableCell.bind(null, { name: item.name, value })} />
+              <Iconfont code="&#xeb4e;" onClick={copyTableCell.bind(null, { name: item.name, value })} />
             </div>
             {value}
           </div>
@@ -135,33 +136,22 @@ export function TableBox(props: ITableProps) {
       }
       return data
     })
-    // columns?.unshift({
-    //   title: '序号',
-    //   dataIndex: 'aliDBHub_table_index',
-    //   key: 'aliDBHub_table_index',
-    //   fixed: 'left',
-    //   render: (text: any) => (
-    //     <div className={styles.tableIndex}>
-    //       {text}
-    //     </div>
-    //   ),
-    // })
     setColumns(columns)
   }, [headerList])
 
   useEffect(() => {
     if (!columns?.length) return
-    const tableData = dataList?.map((item: ITableCellItem[], index) => {
-      console.log(dataList);
+    const tableData = dataList?.map((item: any[], index) => {
       const rowData: any = {}
-      item.map((i: ITableCellItem, index: number) => {
-        if (TableDataTypeCorresValue[i.type] === TableDataTypeCorresValue.DATE) {
-          rowData[columns[index].title] = formatDate(i[TableDataTypeCorresValue[i.type]], 'yyyy-MM-dd hh:mm:ss');
+      item.map((i: string | null, index: number) => {
+        if (columns[index].dataType === TableDataType.DATETIME && i) {
+          rowData[columns[index].title] = formatDate(i, 'yyyy-MM-dd hh:mm:ss');
+        } else if (i === null) {
+          rowData[columns[index].title] = '[null]';
         } else {
-          rowData[columns[index].title] = i[TableDataTypeCorresValue[i.type]];
+          rowData[columns[index].title] = i;
         }
       })
-      // rowData.aliDBHub_table_index = index + 1
       rowData.key = index
       return rowData
     })
