@@ -114,7 +114,7 @@ public class ChatController {
     public SseEmitter chat(@RequestParam("message") String msg, @RequestHeader Map<String, String> headers)
         throws IOException {
         //默认30秒超时,设置为0L则永不超时
-        SseEmitter sseEmitter = new SseEmitter(0L);
+        SseEmitter sseEmitter = new SseEmitter(CHAT_TIMEOUT);
         String uid = headers.get("uid");
         if (StrUtil.isBlank(uid)) {
             throw new BaseException(CommonError.SYS_ERROR);
@@ -162,7 +162,7 @@ public class ChatController {
      */
     private Boolean useOpenAI() {
         ConfigService configService = ApplicationContextUtil.getBean(ConfigService.class);
-        Config config = configService.find(RestAIClient.REST_AI_URL).getData();
+        Config config = configService.find(RestAIClient.AI_SQL_SOURCE).getData();
         if (Objects.nonNull(config) && AiSqlSourceEnum.RESTAI.getCode().equals(config.getContent())) {
             return false;
         }

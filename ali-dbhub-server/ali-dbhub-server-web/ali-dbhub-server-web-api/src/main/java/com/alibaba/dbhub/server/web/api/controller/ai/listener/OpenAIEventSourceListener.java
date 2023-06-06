@@ -54,7 +54,8 @@ public class OpenAIEventSourceListener extends EventSourceListener {
             return;
         }
         ObjectMapper mapper = new ObjectMapper();
-        ChatCompletionResponse completionResponse = mapper.readValue(data, ChatCompletionResponse.class); // 读取Json
+        // 读取Json
+        ChatCompletionResponse completionResponse = mapper.readValue(data, ChatCompletionResponse.class);
         String text = completionResponse.getChoices().get(0).getDelta() == null
             ? completionResponse.getChoices().get(0).getText()
             : completionResponse.getChoices().get(0).getDelta().getContent();
@@ -74,29 +75,47 @@ public class OpenAIEventSourceListener extends EventSourceListener {
         log.info("OpenAI关闭sse连接...");
     }
 
-    @SneakyThrows
     @Override
     public void onFailure(EventSource eventSource, Throwable t, Response response) {
-        if (Objects.isNull(response)) {
-            return;
+        try {
+            if (Objects.isNull(response)) {
+                String message = t.getMessage();
+                if ("No route to host".equals(message)) {
+                    message = "网络连接超时，请检查网络连通性，参考文章<https://github.com/alibaba/Chat2DB/blob/main/CHAT2DB_AI_SQL.md>";
+                } else {
+                    message = "AI无法正常访问，请参考文章<https://github.com/alibaba/Chat2DB/blob/main/CHAT2DB_AI_SQL.md>进行配置";
+                }
+                Message sseMessage = new Message();
+                sseMessage.setContent(message);
+                sseEmitter.send(SseEmitter.event()
+                    .id("[ERROR]")
+                    .data(sseMessage));
+                sseEmitter.send(SseEmitter.event()
+                    .id("[DONE]")
+                    .data("[DONE]"));
+                sseEmitter.complete();
+                return;
+            }
+            ResponseBody body = response.body();
+            String bodyString = null;
+            if (Objects.nonNull(body)) {
+                bodyString = body.string();
+                log.error("OpenAI  sse连接异常data：{}，异常：{}", bodyString, t);
+            } else {
+                log.error("OpenAI  sse连接异常data：{}，异常：{}", response, t);
+            }
+            eventSource.cancel();
+            Message message = new Message();
+            message.setContent("出现异常,请在帮助中查看详细日志：" + bodyString);
+            sseEmitter.send(SseEmitter.event()
+                .id("[ERROR]")
+                .data(message));
+            sseEmitter.send(SseEmitter.event()
+                .id("[DONE]")
+                .data("[DONE]"));
+            sseEmitter.complete();
+        } catch (Exception exception) {
+            log.error("发送数据异常:", exception);
         }
-        ResponseBody body = response.body();
-        String bodyString = null;
-        if (Objects.nonNull(body)) {
-            bodyString = body.string();
-            log.error("OpenAI  sse连接异常data：{}，异常：{}", bodyString, t);
-        } else {
-            log.error("OpenAI  sse连接异常data：{}，异常：{}", response, t);
-        }
-        eventSource.cancel();
-        Message message = new Message();
-        message.setContent("出现异常,请在帮助中查看详细日志：" + bodyString);
-        sseEmitter.send(SseEmitter.event()
-            .id("[ERROR]")
-            .data(message));
-        sseEmitter.send(SseEmitter.event()
-            .id("[DONE]")
-            .data("[DONE]"));
-        sseEmitter.complete();
     }
 }
