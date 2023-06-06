@@ -3,10 +3,10 @@ Chat2DB包含一系列基于ChatGPT的AI SQL使用功能，主要包括自然语
 ## 使用配置
 ### 点击设置
 <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01hecdtO1acLegtiP9k_!!6000000003350-2-tps-2400-1600.png" width="100%"/></a>
-### 配置OPENAI_API_KEY
+### 配置AI
 使用OPENAI的ChatSql功能需要满足两个条件
-1.配置OPENAI_API_KEY
-2.客户端网络可以连接到OPENAI官网，如果本地VPN未能全局生效，可以通过在客户端中设置网络代理HOST和PORT来保证网络连通性
+- 配置OPENAI_API_KEY，如没有OPENAI_API_KEY可微信联系yuanzhixiang0获取chat2db的自定义key
+- 客户端网络可以连接到OPENAI官网，如果本地VPN未能全局生效，可以通过在客户端中设置网络代理HOST和PORT来保证网络连通性
 <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01anrJMI1FEtSBbmTau_!!6000000000456-0-tps-1594-964.jpg" width="100%"/></a>
 
 ## 自然语言转SQL

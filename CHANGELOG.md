@@ -1,5 +1,7 @@
 # 1.0.10
 * fixed: 格式化SQL异常[Issue #266](https://github.com/alibaba/Chat2DB/issues/266)
+* 优化AI网络连接异常提示
+
 # 1.0.9
 * 修复Open Ai 无法连接的问题
 
