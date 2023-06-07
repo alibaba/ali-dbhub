@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3633546 */
-  src: url('iconfont.woff2?t=1686122578381') format('woff2'),
-       url('iconfont.woff?t=1686122578381') format('woff'),
-       url('iconfont.ttf?t=1686122578381') format('truetype');
+  src: url('iconfont.woff2?t=1686123210976') format('woff2'),
+       url('iconfont.woff?t=1686123210976') format('woff'),
+       url('iconfont.ttf?t=1686123210976') format('truetype');
 }
 
 .iconfont {
@@ -13,12 +13,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-shujukuleixingtubiao-kuozhan-:before {
-  content: "\e60a";
+.icon-presto_sql:before {
+  content: "\e60b";
 }
 
-.icon-ptcopy:before {
-  content: "\e64a";
+.icon-shujukuleixingtubiao-kuozhan-:before {
+  content: "\e60a";
 }
 
 .icon-oceanbase:before {

@@ -102,7 +102,7 @@ export const databaseType: {
     img: moreDBLogo,
     code: DatabaseTypeCode.PRESTO,
     port: 8080,
-    icon: '\ue64a',
+    icon: '\ue60b',
   },
   [DatabaseTypeCode.DB2]: {
     name: 'DB2',
