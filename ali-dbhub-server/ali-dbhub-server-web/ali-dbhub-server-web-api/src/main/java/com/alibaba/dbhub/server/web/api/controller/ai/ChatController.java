@@ -28,6 +28,7 @@ import com.alibaba.dbhub.server.web.api.controller.ai.converter.ChatConverter;
 import com.alibaba.dbhub.server.web.api.controller.ai.enums.GptVersionType;
 import com.alibaba.dbhub.server.web.api.controller.ai.enums.PromptType;
 import com.alibaba.dbhub.server.web.api.controller.ai.listener.OpenAIEventSourceListener;
+import com.alibaba.dbhub.server.web.api.controller.ai.listener.RestAIEventSourceListener;
 import com.alibaba.dbhub.server.web.api.controller.ai.request.ChatQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.ai.rest.client.RestAIClient;
 import com.alibaba.dbhub.server.web.api.util.ApplicationContextUtil;
@@ -177,8 +178,8 @@ public class ChatController {
      * @return
      */
     private SseEmitter chatWithRestAi(String prompt, SseEmitter sseEmitter) {
-        OpenAIEventSourceListener openAIEventSourceListener = new OpenAIEventSourceListener(sseEmitter);
-        RestAIClient.getInstance().restCompletions(prompt, openAIEventSourceListener, sseEmitter);
+        RestAIEventSourceListener eventSourceListener = new RestAIEventSourceListener(sseEmitter);
+        RestAIClient.getInstance().restCompletions(prompt, eventSourceListener);
         return sseEmitter;
     }
 
