@@ -47,6 +47,22 @@ Languages： English | [中文](README_CN.md)
 - AI intelligent assistant
   <a><img src="https://gw.alicdn.com/imgextra/i4/O1CN01iaSXot1W6VeaDFbK2_!!6000000002739-0-tps-3430-1740.jpg" width="100%"/></a>
 
+## 🔥 AI Configuration
+### CONFIGURE OPENAI
+There are two basic requirements for using the ChatSql of OPENAI
+- Configure OPENAI_API_KEY
+- Make sure the client can access to the OPENAI website. If your VPN fails to take effect globally, the network connectivity can be ensured by setting the network proxy HOST and PORT on the client side.
+  <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01anrJMI1FEtSBbmTau_!!6000000000456-0-tps-1594-964.jpg" width="100%"/></a>
+* If you want to use the AI in an easier way, you can also email to 1558143046@qq.com to apply for our custom API_KEY. After the application is completed, you can configure and use it as shown in the below figure.
+  <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="100%"/></a>
+
+### CONFIGURE CUSTOM AI
+- Customized AI can be any LLM that you deployed, such as ChatGLM、ChatGPT、ERNIE Bot、Tongyi Qianwen, and so on. However, the customized interface need to conform to the protocol definition. Otherwise, secondary development may be required. Two DEMOs are provided in the code, the configuration is as shown below. In specific use, you can refer to the DEMO interface to write a custom interface, or directly perform secondary development in the DEMO interface.
+- DEMO for configuring customized stream output interface.
+  <a><img src="https://img.alicdn.com/imgextra/i1/O1CN01xMqnRH1DlkdSekvSF_!!6000000000257-0-tps-591-508.jpg" width="100%"/></a>
+- DEMO for configuring customized non-stream output interface.
+  <a><img src="https://img.alicdn.com/imgextra/i1/O1CN01JqmbGo1fW0GAQhRu4_!!6000000004013-0-tps-587-489.jpg" width="100%"/></a>
+
 
 ## 📦 Docker installation
 
