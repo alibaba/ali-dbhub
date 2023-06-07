@@ -47,7 +47,11 @@ public class JdbcUtils {
         if (dbType == null) {
             return null;
         }
-        return DbType.valueOf(dbType.getCode().toLowerCase());
+        try {
+            return DbType.valueOf(dbType.getCode().toLowerCase());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -177,7 +181,8 @@ public class JdbcUtils {
                 } catch (SQLException e) {
                     // ignore
                 }
-            }if(session!=null){
+            }
+            if (session != null) {
                 try {
                     session.delPortForwardingL(Integer.parseInt(ssh.getLocalPort()));
                 } catch (JSchException e) {
@@ -188,4 +193,5 @@ public class JdbcUtils {
         dataSourceConnect.setDescription("成功");
         return dataSourceConnect;
     }
+
 }
