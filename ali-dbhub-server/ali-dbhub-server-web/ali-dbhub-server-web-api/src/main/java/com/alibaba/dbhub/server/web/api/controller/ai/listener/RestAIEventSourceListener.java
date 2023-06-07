@@ -62,10 +62,15 @@ public class RestAIEventSourceListener extends EventSourceListener {
         }
     }
 
+    @SneakyThrows
     @Override
     public void onClosed(EventSource eventSource) {
-        sseEmitter.complete();
         log.info("REST AI关闭sse连接...");
+        sseEmitter.send(SseEmitter.event()
+            .id("[DONE]")
+            .data("[DONE]")
+            .reconnectTime(3000));
+        sseEmitter.complete();
     }
 
     @Override
