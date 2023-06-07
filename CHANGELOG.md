@@ -2,6 +2,7 @@
 * fixed: 格式化SQL异常[Issue #266](https://github.com/alibaba/Chat2DB/issues/266)
 * 优化AI网络连接异常提示
 * 自定义AI添加本地样例
+* 支持oceanbase presto db2
 
 # 1.0.9
 * 修复Open Ai 无法连接的问题
