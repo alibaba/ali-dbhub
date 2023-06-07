@@ -267,7 +267,7 @@ export function SettingAI() {
           <Input placeholder='非必填，用于设置请求OPENAI接口时的HTTP代理host' value={chatgptConfig.httpProxyHost} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, httpProxyHost: e.target.value }) }} />
         </div>
         <div className={styles.title}>
-          HTTP Proxy Prot
+          HTTP Proxy Port
         </div>
         <div className={classnames(styles.content, styles.chatGPTKey)}>
           <Input placeholder='非必填，用于设置请求OPENAI接口时的HTTP代理port' value={chatgptConfig.httpProxyPort} onChange={(e) => { setChatgptConfig({ ...chatgptConfig, httpProxyPort: e.target.value }) }} />

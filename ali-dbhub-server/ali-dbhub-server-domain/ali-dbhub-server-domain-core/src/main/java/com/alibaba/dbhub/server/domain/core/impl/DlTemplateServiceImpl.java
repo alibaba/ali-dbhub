@@ -37,9 +37,6 @@ public class DlTemplateServiceImpl implements DlTemplateService {
             return ListResult.empty();
         }
         // 解析sql
-        SqlAnalyseParam sqlAnalyseParam = new SqlAnalyseParam();
-        sqlAnalyseParam.setDataSourceId(param.getDataSourceId());
-        sqlAnalyseParam.setSql(param.getSql());
         List<String> sqlList = DbhubSQLParserUtils.splitAndRemoveComment(param.getSql(),
             JdbcUtils.parse2DruidDbType(DbhubContext.getConnectInfo().getDbType()));
         if (CollectionUtils.isEmpty(sqlList)) {
