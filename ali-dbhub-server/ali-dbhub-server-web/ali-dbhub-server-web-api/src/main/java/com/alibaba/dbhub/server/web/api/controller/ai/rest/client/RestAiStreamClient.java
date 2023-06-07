@@ -83,7 +83,7 @@ public class RestAiStreamClient {
             return;
         }
         nonStreamCompletions(completion, eventSourceListener);
-        log.info("结束调用飞流式输出自定义AI");
+        log.info("结束调用非流式输出自定义AI");
     }
 
     /**
@@ -148,7 +148,7 @@ public class RestAiStreamClient {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String content = responseBody.string();
-                            eventSourceListener.onEvent(null, "[ERROR]", null, content);
+                            eventSourceListener.onEvent(null, "[DATA]", null, content);
                             eventSourceListener.onEvent(null, "[DONE]", null, "[DONE]");
                         }
                     } catch (IOException e) {

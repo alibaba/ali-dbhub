@@ -9,6 +9,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
@@ -51,10 +52,14 @@ public class RestAIEventSourceListener extends EventSourceListener {
             sseEmitter.complete();
             return;
         }
-        sseEmitter.send(SseEmitter.event()
-            .id(id)
-            .data(data)
-            .reconnectTime(3000));
+        Message message = new Message();
+        if (StringUtils.isNotBlank(data)) {
+            message.setContent(data);
+            sseEmitter.send(SseEmitter.event()
+                .id(id)
+                .data(message)
+                .reconnectTime(3000));
+        }
     }
 
     @Override
