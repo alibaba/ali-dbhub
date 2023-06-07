@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3633546 */
-  src: url('iconfont.woff2?t=1685165802134') format('woff2'),
-       url('iconfont.woff?t=1685165802134') format('woff'),
-       url('iconfont.ttf?t=1685165802134') format('truetype');
+  src: url('iconfont.woff2?t=1686122578381') format('woff2'),
+       url('iconfont.woff?t=1686122578381') format('woff'),
+       url('iconfont.ttf?t=1686122578381') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-shujukuleixingtubiao-kuozhan-:before {
+  content: "\e60a";
+}
+
+.icon-ptcopy:before {
+  content: "\e64a";
+}
+
+.icon-oceanbase:before {
+  content: "\e982";
 }
 
 .icon-dameng1:before {
