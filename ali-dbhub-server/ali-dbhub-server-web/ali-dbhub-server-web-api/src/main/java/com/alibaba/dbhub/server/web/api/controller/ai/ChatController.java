@@ -30,6 +30,7 @@ import com.alibaba.dbhub.server.web.api.controller.ai.enums.PromptType;
 import com.alibaba.dbhub.server.web.api.controller.ai.listener.OpenAIEventSourceListener;
 import com.alibaba.dbhub.server.web.api.controller.ai.listener.RestAIEventSourceListener;
 import com.alibaba.dbhub.server.web.api.controller.ai.request.ChatQueryRequest;
+import com.alibaba.dbhub.server.web.api.controller.ai.request.ChatRequest;
 import com.alibaba.dbhub.server.web.api.controller.ai.rest.client.RestAIClient;
 import com.alibaba.dbhub.server.web.api.util.ApplicationContextUtil;
 import com.alibaba.dbhub.server.web.api.util.OpenAIClient;
@@ -49,6 +50,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -101,6 +104,63 @@ public class ChatController {
      * 返回token大小
      */
     private Integer RETURN_TOKEN_LENGTH = 150;
+
+
+    /**
+     * 自定义模型流式输出接口DEMO
+     * <p>
+     *     Note:使用自己本地的流式输出的自定义AI，接口输入和输出需与该样例保持一致
+     * </p>
+     *
+     * @param queryRequest
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/custom/stream/chat")
+    @CrossOrigin
+    public SseEmitter customChat(@RequestBody ChatRequest queryRequest) throws IOException {
+        SseEmitter emitter = new SseEmitter(CHAT_TIMEOUT);
+
+        // 设置 SSEEmitter 的事件处理程序
+        emitter.onCompletion(() -> log.info(LocalDateTime.now() + ", on completion"));
+        emitter.onTimeout(() -> {
+            log.info(LocalDateTime.now() + ", uid# on timeout");
+            emitter.complete();
+        });
+
+        // 启动一个新的线程来生成 SSE 事件
+        new Thread(() -> {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    emitter.send(SseEmitter.event().name("message").data("Event " + i));
+                    Thread.sleep(1000);
+                }
+            } catch (Exception e) {
+                emitter.completeWithError(e);
+            } finally {
+                emitter.complete();
+            }
+        }).start();
+
+        return emitter;
+    }
+
+    /**
+     * 自定义模型非流式输出接口DEMO
+     * <p>
+     *     Note:使用自己本地的飞流式输出自定义AI，接口输入和输出需与该样例保持一致
+     * </p>
+     *
+     * @param queryRequest
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/custom/non/stream/chat")
+    @CrossOrigin
+    public String customNonStreamChat(@RequestBody ChatRequest queryRequest) throws IOException {
+        String data = "自定义AI样例接口连接成功！！！！";
+        return data;
+    }
 
     /**
      * 问答对话模型
