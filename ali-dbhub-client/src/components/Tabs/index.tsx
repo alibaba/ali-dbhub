@@ -37,7 +37,7 @@ export default memo(function Tabs({ className, tabs, currentTab, onChange, extra
         {visibleTabs.map(tab => (
           <AntdTabs.TabPane tab={
             <span>
-              <span style={{float:'left'}}> {tab.label} &nbsp; </span> 
+              <span style={{float:'left'}}> {tab.label}  </span> 
               <a onClick={() => handleClose(tab.key)}>X</a>
             </span>
           } key={tab.key} />
