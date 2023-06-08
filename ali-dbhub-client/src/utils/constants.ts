@@ -27,6 +27,8 @@ export enum DatabaseTypeCode {
   MARIADB = 'MARIADB',
   CLICKHOUSE = 'CLICKHOUSE',
   DM="DM",
+  OCEANBASE="OCEANBASE",
+  PRESTO="PRESTO",
 }
 
 export const databaseType: {
@@ -94,6 +96,27 @@ export const databaseType: {
     code: DatabaseTypeCode.DM,
     port: 5236,
     icon: '\ue655',
+  },
+  [DatabaseTypeCode.PRESTO]: {
+    name: 'Presto',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.PRESTO,
+    port: 8080,
+    icon: '\ue60b',
+  },
+  [DatabaseTypeCode.DB2]: {
+    name: 'DB2',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.DB2,
+    port: 50000,
+    icon: '\ue60a',
+  },
+  [DatabaseTypeCode.OCEANBASE]: {
+    name: 'OceanBase',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.OCEANBASE,
+    port: 2883,
+    icon: '\ue982',
   },
 };
 

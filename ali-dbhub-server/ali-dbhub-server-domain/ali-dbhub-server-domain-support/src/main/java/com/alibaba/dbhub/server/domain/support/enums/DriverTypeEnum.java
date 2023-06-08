@@ -65,7 +65,7 @@ public enum DriverTypeEnum {
     /**
      * DB2
      */
-    DB2_DRIVER(DbTypeEnum.DB2, "com.ibm.db2.jcc.DB2Driver", "",""),
+    DB2_DRIVER(DbTypeEnum.DB2, "com.ibm.db2.jcc.DB2Driver", "db2jcc4_4.26.14.jar",""),
 
     /**
      * MMARIADB
@@ -77,7 +77,13 @@ public enum DriverTypeEnum {
     /**
      * DM_DRIVER
      */
-    DM_DRIVER(DbTypeEnum.DM, "dm.jdbc.driver.DmDriver", "DmJdbcDriver18-8.1.2.141.jar","");
+    DM_DRIVER(DbTypeEnum.DM, "dm.jdbc.driver.DmDriver", "DmJdbcDriver18-8.1.2.141.jar",""),
+
+
+    /**
+     * PRESTO_DRIVER
+     */
+    PRESTO_DRIVER(DbTypeEnum.PRESTO, "com.facebook.presto.jdbc.PrestoDriver", "presto-jdbc-0.245.1.jar","");
 
     final DbTypeEnum dbTypeEnum;
 
