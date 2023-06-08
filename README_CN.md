@@ -12,9 +12,20 @@
 [![GitHub Forks](https://img.shields.io/github/forks/alibaba/ali-dbhub)](https://github.com/alibaba/ali-dbhub/fork)
 [![GitHub Contributors](https://img.shields.io/github/contributors/alibaba/ali-dbhub)](https://github.com/alibaba/ali-dbhub/graphs/contributors)
 
-语言： 中文 | [English](README_CN.md)
 </div>
 
+<div align="center">
+<p align="center"><b>分享 Chat2DB  </b></p>
+<p align="center">
+<a href="https://twitter.com/intent/tweet?text=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.&url=https://github.com/alibaba/Chat2DB&hashtags=ChatGPT,AGI,SQL%20Client,Reporting%20tool" target="blank" > <img src="https://img.shields.io/twitter/follow/_Chat2DB?label=Share Repo on Twitter&style=social" alt=""/> </a> 
+<a href="https://t.me/share/url?text=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.&url=https://github.com/alibaba/Chat2DB" target="_blank"><img src="https://img.shields.io/twitter/url?label=Telegram&logo=Telegram&style=social&url=https://github.com/alibaba/Chat2DB" alt="Share on Telegram"/></a>
+<a href="https://api.whatsapp.com/send?text=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.%20https://github.com/alibaba/Chat2DB"><img src="https://img.shields.io/twitter/url?label=whatsapp&logo=whatsapp&style=social&url=https://github.com/alibaba/Chat2DB" /></a>
+<a href="https://www.reddit.com/submit?url=https://github.com/alibaba/Chat2DB&title=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities." target="blank"><img src="https://img.shields.io/twitter/url?label=Reddit&logo=Reddit&style=social&url=https://github.com/alibaba/Chat2DB" alt="Share on Reddit"/></a>
+<a href="mailto:?subject=Check%20this%20GitHub%20repository%20out.&body=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.%3A%0Ahttps://github.com/alibaba/Chat2DB" target="_blank"><img src="https://img.shields.io/twitter/url?label=Gmail&logo=Gmail&style=social&url=https://github.com/alibaba/Chat2DB"/></a>
+</p>
+
+Languages： English | [中文](README.md)
+</div>
 
 ## 📖 简介
 &emsp; &emsp;Chat2DB 是一款有开源免费的多数据库客户端工具，支持windows、mac本地安装，也支持服务器端部署，web网页访问。和传统的数据库客户端软件Navicat、DBeaver 相比Chat2DB集成了AIGC的能力，能够将自然语言转换为SQL，也可以将SQL转换为自然语言，可以给出研发人员SQL的优化建议，极大的提升人员的效率，是AI时代数据库研发人员的利器，未来即使不懂SQL的运营业务也可以使用快速查询业务数据、生成报表能力。
@@ -46,20 +57,18 @@
 
 
 ## 🔥 AI配置
-### 配置OPENAI
-使用OPENAI的ChatSql功能需要满足两个条件
-- 配置OPENAI_API_KEY
-- 客户端网络可以连接到OPENAI官网，如果本地VPN未能全局生效，可以通过在客户端中设置网络代理HOST和PORT来保证网络连通性
+### 使用ChatGPT
+方式一（推荐）：使用OPENAI的ChatSql功能需要满足两个条件
+- 1、需要有一个openAI的key：OPENAI_API_KEY
+- 2、客户端网络可以连接到OPENAI官网，国内需要科学上网。注意：如果本地VPN未能全局生效，可以通过在客户端中设置网络代理HOST和PORT来保证网络连通性
   <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01anrJMI1FEtSBbmTau_!!6000000000456-0-tps-1594-964.jpg" width="100%"/></a>
-* 为了方便大家更快速的使用AI的能力，大家也可以发送邮件到邮箱 1558143046@qq.com 申请我们的自定义API_KEY，申请完成之后参考下图进行配置即可进行使用
-  <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="100%"/></a>
 
-### 配置自定义AI
-- 自定义AI可以是用户自己部署的任意AI模型，例如ChatGLM、ChatGPT、文心一言、通义千问等等，但是自定义的接口输入和输出需要符合自定义的协议规范才可快速使用，否则可能需要二次开发。代码中提供了两个DEMO，只需要配置自定义AI接口地址，以及接口是否流式输出即可查看。具体使用中可以参考DEMO接口来编写自定义接口，或者直接在DEMO接口中进行二次开发，封装自己的自定义接口
-- 自定义的流式输出接口配置DEMO
-  <a><img src="https://img.alicdn.com/imgextra/i1/O1CN01xMqnRH1DlkdSekvSF_!!6000000000257-0-tps-591-508.jpg" width="100%"/></a>
-- 自定义的非流式输出接口配置DEMO
-  <a><img src="https://img.alicdn.com/imgextra/i1/O1CN01JqmbGo1fW0GAQhRu4_!!6000000004013-0-tps-587-489.jpg" width="100%"/></a>
+方式二（推荐）：使用我们提供了一个统一的代理服务。
+- 1、不需要opeanAI的key
+- 2、不需要代理，不需要VPN只要可以联网即可使用。
+
+为了方便大家更快速的使用AI的能力，可以加微信 yxccw132 申请我们的自定义API_KEY，申请完成之后参考下图进行配置即可进行使用
+<a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="100%"/></a>
 
 
 ## 📦 Docker部署
