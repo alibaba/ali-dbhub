@@ -53,6 +53,8 @@ Languages： 中文 [English](README.md)
 <a><img src="./document/image/img2.webp"/></a>
 
 ### SQL控制台 及 AI智能助手
+#### 使用前需要配置OpenAI的Api Key及本地代理配置
+<a><img src="./document/image/img4.webp"/></a>
 <a><img src="./document/image/img3.webp"/></a>
 
 
