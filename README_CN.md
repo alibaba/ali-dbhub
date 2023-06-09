@@ -182,7 +182,7 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 加群前请先Star和Fork，谢谢~
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_1.PNG" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_2.PNG" width="40%"/></a>
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
 
