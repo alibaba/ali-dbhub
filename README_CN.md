@@ -53,6 +53,8 @@ Languages： 中文 [English](README.md)
 <a><img src="./document/image/img2.webp"/></a>
 
 ### SQL控制台 及 AI智能助手
+#### 使用前需要配置OpenAI的Api Key及本地代理配置
+<a><img src="./document/image/img4.webp"/></a>
 <a><img src="./document/image/img3.webp"/></a>
 
 
@@ -182,7 +184,7 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 加群前请先Star和Fork，谢谢~
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_1.PNG" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_2.PNG" width="40%"/></a>
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
 
