@@ -24,6 +24,8 @@
 <a href="mailto:?subject=Check%20this%20GitHub%20repository%20out.&body=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.%3A%0Ahttps://github.com/alibaba/Chat2DB" target="_blank"><img src="https://img.shields.io/twitter/url?label=Gmail&logo=Gmail&style=social&url=https://github.com/alibaba/Chat2DB"/></a>
 </p>
 
+**许可说明**: Chat2DB开源内容仅供个人免费使用，如想将该项目用于商业用途，请先联系该项目作者。
+
 Languages： 中文 [English](README.md)
 </div>
 
