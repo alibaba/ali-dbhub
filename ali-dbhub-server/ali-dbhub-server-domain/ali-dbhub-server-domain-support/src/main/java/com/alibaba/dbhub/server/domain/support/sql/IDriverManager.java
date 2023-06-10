@@ -89,8 +89,12 @@ public class IDriverManager {
                 return con;
             }
         } catch (SQLException var7) {
-            reason = var7;
-            return tryConnectionAgain(driverTypeEnum.getDbTypeEnum(), driverEntry, url, info);
+            Connection con = tryConnectionAgain(driverTypeEnum.getDbTypeEnum() ,driverEntry, url, info);
+            if (con != null) {
+                return con;
+            } else {
+                throw var7;
+            }
         }
 
         if (reason != null) {
@@ -109,9 +113,8 @@ public class IDriverManager {
                 info.put("useSSL", "false");
             }
             return driverEntry.getDriver().connect(url, info);
-        } else {
-            throw new SQLException("tryConnectionAgain error", "08001");
         }
+        return null;
     }
 
     private static DriverEntry getJDBCDriver(DriverTypeEnum driverTypeEnum)
