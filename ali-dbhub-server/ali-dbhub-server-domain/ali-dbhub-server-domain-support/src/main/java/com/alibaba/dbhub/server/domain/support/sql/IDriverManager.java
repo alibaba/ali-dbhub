@@ -21,6 +21,7 @@ import com.alibaba.dbhub.server.domain.support.model.DriverEntry;
 import com.alibaba.dbhub.server.domain.support.util.JdbcJarUtils;
 import com.alibaba.fastjson2.JSON;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,11 +59,11 @@ public class IDriverManager {
         Map<String, Object> properties)
         throws SQLException {
         Properties info = new Properties();
-        if (user != null) {
+        if (StringUtils.isNotEmpty(user)) {
             info.put("user", user);
         }
 
-        if (password != null) {
+        if (StringUtils.isNotEmpty(password)) {
             info.put("password", password);
         }
         info.putAll(properties);
