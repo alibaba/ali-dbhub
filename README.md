@@ -41,12 +41,12 @@ Languages： English | [中文](README_CN.md)
 
 ## ⏬ Download and Install
 
-| Description                   | Download                                                                                                                                                                                                                                       |
-|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows      | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB%20Setup%201.0.9.exe](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB%20Setup%201.0.9.exe) |
-| MacOS ARM64 | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9-arm64.dmg) |
-| MacOS X64  | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9.dmg](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9.dmg) |
-| Jar包         | [https://oss-chat2db.alibaba.com/release/1.0.9/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.9/ali-dbhub-server-start.jar) |
+| Description                   | Download                                                                                                                                                   |
+|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Windows      | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe) |
+| MacOS ARM64 | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg)         |
+| MacOS X64  | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg)                     |
+| Jar包         | [https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar)     |
 
 ## 🚀 Supported databases
 | Databases     | Status    |
