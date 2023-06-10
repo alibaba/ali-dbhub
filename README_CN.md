@@ -24,6 +24,8 @@
 <a href="mailto:?subject=Check%20this%20GitHub%20repository%20out.&body=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.%3A%0Ahttps://github.com/alibaba/Chat2DB" target="_blank"><img src="https://img.shields.io/twitter/url?label=Gmail&logo=Gmail&style=social&url=https://github.com/alibaba/Chat2DB"/></a>
 </p>
 
+**许可说明**: Chat2DB开源内容仅供个人免费使用，如想将该项目用于商业用途，请先联系该项目作者。
+
 Languages： 中文 [English](README.md)
 </div>
 
@@ -38,13 +40,37 @@ Languages： 中文 [English](README.md)
 - 🎁 支持环境隔离、线上、日常数据权限分离
 
 ## ⏬ 下载安装
-| 描述                   | 下载地址                                                                                                                                                                                                                                       |
-|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB%20Setup%201.0.9.exe](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB%20Setup%201.0.9.exe) |
-| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9-arm64.dmg) |
-| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9.dmg](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9.dmg) |       
-| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.9/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.9/ali-dbhub-server-start.jar) |                                                                                                                
+| 描述                   | 下载地址                                                                                                                                                       |
+|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe) |
+| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg)         |
+| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg)                     |       
+| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar)     |                                                                                                                
 
+## 🚀 支持的数据库
+| 数据库        | 支持计划    |
+|------------|---------|
+| Mysql      | ✅       |
+| H2         | ✅       |
+| Oracle     | ✅       |       
+| PostgreSQL | ✅       |                                                                                                                
+| SQLServer  | ✅       |   
+| SQLLite    | ✅       |   
+| MariaDB    | ✅       |   
+| ClickHouse | ✅       |   
+| DM         | ✅       |   
+| Presto     | ✅       |   
+| DB2        | ✅       |   
+| OceanBase  | ✅       |   
+| Redis      | ✅       |   
+| Hive       | ✅       |   
+| KingBase   | ✅       |   
+| MongoDB    | ✅       |   
+| Hbase      |Planning |  
+| Elasticsearch| Planning | 
+| openGauss| Planning |  
+| TiDB| Planning |
+| InfluxDB| Planning |
 ## 🌰 使用Demo
 ### 创建数据源
 <a><img src="./document/image/img1.webp"/></a>
@@ -63,14 +89,14 @@ Languages： 中文 [English](README.md)
 方式一（推荐）：使用OPENAI的ChatSql功能需要满足两个条件
 - 1、需要有一个openAI的key：OPENAI_API_KEY
 - 2、客户端网络可以连接到OPENAI官网，国内需要科学上网。注意：如果本地VPN未能全局生效，可以通过在客户端中设置网络代理HOST和PORT来保证网络连通性
-  <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01anrJMI1FEtSBbmTau_!!6000000000456-0-tps-1594-964.jpg" width="100%"/></a>
+  <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01anrJMI1FEtSBbmTau_!!6000000000456-0-tps-1594-964.jpg" width="70%"/></a>
 
 方式二（推荐）：使用我们提供了一个统一的代理服务。
 - 1、不需要opeanAI的key
 - 2、不需要代理，不需要VPN只要可以联网即可使用。
 
 为了方便大家更快速的使用AI的能力，可以加微信 yxccw132 申请我们的自定义API_KEY，申请完成之后参考下图进行配置即可进行使用
-<a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="100%"/></a>
+<a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="70%"/></a>
 
 
 ## 📦 Docker部署

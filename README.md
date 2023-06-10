@@ -23,6 +23,8 @@
 <a href="mailto:?subject=Check%20this%20GitHub%20repository%20out.&body=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.%3A%0Ahttps://github.com/alibaba/Chat2DB" target="_blank"><img src="https://img.shields.io/twitter/url?label=Gmail&logo=Gmail&style=social&url=https://github.com/alibaba/Chat2DB"/></a>
 </p>
 
+**License Notation**: Chat2DB is constructed and distributed for personal and non-commercial use only. For commercial use of this project, please contact corresponding authors.
+
 Languages： English | [中文](README_CN.md)
 </div>
 
@@ -39,13 +41,37 @@ Languages： English | [中文](README_CN.md)
 
 ## ⏬ Download and Install
 
-| Description                   | Download                                                                                                                                                                                                                                       |
-|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows      | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB%20Setup%201.0.9.exe](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB%20Setup%201.0.9.exe) |
-| MacOS ARM64 | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9-arm64.dmg) |
-| MacOS X64  | [https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9.dmg](https://oss-chat2db.alibaba.com/release/1.0.9/Chat2DB-1.0.9.dmg) |
-| Jar包         | [https://oss-chat2db.alibaba.com/release/1.0.9/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.9/ali-dbhub-server-start.jar) |
+| Description                   | Download                                                                                                                                                   |
+|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Windows      | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe) |
+| MacOS ARM64 | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg)         |
+| MacOS X64  | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg)                     |
+| Jar包         | [https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar)     |
 
+## 🚀 Supported databases
+| Databases     | Status    |
+|---------------|---------|
+| Mysql         | ✅       |
+| H2            | ✅       |
+| Oracle        | ✅       |       
+| PostgreSQL    | ✅       |                                                                                                                
+| SQLServer     | ✅       |   
+| SQLLite       | ✅       |   
+| MariaDB       | ✅       |   
+| ClickHouse    | ✅       |   
+| DM            | ✅       |   
+| Presto        | ✅       |   
+| DB2           | ✅       |   
+| OceanBase     | ✅       |   
+| Redis         | ✅       |   
+| Hive          | ✅       |   
+| KingBase      | ✅       |   
+| MongoDB       | ✅       |   
+| Hbase         |Planning |  
+| Elasticsearch | Planning | 
+| openGauss     | Planning | 
+| TiDB          | Planning |
+| InfluxDB      | Planning |
 
 ## 🌰 Demo
 ### Create data source
@@ -77,9 +103,9 @@ To facilitate users' quick use of AI capabilities, you can add WeChat ID "yxccw1
 ### CONFIGURE CUSTOM AI
 - Customized AI can be any LLM that you deployed, such as ChatGLM、ChatGPT、ERNIE Bot、Tongyi Qianwen, and so on. However, the customized interface need to conform to the protocol definition. Otherwise, secondary development may be required. Two DEMOs are provided in the code, the configuration is as shown below. In specific use, you can refer to the DEMO interface to write a custom interface, or directly perform secondary development in the DEMO interface.
 - DEMO for configuring customized stream output interface.
-  <a><img src="https://img.alicdn.com/imgextra/i1/O1CN01xMqnRH1DlkdSekvSF_!!6000000000257-0-tps-591-508.jpg" width="100%"/></a>
+  <a><img src="https://img.alicdn.com/imgextra/i1/O1CN01xMqnRH1DlkdSekvSF_!!6000000000257-0-tps-591-508.jpg" width="60%"/></a>
 - DEMO for configuring customized non-stream output interface.
-  <a><img src="https://img.alicdn.com/imgextra/i1/O1CN01JqmbGo1fW0GAQhRu4_!!6000000004013-0-tps-587-489.jpg" width="100%"/></a>
+  <a><img src="https://img.alicdn.com/imgextra/i1/O1CN01JqmbGo1fW0GAQhRu4_!!6000000004013-0-tps-587-489.jpg" width="60%"/></a>
 
 
 

@@ -9,6 +9,8 @@ import com.alibaba.dbhub.server.domain.support.dialect.common.model.SpiExample;
 import com.alibaba.dbhub.server.domain.support.dialect.db2.DB2MetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.dm.DMMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.h2.H2MetaSchemaSupport;
+import com.alibaba.dbhub.server.domain.support.dialect.hive.HiveMetaSchemaSupport;
+import com.alibaba.dbhub.server.domain.support.dialect.kingbase.KingBaseSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.mariadb.MariaDBMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.mongodb.MongodbMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.mysql.MysqlMetaSchemaSupport;
@@ -16,6 +18,7 @@ import com.alibaba.dbhub.server.domain.support.dialect.oceanbase.OceanBaseMetaSc
 import com.alibaba.dbhub.server.domain.support.dialect.oracle.OracleMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.postgresql.PostgresqlMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.presto.PrestoMetaSchemaSupport;
+import com.alibaba.dbhub.server.domain.support.dialect.redis.RedisMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.sqlite.SQLiteMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.sqlserver.SqlServerMetaSchemaSupport;
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
@@ -109,7 +112,23 @@ public enum DbTypeEnum implements BaseEnum<String> {
     /**
      * PRESTO
      */
-    PRESTO("Presto");
+    PRESTO("Presto"),
+
+    /**
+     * HIVE
+     */
+    HIVE("Hive"),
+
+
+    /**
+     * REDIS
+     */
+    REDIS("Redis"),
+
+    /**
+     * KingBase
+     */
+    KINGBASE("KingBase");
 
     final String description;
 
@@ -129,6 +148,9 @@ public enum DbTypeEnum implements BaseEnum<String> {
         META_SCHEMA_MAP.put(DM, new DMMetaSchemaSupport());
         META_SCHEMA_MAP.put(MONGODB, new MongodbMetaSchemaSupport());
         META_SCHEMA_MAP.put(PRESTO, new PrestoMetaSchemaSupport());
+        META_SCHEMA_MAP.put(REDIS, new RedisMetaSchemaSupport());
+        META_SCHEMA_MAP.put(KINGBASE, new KingBaseSchemaSupport());
+        META_SCHEMA_MAP.put(HIVE, new HiveMetaSchemaSupport());
     }
 
     DbTypeEnum(String description) {

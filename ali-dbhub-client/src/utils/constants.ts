@@ -29,6 +29,10 @@ export enum DatabaseTypeCode {
   DM="DM",
   OCEANBASE="OCEANBASE",
   PRESTO="PRESTO",
+  REDIS="REDIS",
+  HIVE="HIVE",
+  KINGBASE="KINGBASE",
+  MONGODB="MONGODB",
 }
 
 export const databaseType: {
@@ -77,7 +81,7 @@ export const databaseType: {
     icon: '\ue65a',
   },
   [DatabaseTypeCode.MARIADB]: {
-    name: 'Mariadb',
+    name: 'MariaDB',
     img: moreDBLogo,
     code: DatabaseTypeCode.MARIADB,
     port: 3306,
@@ -117,6 +121,34 @@ export const databaseType: {
     code: DatabaseTypeCode.OCEANBASE,
     port: 2883,
     icon: '\ue982',
+  },
+  [DatabaseTypeCode.REDIS]: {
+    name: 'Redis',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.REDIS,
+    port: 6379,
+    icon: '\ue6a2',
+  },
+  [DatabaseTypeCode.HIVE]: {
+    name: 'Hive',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.HIVE,
+    port: 10000,
+    icon: '\ue60e',
+  },
+  [DatabaseTypeCode.KINGBASE]: {
+    name: 'KingBase',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.KINGBASE,
+    port: 54321,
+    icon: '\ue6a0',
+  },
+  [DatabaseTypeCode.MONGODB]: {
+    name: 'MongoDB',
+    img: moreDBLogo,
+    code: DatabaseTypeCode.MONGODB,
+    port: 27017,
+    icon: '\uec21',
   },
 };
 

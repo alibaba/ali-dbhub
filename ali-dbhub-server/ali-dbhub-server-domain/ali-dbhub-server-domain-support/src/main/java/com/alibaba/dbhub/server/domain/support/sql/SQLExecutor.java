@@ -222,6 +222,13 @@ public class SQLExecutor {
                 }
 
             }
+            case REDIS -> {
+                try {
+                    execute("select " + database, null);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             default -> {
 
             }
@@ -237,8 +244,10 @@ public class SQLExecutor {
         List<String> tables = Lists.newArrayList();
         try {
             ResultSet resultSet = getConnection().getMetaData().getCatalogs();
-            while (resultSet.next()) {
-                tables.add(resultSet.getString("TABLE_CAT"));
+            if (resultSet != null) {
+                while (resultSet.next()) {
+                    tables.add(resultSet.getString("TABLE_CAT"));
+                }
             }
         } catch (SQLException e) {
             close();
@@ -258,8 +267,10 @@ public class SQLExecutor {
         List<String> schemaList = Lists.newArrayList();
         try {
             ResultSet resultSet = getConnection().getMetaData().getSchemas(databaseName, schemaName);
-            while (resultSet.next()) {
-                schemaList.add(resultSet.getString("TABLE_SCHEM"));
+            if (resultSet != null) {
+                while (resultSet.next()) {
+                    schemaList.add(resultSet.getString("TABLE_SCHEM"));
+                }
             }
         } catch (SQLException e) {
             close();
@@ -282,8 +293,10 @@ public class SQLExecutor {
         try {
             ResultSet resultSet = getConnection().getMetaData().getTables(databaseName, schemaName, tableName,
                 types);
-            while (resultSet.next()) {
-                tables.add(buildTable(resultSet));
+            if (resultSet != null) {
+                while (resultSet.next()) {
+                    tables.add(buildTable(resultSet));
+                }
             }
         } catch (SQLException e) {
             close();
@@ -306,8 +319,10 @@ public class SQLExecutor {
         try {
             ResultSet resultSet = getConnection().getMetaData().getColumns(databaseName, schemaName, tableName,
                 columnName);
-            while (resultSet.next()) {
-                tableColumns.add(buildColumn(resultSet));
+            if (resultSet != null) {
+                while (resultSet.next()) {
+                    tableColumns.add(buildColumn(resultSet));
+                }
             }
         } catch (Exception e) {
             close();
@@ -330,9 +345,11 @@ public class SQLExecutor {
             List<TableIndexColumn> tableIndexColumns = Lists.newArrayList();
             ResultSet resultSet = getConnection().getMetaData().getIndexInfo(databaseName, schemaName, tableName, false,
                 false);
-            while (resultSet.next()) {
+
+            while (resultSet != null && resultSet.next()) {
                 tableIndexColumns.add(buildTableIndexColumn(resultSet));
             }
+
             tableIndexColumns.stream().filter(c -> c.getIndexName() != null).collect(
                     Collectors.groupingBy(TableIndexColumn::getIndexName)).entrySet()
                 .stream().forEach(entry -> {
@@ -365,7 +382,7 @@ public class SQLExecutor {
         List<com.alibaba.dbhub.server.domain.support.model.Function> functions = Lists.newArrayList();
         try {
             ResultSet resultSet = getConnection().getMetaData().getFunctions(databaseName, schemaName, null);
-            while (resultSet.next()) {
+            while (resultSet != null && resultSet.next()) {
                 functions.add(buildFunction(resultSet));
             }
         } catch (Exception e) {
@@ -386,7 +403,7 @@ public class SQLExecutor {
         List<Procedure> procedures = Lists.newArrayList();
         try {
             ResultSet resultSet = getConnection().getMetaData().getProcedures(databaseName, schemaName, null);
-            while (resultSet.next()) {
+            while (resultSet != null && resultSet.next()) {
                 procedures.add(buildProcedure(resultSet));
             }
         } catch (Exception e) {

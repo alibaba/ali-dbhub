@@ -83,7 +83,29 @@ public enum DriverTypeEnum {
     /**
      * PRESTO_DRIVER
      */
-    PRESTO_DRIVER(DbTypeEnum.PRESTO, "com.facebook.presto.jdbc.PrestoDriver", "presto-jdbc-0.245.1.jar","");
+    PRESTO_DRIVER(DbTypeEnum.PRESTO, "com.facebook.presto.jdbc.PrestoDriver", "presto-jdbc-0.245.1.jar",""),
+
+    /**
+     * KINGBASE_DRIVER
+     * com.kingbase8.Driver
+     */
+    KINGBASE_DRIVER(DbTypeEnum.KINGBASE, "com.kingbase8.Driver", "kingbase8-8.6.0.jar",""),
+
+    /**
+     * HIVE_DRIVER
+     * org.apache.hive.jdbc.HiveDriver
+     */
+    HIVE_DRIVER(DbTypeEnum.HIVE, "org.apache.hive.jdbc.HiveDriver", "hive-jdbc-3.1.2-standalone.jar",""),
+
+    /**
+     * REDIS_DRIVER
+     */
+    REDIS_DRIVER(DbTypeEnum.REDIS, "jdbc.RedisDriver", "redis-jdbc-driver-1.3.jar",""),
+    /**
+     * MONGODB_DRIVER
+     * com.dbschema.MongoJdbcDriver
+     */
+    MONGODB_DRIVER(DbTypeEnum.MONGODB, "com.dbschema.MongoJdbcDriver", "mongo-jdbc-standalone-1.18.jar","");
 
     final DbTypeEnum dbTypeEnum;
 
