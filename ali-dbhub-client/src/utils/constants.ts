@@ -81,7 +81,7 @@ export const databaseType: {
     icon: '\ue65a',
   },
   [DatabaseTypeCode.MARIADB]: {
-    name: 'Mariadb',
+    name: 'MariaDB',
     img: moreDBLogo,
     code: DatabaseTypeCode.MARIADB,
     port: 3306,
