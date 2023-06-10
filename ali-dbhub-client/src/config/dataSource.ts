@@ -184,10 +184,6 @@ export const dataSourceFormConfigs: IDataSourceForm[] = [
         "key":"zeroDateTimeBehavior",
         "value":"convertToNull"
       },
-      {
-        "key":"useSSL",
-        "value":"false"
-      },
     ],
     type: DatabaseTypeCode.MYSQL
   },
