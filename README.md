@@ -99,7 +99,7 @@ Option 2 (recommended): We provide a unified proxy service.
 
 To facilitate users' quick use of AI capabilities, you can add WeChat to apply for our custom API_KEY. After the application is completed, refer to the following figure for configuration and usage.
 <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="100%"/></a>
-WeChat：
+WeiChat (Because too many personal WeChat friends are restricted, so I built a corporate WeChat)：
 
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
 
@@ -195,7 +195,7 @@ Please star and fork on GitHub before joining the group.
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
 
-WeiChat：
+WeiChat (Because too many personal WeChat friends are restricted, so I built a corporate WeChat)：
 
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
 

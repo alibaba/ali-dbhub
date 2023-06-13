@@ -98,7 +98,7 @@ Languages： 中文 [English](README.md)
 为了方便大家更快速的使用AI的能力，可以加微信 申请我们的自定义API_KEY，申请完成之后参考下图进行配置即可进行使用
 <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="70%"/></a>
 
-微信：
+微信（由于个人微信加好友太多被限制了，建了一个企业微信）：
 
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
 
@@ -217,7 +217,7 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_2.PNG" width="40%"/></a>
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
-微信：
+微信（由于个人微信加好友太多被限制了，建了一个企业微信）：
 
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
 
