@@ -97,8 +97,11 @@ Option 2 (recommended): We provide a unified proxy service.
 - No OPENAI_API_KEY is required.
 - No proxy or VPN is required, as long as the network is connected.
 
-To facilitate users' quick use of AI capabilities, you can add WeChat ID "yxccw132" to apply for our custom API_KEY. After the application is completed, refer to the following figure for configuration and usage.
+To facilitate users' quick use of AI capabilities, you can add WeChat to apply for our custom API_KEY. After the application is completed, refer to the following figure for configuration and usage.
 <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="100%"/></a>
+WeChat：
+
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
 
 ### CONFIGURE CUSTOM AI
 - Customized AI can be any LLM that you deployed, such as ChatGLM、ChatGPT、ERNIE Bot、Tongyi Qianwen, and so on. However, the customized interface need to conform to the protocol definition. Otherwise, secondary development may be required. Two DEMOs are provided in the code, the configuration is as shown below. In specific use, you can refer to the DEMO interface to write a custom interface, or directly perform secondary development in the DEMO interface.
@@ -192,7 +195,11 @@ Please star and fork on GitHub before joining the group.
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
 
-微信：yxccw132  钉钉：9135032392
+WeiChat：
+
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
+
+Ding Talk：9135032392
 
 ## ❤️ Acknowledgements
 Thanks to all the students who contributed to Chat2DB~
