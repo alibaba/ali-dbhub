@@ -61,8 +61,8 @@ let monacoEditorExternalList: any = {};
 const initModal = {
   open: false,
   title: '',
-  handleOk: () => {},
-  handleCancel: () => {},
+  handleOk: () => { },
+  handleCancel: () => { },
   content: <></>,
 };
 export default function DatabaseQuery(props: IProps) {
@@ -166,7 +166,7 @@ export default function DatabaseQuery(props: IProps) {
         myEditorHintData[item.name] = [];
       });
       monacoHint.current = setEditorHint(myEditorHintData);
-    } catch {}
+    } catch { }
   };
 
   const getEditor = (editor: any) => {
@@ -177,8 +177,8 @@ export default function DatabaseQuery(props: IProps) {
       localStorage.getItem(
         `window-sql-${windowTab.dataSourceId}-${windowTab.databaseName}-${windowTab.consoleId}`,
       ) ||
-        windowTab.ddl ||
-        '',
+      windowTab.ddl ||
+      '',
     );
   };
 
@@ -262,7 +262,7 @@ export default function DatabaseQuery(props: IProps) {
   const formatValue = () => {
     const model = monacoEditor.current.getModel(monacoEditor.current);
     const value = model.getValue();
-    setMonacoValue(monacoEditor.current,format(value, {}))
+    setMonacoValue(monacoEditor.current, format(value, {}))
   };
 
   const onClickChatbot = () => {
@@ -303,7 +303,7 @@ export default function DatabaseQuery(props: IProps) {
         dataSourceId,
         databaseName,
         promptType,
-        message: sentence,
+        message: encodeURIComponent(sentence),
         ext,
         destSqlType,
       }) + tableNames;
@@ -360,7 +360,7 @@ export default function DatabaseQuery(props: IProps) {
     }
 
     const { apiKey } = await configService.getChatGptSystemConfig();
-    if(!apiKey){
+    if (!apiKey) {
       message.warning('请在设置中配置AI的apiKey！')
       return;
     }
@@ -403,7 +403,7 @@ export default function DatabaseQuery(props: IProps) {
           label: item.name,
           value: item.name,
         }));
-      } catch (error) {}
+      } catch (error) { }
       // --------
 
       setModalConfig({
