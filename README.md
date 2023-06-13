@@ -90,7 +90,8 @@ Option 1 (recommended): To use the ChatSql function of OPENAI, two conditions mu
 
 - You need an OPENAI_API_KEY.
 - The client's network can connect to the OPENAI website, and for users in China, a VPN is required. Note: If the local VPN is not fully effective, the network connectivity can be ensured by setting the network proxy HOST and PORT in the client.
-  <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01anrJMI1FEtSBbmTau_!!6000000000456-0-tps-1594-964.jpg" width="100%"/></a>
+
+<a><img src="https://img.alicdn.com/imgextra/i2/O1CN01anrJMI1FEtSBbmTau_!!6000000000456-0-tps-1594-964.jpg" width="60%"/></a>
 
 Option 2 (recommended): We provide a unified proxy service.
 
@@ -98,8 +99,10 @@ Option 2 (recommended): We provide a unified proxy service.
 - No proxy or VPN is required, as long as the network is connected.
 
 To facilitate users' quick use of AI capabilities, you can add WeChat to apply for our custom API_KEY. After the application is completed, refer to the following figure for configuration and usage.
-<a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="100%"/></a>
-WeChat：
+
+<a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="60%"/></a>
+
+WeiChat (Because too many personal WeChat friends are restricted, so I built a corporate WeChat)：
 
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
 
@@ -108,7 +111,8 @@ WeChat：
 - DEMO for configuring customized stream output interface.
   <a><img src="https://img.alicdn.com/imgextra/i1/O1CN01xMqnRH1DlkdSekvSF_!!6000000000257-0-tps-591-508.jpg" width="60%"/></a>
 - DEMO for configuring customized non-stream output interface.
-  <a><img src="https://img.alicdn.com/imgextra/i1/O1CN01JqmbGo1fW0GAQhRu4_!!6000000004013-0-tps-587-489.jpg" width="60%"/></a>
+
+<a><img src="https://img.alicdn.com/imgextra/i1/O1CN01JqmbGo1fW0GAQhRu4_!!6000000004013-0-tps-587-489.jpg" width="60%"/></a>
 
 
 
@@ -191,11 +195,11 @@ But front debugging need mapping of resources, you can download [XSwitch](https:
 ## ☎️ Contact Us
 Please star and fork on GitHub before joining the group.
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_2.PNG" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_2.PNG" width="33%"/></a>
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
 
-WeiChat：
+WeiChat (Because too many personal WeChat friends are restricted, so I built a corporate WeChat)：
 
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
 

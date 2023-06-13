@@ -89,16 +89,16 @@ Languages： 中文 [English](README.md)
 方式一（推荐）：使用OPENAI的ChatSql功能需要满足两个条件
 - 1、需要有一个openAI的key：OPENAI_API_KEY
 - 2、客户端网络可以连接到OPENAI官网，国内需要科学上网。注意：如果本地VPN未能全局生效，可以通过在客户端中设置网络代理HOST和PORT来保证网络连通性
-  <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01anrJMI1FEtSBbmTau_!!6000000000456-0-tps-1594-964.jpg" width="70%"/></a>
+  <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01anrJMI1FEtSBbmTau_!!6000000000456-0-tps-1594-964.jpg" width="60%"/></a>
 
 方式二（推荐）：使用我们提供了一个统一的代理服务。
 - 1、不需要opeanAI的key
 - 2、不需要代理，不需要VPN只要可以联网即可使用。
 
 为了方便大家更快速的使用AI的能力，可以加微信 申请我们的自定义API_KEY，申请完成之后参考下图进行配置即可进行使用
-<a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="70%"/></a>
+<a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="60%"/></a>
 
-微信：
+微信（由于个人微信加好友太多被限制了，建了一个企业微信）：
 
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
 
@@ -214,10 +214,10 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 加群前请先Star和Fork，谢谢~
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_2.PNG" width="40%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_2.PNG" width="33%"/></a>
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
-微信：
+微信（由于个人微信加好友太多被限制了，建了一个企业微信）：
 
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
 
