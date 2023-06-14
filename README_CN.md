@@ -214,7 +214,7 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 加群前请先Star和Fork，谢谢~
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_3.PNG" width="33%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_3.PNG" width="38%"/></a>
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
 微信（由于个人微信加好友太多被限制了，建了一个企业微信）：
