@@ -149,7 +149,7 @@ $ cd Chat2DB/ali-dbhub-client
 $ npm install 
 $ npm run start
 $ # 打开 http://127.0.0.1:10821 开启前端调试
-$ # 注：前端页面完全赖服务，所以前端同学调试也需要把后端项目跑起来
+$ # 注：前端页面完全依赖服务，所以前端同学调试也需要把后端项目跑起来
 ```
 但是前端调试需要映射下资源，可以下载[XSwitch](https://chrome.google.com/webstore/detail/idkjhjggpffolpidfkikidcokdkdaogg),添加以下配置文件
 ``` json
