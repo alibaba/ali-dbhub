@@ -102,10 +102,6 @@ To facilitate users' quick use of AI capabilities, you can add WeChat to apply f
 
 <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="60%"/></a>
 
-WeiChat (Because too many personal WeChat friends are restricted, so I built a corporate WeChat)：
-
-<a><img src="https://oss-chat2db.alibaba.com/static/Screenshot_2023-06-15-23-38-06-477_com.tencent.mm.jpg" width="40%"/></a>
-
 ### CONFIGURE CUSTOM AI
 - Customized AI can be any LLM that you deployed, such as ChatGLM、ChatGPT、ERNIE Bot、Tongyi Qianwen, and so on. However, the customized interface need to conform to the protocol definition. Otherwise, secondary development may be required. Two DEMOs are provided in the code, the configuration is as shown below. In specific use, you can refer to the DEMO interface to write a custom interface, or directly perform secondary development in the DEMO interface.
 - DEMO for configuring customized stream output interface.
@@ -199,10 +195,10 @@ Please star and fork on GitHub before joining the group.
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
 
-WeiChat (Because too many personal WeChat friends are restricted, so I built a corporate WeChat)：
+WeiChat
 
 <a><img src="./document/hexi-weixin.png" width="30%"/></a>
-<a><img src="https://oss-chat2db.alibaba.com/static/Screenshot_2023-06-15-23-38-06-477_com.tencent.mm.jpg" width="40%"/></a>
+<a><img src="https://oss-chat2db.alibaba.com/static/WeChat3.jpg" width="30%"/></a>
 
 Ding Talk：9135032392
 
