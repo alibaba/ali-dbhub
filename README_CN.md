@@ -219,7 +219,7 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 微信（由于个人微信加好友太多被限制了，建了一个企业微信）：
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
+<a><img src="./document/hexi-weixin.png" width="30%"/></a>
 
 钉钉：9135032392
 

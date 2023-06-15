@@ -201,7 +201,7 @@ Please star and fork on GitHub before joining the group.
 
 WeiChat (Because too many personal WeChat friends are restricted, so I built a corporate WeChat)：
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
+<a><img src="./document/hexi-weixin.png" width="30%"/></a>
 
 Ding Talk：9135032392
 
