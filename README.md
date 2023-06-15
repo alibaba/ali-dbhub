@@ -202,7 +202,7 @@ Please star and fork on GitHub before joining the group.
 WeiChat (Because too many personal WeChat friends are restricted, so I built a corporate WeChat)：
 
 <a><img src="./document/hexi-weixin.png" width="30%"/></a>
-<a><img src="https://oss-chat2db.alibaba.com/static/WeChat3.jpg" width="40%"/></a>
+<a><img src="https://oss-chat2db.alibaba.com/static/WeChat3.jpg" width="30%"/></a>
 
 Ding Talk：9135032392
 
