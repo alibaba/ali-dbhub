@@ -100,7 +100,7 @@ Languages： 中文 [English](README.md)
 
 微信（由于个人微信加好友太多被限制了，建了一个企业微信）：
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
+<a><img src="https://oss-chat2db.alibaba.com/static/Screenshot_2023-06-15-23-38-06-477_com.tencent.mm.jpg" width="40%"/></a>
 
 
 ## 📦 Docker部署
