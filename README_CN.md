@@ -42,10 +42,10 @@ Languages： 中文 [English](README.md)
 ## ⏬ 下载安装
 | 描述                   | 下载地址                                                                                                                                                       |
 |-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe) |
-| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg)         |
-| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg)                     |       
-| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar)     |                                                                                                                
+| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB%20Setup%201.0.11.exe](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB%20Setup%201.0.11.exe) |
+| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11-arm64.dmg)         |
+| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11.dmg](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11.dmg)                     |       
+| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.11/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.11/ali-dbhub-server-start.jar)     |                                                                                                                
 
 ## 🚀 支持的数据库
 | 数据库        | 支持计划    |
@@ -209,15 +209,21 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 加群前请先Star和Fork，谢谢~
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_3.PNG" width="38%"/></a>
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
+<a><img src="./document/qrcode/weixinqun1" width="30%"/></a>
+<a><img src="./document/qrcode/weixinqun2" width="30%"/></a>
+<a><img src="./document/qrcode/weixinqun3" width="30%"/></a>
 
 微信
 
-<a><img src="./document/hexi-weixin.png" width="30%"/></a>
+<a><img src="./document/qrcode/hexi-weixin.png" width="30%"/></a>
 <a><img src="https://oss-chat2db.alibaba.com/static/WeChat3.jpg" width="30%"/></a>
 
 钉钉：9135032392
+
+
+qq
+
+<a><img src="./document/qrcode/qqqun.png" width="30%"/></a>
 
 
 

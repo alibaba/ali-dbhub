@@ -1,5 +1,6 @@
 # 1.0.11
 * fixed: SQL有特殊字符时AI功能无法正常使用 [Issue #291](https://github.com/alibaba/Chat2DB/issues/291)
+* 增减版本信息检测
 
 # 1.0.10
 * fixed: 格式化SQL异常[Issue #266](https://github.com/alibaba/Chat2DB/issues/266)

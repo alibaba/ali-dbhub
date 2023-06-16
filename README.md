@@ -43,10 +43,10 @@ Languages： English | [中文](README_CN.md)
 
 | Description                   | Download                                                                                                                                                   |
 |-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows      | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe) |
-| MacOS ARM64 | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg)         |
-| MacOS X64  | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg)                     |
-| Jar包         | [https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar)     |
+| Windows      | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB%20Setup%201.0.11.exe](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB%20Setup%201.0.11.exe) |
+| MacOS ARM64 | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11-arm64.dmg)         |
+| MacOS X64  | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11.dmg](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11.dmg)                     |
+| Jar包         | [https://oss-chat2db.alibaba.com/release/1.0.11/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.11/ali-dbhub-server-start.jar)     |
 
 ## 🚀 Supported databases
 | Databases     | Status    |
@@ -191,16 +191,20 @@ But front debugging need mapping of resources, you can download [XSwitch](https:
 ## ☎️ Contact Us
 Please star and fork on GitHub before joining the group.
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_3.PNG" width="38%"/></a>
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
+<a><img src="./document/qrcode/weixinqun1" width="30%"/></a>
+<a><img src="./document/qrcode/weixinqun2" width="30%"/></a>
+<a><img src="./document/qrcode/weixinqun3" width="30%"/></a>
 
+WeChat
 
-WeiChat
-
-<a><img src="./document/hexi-weixin.png" width="30%"/></a>
+<a><img src="./document/qrcode/hexi-weixin.png" width="30%"/></a>
 <a><img src="https://oss-chat2db.alibaba.com/static/WeChat3.jpg" width="30%"/></a>
 
 Ding Talk：9135032392
+
+qq
+
+<a><img src="./document/qrcode/qqqun.png" width="30%"/></a>
 
 ## ❤️ Acknowledgements
 Thanks to all the students who contributed to Chat2DB~
