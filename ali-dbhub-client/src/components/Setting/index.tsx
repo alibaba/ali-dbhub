@@ -172,7 +172,7 @@ export default memo<IProps>(function Setting({ className, text }) {
   
   const openNotification = (responseText:any) => {
     try{
-      if(responseText.version.split('.')[2]>11){
+      if(responseText.version !== '1.0.11'){
         const key = `open${Date.now()}`;
         
         function updateHint(){
