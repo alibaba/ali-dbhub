@@ -191,6 +191,9 @@ But front debugging need mapping of resources, you can download [XSwitch](https:
 ## ☎️ Contact Us
 Please star and fork on GitHub before joining the group.
 
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_4.JPG" width="38%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_5.JPG" width="38%"/></a>
+
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_3.PNG" width="38%"/></a>
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
