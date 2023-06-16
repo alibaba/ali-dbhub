@@ -21,6 +21,7 @@ export default {
   'common.text.language': '语言',
   'common.text.en': '英文',
   'common.text.zh-cn': '中文',
+  'common.text.zh-tw': '繁體中文',
 
   'home.nav.database': '连接管理',
   'home.nav.myHistory': '历史记录',
@@ -41,5 +42,5 @@ export default {
   'connection.input.newLink': '新建连接',
   'connection.button.edit': '修改连接',
   'connection.button.clone': '克隆连接',
-  'connection.button.delete': '删除连接' 
+  'connection.button.delete': '删除连接'
 }

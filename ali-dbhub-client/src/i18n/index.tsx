@@ -1,21 +1,24 @@
 import zhCN from './zh-cn';
+import zhTW from './zh-tw';
 import en from './en';
 import React, { Fragment } from 'react';
 
-const locale = {
-  en,
+const locale: { [key: string]: any } = {
+  'en': en,
   'zh-cn': zhCN,
+  'zh-tw': zhTW
 };
 
 const _isEN = (localStorage.getItem('lang') || '').toLowerCase().indexOf('en') > -1;
 export function isEN() {
   return _isEN;
 }
-const langSet:any = locale[_isEN ? 'en' : 'zh-cn'];
-
+const storageLang = localStorage.getItem('lang') ?? 'zh-cn';
+const langSet: any = locale[storageLang];
 export type I18nKey = keyof typeof zhCN;
 function i18n(key: keyof typeof zhCN, ...args: any[]): string;
 function i18n(key: string, ...args: any[]) {
+  console.log(storageLang);
   let result: string = langSet[key];
   if (result === undefined) {
     return `[${key}]`;

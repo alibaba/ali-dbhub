@@ -1,5 +1,5 @@
 export default {
- lang:'em',
+  lang: 'em',
 
   'common.data.hour': '{1} {hour|hours}',
   'common.data.minute': '{1} {minute|minutes}',
@@ -21,6 +21,7 @@ export default {
   'common.text.language': 'language',
   'common.text.en': 'en',
   'common.text.zh-cn': 'zh-cn',
+  'common.text.zh-tw': 'zh-tw',
 
   'home.nav.database': 'Database',
   'home.nav.myHistory': 'My History',
@@ -30,7 +31,7 @@ export default {
   'history.title.myHistory': 'My History',
   'history.tab.mySave': 'My Save',
   'history.tab.executionHistory': 'Execution History',
-  
+
 
   'home.title.name': 'database',
   'home.title.link': 'link',
