@@ -172,7 +172,7 @@ export default memo<IProps>(function Setting({ className, text }) {
   
   const openNotification = (responseText:any) => {
     try{
-      if(responseText.version.split('.')[2]>11){
+      if(responseText.version !== '1.0.11'){
         const key = `open${Date.now()}`;
         
         function updateHint(){
@@ -200,7 +200,7 @@ export default memo<IProps>(function Setting({ className, text }) {
     
         notification.open({
           message: '更新提醒',
-          description: `监测到最近版本 v${responseText.version}`,
+          description: `监测到最新版本 v${responseText.version}`,
           btn,
           key,
           onClose: close,
