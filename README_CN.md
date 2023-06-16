@@ -211,19 +211,22 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 微信（如果无法添加成功，可以先邮箱联系 1558143046@qq.com）：
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_4.JPG" width="38%"/></a>
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_5.JPG" width="38%"/></a>
-
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_3.PNG" width="38%"/></a>
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
+<a><img src="./document/qrcode/weixinqun1" width="30%"/></a>
+<a><img src="./document/qrcode/weixinqun2" width="30%"/></a>
+<a><img src="./document/qrcode/weixinqun3" width="30%"/></a>
 
 
 微信
 
-<a><img src="./document/hexi-weixin.png" width="30%"/></a>
+<a><img src="./document/qrcode/hexi-weixin.png" width="30%"/></a>
 <a><img src="https://oss-chat2db.alibaba.com/static/WeChat3.jpg" width="30%"/></a>
 
 钉钉：9135032392
+
+
+qq
+
+<a><img src="./document/qrcode/qqqun.png" width="30%"/></a>
 
 
 

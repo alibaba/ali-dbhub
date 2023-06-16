@@ -196,16 +196,20 @@ Please star and fork on GitHub before joining the group.
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_4.JPG" width="38%"/></a>
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_5.JPG" width="38%"/></a>
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_3.PNG" width="38%"/></a>
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
-
+<a><img src="./document/qrcode/weixinqun1" width="30%"/></a>
+<a><img src="./document/qrcode/weixinqun2" width="30%"/></a>
+<a><img src="./document/qrcode/weixinqun3" width="30%"/></a>
 
 WeChat
 
-<a><img src="./document/hexi-weixin.png" width="30%"/></a>
+<a><img src="./document/qrcode/hexi-weixin.png" width="30%"/></a>
 <a><img src="https://oss-chat2db.alibaba.com/static/WeChat3.jpg" width="30%"/></a>
 
 Ding Talk：9135032392
+
+qq
+
+<a><img src="./document/qrcode/qqqun.png" width="30%"/></a>
 
 ## ❤️ Acknowledgements
 Thanks to all the students who contributed to Chat2DB~
