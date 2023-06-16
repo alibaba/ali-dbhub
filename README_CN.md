@@ -209,9 +209,12 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 加群前请先Star和Fork，谢谢~
 
+微信（如果无法添加成功，可以先邮箱联系 1558143046@qq.com）：
+
 <a><img src="./document/qrcode/weixinqun1" width="30%"/></a>
 <a><img src="./document/qrcode/weixinqun2" width="30%"/></a>
 <a><img src="./document/qrcode/weixinqun3" width="30%"/></a>
+
 
 微信
 
