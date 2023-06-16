@@ -192,13 +192,9 @@ But front debugging need mapping of resources, you can download [XSwitch](https:
 Please star and fork on GitHub before joining the group.
 微信（由于个人微信加好友太多被限制了，如果无法添加成功，可以先邮箱联系 1558143046@qq.com）：
 
-
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_4.JPG" width="38%"/></a>
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_5.JPG" width="38%"/></a>
-
-<a><img src="./document/qrcode/weixinqun1" width="30%"/></a>
-<a><img src="./document/qrcode/weixinqun2" width="30%"/></a>
-<a><img src="./document/qrcode/weixinqun3" width="30%"/></a>
+<a><img src="./document/qrcode/weixinqun1.png" width="30%"/></a>
+<a><img src="./document/qrcode/weixinqun2.png" width="30%"/></a>
+<a><img src="./document/qrcode/weixinqun3.png" width="30%"/></a>
 
 WeChat
 
