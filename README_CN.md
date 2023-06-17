@@ -17,7 +17,7 @@
 <div align="center">
 <p align="center"><b>分享 Chat2DB  </b></p>
 <p align="center">
-<a href="https://twitter.com/intent/tweet?text=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.&url=https://github.com/alibaba/Chat2DB&hashtags=ChatGPT,AGI,SQL%20Client,Reporting%20tool" target="blank" > <img src="https://img.shields.io/twitter/follow/_Chat2DB?label=Share Repo on Twitter&style=social" alt=""/> </a> 
+<a href="https://twitter.com/intent/tweet?text=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.&url=https://github.com/alibaba/Chat2DB&hashtags=ChatGPT,AGI,SQL%20Client,Reporting%20tool" target="blank" > <img src="https://img.shields.io/twitter/follow/_Chat2DB?label=Share Repo on Twitter&style=social" alt=""/> </a>
 <a href="https://t.me/share/url?text=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.&url=https://github.com/alibaba/Chat2DB" target="_blank"><img src="https://img.shields.io/twitter/url?label=Telegram&logo=Telegram&style=social&url=https://github.com/alibaba/Chat2DB" alt="Share on Telegram"/></a>
 <a href="https://api.whatsapp.com/send?text=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.%20https://github.com/alibaba/Chat2DB"><img src="https://img.shields.io/twitter/url?label=whatsapp&logo=whatsapp&style=social&url=https://github.com/alibaba/Chat2DB" /></a>
 <a href="https://www.reddit.com/submit?url=https://github.com/alibaba/Chat2DB&title=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities." target="blank"><img src="https://img.shields.io/twitter/url?label=Reddit&logo=Reddit&style=social&url=https://github.com/alibaba/Chat2DB" alt="Share on Reddit"/></a>
@@ -26,7 +26,7 @@
 
 **许可说明**: Chat2DB开源内容仅供个人免费使用，如想将该项目用于商业用途，请先联系该项目作者。
 
-Languages： 中文 [English](README.md)
+Languages： 中文 | [English](README.md) | [日本語](README_JA.md)
 </div>
 
 ## 📖 简介
@@ -44,31 +44,31 @@ Languages： 中文 [English](README.md)
 |-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Windows               | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB%20Setup%201.0.11.exe](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB%20Setup%201.0.11.exe) |
 | MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11-arm64.dmg)         |
-| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11.dmg](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11.dmg)                     |       
-| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.11/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.11/ali-dbhub-server-start.jar)     |                                                                                                                
+| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11.dmg](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11.dmg)                     |
+| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.11/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.11/ali-dbhub-server-start.jar)     |
 
 ## 🚀 支持的数据库
 | 数据库        | 支持计划    |
 |------------|---------|
 | Mysql      | ✅       |
 | H2         | ✅       |
-| Oracle     | ✅       |       
-| PostgreSQL | ✅       |                                                                                                                
-| SQLServer  | ✅       |   
-| SQLLite    | ✅       |   
-| MariaDB    | ✅       |   
-| ClickHouse | ✅       |   
-| DM         | ✅       |   
-| Presto     | ✅       |   
-| DB2        | ✅       |   
-| OceanBase  | ✅       |   
-| Redis      | ✅       |   
-| Hive       | ✅       |   
-| KingBase   | ✅       |   
-| MongoDB    | ✅       |   
-| Hbase      |Planning |  
-| Elasticsearch| Planning | 
-| openGauss| Planning |  
+| Oracle     | ✅       |
+| PostgreSQL | ✅       |
+| SQLServer  | ✅       |
+| SQLLite    | ✅       |
+| MariaDB    | ✅       |
+| ClickHouse | ✅       |
+| DM         | ✅       |
+| Presto     | ✅       |
+| DB2        | ✅       |
+| OceanBase  | ✅       |
+| Redis      | ✅       |
+| Hive       | ✅       |
+| KingBase   | ✅       |
+| MongoDB    | ✅       |
+| Hbase      |Planning |
+| Elasticsearch| Planning |
+| openGauss| Planning |
 | TiDB| Planning |
 | InfluxDB| Planning |
 ## 🌰 使用Demo
@@ -113,7 +113,7 @@ Languages： 中文 [English](README.md)
   // 后台运行,运行后可以关闭命令行
   docker run --name=chat2db -p 10824:10824 chat2db/chat2db:latest
   // 这里正常会提示 Tomcat started on port(s): 10824 (http) with context path 就可以结束了
-  
+
   // 如果这里提示  The container name "/chat2db" is already in use by container, 代表已经存在容器了 运行
   dcoker run chat2db
   // 如果想更新chat2db 则需要先rm 再运行
@@ -147,7 +147,7 @@ $ # 打开 http://127.0.0.1:10821 开启调试 注：需要进行前端安装
 - 前端调试
 ```bash
 $ cd Chat2DB/ali-dbhub-client
-$ npm install 
+$ npm install
 $ npm run start
 $ # 打开 http://127.0.0.1:10821 开启前端调试
 $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后端项目跑起来
@@ -191,7 +191,7 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 解决办法：手动下载相关驱动放入到 ~/.chat2db/jdbc-lib 目录下
 
-下载链接 参考：<a href="https://github.com/alibaba/Chat2DB/blob/main/ali-dbhub-server/ali-dbhub-server-start/src/main/resources/application.yml">Application jdbc-jar-downLoad-urls</a> 
+下载链接 参考：<a href="https://github.com/alibaba/Chat2DB/blob/main/ali-dbhub-server/ali-dbhub-server-start/src/main/resources/application.yml">Application jdbc-jar-downLoad-urls</a>
 - https://oss-chat2db.alibaba.com/lib/mysql-connector-java-8.0.30.jar
 - https://oss-chat2db.alibaba.com/lib/mysql-connector-java-5.1.47.jar
 - https://oss-chat2db.alibaba.com/lib/clickhouse-jdbc-0.3.2-patch8-http.jar
@@ -203,7 +203,7 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 - https://oss-chat2db.alibaba.com/lib/ojdbc11.jar
 
 
- 
+
 
 ## Stargazers
 [![Stargazers repo roster for @alibaba/Chat2DB](https://reporoster.com/stars/alibaba/Chat2DB)](https://github.com/alibaba/Chat2DB/stargazers)

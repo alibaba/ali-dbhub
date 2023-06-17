@@ -16,7 +16,7 @@
 <div align="center">
 <p align="center"><b>Share Chat2DB Repository </b></p>
 <p align="center">
-<a href="https://twitter.com/intent/tweet?text=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.&url=https://github.com/alibaba/Chat2DB&hashtags=ChatGPT,AGI,SQL%20Client,Reporting%20tool" target="blank" > <img src="https://img.shields.io/twitter/follow/_Chat2DB?label=Share Repo on Twitter&style=social" alt=""/> </a> 
+<a href="https://twitter.com/intent/tweet?text=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.&url=https://github.com/alibaba/Chat2DB&hashtags=ChatGPT,AGI,SQL%20Client,Reporting%20tool" target="blank" > <img src="https://img.shields.io/twitter/follow/_Chat2DB?label=Share Repo on Twitter&style=social" alt=""/> </a>
 <a href="https://t.me/share/url?text=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.&url=https://github.com/alibaba/Chat2DB" target="_blank"><img src="https://img.shields.io/twitter/url?label=Telegram&logo=Telegram&style=social&url=https://github.com/alibaba/Chat2DB" alt="Share on Telegram"/></a>
 <a href="https://api.whatsapp.com/send?text=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities.%20https://github.com/alibaba/Chat2DB"><img src="https://img.shields.io/twitter/url?label=whatsapp&logo=whatsapp&style=social&url=https://github.com/alibaba/Chat2DB" /></a>
 <a href="https://www.reddit.com/submit?url=https://github.com/alibaba/Chat2DB&title=Chat2DB-An%20intelligent%20and%20versatile%20general-purpose%20SQL%20client%20and%20reporting%20tool%20for%20databases%20which%20integrates%20ChatGPT%20capabilities." target="blank"><img src="https://img.shields.io/twitter/url?label=Reddit&logo=Reddit&style=social&url=https://github.com/alibaba/Chat2DB" alt="Share on Reddit"/></a>
@@ -25,7 +25,7 @@
 
 **License Notation**: Chat2DB is constructed and distributed for personal and non-commercial use only. For commercial use of this project, please contact corresponding authors.
 
-Languages： English | [中文](README_CN.md)
+Languages： English | [中文](README_CN.md) | [日本語](README_JA.md)
 </div>
 
 ## 📖 Introduction
@@ -53,23 +53,23 @@ Languages： English | [中文](README_CN.md)
 |---------------|---------|
 | Mysql         | ✅       |
 | H2            | ✅       |
-| Oracle        | ✅       |       
-| PostgreSQL    | ✅       |                                                                                                                
-| SQLServer     | ✅       |   
-| SQLLite       | ✅       |   
-| MariaDB       | ✅       |   
-| ClickHouse    | ✅       |   
-| DM            | ✅       |   
-| Presto        | ✅       |   
-| DB2           | ✅       |   
-| OceanBase     | ✅       |   
-| Redis         | ✅       |   
-| Hive          | ✅       |   
-| KingBase      | ✅       |   
-| MongoDB       | ✅       |   
-| Hbase         |Planning |  
-| Elasticsearch | Planning | 
-| openGauss     | Planning | 
+| Oracle        | ✅       |
+| PostgreSQL    | ✅       |
+| SQLServer     | ✅       |
+| SQLLite       | ✅       |
+| MariaDB       | ✅       |
+| ClickHouse    | ✅       |
+| DM            | ✅       |
+| Presto        | ✅       |
+| DB2           | ✅       |
+| OceanBase     | ✅       |
+| Redis         | ✅       |
+| Hive          | ✅       |
+| KingBase      | ✅       |
+| MongoDB       | ✅       |
+| Hbase         |Planning |
+| Elasticsearch | Planning |
+| openGauss     | Planning |
 | TiDB          | Planning |
 | InfluxDB      | Planning |
 
@@ -98,7 +98,7 @@ Option 2 (recommended): We provide a unified proxy service.
 - No OPENAI_API_KEY is required.
 - No proxy or VPN is required, as long as the network is connected.
 
-To facilitate users' quick use of AI capabilities, you can scan the QR code below to follow our WeChat public account and apply for our custom API_KEY. 
+To facilitate users' quick use of AI capabilities, you can scan the QR code below to follow our WeChat public account and apply for our custom API_KEY.
 
 <a><img src="https://oss-chat2db.alibaba.com/static/%E5%85%AC%E4%BC%97%E5%8F%B7.jpg" width="60%"/></a>
 
@@ -150,8 +150,8 @@ $ # open http://127.0.0.1:10821 to start debug Note: Front-end installation is r
 - Front-End debug
 ```bash
 $ cd Chat2DB/ali-dbhub-client
-$ npm install 
-$ npm run start 
+$ npm install
+$ npm run start
 $ # open http://127.0.0.1:10821  to start Front-End debug
 $ # Note Front-end page completely depends on the service, so front-end students need to debug the back-end project
 ```
