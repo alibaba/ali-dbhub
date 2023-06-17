@@ -111,7 +111,7 @@ Languages： 中文 [English](README.md)
   // 如果这里提示  The container name "/chat2db" is already in use by container, 代表已经存在容器了 运行
   dcoker run chat2db
   // 如果想更新chat2db 则需要先rm 再运行
-  dcoker rm chat2db
+  docker rm chat2db
 ```
 ## 🎯 运行环境
 注意：
