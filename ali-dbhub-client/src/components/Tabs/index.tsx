@@ -1,7 +1,7 @@
 import React, { memo, ReactNode, useState } from 'react';
 import styles from './index.less';
 import classnames from 'classnames';
-import { Tabs as AntdTabs } from 'antd';
+import { Tabs as AntdTabs, Button } from 'antd';
 
 export interface ITab {
   label: ReactNode;
@@ -17,21 +17,37 @@ interface IProps {
 }
 
 export default memo(function Tabs({ className, tabs, currentTab, onChange, extra }: IProps) {
+  const [hiddenTabs, setHiddenTabs] = useState<string[]>([]);
+
   function myChange(key: string) {
-    const index = tabs.findIndex(t => {
-      return t.key === key
-    })
-    onChange(key, index)
+    const index = tabs.findIndex(t => t.key === key);
+    onChange(key, index);
   }
 
-  return <div className={classnames(className, styles.box)}>
-    <AntdTabs
-      defaultActiveKey={currentTab}
-      onChange={myChange}
-      items={tabs}
-    />
-    <div className={styles.extra}>
-      {extra}
+  function handleClose(key: string) {
+    const updatedHiddenTabs = [...hiddenTabs, key];
+    setHiddenTabs(updatedHiddenTabs);
+  }
+
+  const visibleTabs = tabs.filter(tab => !hiddenTabs.includes(tab.key));
+
+  return (
+    <div className={classnames(className, styles.box)}>
+      <AntdTabs defaultActiveKey={currentTab} onChange={myChange}>
+        {visibleTabs.map(tab => (
+          <AntdTabs.TabPane tab={
+            <span>
+              <span style={{float:'left'}}> {tab.label}  </span> 
+              <a onClick={() => handleClose(tab.key)}>X</a>
+            </span>
+          } key={tab.key} />
+        ))}
+      </AntdTabs>
+      <div className={styles.extra}>
+        
+        {extra}
+      </div>
     </div>
-  </div>
-})
+  );
+});
+
