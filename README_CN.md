@@ -95,7 +95,7 @@ Languages： 中文 [English](README.md)
 - 1、不需要opeanAI的key
 - 2、不需要代理，不需要VPN只要可以联网即可使用。
 
-为了方便大家更快速的使用AI的能力，可以扫描下方二维码关注我们的微信公众号来申请我们的自定义API_KEY
+为了方便大家更快速的使用AI的能力，可以扫描下方二维码关注我们的微信公众号,并发送"ai"来申请我们的自定义API_KEY
 
 <a><img src="https://oss-chat2db.alibaba.com/static/%E5%85%AC%E4%BC%97%E5%8F%B7.jpg" width="60%"/></a>
 
