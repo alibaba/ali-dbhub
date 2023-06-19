@@ -34,8 +34,8 @@ import static com.alibaba.dbhub.server.domain.support.util.JdbcJarUtils.getFullP
  */
 public class IDriverManager {
     private static final Logger log = LoggerFactory.getLogger(IDriverManager.class);
-    private static final Map<String, ClassLoader> CLASS_LOADER_MAP = new ConcurrentHashMap();
-    private static final Map<DriverTypeEnum, DriverEntry> DRIVER_ENTRY_MAP = new ConcurrentHashMap();
+    private static final Map<String, ClassLoader> CLASS_LOADER_MAP = new ConcurrentHashMap<>();
+    private static final Map<DriverTypeEnum, DriverEntry> DRIVER_ENTRY_MAP = new ConcurrentHashMap<>();
 
     public static Connection getConnection(String url, DriverTypeEnum driver) throws SQLException {
         Properties info = new Properties();
@@ -77,7 +77,6 @@ public class IDriverManager {
             throw new SQLException("The url cannot be null", "08001");
         }
         DriverManager.println("DriverManager.getConnection(\"" + url + "\")");
-        SQLException reason = null;
         DriverEntry driverEntry = DRIVER_ENTRY_MAP.get(driverTypeEnum);
         if (driverEntry == null) {
             driverEntry = getJDBCDriver(driverTypeEnum);
@@ -97,13 +96,8 @@ public class IDriverManager {
             }
         }
 
-        if (reason != null) {
-            DriverManager.println("getConnection failed: " + reason);
-            throw reason;
-        } else {
-            DriverManager.println("getConnection: no suitable driver found for " + url);
-            throw new SQLException("No suitable driver found for " + url, "08001");
-        }
+        DriverManager.println("getConnection: no suitable driver found for " + url);
+        throw new SQLException("No suitable driver found for " + url, "08001");
     }
 
     private static Connection tryConnectionAgain(DbTypeEnum dbTypeEnum, DriverEntry driverEntry, String url,

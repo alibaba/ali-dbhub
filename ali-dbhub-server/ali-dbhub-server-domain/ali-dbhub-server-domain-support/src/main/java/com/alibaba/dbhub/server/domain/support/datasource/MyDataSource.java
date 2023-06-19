@@ -19,13 +19,13 @@ public class MyDataSource {
         return connectInfo;
     }
 
-    private ConnectInfo connectInfo;
+    private final ConnectInfo connectInfo;
 
     public HikariDataSource getHikariDataSource() {
         return hikariDataSource;
     }
 
-    private HikariDataSource hikariDataSource;
+    private final HikariDataSource hikariDataSource;
 
     public MyDataSource(ConnectInfo connectInfo, HikariDataSource hikariDataSource) {
         this.connectInfo = connectInfo;
