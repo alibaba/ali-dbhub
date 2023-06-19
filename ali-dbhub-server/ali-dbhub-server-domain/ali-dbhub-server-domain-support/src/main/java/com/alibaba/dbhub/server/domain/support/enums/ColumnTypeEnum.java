@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.domain.support.enums;
 
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
-
 import lombok.Getter;
 
 /**
@@ -11,31 +10,20 @@ import lombok.Getter;
  */
 @Getter
 public enum ColumnTypeEnum implements BaseEnum<String> {
-    /**
-     * BIGINT
-     */
+    /** BIGINT */
     BIGINT,
 
-    /**
-     * VARCHAR
-     */
+    /** VARCHAR */
     VARCHAR,
 
-    /**
-     * TIMESTAMP
-     */
+    /** TIMESTAMP */
     TIMESTAMP,
 
-    /**
-     * DATETIME
-     */
+    /** DATETIME */
     DATETIME,
 
-    /**
-     * INTEGER
-     */
+    /** INTEGER */
     INTEGER,
-
     ;
 
     @Override

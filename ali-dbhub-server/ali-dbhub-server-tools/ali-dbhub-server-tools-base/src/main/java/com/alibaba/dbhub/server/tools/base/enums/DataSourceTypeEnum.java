@@ -10,16 +10,11 @@ import lombok.Getter;
 @Getter
 public enum DataSourceTypeEnum implements BaseEnum<String> {
 
-    /**
-     * mysql数据库连接
-     */
+    /** mysql数据库连接 */
     MYSQL("mysql数据库连接"),
 
-    /**
-     * redis数据库连接
-     */
+    /** redis数据库连接 */
     REDIS("redis数据库连接"),
-
     ;
 
     final String description;

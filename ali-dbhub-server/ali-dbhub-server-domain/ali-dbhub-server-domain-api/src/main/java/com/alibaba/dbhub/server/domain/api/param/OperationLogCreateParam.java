@@ -10,28 +10,18 @@ import lombok.Data;
 @Data
 public class OperationLogCreateParam {
 
-    /**
-     * 主键
-     */
+    /** 主键 */
     private Long id;
 
-    /**
-     * 数据源连接ID
-     */
+    /** 数据源连接ID */
     private Long dataSourceId;
 
-    /**
-     * db名称
-     */
+    /** db名称 */
     private String databaseName;
 
-    /**
-     * 数据库类型
-     */
+    /** 数据库类型 */
     private String type;
 
-    /**
-     * ddl内容
-     */
+    /** ddl内容 */
     private String ddl;
 }

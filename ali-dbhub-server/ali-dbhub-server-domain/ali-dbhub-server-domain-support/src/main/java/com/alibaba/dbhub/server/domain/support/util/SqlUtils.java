@@ -1,15 +1,5 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.util;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
 import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
@@ -48,7 +38,12 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStateme
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlRenameTableStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlRenameTableStatement.Item;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlTableIndex;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -75,16 +70,19 @@ public class SqlUtils {
                     SQLColumnDefinition sqlColumnDefinition = new SQLColumnDefinition();
                     mySqlCreateTableStatement.addColumn(sqlColumnDefinition);
                     sqlColumnDefinition.setName(tableColumn.getName());
-                    sqlColumnDefinition.setDataType(new SQLDataTypeImpl(tableColumn.getColumnType()));
+                    sqlColumnDefinition.setDataType(
+                            new SQLDataTypeImpl(tableColumn.getColumnType()));
                     if (BooleanUtils.isNotFalse(tableColumn.getNullable())) {
                         sqlColumnDefinition.addConstraint(new SQLNullConstraint());
                     } else {
                         sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
                     }
                     if (!Objects.isNull(tableColumn.getDefaultValue())) {
-                        sqlColumnDefinition.setDefaultExpr(new MySqlCharExpr(tableColumn.getDefaultValue()));
+                        sqlColumnDefinition.setDefaultExpr(
+                                new MySqlCharExpr(tableColumn.getDefaultValue()));
                     }
-                    sqlColumnDefinition.setAutoIncrement(BooleanUtils.isTrue(tableColumn.getAutoIncrement()));
+                    sqlColumnDefinition.setAutoIncrement(
+                            BooleanUtils.isTrue(tableColumn.getAutoIncrement()));
                     if (!Objects.isNull(tableColumn.getComment())) {
                         sqlColumnDefinition.setComment(tableColumn.getComment());
                     }
@@ -93,16 +91,16 @@ public class SqlUtils {
                     }
                 }
                 //// 主键
-                //List<TableColumn> primaryKeyColumnList = EasyCollectionUtils.stream(columnList)
+                // List<TableColumn> primaryKeyColumnList = EasyCollectionUtils.stream(columnList)
                 //    .filter(tableColumn -> BooleanUtils.isTrue(tableColumn.getPrimaryKey()))
                 //    .collect(Collectors.toList());
-                //if (!CollectionUtils.isEmpty(primaryKeyColumnList)) {
+                // if (!CollectionUtils.isEmpty(primaryKeyColumnList)) {
                 //    MySqlPrimaryKey mySqlPrimaryKey = new MySqlPrimaryKey();
                 //    mySqlCreateTableStatement.getTableElementList().add(mySqlPrimaryKey);
                 //    for (TableColumn tableColumn : primaryKeyColumnList) {
                 //        mySqlPrimaryKey.addColumn(new SQLIdentifierExpr(tableColumn.getName()));
                 //    }
-                //}
+                // }
             }
 
             // 索引
@@ -117,12 +115,17 @@ public class SqlUtils {
                         mySqlUnique.getIndexDefinition().setType("unique");
                         if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
                             for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
-                                SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
-                                CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
-                                    tableIndexColumn.getCollation());
+                                SQLSelectOrderByItem sqlSelectOrderByItem =
+                                        new SQLSelectOrderByItem();
+                                sqlSelectOrderByItem.setExpr(
+                                        new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
+                                CollationEnum collation =
+                                        EasyEnumUtils.getEnum(
+                                                CollationEnum.class,
+                                                tableIndexColumn.getCollation());
                                 if (collation != null) {
-                                    sqlSelectOrderByItem.setType(collation.getSqlOrderingSpecification());
+                                    sqlSelectOrderByItem.setType(
+                                            collation.getSqlOrderingSpecification());
                                 }
                                 mySqlUnique.addColumn(sqlSelectOrderByItem);
                             }
@@ -134,12 +137,17 @@ public class SqlUtils {
                         mySqlTableIndex.setComment(new SQLCharExpr(tableIndex.getComment()));
                         if (!CollectionUtils.isEmpty(tableIndex.getColumnList())) {
                             for (TableIndexColumn tableIndexColumn : tableIndex.getColumnList()) {
-                                SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                                sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
-                                CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
-                                    tableIndexColumn.getCollation());
+                                SQLSelectOrderByItem sqlSelectOrderByItem =
+                                        new SQLSelectOrderByItem();
+                                sqlSelectOrderByItem.setExpr(
+                                        new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
+                                CollationEnum collation =
+                                        EasyEnumUtils.getEnum(
+                                                CollationEnum.class,
+                                                tableIndexColumn.getCollation());
                                 if (collation != null) {
-                                    sqlSelectOrderByItem.setType(collation.getSqlOrderingSpecification());
+                                    sqlSelectOrderByItem.setType(
+                                            collation.getSqlOrderingSpecification());
                                 }
                                 mySqlTableIndex.addColumn(sqlSelectOrderByItem);
                             }
@@ -182,139 +190,181 @@ public class SqlUtils {
     }
 
     private static void modifyColumn(List<Sql> sqlList, Table oldTable, Table newTable) {
-        Map<String, TableColumn> oldColumnMap = EasyCollectionUtils.toIdentityMap(oldTable.getColumnList(),
-            tableColumn -> {
-                if (tableColumn.getOldName() != null) {
-                    return tableColumn.getOldName();
-                }
-                return tableColumn.getName();
-            });
-        Map<String, TableColumn> newColumnMap = EasyCollectionUtils.toIdentityMap(newTable.getColumnList(),
-            tableColumn -> {
-                if (tableColumn.getOldName() != null) {
-                    return tableColumn.getOldName();
-                }
-                return tableColumn.getName();
-            });
+        Map<String, TableColumn> oldColumnMap =
+                EasyCollectionUtils.toIdentityMap(
+                        oldTable.getColumnList(),
+                        tableColumn -> {
+                            if (tableColumn.getOldName() != null) {
+                                return tableColumn.getOldName();
+                            }
+                            return tableColumn.getName();
+                        });
+        Map<String, TableColumn> newColumnMap =
+                EasyCollectionUtils.toIdentityMap(
+                        newTable.getColumnList(),
+                        tableColumn -> {
+                            if (tableColumn.getOldName() != null) {
+                                return tableColumn.getOldName();
+                            }
+                            return tableColumn.getName();
+                        });
 
         SQLAlterTableStatement sqlAlterTableStatement = new SQLAlterTableStatement();
         sqlAlterTableStatement.setDbType(DbType.mysql);
         sqlAlterTableStatement.setTableSource(new SQLIdentifierExpr(newTable.getName()));
 
-        newColumnMap.forEach((newTableColumnName, newTableColumn) -> {
-            TableColumn oldTableColumn = oldColumnMap.get(newTableColumnName);
-            // 代表新增字段
-            if (oldTableColumn == null) {
+        newColumnMap.forEach(
+                (newTableColumnName, newTableColumn) -> {
+                    TableColumn oldTableColumn = oldColumnMap.get(newTableColumnName);
+                    // 代表新增字段
+                    if (oldTableColumn == null) {
 
-                SQLAlterTableAddColumn sqlAlterTableAddColumn = new SQLAlterTableAddColumn();
-                sqlAlterTableStatement.addItem(sqlAlterTableAddColumn);
-                SQLColumnDefinition sqlColumnDefinition = new SQLColumnDefinition();
-                sqlAlterTableAddColumn.addColumn(sqlColumnDefinition);
-                sqlColumnDefinition.setName(newTableColumn.getName());
-                sqlColumnDefinition.setDataType(new SQLDataTypeImpl(newTableColumn.getColumnType()));
-                if (BooleanUtils.isNotTrue(newTableColumn.getNullable())) {
-                    sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
-                }
-                if (!Objects.isNull(newTableColumn.getDefaultValue())) {
-                    sqlColumnDefinition.setDefaultExpr(new MySqlCharExpr(newTableColumn.getDefaultValue()));
-                }
-                sqlColumnDefinition.setAutoIncrement(BooleanUtils.isTrue(newTableColumn.getAutoIncrement()));
-                if (!Objects.isNull(newTableColumn.getComment())) {
-                    sqlColumnDefinition.setComment(newTableColumn.getComment());
-                }
-                return;
-            }
-            // 代表可能修改字段 或者没变
-            boolean hasChange = !StringUtils.equals(oldTableColumn.getName(), newTableColumn.getName())
-                || !StringUtils.equals(oldTableColumn.getColumnType(), newTableColumn.getColumnType())
-                || !EasyBooleanUtils.equals(oldTableColumn.getNullable(), newTableColumn.getNullable(), Boolean.TRUE)
-                || !StringUtils.equals(oldTableColumn.getDefaultValue(), newTableColumn.getDefaultValue())
-                || !EasyBooleanUtils.equals(oldTableColumn.getAutoIncrement(), newTableColumn.getAutoIncrement(),
-                Boolean.FALSE)
-                || !StringUtils.equals(oldTableColumn.getComment(), newTableColumn.getComment());
+                        SQLAlterTableAddColumn sqlAlterTableAddColumn =
+                                new SQLAlterTableAddColumn();
+                        sqlAlterTableStatement.addItem(sqlAlterTableAddColumn);
+                        SQLColumnDefinition sqlColumnDefinition = new SQLColumnDefinition();
+                        sqlAlterTableAddColumn.addColumn(sqlColumnDefinition);
+                        sqlColumnDefinition.setName(newTableColumn.getName());
+                        sqlColumnDefinition.setDataType(
+                                new SQLDataTypeImpl(newTableColumn.getColumnType()));
+                        if (BooleanUtils.isNotTrue(newTableColumn.getNullable())) {
+                            sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
+                        }
+                        if (!Objects.isNull(newTableColumn.getDefaultValue())) {
+                            sqlColumnDefinition.setDefaultExpr(
+                                    new MySqlCharExpr(newTableColumn.getDefaultValue()));
+                        }
+                        sqlColumnDefinition.setAutoIncrement(
+                                BooleanUtils.isTrue(newTableColumn.getAutoIncrement()));
+                        if (!Objects.isNull(newTableColumn.getComment())) {
+                            sqlColumnDefinition.setComment(newTableColumn.getComment());
+                        }
+                        return;
+                    }
+                    // 代表可能修改字段 或者没变
+                    boolean hasChange =
+                            !StringUtils.equals(oldTableColumn.getName(), newTableColumn.getName())
+                                    || !StringUtils.equals(
+                                            oldTableColumn.getColumnType(),
+                                            newTableColumn.getColumnType())
+                                    || !EasyBooleanUtils.equals(
+                                            oldTableColumn.getNullable(),
+                                            newTableColumn.getNullable(),
+                                            Boolean.TRUE)
+                                    || !StringUtils.equals(
+                                            oldTableColumn.getDefaultValue(),
+                                            newTableColumn.getDefaultValue())
+                                    || !EasyBooleanUtils.equals(
+                                            oldTableColumn.getAutoIncrement(),
+                                            newTableColumn.getAutoIncrement(),
+                                            Boolean.FALSE)
+                                    || !StringUtils.equals(
+                                            oldTableColumn.getComment(),
+                                            newTableColumn.getComment());
 
-            // 没有修改字段
-            if (!hasChange) {
-                return;
-            }
+                    // 没有修改字段
+                    if (!hasChange) {
+                        return;
+                    }
 
-            // 修改字段包含字段名
-            if (!StringUtils.equals(oldTableColumn.getName(), newTableColumn.getName())) {
-                MySqlAlterTableChangeColumn mySqlAlterTableChangeColumn = new MySqlAlterTableChangeColumn();
-                sqlAlterTableStatement.addItem(mySqlAlterTableChangeColumn);
-                mySqlAlterTableChangeColumn.setColumnName(new SQLIdentifierExpr(newTableColumn.getOldName()));
-                SQLColumnDefinition sqlColumnDefinition = new SQLColumnDefinition();
-                mySqlAlterTableChangeColumn.setNewColumnDefinition(sqlColumnDefinition);
-                sqlColumnDefinition.setName(newTableColumn.getName());
-                sqlColumnDefinition.setDataType(new SQLDataTypeImpl(newTableColumn.getColumnType()));
-                if (BooleanUtils.isNotTrue(newTableColumn.getNullable())) {
-                    sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
-                }
-                if (!Objects.isNull(newTableColumn.getDefaultValue())) {
-                    sqlColumnDefinition.setDefaultExpr(new MySqlCharExpr(newTableColumn.getDefaultValue()));
-                }
-                sqlColumnDefinition.setAutoIncrement(BooleanUtils.isTrue(newTableColumn.getAutoIncrement()));
-                if (!Objects.isNull(newTableColumn.getComment())) {
-                    sqlColumnDefinition.setComment(newTableColumn.getComment());
-                }
-            } else {
-                // 修改字段不包括字段名
-                MySqlAlterTableModifyColumn mySqlAlterTableModifyColumn = new MySqlAlterTableModifyColumn();
-                sqlAlterTableStatement.addItem(mySqlAlterTableModifyColumn);
-                SQLColumnDefinition sqlColumnDefinition = new SQLColumnDefinition();
-                mySqlAlterTableModifyColumn.setNewColumnDefinition(sqlColumnDefinition);
-                sqlColumnDefinition.setName(newTableColumn.getName());
-                sqlColumnDefinition.setDataType(new SQLDataTypeImpl(newTableColumn.getColumnType()));
-                if (BooleanUtils.isNotTrue(newTableColumn.getNullable())) {
-                    sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
-                }
-                if (!Objects.isNull(newTableColumn.getDefaultValue())) {
-                    sqlColumnDefinition.setDefaultExpr(new MySqlCharExpr(newTableColumn.getDefaultValue()));
-                }
-                sqlColumnDefinition.setAutoIncrement(BooleanUtils.isTrue(newTableColumn.getAutoIncrement()));
-                if (!Objects.isNull(newTableColumn.getComment())) {
-                    sqlColumnDefinition.setComment(newTableColumn.getComment());
-                }
-            }
-        });
+                    // 修改字段包含字段名
+                    if (!StringUtils.equals(oldTableColumn.getName(), newTableColumn.getName())) {
+                        MySqlAlterTableChangeColumn mySqlAlterTableChangeColumn =
+                                new MySqlAlterTableChangeColumn();
+                        sqlAlterTableStatement.addItem(mySqlAlterTableChangeColumn);
+                        mySqlAlterTableChangeColumn.setColumnName(
+                                new SQLIdentifierExpr(newTableColumn.getOldName()));
+                        SQLColumnDefinition sqlColumnDefinition = new SQLColumnDefinition();
+                        mySqlAlterTableChangeColumn.setNewColumnDefinition(sqlColumnDefinition);
+                        sqlColumnDefinition.setName(newTableColumn.getName());
+                        sqlColumnDefinition.setDataType(
+                                new SQLDataTypeImpl(newTableColumn.getColumnType()));
+                        if (BooleanUtils.isNotTrue(newTableColumn.getNullable())) {
+                            sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
+                        }
+                        if (!Objects.isNull(newTableColumn.getDefaultValue())) {
+                            sqlColumnDefinition.setDefaultExpr(
+                                    new MySqlCharExpr(newTableColumn.getDefaultValue()));
+                        }
+                        sqlColumnDefinition.setAutoIncrement(
+                                BooleanUtils.isTrue(newTableColumn.getAutoIncrement()));
+                        if (!Objects.isNull(newTableColumn.getComment())) {
+                            sqlColumnDefinition.setComment(newTableColumn.getComment());
+                        }
+                    } else {
+                        // 修改字段不包括字段名
+                        MySqlAlterTableModifyColumn mySqlAlterTableModifyColumn =
+                                new MySqlAlterTableModifyColumn();
+                        sqlAlterTableStatement.addItem(mySqlAlterTableModifyColumn);
+                        SQLColumnDefinition sqlColumnDefinition = new SQLColumnDefinition();
+                        mySqlAlterTableModifyColumn.setNewColumnDefinition(sqlColumnDefinition);
+                        sqlColumnDefinition.setName(newTableColumn.getName());
+                        sqlColumnDefinition.setDataType(
+                                new SQLDataTypeImpl(newTableColumn.getColumnType()));
+                        if (BooleanUtils.isNotTrue(newTableColumn.getNullable())) {
+                            sqlColumnDefinition.addConstraint(new SQLNotNullConstraint());
+                        }
+                        if (!Objects.isNull(newTableColumn.getDefaultValue())) {
+                            sqlColumnDefinition.setDefaultExpr(
+                                    new MySqlCharExpr(newTableColumn.getDefaultValue()));
+                        }
+                        sqlColumnDefinition.setAutoIncrement(
+                                BooleanUtils.isTrue(newTableColumn.getAutoIncrement()));
+                        if (!Objects.isNull(newTableColumn.getComment())) {
+                            sqlColumnDefinition.setComment(newTableColumn.getComment());
+                        }
+                    }
+                });
 
-        oldColumnMap.forEach((oldTableColumnName, oldTableColumn) -> {
-            TableColumn newTableColumn = newColumnMap.get(oldTableColumnName);
-            // 代表删除字段
-            if (newTableColumn == null) {
-                SQLAlterTableDropColumnItem sqlAlterTableDropColumnItem = new SQLAlterTableDropColumnItem();
-                sqlAlterTableStatement.addItem(sqlAlterTableDropColumnItem);
-                sqlAlterTableDropColumnItem.addColumn(new SQLIdentifierExpr(oldTableColumn.getName()));
-            }
-        });
+        oldColumnMap.forEach(
+                (oldTableColumnName, oldTableColumn) -> {
+                    TableColumn newTableColumn = newColumnMap.get(oldTableColumnName);
+                    // 代表删除字段
+                    if (newTableColumn == null) {
+                        SQLAlterTableDropColumnItem sqlAlterTableDropColumnItem =
+                                new SQLAlterTableDropColumnItem();
+                        sqlAlterTableStatement.addItem(sqlAlterTableDropColumnItem);
+                        sqlAlterTableDropColumnItem.addColumn(
+                                new SQLIdentifierExpr(oldTableColumn.getName()));
+                    }
+                });
 
         // 比较主键是否有修改
         // 主键
-        Set<String> oldPrimaryKeySet = EasyCollectionUtils.stream(oldTable.getColumnList())
-            .filter(tableColumn -> BooleanUtils.isTrue(tableColumn.getPrimaryKey()))
-            .map(TableColumn::getName)
-            .collect(Collectors.toSet());
-        Set<String> newPrimaryKeySet = EasyCollectionUtils.stream(newTable.getColumnList())
-            .filter(tableColumn -> BooleanUtils.isTrue(tableColumn.getPrimaryKey()))
-            .map(TableColumn::getName)
-            .collect(Collectors.toSet());
-        boolean primaryKeyChange = oldPrimaryKeySet.stream()
-            .anyMatch(oldPrimaryKey -> !newPrimaryKeySet.contains(oldPrimaryKey))
-            || newPrimaryKeySet.stream()
-            .anyMatch(newPrimaryKey -> !oldPrimaryKeySet.contains(newPrimaryKey));
+        Set<String> oldPrimaryKeySet =
+                EasyCollectionUtils.stream(oldTable.getColumnList())
+                        .filter(tableColumn -> BooleanUtils.isTrue(tableColumn.getPrimaryKey()))
+                        .map(TableColumn::getName)
+                        .collect(Collectors.toSet());
+        Set<String> newPrimaryKeySet =
+                EasyCollectionUtils.stream(newTable.getColumnList())
+                        .filter(tableColumn -> BooleanUtils.isTrue(tableColumn.getPrimaryKey()))
+                        .map(TableColumn::getName)
+                        .collect(Collectors.toSet());
+        boolean primaryKeyChange =
+                oldPrimaryKeySet.stream()
+                                .anyMatch(
+                                        oldPrimaryKey -> !newPrimaryKeySet.contains(oldPrimaryKey))
+                        || newPrimaryKeySet.stream()
+                                .anyMatch(
+                                        newPrimaryKey -> !oldPrimaryKeySet.contains(newPrimaryKey));
         if (primaryKeyChange) {
             sqlAlterTableStatement.addItem(new SQLAlterTableDropPrimaryKey());
-            SQLAlterTableAddConstraint sqlAlterTableAddConstraint = new SQLAlterTableAddConstraint();
+            SQLAlterTableAddConstraint sqlAlterTableAddConstraint =
+                    new SQLAlterTableAddConstraint();
             sqlAlterTableStatement.addItem(sqlAlterTableAddConstraint);
             MySqlPrimaryKey mySqlPrimaryKey = new MySqlPrimaryKey();
             sqlAlterTableAddConstraint.setConstraint(mySqlPrimaryKey);
             mySqlPrimaryKey.setIndexType("PRIMARY");
             // 排序
             EasyCollectionUtils.stream(newTable.getColumnList())
-                .filter(tableColumn -> BooleanUtils.isTrue(tableColumn.getPrimaryKey()))
-                .map(TableColumn::getName)
-                .forEach(tableColumnName -> mySqlPrimaryKey.addColumn(
-                    new SQLSelectOrderByItem(new SQLIdentifierExpr(tableColumnName))));
+                    .filter(tableColumn -> BooleanUtils.isTrue(tableColumn.getPrimaryKey()))
+                    .map(TableColumn::getName)
+                    .forEach(
+                            tableColumnName ->
+                                    mySqlPrimaryKey.addColumn(
+                                            new SQLSelectOrderByItem(
+                                                    new SQLIdentifierExpr(tableColumnName))));
         }
 
         if (CollectionUtils.isNotEmpty(sqlAlterTableStatement.getItems())) {
@@ -323,111 +373,150 @@ public class SqlUtils {
     }
 
     private static void modifyIndex(List<Sql> sqlList, Table oldTable, Table newTable) {
-        Map<String, TableIndex> oldIndexMap = EasyCollectionUtils.toIdentityMap(oldTable.getIndexList(),
-            TableIndex::getName);
-        Map<String, TableIndex> newIndexMap = EasyCollectionUtils.toIdentityMap(newTable.getIndexList(),
-            TableIndex::getName);
-        newIndexMap.forEach((newTableIndexName, newTableIndex) -> {
-            TableIndex oldTableIndex = oldIndexMap.get(newTableIndexName);
-            // 代表新增索引
-            if (oldTableIndex == null) {
-                SQLCreateIndexStatement sqlCreateIndexStatement = new SQLCreateIndexStatement();
-                sqlCreateIndexStatement.setTable(new SQLExprTableSource(newTable.getName()));
-                sqlCreateIndexStatement.setName(new SQLIdentifierExpr(newTableIndex.getName()));
-                if (!Objects.isNull(newTableIndex.getComment())) {
-                    sqlCreateIndexStatement.setComment(new SQLCharExpr(newTableIndex.getComment()));
-                }
-                if (!CollectionUtils.isEmpty(newTableIndex.getColumnList())) {
-                    for (TableIndexColumn tableIndexColumn : newTableIndex.getColumnList()) {
-                        SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                        sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
-                        CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
-                            tableIndexColumn.getCollation());
-                        if (collation != null) {
-                            sqlSelectOrderByItem.setType(collation.getSqlOrderingSpecification());
+        Map<String, TableIndex> oldIndexMap =
+                EasyCollectionUtils.toIdentityMap(oldTable.getIndexList(), TableIndex::getName);
+        Map<String, TableIndex> newIndexMap =
+                EasyCollectionUtils.toIdentityMap(newTable.getIndexList(), TableIndex::getName);
+        newIndexMap.forEach(
+                (newTableIndexName, newTableIndex) -> {
+                    TableIndex oldTableIndex = oldIndexMap.get(newTableIndexName);
+                    // 代表新增索引
+                    if (oldTableIndex == null) {
+                        SQLCreateIndexStatement sqlCreateIndexStatement =
+                                new SQLCreateIndexStatement();
+                        sqlCreateIndexStatement.setTable(
+                                new SQLExprTableSource(newTable.getName()));
+                        sqlCreateIndexStatement.setName(
+                                new SQLIdentifierExpr(newTableIndex.getName()));
+                        if (!Objects.isNull(newTableIndex.getComment())) {
+                            sqlCreateIndexStatement.setComment(
+                                    new SQLCharExpr(newTableIndex.getComment()));
                         }
-                        sqlCreateIndexStatement.getColumns().add(sqlSelectOrderByItem);
-                    }
-                }
-                sqlList.add(Sql.builder().sql(sqlCreateIndexStatement + ";").build());
-                return;
-            }
-            // 代表可能修改索引 或者没变
-            boolean hasChange = !StringUtils.equals(oldTableIndex.getName(), newTableIndex.getName())
-                || !StringUtils.equals(oldTableIndex.getComment(), newTableIndex.getComment())
-                || !Objects.equals(oldTableIndex.getUnique(), newTableIndex.getUnique());
-            if (!hasChange) {
-                Map<String, TableIndexColumn> oldTableIndexColumnMap = EasyCollectionUtils.toIdentityMap(
-                    oldTableIndex.getColumnList(), TableIndexColumn::getColumnName);
-                Map<String, TableIndexColumn> newTableIndexColumnMap = EasyCollectionUtils.toIdentityMap(
-                    newTableIndex.getColumnList(), TableIndexColumn::getColumnName);
-                hasChange = oldTableIndexColumnMap.entrySet()
-                    .stream()
-                    .anyMatch(oldTableIndexColumnEntry -> {
-                        TableIndexColumn newTableIndexColumn = newTableIndexColumnMap.get(
-                            oldTableIndexColumnEntry.getKey());
-                        if (newTableIndexColumn == null) {
-                            return true;
+                        if (!CollectionUtils.isEmpty(newTableIndex.getColumnList())) {
+                            for (TableIndexColumn tableIndexColumn :
+                                    newTableIndex.getColumnList()) {
+                                SQLSelectOrderByItem sqlSelectOrderByItem =
+                                        new SQLSelectOrderByItem();
+                                sqlSelectOrderByItem.setExpr(
+                                        new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
+                                CollationEnum collation =
+                                        EasyEnumUtils.getEnum(
+                                                CollationEnum.class,
+                                                tableIndexColumn.getCollation());
+                                if (collation != null) {
+                                    sqlSelectOrderByItem.setType(
+                                            collation.getSqlOrderingSpecification());
+                                }
+                                sqlCreateIndexStatement.getColumns().add(sqlSelectOrderByItem);
+                            }
                         }
-                        TableIndexColumn oldTableIndexColumn = oldTableIndexColumnEntry.getValue();
-                        return !StringUtils.equals(oldTableIndexColumn.getColumnName(),
-                            newTableIndexColumn.getColumnName())
-                            || !CollationEnum.equals(oldTableIndexColumn.getCollation(),
-                            newTableIndexColumn.getCollation());
-                    })
-                    || newTableIndexColumnMap.entrySet()
-                    .stream()
-                    .anyMatch(newTableIndexColumnEntry -> {
-                        TableIndexColumn oldTableIndexColumn = oldTableIndexColumnMap.get(
-                            newTableIndexColumnEntry.getKey());
-                        return oldTableIndexColumn == null;
-                    });
-            }
-
-            // 没有修改索引
-            if (!hasChange) {
-                return;
-            }
-            // 先删除
-            SQLDropIndexStatement sqlDropIndexStatement = new SQLDropIndexStatement();
-            sqlDropIndexStatement.setDbType(DbType.mysql);
-            sqlDropIndexStatement.setTableName(new SQLExprTableSource(newTable.getName()));
-            sqlDropIndexStatement.setIndexName(new SQLIdentifierExpr(newTableIndex.getName()));
-            sqlList.add(Sql.builder().sql(sqlDropIndexStatement + ";").build());
-
-            // 再新增
-            SQLCreateIndexStatement sqlCreateIndexStatement = new SQLCreateIndexStatement();
-            sqlCreateIndexStatement.setTable(new SQLExprTableSource(newTable.getName()));
-            sqlCreateIndexStatement.setName(new SQLIdentifierExpr(newTableIndex.getName()));
-            if (!Objects.isNull(newTableIndex.getComment())) {
-                sqlCreateIndexStatement.setComment(new SQLCharExpr(newTableIndex.getComment()));
-            }
-            if (!CollectionUtils.isEmpty(newTableIndex.getColumnList())) {
-                for (TableIndexColumn tableIndexColumn : newTableIndex.getColumnList()) {
-                    SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
-                    sqlSelectOrderByItem.setExpr(new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
-                    CollationEnum collation = EasyEnumUtils.getEnum(CollationEnum.class,
-                        tableIndexColumn.getCollation());
-                    if (collation != null) {
-                        sqlSelectOrderByItem.setType(collation.getSqlOrderingSpecification());
+                        sqlList.add(Sql.builder().sql(sqlCreateIndexStatement + ";").build());
+                        return;
                     }
-                    sqlCreateIndexStatement.getColumns().add(sqlSelectOrderByItem);
-                }
-            }
-            sqlList.add(Sql.builder().sql(sqlCreateIndexStatement + ";").build());
-        });
+                    // 代表可能修改索引 或者没变
+                    boolean hasChange =
+                            !StringUtils.equals(oldTableIndex.getName(), newTableIndex.getName())
+                                    || !StringUtils.equals(
+                                            oldTableIndex.getComment(), newTableIndex.getComment())
+                                    || !Objects.equals(
+                                            oldTableIndex.getUnique(), newTableIndex.getUnique());
+                    if (!hasChange) {
+                        Map<String, TableIndexColumn> oldTableIndexColumnMap =
+                                EasyCollectionUtils.toIdentityMap(
+                                        oldTableIndex.getColumnList(),
+                                        TableIndexColumn::getColumnName);
+                        Map<String, TableIndexColumn> newTableIndexColumnMap =
+                                EasyCollectionUtils.toIdentityMap(
+                                        newTableIndex.getColumnList(),
+                                        TableIndexColumn::getColumnName);
+                        hasChange =
+                                oldTableIndexColumnMap.entrySet().stream()
+                                                .anyMatch(
+                                                        oldTableIndexColumnEntry -> {
+                                                            TableIndexColumn newTableIndexColumn =
+                                                                    newTableIndexColumnMap.get(
+                                                                            oldTableIndexColumnEntry
+                                                                                    .getKey());
+                                                            if (newTableIndexColumn == null) {
+                                                                return true;
+                                                            }
+                                                            TableIndexColumn oldTableIndexColumn =
+                                                                    oldTableIndexColumnEntry
+                                                                            .getValue();
+                                                            return !StringUtils.equals(
+                                                                            oldTableIndexColumn
+                                                                                    .getColumnName(),
+                                                                            newTableIndexColumn
+                                                                                    .getColumnName())
+                                                                    || !CollationEnum.equals(
+                                                                            oldTableIndexColumn
+                                                                                    .getCollation(),
+                                                                            newTableIndexColumn
+                                                                                    .getCollation());
+                                                        })
+                                        || newTableIndexColumnMap.entrySet().stream()
+                                                .anyMatch(
+                                                        newTableIndexColumnEntry -> {
+                                                            TableIndexColumn oldTableIndexColumn =
+                                                                    oldTableIndexColumnMap.get(
+                                                                            newTableIndexColumnEntry
+                                                                                    .getKey());
+                                                            return oldTableIndexColumn == null;
+                                                        });
+                    }
 
-        oldIndexMap.forEach((oldTableIndexName, oldTableIndex) -> {
-            TableIndex newTableIndex = newIndexMap.get(oldTableIndexName);
-            // 代表删除索引
-            if (newTableIndex == null) {
-                SQLDropIndexStatement sqlDropIndexStatement = new SQLDropIndexStatement();
-                sqlDropIndexStatement.setDbType(DbType.mysql);
-                sqlDropIndexStatement.setTableName(new SQLExprTableSource(newTable.getName()));
-                sqlDropIndexStatement.setIndexName(new SQLIdentifierExpr(oldTableIndex.getName()));
-                sqlList.add(Sql.builder().sql(sqlDropIndexStatement + ";").build());
-            }
-        });
+                    // 没有修改索引
+                    if (!hasChange) {
+                        return;
+                    }
+                    // 先删除
+                    SQLDropIndexStatement sqlDropIndexStatement = new SQLDropIndexStatement();
+                    sqlDropIndexStatement.setDbType(DbType.mysql);
+                    sqlDropIndexStatement.setTableName(new SQLExprTableSource(newTable.getName()));
+                    sqlDropIndexStatement.setIndexName(
+                            new SQLIdentifierExpr(newTableIndex.getName()));
+                    sqlList.add(Sql.builder().sql(sqlDropIndexStatement + ";").build());
+
+                    // 再新增
+                    SQLCreateIndexStatement sqlCreateIndexStatement = new SQLCreateIndexStatement();
+                    sqlCreateIndexStatement.setTable(new SQLExprTableSource(newTable.getName()));
+                    sqlCreateIndexStatement.setName(new SQLIdentifierExpr(newTableIndex.getName()));
+                    if (!Objects.isNull(newTableIndex.getComment())) {
+                        sqlCreateIndexStatement.setComment(
+                                new SQLCharExpr(newTableIndex.getComment()));
+                    }
+                    if (!CollectionUtils.isEmpty(newTableIndex.getColumnList())) {
+                        for (TableIndexColumn tableIndexColumn : newTableIndex.getColumnList()) {
+                            SQLSelectOrderByItem sqlSelectOrderByItem = new SQLSelectOrderByItem();
+                            sqlSelectOrderByItem.setExpr(
+                                    new SQLIdentifierExpr(tableIndexColumn.getColumnName()));
+                            CollationEnum collation =
+                                    EasyEnumUtils.getEnum(
+                                            CollationEnum.class, tableIndexColumn.getCollation());
+                            if (collation != null) {
+                                sqlSelectOrderByItem.setType(
+                                        collation.getSqlOrderingSpecification());
+                            }
+                            sqlCreateIndexStatement.getColumns().add(sqlSelectOrderByItem);
+                        }
+                    }
+                    sqlList.add(Sql.builder().sql(sqlCreateIndexStatement + ";").build());
+                });
+
+        oldIndexMap.forEach(
+                (oldTableIndexName, oldTableIndex) -> {
+                    TableIndex newTableIndex = newIndexMap.get(oldTableIndexName);
+                    // 代表删除索引
+                    if (newTableIndex == null) {
+                        SQLDropIndexStatement sqlDropIndexStatement = new SQLDropIndexStatement();
+                        sqlDropIndexStatement.setDbType(DbType.mysql);
+                        sqlDropIndexStatement.setTableName(
+                                new SQLExprTableSource(newTable.getName()));
+                        sqlDropIndexStatement.setIndexName(
+                                new SQLIdentifierExpr(oldTableIndex.getName()));
+                        sqlList.add(Sql.builder().sql(sqlDropIndexStatement + ";").build());
+                    }
+                });
     }
 
     public static String formatSQLString(Object para) {

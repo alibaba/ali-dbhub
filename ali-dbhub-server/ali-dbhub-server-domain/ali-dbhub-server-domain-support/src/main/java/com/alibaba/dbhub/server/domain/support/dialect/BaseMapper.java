@@ -1,15 +1,10 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect;
-
-import java.util.List;
 
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
-
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -31,7 +26,10 @@ public interface BaseMapper {
      * @param tableName
      * @return
      */
-    List<TableColumn> selectColumns(@Param("databaseName") String databaseName,@Param("tableSchema") String tableSchema, @Param("tableName") String tableName);
+    List<TableColumn> selectColumns(
+            @Param("databaseName") String databaseName,
+            @Param("tableSchema") String tableSchema,
+            @Param("tableName") String tableName);
 
     /**
      * 删除表
@@ -39,7 +37,8 @@ public interface BaseMapper {
      * @param databaseName
      * @param tableName
      */
-    void dropTable(@Param("databaseName") String databaseName, @Param("tableName") String tableName);
+    void dropTable(
+            @Param("databaseName") String databaseName, @Param("tableName") String tableName);
 
     /**
      * 查询所有的表
@@ -48,7 +47,10 @@ public interface BaseMapper {
      * @param tableSchema
      * @return
      */
-    List<Table> selectTables(@Param("databaseName") String databaseName, @Param("tableSchema") String tableSchema,@Param("tableName") String tableName);
+    List<Table> selectTables(
+            @Param("databaseName") String databaseName,
+            @Param("tableSchema") String tableSchema,
+            @Param("tableName") String tableName);
 
     /**
      * @param databaseName
@@ -63,8 +65,10 @@ public interface BaseMapper {
      * @param tableName
      * @return
      */
-    String showCreateTable(@Param("databaseName") String databaseName,@Param("tableSchema") String tableSchema,
-        @Param("tableName") String tableName);
+    String showCreateTable(
+            @Param("databaseName") String databaseName,
+            @Param("tableSchema") String tableSchema,
+            @Param("tableName") String tableName);
 
     /**
      * 查询表索引信息
@@ -73,6 +77,8 @@ public interface BaseMapper {
      * @param tableName
      * @return
      */
-    List<TableIndexColumn> selectTableIndexes(@Param("databaseName") String databaseName,@Param("tableSchema") String tableSchema,
-        @Param("tableName") String tableName);
+    List<TableIndexColumn> selectTableIndexes(
+            @Param("databaseName") String databaseName,
+            @Param("tableSchema") String tableSchema,
+            @Param("tableName") String tableName);
 }

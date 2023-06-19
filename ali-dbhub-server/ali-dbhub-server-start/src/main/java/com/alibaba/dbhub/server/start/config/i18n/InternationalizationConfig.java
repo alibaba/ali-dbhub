@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.start.config.i18n;
 
 import java.util.Locale;
-
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,8 +39,7 @@ public class InternationalizationConfig implements WebMvcConfigurer {
 
     @Bean("messageSource")
     public MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource =
-            new ResourceBundleMessageSource();
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasenames("i18n/messages/messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;

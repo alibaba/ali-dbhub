@@ -2,7 +2,6 @@ package com.alibaba.dbhub.server.tools.common.exception;
 
 import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
 import com.alibaba.dbhub.server.tools.common.enums.ErrorEnum;
-
 import lombok.Getter;
 
 /**

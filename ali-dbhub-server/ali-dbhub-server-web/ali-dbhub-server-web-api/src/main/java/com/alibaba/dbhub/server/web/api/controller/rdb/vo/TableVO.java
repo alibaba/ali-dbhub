@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
 
 import java.util.List;
-
 import lombok.Data;
 
 /**
@@ -12,24 +11,15 @@ import lombok.Data;
 @Data
 public class TableVO {
 
-    /**
-     * 表名称
-     */
+    /** 表名称 */
     private String name;
 
-    /**
-     * 表描述
-     */
+    /** 表描述 */
     private String comment;
 
-    /**
-     * 列
-     */
+    /** 列 */
     private List<ColumnVO> columnList;
 
-    /**
-     * 索引
-     */
+    /** 索引 */
     private List<IndexVO> indexList;
-
 }

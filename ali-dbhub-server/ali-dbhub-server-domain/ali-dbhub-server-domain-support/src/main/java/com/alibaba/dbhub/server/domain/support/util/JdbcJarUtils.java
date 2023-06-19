@@ -1,18 +1,13 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.util;
 
+import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.Executors;
-
-import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Dispatcher;
@@ -26,14 +21,20 @@ import okhttp3.Response;
  */
 public class JdbcJarUtils {
 
-    private static final OkHttpClient async_client = new OkHttpClient.Builder()
-        .dispatcher(new Dispatcher(Executors.newFixedThreadPool(20))) // 设定线程池大小
-        .build();
+    private static final OkHttpClient async_client =
+            new OkHttpClient.Builder()
+                    .dispatcher(new Dispatcher(Executors.newFixedThreadPool(20))) // 设定线程池大小
+                    .build();
 
     private static final OkHttpClient client = new OkHttpClient();
 
-    private static final String PATH = System.getProperty("user.home") + File.separator + ".chat2db" + File.separator
-        + "jdbc-lib" + File.separator;
+    private static final String PATH =
+            System.getProperty("user.home")
+                    + File.separator
+                    + ".chat2db"
+                    + File.separator
+                    + "jdbc-lib"
+                    + File.separator;
 
     static {
         File file = new File(PATH);
@@ -60,31 +61,32 @@ public class JdbcJarUtils {
         if (file.exists()) {
             file.delete();
         }
-        Request request = new Request.Builder()
-            .url(url)
-            .build();
-        async_client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-            }
+        Request request = new Request.Builder().url(url).build();
+        async_client
+                .newCall(request)
+                .enqueue(
+                        new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {}
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected code " + response);
-                }
-                try (InputStream is = response.body().byteStream();
-                     FileOutputStream fos = new FileOutputStream(outputPath)) {
-                    byte[] buffer = new byte[2048];
-                    int length;
-                    while ((length = is.read(buffer)) != -1) {
-                        fos.write(buffer, 0, length);
-                    }
-                    fos.flush();
-                }
-                System.out.println("File downloaded: " + outputPath);
-            }
-        });
+                            @Override
+                            public void onResponse(Call call, Response response)
+                                    throws IOException {
+                                if (!response.isSuccessful()) {
+                                    throw new IOException("Unexpected code " + response);
+                                }
+                                try (InputStream is = response.body().byteStream();
+                                        FileOutputStream fos = new FileOutputStream(outputPath)) {
+                                    byte[] buffer = new byte[2048];
+                                    int length;
+                                    while ((length = is.read(buffer)) != -1) {
+                                        fos.write(buffer, 0, length);
+                                    }
+                                    fos.flush();
+                                }
+                                System.out.println("File downloaded: " + outputPath);
+                            }
+                        });
     }
 
     public static void download(String url) throws IOException {
@@ -93,15 +95,13 @@ public class JdbcJarUtils {
         if (file.exists()) {
             file.delete();
         }
-        Request request = new Request.Builder()
-            .url(url)
-            .build();
+        Request request = new Request.Builder().url(url).build();
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
             }
             try (InputStream is = response.body().byteStream();
-                 FileOutputStream fos = new FileOutputStream(outputPath)) {
+                    FileOutputStream fos = new FileOutputStream(outputPath)) {
 
                 byte[] buffer = new byte[2048];
                 int length;

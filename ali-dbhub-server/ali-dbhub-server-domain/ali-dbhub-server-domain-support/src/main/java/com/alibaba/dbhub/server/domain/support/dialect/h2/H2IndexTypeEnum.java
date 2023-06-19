@@ -1,8 +1,7 @@
 package com.alibaba.dbhub.server.domain.support.dialect.h2;
 
-import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
 import com.alibaba.dbhub.server.domain.support.dialect.common.enums.BaseIndexTypeEnum;
-
+import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
 import lombok.Getter;
 
 /**
@@ -12,17 +11,11 @@ import lombok.Getter;
  */
 @Getter
 public enum H2IndexTypeEnum implements BaseIndexTypeEnum {
-    /**
-     * PRIMARY_KEY
-     */
+    /** PRIMARY_KEY */
     PRIMARY_KEY("PRIMARY KEY", IndexTypeEnum.PRIMARY_KEY),
-    /**
-     * UNIQUE INDEX
-     */
+    /** UNIQUE INDEX */
     UNIQUE("UNIQUE INDEX", IndexTypeEnum.UNIQUE),
-    /**
-     * NORMAL
-     */
+    /** NORMAL */
     NORMAL("INDEX", IndexTypeEnum.NORMAL),
     ;
 
@@ -38,5 +31,4 @@ public enum H2IndexTypeEnum implements BaseIndexTypeEnum {
     public String getDescription() {
         return getCode();
     }
-
 }

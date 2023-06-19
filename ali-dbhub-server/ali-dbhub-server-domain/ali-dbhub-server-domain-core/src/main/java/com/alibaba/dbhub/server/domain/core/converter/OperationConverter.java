@@ -1,12 +1,10 @@
 package com.alibaba.dbhub.server.domain.core.converter;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.api.model.Operation;
 import com.alibaba.dbhub.server.domain.api.param.OperationSavedParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationUpdateParam;
 import com.alibaba.dbhub.server.domain.repository.entity.OperationSavedDO;
-
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -25,9 +23,7 @@ public abstract class OperationConverter {
      * @param param
      * @return
      */
-    @Mappings({
-        @Mapping(source = "schemaName", target = "dbSchemaName")
-    })
+    @Mappings({@Mapping(source = "schemaName", target = "dbSchemaName")})
     public abstract OperationSavedDO param2do(OperationSavedParam param);
 
     /**
@@ -36,9 +32,7 @@ public abstract class OperationConverter {
      * @param param
      * @return
      */
-    @Mappings({
-        @Mapping(source = "schemaName", target = "dbSchemaName")
-    })
+    @Mappings({@Mapping(source = "schemaName", target = "dbSchemaName")})
     public abstract OperationSavedDO param2do(OperationUpdateParam param);
 
     /**
@@ -47,9 +41,7 @@ public abstract class OperationConverter {
      * @param userSavedDdlDO
      * @return
      */
-    @Mappings({
-        @Mapping(source = "dbSchemaName", target = "schemaName")
-    })
+    @Mappings({@Mapping(source = "dbSchemaName", target = "schemaName")})
     public abstract Operation do2dto(OperationSavedDO userSavedDdlDO);
 
     /**

@@ -1,10 +1,8 @@
 package com.alibaba.dbhub.server.web.api.controller.operation.log.request;
 
-import javax.validation.constraints.NotNull;
-
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -15,21 +13,16 @@ import lombok.Data;
 @Data
 public class OperationLogCreateRequest extends DataSourceBaseRequest {
 
-    /**
-     * 文件别名
-     */
+    /** 文件别名 */
     private String name;
 
     /**
      * ddl类型
+     *
      * @see DbTypeEnum
      */
-    @NotNull
-    private String type;
+    @NotNull private String type;
 
-    /**
-     * ddl内容
-     */
-    @NotNull
-    private String ddl;
+    /** ddl内容 */
+    @NotNull private String ddl;
 }

@@ -1,7 +1,15 @@
 package com.alibaba.dbhub.server.domain.support.enums;
 
-import java.util.HashMap;
-import java.util.Map;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.H2_ALTER_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.H2_CREATE_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.MYSQL_ALTER_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.MYSQL_CREATE_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.ORACLE_ALTER_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.ORACLE_CREATE_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_ALTER_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_CREATE_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.SQLITE_ALTER_TABLE_SIMPLE;
+import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.SQLITE_CREATE_TABLE_SIMPLE;
 
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.clickhouse.ClickhouseMetaSchemaSupport;
@@ -22,19 +30,9 @@ import com.alibaba.dbhub.server.domain.support.dialect.redis.RedisMetaSchemaSupp
 import com.alibaba.dbhub.server.domain.support.dialect.sqlite.SQLiteMetaSchemaSupport;
 import com.alibaba.dbhub.server.domain.support.dialect.sqlserver.SqlServerMetaSchemaSupport;
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
-
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
-
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.H2_ALTER_TABLE_SIMPLE;
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.H2_CREATE_TABLE_SIMPLE;
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.MYSQL_ALTER_TABLE_SIMPLE;
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.MYSQL_CREATE_TABLE_SIMPLE;
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.ORACLE_ALTER_TABLE_SIMPLE;
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.ORACLE_CREATE_TABLE_SIMPLE;
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_ALTER_TABLE_SIMPLE;
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.PG_CREATE_TABLE_SIMPLE;
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.SQLITE_ALTER_TABLE_SIMPLE;
-import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst.SQLITE_CREATE_TABLE_SIMPLE;
 
 /**
  * 数据类型
@@ -43,91 +41,55 @@ import static com.alibaba.dbhub.server.domain.support.dialect.common.SQLKeyConst
  */
 @Getter
 public enum DbTypeEnum implements BaseEnum<String> {
-    /**
-     * MySQL
-     */
+    /** MySQL */
     MYSQL("MySQL"),
 
-    /**
-     * PostgreSQL
-     */
+    /** PostgreSQL */
     POSTGRESQL("PostgreSQL"),
 
-    /**
-     * Oracle
-     */
+    /** Oracle */
     ORACLE("Oracle"),
 
-    /**
-     * SQLServer
-     */
+    /** SQLServer */
     SQLSERVER("SQLServer"),
 
-    /**
-     * SQLite
-     */
+    /** SQLite */
     SQLITE("SQLite"),
 
-    /**
-     * H2
-     */
+    /** H2 */
     H2("H2"),
 
-    /**
-     * ADB MySQL
-     */
+    /** ADB MySQL */
     ADB_POSTGRESQL("PostgreSQL"),
 
-    /**
-     * ClickHouse
-     */
+    /** ClickHouse */
     CLICKHOUSE("ClickHouse"),
 
-    /**
-     * OceanBase
-     */
+    /** OceanBase */
     OCEANBASE("OceanBase"),
 
-    /**
-     * DB2
-     */
+    /** DB2 */
     DB2("DB2"),
 
-    /**
-     * MMARIADB
-     */
+    /** MMARIADB */
     MARIADB("MariaDB"),
 
-    /**
-     * DM 达梦
-     */
+    /** DM 达梦 */
     DM("DM"),
 
-
-    /**
-     * MONGODB
-     */
+    /** MONGODB */
     MONGODB("Mongodb"),
 
-    /**
-     * PRESTO
-     */
+    /** PRESTO */
     PRESTO("Presto"),
 
-    /**
-     * HIVE
-     */
+    /** HIVE */
     HIVE("Hive"),
 
-
-    /**
-     * REDIS
-     */
+    /** REDIS */
     REDIS("Redis"),
 
-    /**
-     * KingBase
-     */
+    /** KingBase */
     KINGBASE("KingBase");
 
     final String description;
@@ -185,48 +147,81 @@ public enum DbTypeEnum implements BaseEnum<String> {
         SpiExample SpiExample = null;
         switch (this) {
             case H2:
-                SpiExample = SpiExample.builder().createTable(H2_CREATE_TABLE_SIMPLE).alterTable(H2_ALTER_TABLE_SIMPLE)
-                    .build();
+                SpiExample =
+                        SpiExample.builder()
+                                .createTable(H2_CREATE_TABLE_SIMPLE)
+                                .alterTable(H2_ALTER_TABLE_SIMPLE)
+                                .build();
                 break;
             case MYSQL:
-                SpiExample = SpiExample.builder().createTable(MYSQL_CREATE_TABLE_SIMPLE).alterTable(
-                    MYSQL_ALTER_TABLE_SIMPLE).build();
+                SpiExample =
+                        SpiExample.builder()
+                                .createTable(MYSQL_CREATE_TABLE_SIMPLE)
+                                .alterTable(MYSQL_ALTER_TABLE_SIMPLE)
+                                .build();
                 break;
             case POSTGRESQL:
-                SpiExample = SpiExample.builder().createTable(PG_CREATE_TABLE_SIMPLE).alterTable(PG_ALTER_TABLE_SIMPLE)
-                    .build();
+                SpiExample =
+                        SpiExample.builder()
+                                .createTable(PG_CREATE_TABLE_SIMPLE)
+                                .alterTable(PG_ALTER_TABLE_SIMPLE)
+                                .build();
                 break;
             case ORACLE:
-                SpiExample = SpiExample.builder().createTable(ORACLE_CREATE_TABLE_SIMPLE).alterTable(
-                    ORACLE_ALTER_TABLE_SIMPLE).build();
+                SpiExample =
+                        SpiExample.builder()
+                                .createTable(ORACLE_CREATE_TABLE_SIMPLE)
+                                .alterTable(ORACLE_ALTER_TABLE_SIMPLE)
+                                .build();
                 break;
             case SQLSERVER:
-                SpiExample = SpiExample.builder().createTable(ORACLE_CREATE_TABLE_SIMPLE).alterTable(
-                    ORACLE_ALTER_TABLE_SIMPLE).build();
+                SpiExample =
+                        SpiExample.builder()
+                                .createTable(ORACLE_CREATE_TABLE_SIMPLE)
+                                .alterTable(ORACLE_ALTER_TABLE_SIMPLE)
+                                .build();
                 break;
             case SQLITE:
-                SpiExample = SpiExample.builder().createTable(SQLITE_CREATE_TABLE_SIMPLE).alterTable(
-                    SQLITE_ALTER_TABLE_SIMPLE).build();
+                SpiExample =
+                        SpiExample.builder()
+                                .createTable(SQLITE_CREATE_TABLE_SIMPLE)
+                                .alterTable(SQLITE_ALTER_TABLE_SIMPLE)
+                                .build();
                 break;
             case OCEANBASE:
-                SpiExample = SpiExample.builder().createTable(MYSQL_CREATE_TABLE_SIMPLE).alterTable(
-                    MYSQL_ALTER_TABLE_SIMPLE).build();
+                SpiExample =
+                        SpiExample.builder()
+                                .createTable(MYSQL_CREATE_TABLE_SIMPLE)
+                                .alterTable(MYSQL_ALTER_TABLE_SIMPLE)
+                                .build();
                 break;
             case CLICKHOUSE:
-                SpiExample = SpiExample.builder().createTable(MYSQL_CREATE_TABLE_SIMPLE).alterTable(
-                    MYSQL_ALTER_TABLE_SIMPLE).build();
+                SpiExample =
+                        SpiExample.builder()
+                                .createTable(MYSQL_CREATE_TABLE_SIMPLE)
+                                .alterTable(MYSQL_ALTER_TABLE_SIMPLE)
+                                .build();
                 break;
             case MARIADB:
-                SpiExample = SpiExample.builder().createTable(MYSQL_CREATE_TABLE_SIMPLE).alterTable(
-                    MYSQL_ALTER_TABLE_SIMPLE).build();
+                SpiExample =
+                        SpiExample.builder()
+                                .createTable(MYSQL_CREATE_TABLE_SIMPLE)
+                                .alterTable(MYSQL_ALTER_TABLE_SIMPLE)
+                                .build();
                 break;
             case DB2:
-                SpiExample = SpiExample.builder().createTable(MYSQL_CREATE_TABLE_SIMPLE).alterTable(
-                    MYSQL_ALTER_TABLE_SIMPLE).build();
+                SpiExample =
+                        SpiExample.builder()
+                                .createTable(MYSQL_CREATE_TABLE_SIMPLE)
+                                .alterTable(MYSQL_ALTER_TABLE_SIMPLE)
+                                .build();
                 break;
             case DM:
-                SpiExample = SpiExample.builder().createTable(MYSQL_CREATE_TABLE_SIMPLE).alterTable(
-                    MYSQL_ALTER_TABLE_SIMPLE).build();
+                SpiExample =
+                        SpiExample.builder()
+                                .createTable(MYSQL_CREATE_TABLE_SIMPLE)
+                                .alterTable(MYSQL_ALTER_TABLE_SIMPLE)
+                                .build();
                 break;
             case PRESTO:
                 SpiExample = SpiExample.builder().createTable("").alterTable("").build();
@@ -235,5 +230,4 @@ public enum DbTypeEnum implements BaseEnum<String> {
         }
         return SpiExample;
     }
-
 }

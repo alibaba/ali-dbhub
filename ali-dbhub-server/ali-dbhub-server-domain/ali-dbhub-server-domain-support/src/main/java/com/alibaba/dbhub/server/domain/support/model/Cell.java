@@ -1,9 +1,7 @@
 package com.alibaba.dbhub.server.domain.support.model;
 
-import java.math.BigDecimal;
-
 import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
-
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,23 +25,15 @@ public class Cell {
      */
     private String type;
 
-    /**
-     * 字符串数据
-     */
+    /** 字符串数据 */
     private String stringValue;
 
-    /**
-     * 数字
-     */
+    /** 数字 */
     private BigDecimal bigDecimalValue;
 
-    /**
-     * 日期数据
-     */
+    /** 日期数据 */
     private Long dateValue;
 
-    /**
-     * 二进制流
-     */
+    /** 二进制流 */
     private byte[] byteValue;
 }

@@ -1,9 +1,7 @@
 package com.alibaba.dbhub.server.tools.base.wrapper.param;
 
-import java.io.Serializable;
-
 import com.alibaba.dbhub.server.tools.base.enums.OrderByDirectionEnum;
-
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,13 +17,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderBy implements Serializable {
-    /**
-     * 排序字段
-     */
+    /** 排序字段 */
     private String orderConditionName;
-    /**
-     * 排序方向
-     */
+    /** 排序方向 */
     private OrderByDirectionEnum direction;
 
     public static OrderBy of(String property, OrderByDirectionEnum direction) {

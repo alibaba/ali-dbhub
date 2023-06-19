@@ -1,9 +1,5 @@
 package com.alibaba.dbhub.server.test.domain.data.service;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
 import com.alibaba.dbhub.server.domain.api.service.DataSourceService;
@@ -14,7 +10,8 @@ import com.alibaba.dbhub.server.test.domain.data.utils.TestUtils;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.fastjson2.JSON;
-
+import java.util.List;
+import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
@@ -28,10 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Slf4j
 public class SQLExecutorOperationsTest extends BaseTest {
-    @Resource
-    private DataSourceService dataSourceService;
-    @Autowired
-    private List<DialectProperties> dialectPropertiesList;
+    @Resource private DataSourceService dataSourceService;
+    @Autowired private List<DialectProperties> dialectPropertiesList;
 
     @Test
     @Order(1)
@@ -49,7 +44,8 @@ public class SQLExecutorOperationsTest extends BaseTest {
             dataSourceCreateParam.setPassword(dialectProperties.getPassword());
             ActionResult dataSourceConnect = dataSourceService.preConnect(dataSourceCreateParam);
             Assertions.assertTrue(dataSourceConnect.getSuccess(), "创建数据库连接池失败");
-            // Assertions.assertTrue(DataCenterUtils.JDBC_ACCESSOR_MAP.containsKey(dataSourceId), "创建数据库连接池失败");
+            // Assertions.assertTrue(DataCenterUtils.JDBC_ACCESSOR_MAP.containsKey(dataSourceId),
+            // "创建数据库连接池失败");
 
             // 关闭
             dataSourceService.close(dataSourceId);
@@ -75,11 +71,12 @@ public class SQLExecutorOperationsTest extends BaseTest {
             Assertions.assertFalse(dataSourceConnect.getSuccess(), "创建数据库失败错误");
         }
     }
+
     @Test
     @Order(3)
-    public void createDataSource(){
+    public void createDataSource() {
         for (DialectProperties dialectProperties : dialectPropertiesList) {
-            if(!dialectProperties.getDbType().equals(DbTypeEnum.CLICKHOUSE)){
+            if (!dialectProperties.getDbType().equals(DbTypeEnum.CLICKHOUSE)) {
                 continue;
             }
             DbTypeEnum dbTypeEnum = dialectProperties.getDbType();
@@ -87,15 +84,16 @@ public class SQLExecutorOperationsTest extends BaseTest {
             TestUtils.buildContext(dialectProperties, dataSourceId, null);
             // 创建
             DataSourceCreateParam dataSourceCreateParam = new DataSourceCreateParam();
-            dataSourceCreateParam.setAlias(dialectProperties.getDbType()+"_unittest_"+dialectProperties.getDbType());
+            dataSourceCreateParam.setAlias(
+                    dialectProperties.getDbType() + "_unittest_" + dialectProperties.getDbType());
             dataSourceCreateParam.setType(dbTypeEnum.getCode());
             dataSourceCreateParam.setUrl(dialectProperties.getUrl());
             dataSourceCreateParam.setUserName(dialectProperties.getUsername());
             dataSourceCreateParam.setPassword(dialectProperties.getPassword());
             DataResult<Long> dataSourceConnect = dataSourceService.create(dataSourceCreateParam);
             Assertions.assertTrue(dataSourceConnect.getSuccess(), "创建数据库连接池失败");
-            // Assertions.assertTrue(DataCenterUtils.JDBC_ACCESSOR_MAP.containsKey(dataSourceId), "创建数据库连接池失败");
+            // Assertions.assertTrue(DataCenterUtils.JDBC_ACCESSOR_MAP.containsKey(dataSourceId),
+            // "创建数据库连接池失败");
         }
     }
-
 }

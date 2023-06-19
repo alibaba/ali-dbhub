@@ -2,7 +2,6 @@ package com.alibaba.dbhub.server.start.test.sql;
 
 import java.sql.Connection;
 import java.sql.Statement;
-
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
@@ -33,15 +32,19 @@ public class DbhubJdbcTemplateTest {
         Connection connection = jdbcTemplate.getDataSource().getConnection();
         Statement statement = connection.createStatement();
         boolean execute = statement.execute("select * from test_query");
-        log.info("execute：{}",execute);
+        log.info("execute：{}", execute);
 
         statement = connection.createStatement();
-        execute = statement.execute("INSERT INTO `test_query` (name,date,number) VALUES ('姓名','2022-01-01',123);");
-        log.info("execute：{}",execute);
-        //Returns:
-        //true if the first result is a ResultSet object; false if it is an update count or there are no results
+        execute =
+                statement.execute(
+                        "INSERT INTO `test_query` (name,date,number) VALUES"
+                                + " ('姓名','2022-01-01',123);");
+        log.info("execute：{}", execute);
+        // Returns:
+        // true if the first result is a ResultSet object; false if it is an update count or there
+        // are no results
         statement = connection.createStatement();
         execute = statement.execute("show tables");
-        log.info("execute：{}",execute);
+        log.info("execute：{}", execute);
     }
 }

@@ -1,15 +1,13 @@
 package com.alibaba.druid.sql.parser;
 
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.druid.DbType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.druid.DbType;
-
 /**
- * 临时的sql 解析工具类
- * 已经让druid改了 但是没上线
+ * 临时的sql 解析工具类 已经让druid改了 但是没上线
  *
  * @author 是仪
  */
@@ -35,8 +33,8 @@ public class DbhubSQLParserUtils extends SQLParserUtils {
 
             while (lexer.token != Token.EOF) {
                 if (lexer.token == Token.LINE_COMMENT
-                    || lexer.token == Token.MULTI_LINE_COMMENT
-                    || lexer.token == Token.SEMI) {
+                        || lexer.token == Token.MULTI_LINE_COMMENT
+                        || lexer.token == Token.SEMI) {
                     containsCommentAndSemi = true;
                     break;
                 }
@@ -76,10 +74,10 @@ public class DbhubSQLParserUtils extends SQLParserUtils {
                 int len = lexer.startPos - start;
                 if (len > 0) {
                     String lineSql = sql.substring(start, lexer.startPos);
-                    String splitSql = set
-                        ? removeLeftComment(lineSql, dbType)
-                        : removeComment(lineSql, dbType
-                        ).trim();
+                    String splitSql =
+                            set
+                                    ? removeLeftComment(lineSql, dbType)
+                                    : removeComment(lineSql, dbType).trim();
                     if (!splitSql.isEmpty()) {
                         list.add(splitSql);
                     }
@@ -89,10 +87,8 @@ public class DbhubSQLParserUtils extends SQLParserUtils {
             } else if (token == Token.MULTI_LINE_COMMENT) {
                 int len = lexer.startPos - start;
                 if (len > 0) {
-                    String splitSql = removeComment(
-                        sql.substring(start, lexer.startPos),
-                        dbType
-                    ).trim();
+                    String splitSql =
+                            removeComment(sql.substring(start, lexer.startPos), dbType).trim();
                     if (!splitSql.isEmpty()) {
                         list.add(splitSql);
                     }
@@ -126,8 +122,8 @@ public class DbhubSQLParserUtils extends SQLParserUtils {
                 token = lexer.token;
                 continue;
             } else if (dbType == DbType.odps
-                && lexer.ch != '.'
-                && (lexer.identifierEquals("pai") || lexer.identifierEquals("jar"))) {
+                    && lexer.ch != '.'
+                    && (lexer.identifierEquals("pai") || lexer.identifierEquals("jar"))) {
                 paiOrJar = true;
             }
 
@@ -173,7 +169,6 @@ public class DbhubSQLParserUtils extends SQLParserUtils {
 
         return list;
     }
-
 
     public static String format(DbTypeEnum dbType, String tableName) {
         if (DbTypeEnum.MYSQL.equals(dbType)) {

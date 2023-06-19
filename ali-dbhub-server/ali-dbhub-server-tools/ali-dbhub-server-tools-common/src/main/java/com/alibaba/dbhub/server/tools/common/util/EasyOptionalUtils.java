@@ -13,7 +13,7 @@ public class EasyOptionalUtils {
     /**
      * 将一个可能未null 的对象 获取其值
      *
-     * @param source   原始对象
+     * @param source 原始对象
      * @param function 转换方法
      * @param <T>
      * @param <R>
@@ -26,8 +26,8 @@ public class EasyOptionalUtils {
     /**
      * 将一个可能未null 的对象 获取其值
      *
-     * @param source       原始对象
-     * @param function     转换方法
+     * @param source 原始对象
+     * @param function 转换方法
      * @param defaultValue 默认值
      * @param <T>
      * @param <R>

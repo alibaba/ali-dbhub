@@ -2,7 +2,6 @@ package com.alibaba.dbhub.server.web.api.controller.ai.converter;
 
 import com.alibaba.dbhub.server.domain.api.param.TableQueryParam;
 import com.alibaba.dbhub.server.web.api.controller.ai.request.ChatQueryRequest;
-
 import org.mapstruct.Mapper;
 
 /**

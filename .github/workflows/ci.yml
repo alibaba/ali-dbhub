@@ -3,6 +3,16 @@
  on: [ push, pull_request ]
 
  jobs:
+   code-style:
+     name: Code style
+     runs-on: ubuntu-latest
+     timeout-minutes: 10
+     steps:
+       - uses: actions/checkout@v3
+         with:
+           submodules: true
+       - name: Check code style
+         run: ./mvnw --batch-mode --quiet --no-snapshot-updates clean spotless:check
    test:
      runs-on: ubuntu-latest
      steps:

@@ -27,5 +27,4 @@ public class EasyBooleanUtils {
         }
         return b1 == b2;
     }
-
 }

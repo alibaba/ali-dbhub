@@ -1,7 +1,9 @@
 package com.alibaba.dbhub.server.start.controller.oauth;
 
-import javax.annotation.Resource;
-
+import cn.dev33.satoken.context.SaHolder;
+import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.util.SaTokenConsts;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.dbhub.server.domain.api.model.User;
 import com.alibaba.dbhub.server.domain.api.service.UserService;
 import com.alibaba.dbhub.server.start.controller.oauth.request.LoginRequest;
@@ -10,11 +12,7 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.common.model.LoginUser;
 import com.alibaba.dbhub.server.tools.common.util.ContextUtils;
-
-import cn.dev33.satoken.context.SaHolder;
-import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.util.SaTokenConsts;
-import cn.hutool.crypto.digest.DigestUtil;
+import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class OauthController {
 
-    @Resource
-    private UserService userService;
+    @Resource private UserService userService;
 
     /**
      * 用户名密码登录
@@ -87,5 +84,4 @@ public class OauthController {
     public DataResult<LoginUser> usera() {
         return DataResult.of(ContextUtils.queryLoginUser());
     }
-
 }

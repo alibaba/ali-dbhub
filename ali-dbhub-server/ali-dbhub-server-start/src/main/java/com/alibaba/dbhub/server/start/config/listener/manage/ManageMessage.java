@@ -1,13 +1,12 @@
 package com.alibaba.dbhub.server.start.config.listener.manage;
 
 import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.io.Serial;
-import java.io.Serializable;
 
 /**
  * 管理的消息
@@ -19,8 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ManageMessage implements Serializable {
-    @Serial
-    private static final long serialVersionUID = EasyToolsConstant.SERIAL_VERSION_UID;
+    @Serial private static final long serialVersionUID = EasyToolsConstant.SERIAL_VERSION_UID;
 
     /**
      * 消息类型

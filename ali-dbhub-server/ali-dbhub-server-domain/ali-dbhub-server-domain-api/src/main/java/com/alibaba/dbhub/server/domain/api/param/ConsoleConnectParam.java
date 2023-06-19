@@ -10,18 +10,12 @@ import lombok.Data;
 @Data
 public class ConsoleConnectParam {
 
-    /**
-     * 数据源id
-     */
+    /** 数据源id */
     private Long dataSourceId;
 
-    /**
-     * 数据库db名称
-     */
+    /** 数据库db名称 */
     private String databaseName;
 
-    /**
-     * 控制台id
-     */
+    /** 控制台id */
     private Long consoleId;
 }

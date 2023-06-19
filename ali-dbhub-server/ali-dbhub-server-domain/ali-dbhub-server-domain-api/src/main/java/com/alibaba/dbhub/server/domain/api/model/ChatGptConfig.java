@@ -10,40 +10,28 @@ import lombok.Data;
 @Data
 public class ChatGptConfig {
 
-    /**
-     * OpenAi APIKEY
-     */
+    /** OpenAi APIKEY */
     private String apiKey;
 
-    /**
-     * OpenAi APIHOST
-     */
+    /** OpenAi APIHOST */
     private String apiHost;
 
-    /**
-     * http代理Host
-     */
+    /** http代理Host */
     private String httpProxyHost;
 
-    /**
-     * http代理Port
-     */
+    /** http代理Port */
     private String httpProxyPort;
 
     /**
      * AI类型
+     *
      * @see com.alibaba.dbhub.server.domain.api.enums.AiSqlSourceEnum
      */
     private String aiSqlSource;
 
-    /**
-     * 自定义AI接口
-     */
+    /** 自定义AI接口 */
     private String restAiUrl;
 
-    /**
-     * Rest接口是否流式输出
-     * 非必填，默认值为TRUE
-     */
+    /** Rest接口是否流式输出 非必填，默认值为TRUE */
     private Boolean restAiStream = Boolean.TRUE;
 }

@@ -1,14 +1,5 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect.common;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 /**
  * 需要执行的sql类型
@@ -17,7 +8,6 @@ import lombok.experimental.SuperBuilder;
  * @version : SQLType.java
  */
 public enum SQLType {
-
     MODIFY_DATABASE,
 
     CREATE_DATABASE,
@@ -27,6 +17,4 @@ public enum SQLType {
     CREATE_SCHEMA,
     DROP_SCHEMA,
     MODIFY_SCHEMA;
-
-
 }

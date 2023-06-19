@@ -1,9 +1,7 @@
 package com.alibaba.dbhub.server.start.exception.convertor;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.tools.base.constant.SymbolConstant;
-
+import java.util.List;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;

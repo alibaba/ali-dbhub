@@ -16,9 +16,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class SqlVO {
 
-    /**
-     * sql
-     */
+    /** sql */
     private String sql;
-
 }

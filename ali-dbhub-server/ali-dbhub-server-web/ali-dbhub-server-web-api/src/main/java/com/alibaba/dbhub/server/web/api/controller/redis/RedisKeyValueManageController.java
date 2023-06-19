@@ -7,7 +7,6 @@ import com.alibaba.dbhub.server.web.api.controller.redis.request.KeyQueryRequest
 import com.alibaba.dbhub.server.web.api.controller.redis.request.KeyValueManageRequest;
 import com.alibaba.dbhub.server.web.api.controller.redis.request.ValueUpdateRequest;
 import com.alibaba.dbhub.server.web.api.controller.redis.vo.KeyVO;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +31,9 @@ public class RedisKeyValueManageController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/manage",method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(
+            value = "/manage",
+            method = {RequestMethod.POST, RequestMethod.PUT})
     public DataResult<Object> manage(@RequestBody KeyValueManageRequest request) {
         return null;
     }
@@ -54,9 +55,10 @@ public class RedisKeyValueManageController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/update",method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(
+            value = "/update",
+            method = {RequestMethod.POST, RequestMethod.PUT})
     public ActionResult update(@RequestBody ValueUpdateRequest request) {
         return null;
     }
-
 }

@@ -2,7 +2,6 @@ package com.alibaba.dbhub.server.start.exception.convertor;
 
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
-
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
@@ -11,7 +10,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
  * @author 是仪
  */
 public class MethodArgumentTypeMismatchExceptionConvertor
-    implements ExceptionConvertor<MethodArgumentTypeMismatchException> {
+        implements ExceptionConvertor<MethodArgumentTypeMismatchException> {
 
     @Override
     public ActionResult convert(MethodArgumentTypeMismatchException exception) {

@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.ai.enums;
 
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
-
 import lombok.Getter;
 
 /**
@@ -14,24 +13,16 @@ import lombok.Getter;
 @Getter
 public enum PromptType implements BaseEnum<String> {
 
-    /**
-     * 自然语言转换成SQL
-     */
+    /** 自然语言转换成SQL */
     NL_2_SQL("将自然语言转换成SQL查询"),
 
-    /**
-     * 解释SQL
-     */
+    /** 解释SQL */
     SQL_EXPLAIN("解释SQL"),
 
-    /**
-     * SQL优化
-     */
+    /** SQL优化 */
     SQL_OPTIMIZER("提供优化建议"),
 
-    /**
-     * SQL转换
-     */
+    /** SQL转换 */
     SQL_2_SQL("进行SQL转换"),
     ;
 

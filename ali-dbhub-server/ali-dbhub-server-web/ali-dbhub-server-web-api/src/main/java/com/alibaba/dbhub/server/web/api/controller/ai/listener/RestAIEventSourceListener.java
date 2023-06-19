@@ -1,8 +1,7 @@
 package com.alibaba.dbhub.server.web.api.controller.ai.listener;
 
-import java.util.Objects;
-
 import com.unfbx.chatgpt.entity.chat.Message;
+import java.util.Objects;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
@@ -27,17 +26,13 @@ public class RestAIEventSourceListener extends EventSourceListener {
         this.sseEmitter = sseEmitter;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void onOpen(EventSource eventSource, Response response) {
         log.info("REST AI建立sse连接...");
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @SneakyThrows
     @Override
     public void onEvent(EventSource eventSource, String id, String type, String data) {
@@ -45,20 +40,14 @@ public class RestAIEventSourceListener extends EventSourceListener {
         String end = "[DONE]";
         if (data.equals(end)) {
             log.info("REST AI返回数据结束了");
-            sseEmitter.send(SseEmitter.event()
-                .id(end)
-                .data(end)
-                .reconnectTime(3000));
+            sseEmitter.send(SseEmitter.event().id(end).data(end).reconnectTime(3000));
             sseEmitter.complete();
             return;
         }
         Message message = new Message();
         if (StringUtils.isNotBlank(data)) {
             message.setContent(data);
-            sseEmitter.send(SseEmitter.event()
-                .id(id)
-                .data(message)
-                .reconnectTime(3000));
+            sseEmitter.send(SseEmitter.event().id(id).data(message).reconnectTime(3000));
         }
     }
 
@@ -66,10 +55,7 @@ public class RestAIEventSourceListener extends EventSourceListener {
     @Override
     public void onClosed(EventSource eventSource) {
         log.info("REST AI关闭sse连接...");
-        sseEmitter.send(SseEmitter.event()
-            .id("[DONE]")
-            .data("[DONE]")
-            .reconnectTime(3000));
+        sseEmitter.send(SseEmitter.event().id("[DONE]").data("[DONE]").reconnectTime(3000));
         sseEmitter.complete();
     }
 
@@ -78,15 +64,14 @@ public class RestAIEventSourceListener extends EventSourceListener {
         try {
             if (Objects.isNull(response)) {
                 String message = t.getMessage();
-                message = message + ", AI无法正常访问, 请参考文章<https://github.com/alibaba/Chat2DB/blob/main/CHAT2DB_AI_SQL.md>进行配置";
+                message =
+                        message
+                                + ", AI无法正常访问,"
+                                + " 请参考文章<https://github.com/alibaba/Chat2DB/blob/main/CHAT2DB_AI_SQL.md>进行配置";
                 Message sseMessage = new Message();
                 sseMessage.setContent(message);
-                sseEmitter.send(SseEmitter.event()
-                    .id("[ERROR]")
-                    .data(sseMessage));
-                sseEmitter.send(SseEmitter.event()
-                    .id("[DONE]")
-                    .data("[DONE]"));
+                sseEmitter.send(SseEmitter.event().id("[ERROR]").data(sseMessage));
+                sseEmitter.send(SseEmitter.event().id("[DONE]").data("[DONE]"));
                 sseEmitter.complete();
                 return;
             }
@@ -103,12 +88,8 @@ public class RestAIEventSourceListener extends EventSourceListener {
             }
             Message message = new Message();
             message.setContent("出现异常,请在帮助中查看详细日志：" + bodyString);
-            sseEmitter.send(SseEmitter.event()
-                .id("[ERROR]")
-                .data(message));
-            sseEmitter.send(SseEmitter.event()
-                .id("[DONE]")
-                .data("[DONE]"));
+            sseEmitter.send(SseEmitter.event().id("[ERROR]").data(message));
+            sseEmitter.send(SseEmitter.event().id("[DONE]").data("[DONE]"));
             sseEmitter.complete();
         } catch (Exception exception) {
             log.error("发送数据异常:", exception);

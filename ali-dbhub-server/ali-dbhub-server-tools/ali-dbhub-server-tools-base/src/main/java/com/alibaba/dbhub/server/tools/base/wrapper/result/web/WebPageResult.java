@@ -1,25 +1,21 @@
 package com.alibaba.dbhub.server.tools.base.wrapper.result.web;
 
+import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
+import com.alibaba.dbhub.server.tools.base.enums.BaseErrorEnum;
+import com.alibaba.dbhub.server.tools.base.wrapper.Result;
+import com.alibaba.dbhub.server.tools.base.wrapper.param.PageQueryParam;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import javax.validation.constraints.NotNull;
-
-import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
-import com.alibaba.dbhub.server.tools.base.enums.BaseErrorEnum;
-import com.alibaba.dbhub.server.tools.base.wrapper.Result;
-import com.alibaba.dbhub.server.tools.base.wrapper.param.PageQueryParam;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 /**
- * data的返回对象
- * 和 PageResult 比较一致 也可以直接用 PageResult。 这个是部分项目前端需要将 data+pageNo 封装到一起 所以额外创建的类
+ * data的返回对象 和 PageResult 比较一致 也可以直接用 PageResult。 这个是部分项目前端需要将 data+pageNo 封装到一起 所以额外创建的类
  *
  * @author 是仪
  */
@@ -33,23 +29,14 @@ public class WebPageResult<T> implements Serializable, Result<List<T>> {
      *
      * @mock true
      */
-    @NotNull
-    private Boolean success;
-    /**
-     * 异常编码
-     */
+    @NotNull private Boolean success;
+    /** 异常编码 */
     private String errorCode;
-    /**
-     * 异常信息
-     */
+    /** 异常信息 */
     private String errorMessage;
-    /**
-     * 数据信息
-     */
+    /** 数据信息 */
     private Page<T> data;
-    /**
-     * traceId
-     */
+    /** traceId */
     private String traceId;
 
     public WebPageResult() {
@@ -70,11 +57,11 @@ public class WebPageResult<T> implements Serializable, Result<List<T>> {
     /**
      * 构建分页返回对象
      *
-     * @param data     返回的对象
-     * @param total    总的条数
-     * @param pageNo   页码
+     * @param data 返回的对象
+     * @param total 总的条数
+     * @param pageNo 页码
      * @param pageSize 分页大小
-     * @param <T>      返回的对象类型
+     * @param <T> 返回的对象类型
      * @return 分页返回对象
      */
     public static <T> WebPageResult<T> of(List<T> data, Long total, Long pageNo, Long pageSize) {
@@ -84,24 +71,25 @@ public class WebPageResult<T> implements Serializable, Result<List<T>> {
     /**
      * 构建分页返回对象
      *
-     * @param data     返回的对象
-     * @param total    总的条数
-     * @param pageNo   页码
+     * @param data 返回的对象
+     * @param total 总的条数
+     * @param pageNo 页码
      * @param pageSize 分页大小
-     * @param <T>      返回的对象类型
+     * @param <T> 返回的对象类型
      * @return 分页返回对象
      */
-    public static <T> WebPageResult<T> of(List<T> data, Long total, Integer pageNo, Integer pageSize) {
+    public static <T> WebPageResult<T> of(
+            List<T> data, Long total, Integer pageNo, Integer pageSize) {
         return new WebPageResult<>(data, total, pageNo, pageSize);
     }
 
     /**
      * 构建分页返回对象
      *
-     * @param data  返回的对象
+     * @param data 返回的对象
      * @param total 总的条数
      * @param param 分页参数
-     * @param <T>   返回的对象类型
+     * @param <T> 返回的对象类型
      * @return 分页返回对象
      */
     public static <T> WebPageResult<T> of(List<T> data, Long total, PageQueryParam param) {
@@ -111,9 +99,9 @@ public class WebPageResult<T> implements Serializable, Result<List<T>> {
     /**
      * 构建空的返回对象
      *
-     * @param pageNo   页码
+     * @param pageNo 页码
      * @param pageSize 分页大小
-     * @param <T>      返回的对象类型
+     * @param <T> 返回的对象类型
      * @return 分页返回对象
      */
     public static <T> WebPageResult<T> empty(Long pageNo, Long pageSize) {
@@ -123,9 +111,9 @@ public class WebPageResult<T> implements Serializable, Result<List<T>> {
     /**
      * 构建空的返回对象
      *
-     * @param pageNo   页码
+     * @param pageNo 页码
      * @param pageSize 分页大小
-     * @param <T>      返回的对象类型
+     * @param <T> 返回的对象类型
      * @return 分页返回对象
      */
     public static <T> WebPageResult<T> empty(Integer pageNo, Integer pageSize) {
@@ -133,8 +121,7 @@ public class WebPageResult<T> implements Serializable, Result<List<T>> {
     }
 
     /**
-     * 判断是否还有下一页
-     * 根据分页大小来计算 防止total为空
+     * 判断是否还有下一页 根据分页大小来计算 防止total为空
      *
      * @return 是否还有下一页
      * @deprecated 使用 {@link #getHasNextPage()} ()}
@@ -154,9 +141,9 @@ public class WebPageResult<T> implements Serializable, Result<List<T>> {
     /**
      * 返回查询异常信息
      *
-     * @param errorCode    错误编码
+     * @param errorCode 错误编码
      * @param errorMessage 错误信息
-     * @param <T>          返回的对象
+     * @param <T> 返回的对象
      * @return 分页返回对象
      */
     public static <T> WebPageResult<T> error(String errorCode, String errorMessage) {
@@ -171,7 +158,7 @@ public class WebPageResult<T> implements Serializable, Result<List<T>> {
      * 返回查询异常信息
      *
      * @param errorEnum 错误枚举
-     * @param <T>       返回的对象
+     * @param <T> 返回的对象
      * @return 分页返回对象
      */
     public static <T> WebPageResult<T> error(BaseErrorEnum errorEnum) {
@@ -185,20 +172,25 @@ public class WebPageResult<T> implements Serializable, Result<List<T>> {
      * @return 是否存在数据
      */
     public static boolean hasData(WebPageResult<?> pageResult) {
-        return pageResult != null && pageResult.getSuccess() && pageResult.getData() != null
-            && pageResult.getData().getData() != null && !pageResult.getData().getData().isEmpty();
+        return pageResult != null
+                && pageResult.getSuccess()
+                && pageResult.getData() != null
+                && pageResult.getData().getData() != null
+                && !pageResult.getData().getData().isEmpty();
     }
 
     /**
      * 将当前的类型转换成另外一个类型
      *
      * @param mapper 转换的方法
-     * @param <R>    返回的类型
+     * @param <R> 返回的类型
      * @return 分页返回对象
      */
     public <R> WebPageResult<R> map(Function<T, R> mapper) {
-        List<R> returnData = hasData(this) ? getData().getData().stream().map(mapper).collect(Collectors.toList())
-            : Collections.emptyList();
+        List<R> returnData =
+                hasData(this)
+                        ? getData().getData().stream().map(mapper).collect(Collectors.toList())
+                        : Collections.emptyList();
         WebPageResult<R> pageResult = new WebPageResult<>();
         pageResult.setSuccess(getSuccess());
         pageResult.setErrorCode(getErrorCode());
@@ -251,25 +243,15 @@ public class WebPageResult<T> implements Serializable, Result<List<T>> {
      */
     @Data
     public static class Page<T> {
-        /**
-         * 数据信息
-         */
+        /** 数据信息 */
         private List<T> data;
-        /**
-         * 分页编码
-         */
+        /** 分页编码 */
         private Integer pageNo;
-        /**
-         * 分页大小
-         */
+        /** 分页大小 */
         private Integer pageSize;
-        /**
-         * 总的大小
-         */
+        /** 总的大小 */
         private Long total;
-        /**
-         * 是否存在下一页
-         */
+        /** 是否存在下一页 */
         private Boolean hasNextPage;
 
         public Page() {
@@ -310,15 +292,14 @@ public class WebPageResult<T> implements Serializable, Result<List<T>> {
         }
 
         /**
-         * 判断是否还有下一页
-         * 根据分页大小来计算 防止total为空
+         * 判断是否还有下一页 根据分页大小来计算 防止total为空
          *
          * @return 是否还有下一页
          */
         public Boolean calculateHasNextPage() {
             // 存在分页大小 根据分页来计算
             if (total > 0) {
-                return (long)pageSize * pageNo <= total;
+                return (long) pageSize * pageNo <= total;
             }
             // 没有数据 肯定没有下一页
             if (data == null || data.isEmpty()) {

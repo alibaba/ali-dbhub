@@ -1,22 +1,16 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.datasource;
-
-import java.net.URLClassLoader;
-import java.sql.Connection;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.sql.DataSource;
 
 import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
 import com.alibaba.dbhub.server.domain.support.sql.ConnectInfo;
 import com.alibaba.dbhub.server.domain.support.sql.IDriverManager;
 import com.alibaba.fastjson2.JSON;
-
 import com.zaxxer.hikari.HikariDataSource;
+import java.net.URLClassLoader;
+import java.sql.Connection;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 
@@ -27,7 +21,8 @@ import org.springframework.util.ObjectUtils;
 @Slf4j
 public class DataSourceManger {
 
-    protected static final ConcurrentHashMap<String, MyDataSource> DATA_SOURCE_MAP = new ConcurrentHashMap();
+    protected static final ConcurrentHashMap<String, MyDataSource> DATA_SOURCE_MAP =
+            new ConcurrentHashMap();
 
     public static DataSource getDataSource(ConnectInfo connectInfo) {
         String key = connectInfo.getDataSourceId().toString();
@@ -60,37 +55,41 @@ public class DataSourceManger {
     }
 
     private static MyDataSource createDataSource(ConnectInfo connectInfo) throws Exception {
-        DriverTypeEnum driverTypeEnum = DriverTypeEnum.getDriver(connectInfo.getDbType(), connectInfo.getJdbc());
+        DriverTypeEnum driverTypeEnum =
+                DriverTypeEnum.getDriver(connectInfo.getDbType(), connectInfo.getJdbc());
         ClassLoader classLoader = IDriverManager.getClassLoader(driverTypeEnum);
-        //IDataSource dataSource = new IDataSource(connectInfo, driverTypeEnum, classLoader);
-        //dataSource.setName(connectInfo.getAlias());
-        //dataSource.setDriverClassLoader(classLoader);
-        //dataSource.setDriverClassName(driverTypeEnum.getDriverClass());
-        //dataSource.setUrl(connectInfo.getUrl());
-        //dataSource.setInitialSize(2);
-        //dataSource.setMinIdle(0);
-        //dataSource.setMaxActive(5);
-        //dataSource.setMaxWait(3000L);
-        //dataSource.setMinEvictableIdleTimeMillis(300000L);
-        //dataSource.setUsername(connectInfo.getUser());
-        //dataSource.setPassword(connectInfo.getPassword());
-        //dataSource.setConnectionErrorRetryAttempts(2);
-        //dataSource.setBreakAfterAcquireFailure(true);
-        //dataSource.setRemoveAbandoned(true);
-        //dataSource.setRemoveAbandonedTimeout(1800);
-        //dataSource.setTestOnBorrow(true);
-        //dataSource.setValidationQuery("select 1");
-        //if (!ObjectUtils.isEmpty(connectInfo.getExtendMap())) {
+        // IDataSource dataSource = new IDataSource(connectInfo, driverTypeEnum, classLoader);
+        // dataSource.setName(connectInfo.getAlias());
+        // dataSource.setDriverClassLoader(classLoader);
+        // dataSource.setDriverClassName(driverTypeEnum.getDriverClass());
+        // dataSource.setUrl(connectInfo.getUrl());
+        // dataSource.setInitialSize(2);
+        // dataSource.setMinIdle(0);
+        // dataSource.setMaxActive(5);
+        // dataSource.setMaxWait(3000L);
+        // dataSource.setMinEvictableIdleTimeMillis(300000L);
+        // dataSource.setUsername(connectInfo.getUser());
+        // dataSource.setPassword(connectInfo.getPassword());
+        // dataSource.setConnectionErrorRetryAttempts(2);
+        // dataSource.setBreakAfterAcquireFailure(true);
+        // dataSource.setRemoveAbandoned(true);
+        // dataSource.setRemoveAbandonedTimeout(1800);
+        // dataSource.setTestOnBorrow(true);
+        // dataSource.setValidationQuery("select 1");
+        // if (!ObjectUtils.isEmpty(connectInfo.getExtendMap())) {
         //    Properties properties = new Properties();
         //    properties.putAll(connectInfo.getExtendMap());
         //    dataSource.setConnectProperties(properties);
-        //}
-        //return dataSource;
+        // }
+        // return dataSource;
         Thread.currentThread().setContextClassLoader(classLoader);
-        log.info("createDataSource classLoader  hashCode:{}"+ classLoader.hashCode());
-        log.info("createDataSource classLoader url :{}"+ JSON.toJSONString (((URLClassLoader)classLoader).getURLs()));
-        HikariDataSource myDataSource = (HikariDataSource)classLoader.loadClass("com.zaxxer.hikari.HikariDataSource")
-            .newInstance();
+        log.info("createDataSource classLoader  hashCode:{}" + classLoader.hashCode());
+        log.info(
+                "createDataSource classLoader url :{}"
+                        + JSON.toJSONString(((URLClassLoader) classLoader).getURLs()));
+        HikariDataSource myDataSource =
+                (HikariDataSource)
+                        classLoader.loadClass("com.zaxxer.hikari.HikariDataSource").newInstance();
         myDataSource.setDriverClassName(driverTypeEnum.getDriverClass());
         myDataSource.setJdbcUrl(connectInfo.getUrl());
         myDataSource.setUsername(connectInfo.getUser());
@@ -108,8 +107,9 @@ public class DataSourceManger {
             myDataSource.setDataSourceProperties(properties);
         }
         Connection connection = myDataSource.getConnection();
-        if (connection != null) {connection.close();}
+        if (connection != null) {
+            connection.close();
+        }
         return new MyDataSource(connectInfo, myDataSource);
     }
-
 }

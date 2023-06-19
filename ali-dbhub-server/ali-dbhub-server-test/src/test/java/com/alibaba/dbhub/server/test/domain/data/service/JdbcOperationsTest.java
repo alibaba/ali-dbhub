@@ -1,11 +1,5 @@
 package com.alibaba.dbhub.server.test.domain.data.service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DlExecuteParam;
@@ -20,7 +14,10 @@ import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperti
 import com.alibaba.dbhub.server.test.domain.data.utils.TestUtils;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.fastjson2.JSON;
-
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
@@ -34,24 +31,19 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Slf4j
 public class JdbcOperationsTest extends BaseTest {
-    /**
-     * 表名
-     */
+    /** 表名 */
     public static final String TABLE_NAME = "DATA_OPS_TEMPLATE_TEST_" + System.currentTimeMillis();
-    private final static String STRING = "STR";
-    private final static Date DATE = new Date();
-    private final static long NUMBER = 1L;
 
-    @Resource
-    private DataSourceService dataSourceService;
-    @Resource
-    private ConsoleService consoleService;
+    private static final String STRING = "STR";
+    private static final Date DATE = new Date();
+    private static final long NUMBER = 1L;
 
-    @Autowired
-    private List<DialectProperties> dialectPropertiesList;
+    @Resource private DataSourceService dataSourceService;
+    @Resource private ConsoleService consoleService;
 
-    @Resource
-    private DlTemplateService dlTemplateService;
+    @Autowired private List<DialectProperties> dialectPropertiesList;
+
+    @Resource private DlTemplateService dlTemplateService;
 
     @Test
     @Order(1)
@@ -62,8 +54,14 @@ public class JdbcOperationsTest extends BaseTest {
             Long consoleId = TestUtils.nextLong();
 
             // 准备上下文
-            putConnect(dialectProperties.getUrl(), dialectProperties.getUsername(), dialectProperties.getPassword(),
-                dialectProperties.getDbType(), dialectProperties.getDatabaseName(), dataSourceId, consoleId);
+            putConnect(
+                    dialectProperties.getUrl(),
+                    dialectProperties.getUsername(),
+                    dialectProperties.getPassword(),
+                    dialectProperties.getDbType(),
+                    dialectProperties.getDatabaseName(),
+                    dataSourceId,
+                    consoleId);
 
             DataSourcePreConnectParam dataSourceCreateParam = new DataSourcePreConnectParam();
             dataSourceCreateParam.setType(dbTypeEnum.getCode());
@@ -89,7 +87,8 @@ public class JdbcOperationsTest extends BaseTest {
             templateQueryParam = new DlExecuteParam();
             templateQueryParam.setConsoleId(consoleId);
             templateQueryParam.setDataSourceId(dataSourceId);
-            templateQueryParam.setSql(dialectProperties.getInsertSql(TABLE_NAME, DATE, NUMBER, STRING));
+            templateQueryParam.setSql(
+                    dialectProperties.getInsertSql(TABLE_NAME, DATE, NUMBER, STRING));
             ListResult<ExecuteResult> executeResult = dlTemplateService.execute(templateQueryParam);
             Assertions.assertTrue(executeResult.getSuccess(), "查询数据失败");
             // Assertions.assertEquals(1, listResult.getUpdateCount(), "查询数据失败");
@@ -104,7 +103,8 @@ public class JdbcOperationsTest extends BaseTest {
             Assertions.assertTrue(executeResult.getSuccess(), "查询数据失败");
             List<Cell> headerList = executeResult.getData().get(0).getHeaderList();
             Assertions.assertEquals(4L, headerList.size(), "查询数据失败");
-            Assertions.assertEquals(dialectProperties.toCase("ID"), headerList.get(0).getStringValue(), "查询数据失败");
+            Assertions.assertEquals(
+                    dialectProperties.toCase("ID"), headerList.get(0).getStringValue(), "查询数据失败");
 
             List<List<Cell>> dataList = executeResult.getData().get(0).getDataList();
             Assertions.assertEquals(1L, dataList.size(), "查询数据失败");
@@ -112,7 +112,8 @@ public class JdbcOperationsTest extends BaseTest {
             Assertions.assertEquals(BigDecimal.ONE, data1.get(0).getBigDecimalValue(), "查询数据失败");
             log.info("date:{},{}", DATE, new Date(data1.get(1).getDateValue()));
             Assertions.assertEquals(DATE.getTime(), data1.get(1).getDateValue(), "查询数据失败");
-            Assertions.assertEquals(NUMBER, data1.get(2).getBigDecimalValue().longValue(), "查询数据失败");
+            Assertions.assertEquals(
+                    NUMBER, data1.get(2).getBigDecimalValue().longValue(), "查询数据失败");
             Assertions.assertEquals(STRING, data1.get(3).getStringValue(), "查询数据失败");
 
             // 异常sql
@@ -163,5 +164,4 @@ public class JdbcOperationsTest extends BaseTest {
             }
         }
     }
-
 }

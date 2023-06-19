@@ -2,7 +2,6 @@ package com.alibaba.dbhub.server.start.exception.convertor;
 
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
-
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 /**
@@ -10,7 +9,8 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
  *
  * @author 是仪
  */
-public class MaxUploadSizeExceededExceptionConvertor implements ExceptionConvertor<MaxUploadSizeExceededException> {
+public class MaxUploadSizeExceededExceptionConvertor
+        implements ExceptionConvertor<MaxUploadSizeExceededException> {
 
     @Override
     public ActionResult convert(MaxUploadSizeExceededException exception) {

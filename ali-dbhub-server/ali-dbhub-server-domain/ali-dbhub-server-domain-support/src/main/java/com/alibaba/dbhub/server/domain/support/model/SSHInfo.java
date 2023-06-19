@@ -1,7 +1,4 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.model;
 
 import lombok.Data;
@@ -13,59 +10,36 @@ import lombok.Data;
 @Data
 public class SSHInfo {
 
-    /**
-     * 是否使用ssh
-     */
+    /** 是否使用ssh */
     private boolean use;
 
-    /**
-     * ssh主机名
-     */
+    /** ssh主机名 */
     private String hostName;
 
-    /**
-     * ssh端口
-     */
+    /** ssh端口 */
     private String port;
 
-    /**
-     * ssh用户名
-     */
+    /** ssh用户名 */
     private String userName;
 
-    /**
-     * ssh本地端口
-     */
+    /** ssh本地端口 */
     private String localPort;
 
-    /**
-     * ssh认证类型
-     */
+    /** ssh认证类型 */
     private String authenticationType;
 
-    /**
-     * ssh密码
-     */
+    /** ssh密码 */
     private String password;
 
-    /**
-     * ssh密钥文件
-     */
+    /** ssh密钥文件 */
     private String keyFile;
 
-    /**
-     * ssh密钥文件密码
-     */
+    /** ssh密钥文件密码 */
     private String passphrase;
 
-    /**
-     * ssh跳板机目标主机
-     */
+    /** ssh跳板机目标主机 */
     private String rHost;
 
-    /**
-     * ssh跳板目标端口
-     */
+    /** ssh跳板目标端口 */
     private String rPort;
-
 }

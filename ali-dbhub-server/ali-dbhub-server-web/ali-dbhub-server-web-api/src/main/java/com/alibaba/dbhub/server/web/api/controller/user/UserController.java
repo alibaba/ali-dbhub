@@ -1,7 +1,4 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.web.api.controller.user;
 
 import com.alibaba.dbhub.server.domain.api.model.User;
@@ -17,7 +14,6 @@ import com.alibaba.dbhub.server.web.api.controller.user.request.UserCreateReques
 import com.alibaba.dbhub.server.web.api.controller.user.request.UserQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.user.request.UserUpdateRequest;
 import com.alibaba.dbhub.server.web.api.controller.user.vo.UserVO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,11 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
-    @Autowired
-    private UserWebConverter userWebConverter;
+    @Autowired private UserWebConverter userWebConverter;
 
     @GetMapping("/{id}")
     public DataResult<UserVO> query(@PathVariable("id") Long id) {
@@ -55,7 +49,8 @@ public class UserController {
         userQueryParam.setPageNo(request.getPageNo());
         userQueryParam.setPageSize(request.getPageSize());
         PageResult<User> pageResult = userService.queryPage(userQueryParam);
-        return WebPageResult.of(userWebConverter.dto2vo(pageResult.getData()), pageResult.getTotal(), request);
+        return WebPageResult.of(
+                userWebConverter.dto2vo(pageResult.getData()), pageResult.getTotal(), request);
     }
 
     /**
@@ -75,9 +70,12 @@ public class UserController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/update",method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(
+            value = "/update",
+            method = {RequestMethod.POST, RequestMethod.PUT})
     public ActionResult update(@RequestBody UserUpdateRequest request) {
-        DataResult<Boolean> result = userService.update(userWebConverter.updateRequest2dto(request));
+        DataResult<Boolean> result =
+                userService.update(userWebConverter.updateRequest2dto(request));
         return ActionResult.isSuccess();
     }
 

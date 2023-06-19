@@ -1,10 +1,5 @@
 package com.alibaba.dbhub.server.web.api.controller.data.source;
 
-import java.util.List;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
@@ -38,8 +33,10 @@ import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourc
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.SSHTestRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DataSourceVO;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DatabaseVO;
-
 import com.jcraft.jsch.Session;
+import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -65,17 +62,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class DataSourceController {
 
-    @Autowired
-    private DataSourceService dataSourceService;
+    @Autowired private DataSourceService dataSourceService;
 
-    @Autowired
-    private ConsoleService consoleService;
+    @Autowired private ConsoleService consoleService;
 
-    @Autowired
-    private DataSourceWebConverter dataSourceWebConverter;
+    @Autowired private DataSourceWebConverter dataSourceWebConverter;
 
-    @Autowired
-    private SSHWebConverter sshWebConverter;
+    @Autowired private SSHWebConverter sshWebConverter;
 
     /**
      * 数据库连接测试
@@ -120,7 +113,8 @@ public class DataSourceController {
     @GetMapping("/datasource/connect")
     public ListResult<DatabaseVO> attach(@Valid @NotNull DataSourceAttachRequest request) {
         ListResult<Database> databaseDTOListResult = dataSourceService.connect(request.getId());
-        List<DatabaseVO> databaseVOS = dataSourceWebConverter.databaseDto2vo(databaseDTOListResult.getData());
+        List<DatabaseVO> databaseVOS =
+                dataSourceWebConverter.databaseDto2vo(databaseDTOListResult.getData());
         return ListResult.of(databaseVOS);
     }
 
@@ -143,7 +137,8 @@ public class DataSourceController {
      */
     @GetMapping("/console/connect")
     public ActionResult connect(@Valid @NotNull ConsoleConnectRequest request) {
-        ConsoleConnectParam consoleConnectParam = dataSourceWebConverter.request2connectParam(request);
+        ConsoleConnectParam consoleConnectParam =
+                dataSourceWebConverter.request2connectParam(request);
         return consoleService.createConsole(consoleConnectParam);
     }
 
@@ -168,9 +163,11 @@ public class DataSourceController {
     @GetMapping("/datasource/list")
     public WebPageResult<DataSourceVO> list(DataSourceQueryRequest request) {
         DataSourcePageQueryParam param = dataSourceWebConverter.queryReq2param(request);
-        PageResult<DataSource> result = dataSourceService.queryPage(param, new DataSourceSelector());
+        PageResult<DataSource> result =
+                dataSourceService.queryPage(param, new DataSourceSelector());
         List<DataSourceVO> dataSourceVOS = dataSourceWebConverter.dto2vo(result.getData());
-        return WebPageResult.of(dataSourceVOS, result.getTotal(), result.getPageNo(), result.getPageSize());
+        return WebPageResult.of(
+                dataSourceVOS, result.getTotal(), result.getPageNo(), result.getPageSize());
     }
 
     /**
@@ -204,7 +201,9 @@ public class DataSourceController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/datasource/update",method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(
+            value = "/datasource/update",
+            method = {RequestMethod.POST, RequestMethod.PUT})
     public ActionResult update(@RequestBody DataSourceUpdateRequest request) {
         DataSourceUpdateParam param = dataSourceWebConverter.updateReq2param(request);
         return dataSourceService.update(param);
@@ -231,5 +230,4 @@ public class DataSourceController {
     public ActionResult delete(@PathVariable Long id) {
         return dataSourceService.delete(id);
     }
-
 }

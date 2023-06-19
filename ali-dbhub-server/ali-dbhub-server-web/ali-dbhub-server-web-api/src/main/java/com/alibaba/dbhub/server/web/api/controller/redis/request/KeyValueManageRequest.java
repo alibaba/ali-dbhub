@@ -1,10 +1,7 @@
 package com.alibaba.dbhub.server.web.api.controller.redis.request;
 
+import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
 import javax.validation.constraints.NotNull;
-
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-
 import lombok.Data;
 
 /**
@@ -15,9 +12,6 @@ import lombok.Data;
 @Data
 public class KeyValueManageRequest extends DataSourceBaseRequest {
 
-    /**
-     * redis ddl语句
-     */
-    @NotNull
-    private String ddl;
+    /** redis ddl语句 */
+    @NotNull private String ddl;
 }

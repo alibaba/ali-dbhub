@@ -10,18 +10,12 @@ import lombok.Data;
 @Data
 public class DatabaseVO {
 
-    /**
-     * DB名称
-     */
+    /** DB名称 */
     private String name;
 
-    /**
-     * DB描述
-     */
+    /** DB描述 */
     private String description;
 
-    /**
-     * DB下表数量或key数量
-     */
+    /** DB下表数量或key数量 */
     private Integer count;
 }

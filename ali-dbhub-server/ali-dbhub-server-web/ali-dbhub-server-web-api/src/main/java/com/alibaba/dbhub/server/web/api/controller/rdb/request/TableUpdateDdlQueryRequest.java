@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.request;
 
 import javax.validation.constraints.NotNull;
-
 import lombok.Data;
 
 /**
@@ -14,10 +13,8 @@ public class TableUpdateDdlQueryRequest {
 
     /**
      * DB类型
+     *
      * @see com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum
      */
-    @NotNull
-    private String dbType;
-
-
+    @NotNull private String dbType;
 }

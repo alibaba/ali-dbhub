@@ -1,12 +1,7 @@
-/**
- * Alipay.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect.postgresql.model;
 
 import com.alibaba.dbhub.server.domain.support.model.Table;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -20,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class PostgresqlTable extends Table {
 
-    public boolean isForeignTable(){
+    public boolean isForeignTable() {
         return false;
     }
 }

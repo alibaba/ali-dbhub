@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,9 +13,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author Jiaju Zhuang
  */
 public class EasyStringUtils {
-    /**
-     * 0的字符
-     */
+    /** 0的字符 */
     private static final char ZERO_CHAR = '0';
 
     /**
@@ -87,7 +84,7 @@ public class EasyStringUtils {
     /**
      * 构建展示的名称
      *
-     * @param name     姓名
+     * @param name 姓名
      * @param nickName 花名
      * @return 展示名称 姓名（花名）
      */
@@ -108,15 +105,17 @@ public class EasyStringUtils {
      * 将多个字符串 拼接在一起
      *
      * @param delimiter 分隔符 不能为空
-     * @param elements  字符串 可以为空 会忽略空的字符串
+     * @param elements 字符串 可以为空 会忽略空的字符串
      * @return
      */
     public static String join(CharSequence delimiter, CharSequence... elements) {
         if (elements == null) {
             return null;
         }
-        List<CharSequence> charSequenceList = Arrays.stream(elements).filter(
-            org.apache.commons.lang3.StringUtils::isNotBlank).collect(Collectors.toList());
+        List<CharSequence> charSequenceList =
+                Arrays.stream(elements)
+                        .filter(org.apache.commons.lang3.StringUtils::isNotBlank)
+                        .collect(Collectors.toList());
         if (charSequenceList.isEmpty()) {
             return null;
         }
@@ -126,7 +125,7 @@ public class EasyStringUtils {
     /**
      * 限制一个string字符串的长度 ，超过长度 会用... 替换
      *
-     * @param str    字符串
+     * @param str 字符串
      * @param length 限制长度
      * @return
      */
@@ -140,5 +139,4 @@ public class EasyStringUtils {
         }
         return limitString;
     }
-
 }

@@ -1,10 +1,7 @@
 package com.alibaba.dbhub.server.web.api.controller.redis.request;
 
+import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
 import javax.validation.constraints.NotNull;
-
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-
 import lombok.Data;
 
 /**
@@ -15,19 +12,12 @@ import lombok.Data;
 @Data
 public class KeyCreateRequest extends DataSourceBaseRequest {
 
-    /**
-     * key名称
-     */
-    @NotNull
-    private String name;
+    /** key名称 */
+    @NotNull private String name;
 
-    /**
-     * key值
-     */
+    /** key值 */
     private Object value;
 
-    /**
-     * 过期时间
-     */
+    /** 过期时间 */
     private Long ttl;
 }

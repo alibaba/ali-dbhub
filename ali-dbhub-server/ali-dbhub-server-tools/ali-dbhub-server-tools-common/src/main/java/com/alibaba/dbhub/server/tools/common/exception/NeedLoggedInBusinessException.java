@@ -1,10 +1,8 @@
 package com.alibaba.dbhub.server.tools.common.exception;
 
-import java.io.Serial;
-
 import com.alibaba.dbhub.server.tools.base.excption.BusinessException;
 import com.alibaba.dbhub.server.tools.common.enums.ErrorEnum;
-
+import java.io.Serial;
 import lombok.Getter;
 
 /**
@@ -15,8 +13,7 @@ import lombok.Getter;
 @Getter
 public class NeedLoggedInBusinessException extends BusinessException {
 
-    @Serial
-    private static final long serialVersionUID = 4481325884589199804L;
+    @Serial private static final long serialVersionUID = 4481325884589199804L;
 
     public NeedLoggedInBusinessException() {
         super(ErrorEnum.NEED_LOGGED_IN);

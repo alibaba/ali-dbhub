@@ -9,21 +9,14 @@ import lombok.Getter;
  */
 @Getter
 public enum OperationEnum implements BaseEnum<String> {
-    /**
-     * 新增
-     */
+    /** 新增 */
     CREATE("新增"),
 
-    /**
-     * 修改
-     */
+    /** 修改 */
     UPDATE("修改"),
 
-    /**
-     * 删除
-     */
+    /** 删除 */
     DELETE("删除"),
-
     ;
 
     final String description;

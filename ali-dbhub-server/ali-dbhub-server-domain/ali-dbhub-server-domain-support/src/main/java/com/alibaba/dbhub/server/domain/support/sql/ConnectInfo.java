@@ -1,21 +1,16 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.sql;
-
-import java.sql.Connection;
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.KeyValue;
 import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
 import com.alibaba.dbhub.server.domain.support.model.SSLInfo;
-
 import com.jcraft.jsch.Session;
+import java.sql.Connection;
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -23,103 +18,62 @@ import org.springframework.util.ObjectUtils;
  * @version : ConnectInfo.java
  */
 public class ConnectInfo {
-    /**
-     * 别名
-     */
+    /** 别名 */
     private String alias;
-    /**
-     * 数据连接ID
-     */
+    /** 数据连接ID */
     private Long dataSourceId;
 
-
-    /**
-     * 创建时间
-     */
+    /** 创建时间 */
     private LocalDateTime gmtCreate;
 
-    /**
-     * 修改时间
-     */
+    /** 修改时间 */
     private LocalDateTime gmtModified;
-    /**
-     * database
-     */
+    /** database */
     private String databaseName;
 
-    /**
-     * 控制台ID
-     */
+    /** 控制台ID */
     private Long consoleId;
 
-    /**
-     * 数据库URL
-     */
+    /** 数据库URL */
     private String url;
 
-    /**
-     * 用户名
-     */
+    /** 用户名 */
     private String user;
 
-    /**
-     * 密码
-     */
+    /** 密码 */
     private String password;
 
-    /**
-     * console独立占有连接
-     */
+    /** console独立占有连接 */
     private Boolean consoleOwn = Boolean.FALSE;
 
-    /**
-     * 数据库类型
-     */
+    /** 数据库类型 */
     private DbTypeEnum dbType;
 
     private Integer port;
 
-    /**
-     *
-     */
+    /** */
     private String urlWithOutDatabase;
 
-    /**
-     * host
-     */
+    /** host */
     private String host;
 
-    /**
-     * ssh
-     */
+    /** ssh */
     private SSHInfo ssh;
 
-    /**
-     * ssh
-     */
+    /** ssh */
     private SSLInfo ssl;
 
-    /**
-     * sid
-     */
+    /** sid */
     private String sid;
 
-    /**
-     * driver
-     */
+    /** driver */
     private String driver;
 
-    /**
-     * jdbc版本
-     */
+    /** jdbc版本 */
     private String jdbc;
 
-    /**
-     * 扩展信息
-     */
+    /** 扩展信息 */
     private List<KeyValue> extendInfo;
-
-
 
     public Connection connection;
 
@@ -143,29 +97,28 @@ public class ConnectInfo {
 
     public Session session;
 
-
     /**
      * Getter method for property <tt>extendInfo</tt>.
      *
      * @return property value of extendInfo
      */
-    public LinkedHashMap<String,Object> getExtendMap() {
+    public LinkedHashMap<String, Object> getExtendMap() {
         if (ObjectUtils.isEmpty(extendInfo)) {
             return new LinkedHashMap<>();
         }
-        LinkedHashMap<String,Object> map = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         for (KeyValue keyValue : extendInfo) {
-            map.put(keyValue.getKey(),keyValue.getValue());
+            map.put(keyValue.getKey(), keyValue.getValue());
         }
         return map;
     }
 
-
     public void setDatabase(String database) {
         this.databaseName = database;
-        //if (!ObjectUtils.isEmpty(this.urlWithOutDatabase) && !ObjectUtils.isEmpty(this.databaseName)) {
+        // if (!ObjectUtils.isEmpty(this.urlWithOutDatabase) &&
+        // !ObjectUtils.isEmpty(this.databaseName)) {
         //    this.url = this.urlWithOutDatabase + "/" + database;
-        //}
+        // }
     }
 
     public String key() {
@@ -174,10 +127,10 @@ public class ConnectInfo {
 
     public void setUrl(String url) {
         this.url = url;
-        //if (this.dbType != DbTypeEnum.MYSQL && this.dbType != DbTypeEnum.POSTGRESQL) {
+        // if (this.dbType != DbTypeEnum.MYSQL && this.dbType != DbTypeEnum.POSTGRESQL) {
         //    return;
-        //}
-        //if (!ObjectUtils.isEmpty(url)) {
+        // }
+        // if (!ObjectUtils.isEmpty(url)) {
         //    //jdbc:postgresql://localhost:5432/postgres
         //    String[] array = getUrl().split(":");
         //    if (array.length == 4) {
@@ -204,17 +157,20 @@ public class ConnectInfo {
         //        this.port = Integer.parseInt(sb1.toString());
         //        this.urlWithOutDatabase = array[0] + ":" + array[1] + ":" + array[2] + ":" + port;
         //    }
-        //}
+        // }
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {return true;}
-        if (!(o instanceof ConnectInfo)) {return false;}
-        ConnectInfo that = (ConnectInfo)o;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ConnectInfo)) {
+            return false;
+        }
+        ConnectInfo that = (ConnectInfo) o;
         return Objects.equals(dataSourceId, that.dataSourceId)
-            && Objects.equals(gmtModified, that.gmtModified)
-            ;
+                && Objects.equals(gmtModified, that.gmtModified);
     }
 
     @Override
@@ -510,8 +466,6 @@ public class ConnectInfo {
         return extendInfo;
     }
 
-
-
     /**
      * Setter method for property <tt>extendInfo</tt>.
      *
@@ -538,7 +492,6 @@ public class ConnectInfo {
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
-
 
     /**
      * Getter method for property <tt>alias</tt>.
@@ -576,7 +529,6 @@ public class ConnectInfo {
         this.gmtCreate = gmtCreate;
     }
 
-
     /**
      * Getter method for property <tt>gmtModified</tt>.
      *
@@ -594,5 +546,4 @@ public class ConnectInfo {
     public void setGmtModified(LocalDateTime gmtModified) {
         this.gmtModified = gmtModified;
     }
-
 }

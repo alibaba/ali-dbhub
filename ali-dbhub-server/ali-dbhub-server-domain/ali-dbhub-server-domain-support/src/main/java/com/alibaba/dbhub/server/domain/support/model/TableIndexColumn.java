@@ -2,7 +2,6 @@ package com.alibaba.dbhub.server.domain.support.model;
 
 import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
 import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,14 +18,10 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class TableIndexColumn {
 
-    /**
-     * 索引名称
-     */
+    /** 索引名称 */
     private String indexName;
 
-    /**
-     * 表名
-     */
+    /** 表名 */
     private String tableName;
 
     /**
@@ -36,19 +31,13 @@ public class TableIndexColumn {
      */
     private String type;
 
-    /**
-     * 注释
-     */
+    /** 注释 */
     private String comment;
 
-    /**
-     * 列名
-     */
+    /** 列名 */
     private String columnName;
 
-    /**
-     * 顺序
-     */
+    /** 顺序 */
     private Short ordinalPosition;
 
     /**
@@ -58,45 +47,36 @@ public class TableIndexColumn {
      */
     private String collation;
 
-
-    /**
-     * 索引所属schema
-     */
+    /** 索引所属schema */
     private String schemaName;
 
-    /**
-     * 数据库名
-     */
+    /** 数据库名 */
     private String databaseName;
 
-    /**
-     * 是否唯一
-     */
+    /** 是否唯一 */
     private Boolean nonUnique;
 
-    /**
-     *  index catalog (may be null); null when TYPE is tableIndexStatistic
-     */
+    /** index catalog (may be null); null when TYPE is tableIndexStatistic */
     private String indexQualifier;
 
     /**
-     * ASC_OR_DESC String => column sort sequence, "A" => ascending, "D" => descending, may be null if sort sequence is not supported; null when TYPE is tableIndexStatistic
+     * ASC_OR_DESC String => column sort sequence, "A" => ascending, "D" => descending, may be null
+     * if sort sequence is not supported; null when TYPE is tableIndexStatistic
      */
     private String ascOrDesc;
 
     /**
-     * CARDINALITY long => When TYPE is tableIndexStatistic, then this is the number of rows in the table; otherwise, it is the number of unique values in the index.
+     * CARDINALITY long => When TYPE is tableIndexStatistic, then this is the number of rows in the
+     * table; otherwise, it is the number of unique values in the index.
      */
     private Long cardinality;
 
     /**
-     * When TYPE is tableIndexStatistic then this is the number of pages used for the table, otherwise it is the number of pages used for the current index.
+     * When TYPE is tableIndexStatistic then this is the number of pages used for the table,
+     * otherwise it is the number of pages used for the current index.
      */
     private Long pages;
 
-    /**
-     * Filter condition, if any. (may be null)
-     */
+    /** Filter condition, if any. (may be null) */
     private String filterCondition;
 }
-

@@ -1,18 +1,15 @@
 package com.alibaba.dbhub.server.tools.base.wrapper.result;
 
+import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
+import com.alibaba.dbhub.server.tools.base.enums.BaseErrorEnum;
+import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
+import com.alibaba.dbhub.server.tools.base.wrapper.Result;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import javax.validation.constraints.NotNull;
-
-import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
-import com.alibaba.dbhub.server.tools.base.enums.BaseErrorEnum;
-import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
-import com.alibaba.dbhub.server.tools.base.wrapper.Result;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -32,8 +29,7 @@ public class ListResult<T> implements Serializable, Result<T> {
      *
      * @mock true
      */
-    @NotNull
-    private Boolean success;
+    @NotNull private Boolean success;
 
     /**
      * 错误编码
@@ -41,17 +37,11 @@ public class ListResult<T> implements Serializable, Result<T> {
      * @see CommonErrorEnum
      */
     private String errorCode;
-    /**
-     * 异常信息
-     */
+    /** 异常信息 */
     private String errorMessage;
-    /**
-     * 数据信息
-     */
+    /** 数据信息 */
     private List<T> data;
-    /**
-     * traceId
-     */
+    /** traceId */
     private String traceId;
 
     public ListResult() {
@@ -67,7 +57,7 @@ public class ListResult<T> implements Serializable, Result<T> {
      * 构建列表返回对象
      *
      * @param data 需要构建的对象
-     * @param <T>  需要构建的对象类型
+     * @param <T> 需要构建的对象类型
      * @return 返回的列表
      */
     public static <T> ListResult<T> of(List<T> data) {
@@ -87,9 +77,9 @@ public class ListResult<T> implements Serializable, Result<T> {
     /**
      * 构建异常返回列表
      *
-     * @param errorCode    错误编码
+     * @param errorCode 错误编码
      * @param errorMessage 错误信息
-     * @param <T>          需要构建的对象类型
+     * @param <T> 需要构建的对象类型
      * @return 返回的列表
      */
     public static <T> ListResult<T> error(String errorCode, String errorMessage) {
@@ -104,7 +94,7 @@ public class ListResult<T> implements Serializable, Result<T> {
      * 构建异常返回列表
      *
      * @param errorEnum 错误枚举
-     * @param <T>       需要构建的对象类型
+     * @param <T> 需要构建的对象类型
      * @return 返回的列表
      */
     public static <T> ListResult<T> error(BaseErrorEnum errorEnum) {
@@ -118,20 +108,24 @@ public class ListResult<T> implements Serializable, Result<T> {
      * @return 是否存在数据
      */
     public static boolean hasData(ListResult<?> listResult) {
-        return listResult != null && listResult.getSuccess() && listResult.getData() != null && !listResult.getData()
-            .isEmpty();
+        return listResult != null
+                && listResult.getSuccess()
+                && listResult.getData() != null
+                && !listResult.getData().isEmpty();
     }
 
     /**
      * 将当前的类型转换成另外一个类型
      *
      * @param mapper 转换的方法
-     * @param <R>    返回的类型
+     * @param <R> 返回的类型
      * @return 分页返回对象
      */
     public <R> ListResult<R> map(Function<T, R> mapper) {
-        List<R> returnData = hasData(this) ? getData().stream().map(mapper).collect(Collectors.toList())
-            : Collections.emptyList();
+        List<R> returnData =
+                hasData(this)
+                        ? getData().stream().map(mapper).collect(Collectors.toList())
+                        : Collections.emptyList();
         ListResult<R> listResult = new ListResult<>();
         listResult.setSuccess(getSuccess());
         listResult.setErrorCode(getErrorCode());

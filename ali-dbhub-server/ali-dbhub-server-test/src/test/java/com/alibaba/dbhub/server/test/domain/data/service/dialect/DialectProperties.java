@@ -1,8 +1,7 @@
 package com.alibaba.dbhub.server.test.domain.data.service.dialect;
 
-import java.util.Date;
-
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import java.util.Date;
 
 /**
  * 方言配置
@@ -37,7 +36,6 @@ public interface DialectProperties {
      *
      * @return
      */
-
     String getUsername();
 
     /**
@@ -55,17 +53,9 @@ public interface DialectProperties {
     String getDatabaseName();
 
     /**
-     * 大小写看具体的数据库决定：
-     * 创建表表结构 : 测试表
-     * 字段：
-     * id   主键自增
-     * date 日期 非空
-     * number 长整型
-     * string  字符串 长度100 默认值 "DATA"
+     * 大小写看具体的数据库决定： 创建表表结构 : 测试表 字段： id 主键自增 date 日期 非空 number 长整型 string 字符串 长度100 默认值 "DATA"
      *
-     * 索引(加上$tableName_ 原因是 有些数据库索引是全局唯一的)：
-     * $tableName_idx_date 日期索引 倒序
-     * $tableName_uk_number 唯一索引
+     * <p>索引(加上$tableName_ 原因是 有些数据库索引是全局唯一的)： $tableName_idx_date 日期索引 倒序 $tableName_uk_number 唯一索引
      * $tableName_idx_number_string 联合索引
      *
      * @return
@@ -101,9 +91,7 @@ public interface DialectProperties {
     String getTableNotFoundSqlById(String tableName);
 
     /**
-     * 转换大小写
-     * 有些数据库表结构默认存储大写
-     * 有些数据库默认存储小写
+     * 转换大小写 有些数据库表结构默认存储大写 有些数据库默认存储小写
      *
      * @param string
      * @return

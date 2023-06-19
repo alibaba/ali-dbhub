@@ -2,7 +2,6 @@ package com.alibaba.dbhub.server.start.exception.convertor;
 
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
-
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 /**
@@ -10,7 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
  *
  * @author 是仪
  */
-public class MethodArgumentNotValidExceptionConvertor implements ExceptionConvertor<MethodArgumentNotValidException> {
+public class MethodArgumentNotValidExceptionConvertor
+        implements ExceptionConvertor<MethodArgumentNotValidException> {
 
     @Override
     public ActionResult convert(MethodArgumentNotValidException exception) {

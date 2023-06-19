@@ -10,23 +10,15 @@ import lombok.Data;
 @Data
 public class KeyVO {
 
-    /**
-     * key名称
-     */
+    /** key名称 */
     private String name;
 
-    /**
-     * key值
-     */
+    /** key值 */
     private Object value;
 
-    /**
-     * key类型
-     */
+    /** key类型 */
     private String type;
 
-    /**
-     * 过期时间
-     */
+    /** 过期时间 */
     private Long ttl;
 }

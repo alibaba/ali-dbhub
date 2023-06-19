@@ -1,14 +1,11 @@
 package com.alibaba.dbhub.server.tools.base.wrapper.result;
 
-import java.io.Serializable;
-
-import javax.validation.constraints.NotNull;
-
 import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
 import com.alibaba.dbhub.server.tools.base.enums.BaseErrorEnum;
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.Result;
-
+import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -28,8 +25,7 @@ public class ActionResult implements Serializable, Result {
      *
      * @mock true
      */
-    @NotNull
-    private Boolean success;
+    @NotNull private Boolean success;
 
     /**
      * 错误编码
@@ -37,14 +33,10 @@ public class ActionResult implements Serializable, Result {
      * @see CommonErrorEnum
      */
     private String errorCode;
-    /**
-     * 错误信息
-     */
+    /** 错误信息 */
     private String errorMessage;
 
-    /**
-     * traceId
-     */
+    /** traceId */
     private String traceId;
 
     public ActionResult() {
@@ -93,7 +85,7 @@ public class ActionResult implements Serializable, Result {
     /**
      * 返回失败
      *
-     * @param errorCode    错误编码
+     * @param errorCode 错误编码
      * @param errorMessage 错误信息
      * @return 运行结果
      */
@@ -124,5 +116,4 @@ public class ActionResult implements Serializable, Result {
     public static ActionResult fail(BaseErrorEnum errorEnum, String errorMessage) {
         return fail(errorEnum.getCode(), errorMessage);
     }
-
 }

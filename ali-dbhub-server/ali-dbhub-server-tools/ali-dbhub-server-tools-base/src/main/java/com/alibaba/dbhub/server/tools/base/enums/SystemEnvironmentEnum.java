@@ -10,21 +10,14 @@ import lombok.Getter;
 @Getter
 public enum SystemEnvironmentEnum implements BaseEnum<String> {
 
-    /**
-     * 本地
-     */
+    /** 本地 */
     DEV("dev", "本地"),
 
-    /**
-     * 测试
-     */
+    /** 测试 */
     TEST("test", "测试"),
 
-    /**
-     * 正式
-     */
+    /** 正式 */
     RELEASE("release", "正式"),
-
     ;
 
     final String code;

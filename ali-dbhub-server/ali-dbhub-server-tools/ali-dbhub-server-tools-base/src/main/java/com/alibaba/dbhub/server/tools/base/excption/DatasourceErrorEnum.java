@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.tools.base.excption;
 
 import com.alibaba.dbhub.server.tools.base.enums.BaseErrorEnum;
-
 import lombok.Getter;
 
 /**
@@ -12,26 +11,17 @@ import lombok.Getter;
 @Getter
 public enum DatasourceErrorEnum implements BaseErrorEnum {
 
-    /**
-     * 数据源测试连接错误
-     */
+    /** 数据源测试连接错误 */
     DATASOURCE_TEST_ERROR("数据源测试连接错误"),
 
-    /**
-     * 数据源连接错误
-     */
+    /** 数据源连接错误 */
     DATASOURCE_CONNECT_ERROR("数据源连接错误"),
 
-    /**
-     * 控制台链接错误
-     */
+    /** 控制台链接错误 */
     CONSOLE_CONNECT_ERROR("控制台链接错误"),
 
-    /**
-     * 不合法的执行语句
-     */
+    /** 不合法的执行语句 */
     SQL_ANALYSIS_ERROR("不合法的执行语句"),
-
     ;
 
     DatasourceErrorEnum(String desctiption) {

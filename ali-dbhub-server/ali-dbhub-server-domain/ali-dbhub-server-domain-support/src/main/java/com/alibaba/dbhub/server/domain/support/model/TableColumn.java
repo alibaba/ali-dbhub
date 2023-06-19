@@ -15,131 +15,81 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TableColumn {
-    /**
-     * 旧的列名，在修改列的时候需要这个参数
-     * 在返回的时候oldName=name
-     */
+    /** 旧的列名，在修改列的时候需要这个参数 在返回的时候oldName=name */
     private String oldName;
 
-    /**
-     * 列名
-     */
+    /** 列名 */
     private String name;
 
-    /**
-     * 表名
-     */
+    /** 表名 */
     private String tableName;
 
-    /**
-     * 列的类型
-     * 比如 varchar(100) ,double(10,6)
-     */
+    /** 列的类型 比如 varchar(100) ,double(10,6) */
     private String columnType;
 
-    /**
-     * 列的数据类型
-     * 比如 varchar ,double
-     */
+    /** 列的数据类型 比如 varchar ,double */
     private Integer dataType;
 
-
-    /**
-     * 默认值
-     */
+    /** 默认值 */
     private String defaultValue;
 
-    /**
-     * 是否自增
-     * 为空 代表没有值 数据库的实际语义是 false
-     */
+    /** 是否自增 为空 代表没有值 数据库的实际语义是 false */
     private Boolean autoIncrement;
 
-    /**
-     * 注释
-     */
+    /** 注释 */
     private String comment;
 
-    /**
-     * 是否主键
-     */
+    /** 是否主键 */
     private Boolean primaryKey;
 
-    /**
-     * 空间名
-     */
+    /** 空间名 */
     private String schemaName;
 
-    /**
-     * 数据库名
-     */
+    /** 数据库名 */
     private String databaseName;
 
-    /**
-     *  Data source dependent type name, for a UDT the type name is fully qualified
-     */
+    /** Data source dependent type name, for a UDT the type name is fully qualified */
     private String typeName;
 
-    /**
-     * column size.
-     */
+    /** column size. */
     private Integer columnSize;
 
-    /**
-     * is not used.
-     */
+    /** is not used. */
     private Integer bufferLength;
 
     /**
-     * the number of fractional digits. Null is returned for data types where DECIMAL_DIGITS is not applicable.
+     * the number of fractional digits. Null is returned for data types where DECIMAL_DIGITS is not
+     * applicable.
      */
     private Integer decimalDigits;
 
-    /**
-     * Radix (typically either 10 or 2)
-     */
+    /** Radix (typically either 10 or 2) */
     private Integer numPrecRadix;
 
     /**
-     * is NULL allowed.
-     * columnNoNulls - might not allow NULL values
-     * columnNullable - definitely allows NULL values
-     * columnNullableUnknown - nullability unknown
+     * is NULL allowed. columnNoNulls - might not allow NULL values columnNullable - definitely
+     * allows NULL values columnNullableUnknown - nullability unknown
      */
     private Integer nullableInt;
 
-    /**
-     * unused
-     */
+    /** unused */
     private Integer sqlDataType;
 
-
-    /**
-     * unused
-     */
+    /** unused */
     private Integer sqlDatetimeSub;
 
-    /**
-     * for char types the maximum number of bytes in the column
-     */
+    /** for char types the maximum number of bytes in the column */
     private Integer charOctetLength;
 
-    /**
-     * index of column in table (starting at 1)
-     */
+    /** index of column in table (starting at 1) */
     private Integer ordinalPosition;
 
-    /**
-     * ISO rules are used to determine the nullability for a column.
-     */
+    /** ISO rules are used to determine the nullability for a column. */
     private Boolean nullable;
 
     /**
-     * String => Indicates whether this is a generated column
-     *      * YES --- if this a generated column
-     *      * NO --- if this not a generated column
+     * String => Indicates whether this is a generated column * YES --- if this a generated column *
+     * NO --- if this not a generated column
      */
     private Boolean generatedColumn;
-
-
 }

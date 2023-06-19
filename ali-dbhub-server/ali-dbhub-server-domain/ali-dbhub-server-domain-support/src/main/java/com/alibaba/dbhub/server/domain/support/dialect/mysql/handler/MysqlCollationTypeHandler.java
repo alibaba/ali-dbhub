@@ -1,29 +1,22 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect.mysql.handler;
 
+import com.alibaba.dbhub.server.domain.support.dialect.mysql.MysqlCollationEnum;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import com.alibaba.dbhub.server.domain.support.dialect.mysql.MysqlCollationEnum;
-
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
- *
  * @author jipengfei
  * @version : MysqlCollationTypeHandler.java
  */
 public class MysqlCollationTypeHandler implements TypeHandler<String> {
     @Override
-    public void setParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
-
-    }
+    public void setParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType)
+            throws SQLException {}
 
     @Override
     public String getResult(ResultSet rs, String columnName) throws SQLException {

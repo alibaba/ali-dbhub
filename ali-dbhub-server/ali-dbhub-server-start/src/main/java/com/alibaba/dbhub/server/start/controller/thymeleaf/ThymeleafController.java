@@ -22,13 +22,16 @@ public class ThymeleafController {
      *
      * @return
      */
-    @GetMapping(value = {"/", "/web/", "/web/**","login-a"})
+    @GetMapping(value = {"/", "/web/", "/web/**", "login-a"})
     public String index() {
         return "index";
     }
 
-    @RequestMapping(value = "/chat.html", method={RequestMethod.GET}, produces="text/html;charset=utf-8")
-    public String chat(){
+    @RequestMapping(
+            value = "/chat.html",
+            method = {RequestMethod.GET},
+            produces = "text/html;charset=utf-8")
+    public String chat() {
 
         return "chat";
     }

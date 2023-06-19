@@ -1,9 +1,7 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.request;
 
-import javax.validation.constraints.NotNull;
-
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -14,10 +12,6 @@ import lombok.Data;
 @Data
 public class TableDetailQueryRequest extends DataSourceBaseRequest {
 
-    /**
-     * 表名称
-     */
-    @NotNull
-    private String tableName;
-
+    /** 表名称 */
+    @NotNull private String tableName;
 }

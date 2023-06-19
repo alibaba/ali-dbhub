@@ -1,16 +1,13 @@
 package com.alibaba.dbhub.server.tools.base.wrapper.param;
 
+import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
+import com.alibaba.dbhub.server.tools.base.enums.OrderByDirectionEnum;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
-import com.alibaba.dbhub.server.tools.base.enums.OrderByDirectionEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -26,32 +23,24 @@ import org.hibernate.validator.constraints.Range;
 @SuperBuilder
 @AllArgsConstructor
 public class PageQueryParam implements Serializable {
-    @Serial
-    private static final long serialVersionUID = EasyToolsConstant.SERIAL_VERSION_UID;
+    @Serial private static final long serialVersionUID = EasyToolsConstant.SERIAL_VERSION_UID;
 
-    /**
-     * 页码
-     */
+    /** 页码 */
     @NotNull(message = "分页页码不能为空")
     @Min(value = 1, message = "分页页码必须大于0")
     private Integer pageNo;
-    /**
-     * 分页大小
-     */
+    /** 分页大小 */
     @NotNull(message = "分页大小不能为空")
-    @Range(min = 1, max = EasyToolsConstant.MAX_PAGE_SIZE,
-        message = "分页大小必须在1-" + EasyToolsConstant.MAX_PAGE_SIZE + "之间")
+    @Range(
+            min = 1,
+            max = EasyToolsConstant.MAX_PAGE_SIZE,
+            message = "分页大小必须在1-" + EasyToolsConstant.MAX_PAGE_SIZE + "之间")
     private Integer pageSize;
 
-    /**
-     * 是否返回总条数
-     * 默认不返回 提高性能
-     */
+    /** 是否返回总条数 默认不返回 提高性能 */
     private Boolean enableReturnCount;
 
-    /**
-     * 排序
-     */
+    /** 排序 */
     private List<OrderBy> orderByList;
 
     public PageQueryParam() {
@@ -60,9 +49,7 @@ public class PageQueryParam implements Serializable {
         this.enableReturnCount = Boolean.FALSE;
     }
 
-    /**
-     * 查询全部数据
-     */
+    /** 查询全部数据 */
     public void queryAll() {
         this.pageNo = 1;
         this.pageSize = Integer.MAX_VALUE;
@@ -84,7 +71,7 @@ public class PageQueryParam implements Serializable {
      * 新增一个排序 并替换原有排序
      *
      * @param orderConditionName 排序字段
-     * @param direction          排序方向
+     * @param direction 排序方向
      * @return 排序参数
      */
     public PageQueryParam orderBy(String orderConditionName, OrderByDirectionEnum direction) {
@@ -116,7 +103,7 @@ public class PageQueryParam implements Serializable {
      * 新增一个排序
      *
      * @param orderConditionName 排序字段
-     * @param direction          排序方向
+     * @param direction 排序方向
      * @return 排序参数
      */
     public PageQueryParam andOrderBy(String orderConditionName, OrderByDirectionEnum direction) {
@@ -133,4 +120,3 @@ public class PageQueryParam implements Serializable {
         return andOrderBy(orderCondition.getOrderBy());
     }
 }
-
