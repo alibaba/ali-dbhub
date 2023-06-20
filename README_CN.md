@@ -218,7 +218,7 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 <a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_3.PNG" width="30%"/></a>
 
-钉钉：9135032392
+钉钉：33285019116
 
 QQ:863576619
 
