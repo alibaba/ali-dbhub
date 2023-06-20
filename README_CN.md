@@ -93,7 +93,7 @@ Languages： 中文 [English](README.md)
   <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01anrJMI1FEtSBbmTau_!!6000000000456-0-tps-1594-964.jpg" width="60%"/></a>
 
 方式二（推荐）：使用我们提供了一个统一的代理服务。
-- 1、不需要opeanAI的key
+- 1、不需要openAI的key
 - 2、不需要代理，不需要VPN只要可以联网即可使用。
 
 为了方便大家更快速的使用AI的能力，可以关注微信公众号，回复"AI" 获得我们的自定义API_KEY，申请完成之后参考下图进行配置即可进行使用
