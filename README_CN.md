@@ -42,10 +42,10 @@ Languages： 中文 [English](README.md)
 ## ⏬ 下载安装
 | 描述                   | 下载地址                                                                                                                                                       |
 |-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB%20Setup%201.0.11.exe](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB%20Setup%201.0.11.exe) |
-| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11-arm64.dmg)         |
-| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11.dmg](https://oss-chat2db.alibaba.com/release/1.0.11/Chat2DB-1.0.11.dmg)                     |       
-| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.11/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.11/ali-dbhub-server-start.jar)     |                                                                                                                
+| Windows               | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB%20Setup%201.0.10.exe) |
+| MacOS ARM64 (Apple芯片) | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10-arm64.dmg)         |
+| MacOS X64 (Intel芯片)   | [https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg](https://oss-chat2db.alibaba.com/release/1.0.10/Chat2DB-1.0.10.dmg)                     |       
+| Jar包                  | [https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar](https://oss-chat2db.alibaba.com/release/1.0.10/ali-dbhub-server-start.jar)     |                                                                                                                
 
 ## 🚀 支持的数据库
 | 数据库        | 支持计划    |
@@ -95,13 +95,12 @@ Languages： 中文 [English](README.md)
 - 1、不需要opeanAI的key
 - 2、不需要代理，不需要VPN只要可以联网即可使用。
 
-为了方便大家更快速的使用AI的能力，可以扫描下方二维码关注我们的微信公众号,并发送"ai"来申请我们的自定义API_KEY
-
-<a><img src="https://oss-chat2db.alibaba.com/static/%E5%85%AC%E4%BC%97%E5%8F%B7.jpg" width="60%"/></a>
-
-申请完成之后参考下图进行配置即可进行使用，填入Api Key和Api Host. Api Host配置为http://test.sqlgpt.cn/gateway/api/
-
+为了方便大家更快速的使用AI的能力，可以加微信 申请我们的自定义API_KEY，申请完成之后参考下图进行配置即可进行使用
 <a><img src="https://img.alicdn.com/imgextra/i2/O1CN01xNobD21mo3B1ILrs2_!!6000000005000-0-tps-592-515.jpg" width="60%"/></a>
+
+微信（由于个人微信加好友太多被限制了，建了一个企业微信）：
+
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
 
 
 ## 📦 Docker部署
@@ -117,7 +116,7 @@ Languages： 中文 [English](README.md)
   // 如果这里提示  The container name "/chat2db" is already in use by container, 代表已经存在容器了 运行
   dcoker run chat2db
   // 如果想更新chat2db 则需要先rm 再运行
-  docker rm chat2db
+  dcoker rm chat2db
 ```
 ## 🎯 运行环境
 注意：
@@ -191,7 +190,7 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 解决办法：手动下载相关驱动放入到 ~/.chat2db/jdbc-lib 目录下
 
-下载链接 参考：<a href="https://github.com/alibaba/Chat2DB/blob/main/ali-dbhub-server/ali-dbhub-server-start/src/main/resources/application.yml">Application jdbc-jar-downLoad-urls</a> 
+下载链接 参考：<a href="https://github.com/alibaba/Chat2DB/blob/main/ali-dbhub-server/ali-dbhub-server-start/src/main/resources/application.yml">Application jdbc-jar-downLoad-urls</a>
 - https://oss-chat2db.alibaba.com/lib/mysql-connector-java-8.0.30.jar
 - https://oss-chat2db.alibaba.com/lib/mysql-connector-java-5.1.47.jar
 - https://oss-chat2db.alibaba.com/lib/clickhouse-jdbc-0.3.2-patch8-http.jar
@@ -203,7 +202,7 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 - https://oss-chat2db.alibaba.com/lib/ojdbc11.jar
 
 
- 
+
 
 ## Stargazers
 [![Stargazers repo roster for @alibaba/Chat2DB](https://reporoster.com/stars/alibaba/Chat2DB)](https://github.com/alibaba/Chat2DB/stargazers)
@@ -215,19 +214,14 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 加群前请先Star和Fork，谢谢~
 
-微信（如果无法添加成功，可以先邮箱联系 1558143046@qq.com）：
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_3.PNG" width="38%"/></a>
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/dingding_1.PNG" width="40%"/></a>
 
-<a><img src="./document/qrcode/weixinqun1.png" width="30%"/></a>
-<a><img src="./document/qrcode/weixinqun2.png" width="30%"/></a>
-<a><img src="./document/qrcode/weixinqun3.png" width="30%"/></a>
+微信（由于个人微信加好友太多被限制了，建了一个企业微信）：
 
+<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/qiye_weichat.PNG" width="30%"/></a>
 
 钉钉：9135032392
-
-
-qq
-
-<a><img src="./document/qrcode/qqqun.png" width="30%"/></a>
 
 
 
