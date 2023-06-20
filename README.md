@@ -100,7 +100,7 @@ Option 2 (recommended): We provide a unified proxy service.
 
 To facilitate users' quick use of AI capabilities, you can scan the QR code below to follow our WeChat public account and apply for our custom API_KEY. 
 
-<a><img src="https://oss-chat2db.alibaba.com/static/%E5%85%AC%E4%BC%97%E5%8F%B7.jpg" width="60%"/></a>
+<a><img src="https://oss-chat2db.alibaba.com/static/%E5%85%AC%E4%BC%97%E5%8F%B7.jpg" width="40%"/></a>
 
 After the application is completed, refer to the following figure for configuration and usage. Config Api Host as http://test.sqlgpt.cn/gateway/api/.
 
@@ -193,7 +193,8 @@ But front debugging need mapping of resources, you can download [XSwitch](https:
 
 ## ☎️ Contact Us
 Please star and fork on GitHub before joining the group.
-微信（由于个人微信加好友太多被限制了，如果无法添加成功，可以先邮箱联系 1558143046@qq.com）：
+Follow our WeChat public account
+<a><img src="https://oss-chat2db.alibaba.com/static/%E5%85%AC%E4%BC%97%E5%8F%B7.jpg" width="40%"/></a>
 
 <a><img src="./document/qrcode/weixinqun1.png" width="30%"/></a>
 <a><img src="./document/qrcode/weixinqun2.png" width="30%"/></a>
@@ -201,9 +202,8 @@ Please star and fork on GitHub before joining the group.
 
 Ding Talk：9135032392
 
-qq
+QQ:863576619
 
-<a><img src="./document/qrcode/qqqun.png" width="30%"/></a>
 
 ## ❤️ Acknowledgements
 Thanks to all the students who contributed to Chat2DB~
