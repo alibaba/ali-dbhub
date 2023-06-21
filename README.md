@@ -1,4 +1,4 @@
-### 🎁 Chat2DB将迁移到新地址：[Chat2DB++](https://github.com/chat2db/Chat2DB) 6月底将有重大升级，敬请期待 🔥🔥🔥
+# 重要公告: Chat2DB将迁移到新地址：>>>[Chat2DB++](https://github.com/chat2db/Chat2DB) <<<<6月底将有重大升级，敬请期待 
 The Chat2DB repository will be migrated to: [Chat2DB++](https://github.com/chat2db/Chat2DB). There will be a significant upgrade by the end of June. Please stay tuned! 🔥🔥🔥
 
 <h1 align="center">Chat2DB</h1>
