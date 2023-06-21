@@ -7,13 +7,9 @@ package com.alibaba.dbhub.server.tools.base.enums;
  */
 public enum OrderByDirectionEnum implements BaseEnum<String> {
 
-    /**
-     * 升序
-     */
+    /** 升序 */
     ASC,
-    /**
-     * 降序
-     */
+    /** 降序 */
     DESC;
 
     @Override

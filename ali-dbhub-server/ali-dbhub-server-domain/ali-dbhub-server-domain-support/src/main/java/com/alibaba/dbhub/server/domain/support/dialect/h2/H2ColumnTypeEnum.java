@@ -2,7 +2,6 @@ package com.alibaba.dbhub.server.domain.support.dialect.h2;
 
 import com.alibaba.dbhub.server.domain.support.dialect.common.enums.BaseColumnTypeEnum;
 import com.alibaba.dbhub.server.domain.support.enums.ColumnTypeEnum;
-
 import lombok.Getter;
 
 /**
@@ -12,21 +11,13 @@ import lombok.Getter;
  */
 @Getter
 public enum H2ColumnTypeEnum implements BaseColumnTypeEnum {
-    /**
-     * BIGINT
-     */
+    /** BIGINT */
     BIGINT("BIGINT", ColumnTypeEnum.BIGINT),
-    /**
-     * BIGINT
-     */
+    /** BIGINT */
     CHARACTER_VARYING("CHARACTER VARYING", ColumnTypeEnum.VARCHAR),
-    /**
-     * TIMESTAMP
-     */
+    /** TIMESTAMP */
     TIMESTAMP("TIMESTAMP", ColumnTypeEnum.TIMESTAMP),
-    /**
-     * INTEGER
-     */
+    /** INTEGER */
     INTEGER("INTEGER", ColumnTypeEnum.INTEGER),
     ;
 
@@ -42,5 +33,4 @@ public enum H2ColumnTypeEnum implements BaseColumnTypeEnum {
     public String getDescription() {
         return getCode();
     }
-
 }

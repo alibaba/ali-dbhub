@@ -1,8 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.data.source.request;
 
-
 import javax.validation.constraints.NotNull;
-
 import lombok.Data;
 
 /**
@@ -13,10 +11,6 @@ import lombok.Data;
 @Data
 public class DataSourceCloseRequest {
 
-    /**
-     * 主键id
-     */
-    @NotNull
-    private Long id;
-
+    /** 主键id */
+    @NotNull private Long id;
 }

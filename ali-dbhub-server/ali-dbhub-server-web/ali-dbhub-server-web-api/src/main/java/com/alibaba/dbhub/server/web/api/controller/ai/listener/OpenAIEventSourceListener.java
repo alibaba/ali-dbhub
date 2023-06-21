@@ -1,11 +1,9 @@
 package com.alibaba.dbhub.server.web.api.controller.ai.listener;
 
-import java.util.Objects;
-
 import com.alibaba.dbhub.server.web.api.controller.ai.response.ChatCompletionResponse;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unfbx.chatgpt.entity.chat.Message;
+import java.util.Objects;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
@@ -29,43 +27,39 @@ public class OpenAIEventSourceListener extends EventSourceListener {
         this.sseEmitter = sseEmitter;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void onOpen(EventSource eventSource, Response response) {
         log.info("OpenAI建立sse连接...");
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @SneakyThrows
     @Override
     public void onEvent(EventSource eventSource, String id, String type, String data) {
         log.info("OpenAI返回数据：{}", data);
         if (data.equals("[DONE]")) {
             log.info("OpenAI返回数据结束了");
-            sseEmitter.send(SseEmitter.event()
-                .id("[DONE]")
-                .data("[DONE]")
-                .reconnectTime(3000));
+            sseEmitter.send(SseEmitter.event().id("[DONE]").data("[DONE]").reconnectTime(3000));
             sseEmitter.complete();
             return;
         }
         ObjectMapper mapper = new ObjectMapper();
         // 读取Json
-        ChatCompletionResponse completionResponse = mapper.readValue(data, ChatCompletionResponse.class);
-        String text = completionResponse.getChoices().get(0).getDelta() == null
-            ? completionResponse.getChoices().get(0).getText()
-            : completionResponse.getChoices().get(0).getDelta().getContent();
+        ChatCompletionResponse completionResponse =
+                mapper.readValue(data, ChatCompletionResponse.class);
+        String text =
+                completionResponse.getChoices().get(0).getDelta() == null
+                        ? completionResponse.getChoices().get(0).getText()
+                        : completionResponse.getChoices().get(0).getDelta().getContent();
         Message message = new Message();
         if (text != null) {
             message.setContent(text);
-            sseEmitter.send(SseEmitter.event()
-                .id(completionResponse.getId())
-                .data(message)
-                .reconnectTime(3000));
+            sseEmitter.send(
+                    SseEmitter.event()
+                            .id(completionResponse.getId())
+                            .data(message)
+                            .reconnectTime(3000));
         }
     }
 
@@ -81,18 +75,16 @@ public class OpenAIEventSourceListener extends EventSourceListener {
             if (Objects.isNull(response)) {
                 String message = t.getMessage();
                 if ("No route to host".equals(message)) {
-                    message = "网络连接超时，请检查网络连通性，参考文章<https://github.com/alibaba/Chat2DB/blob/main/CHAT2DB_AI_SQL.md>";
+                    message =
+                            "网络连接超时，请检查网络连通性，参考文章<https://github.com/alibaba/Chat2DB/blob/main/CHAT2DB_AI_SQL.md>";
                 } else {
-                    message = "AI无法正常访问，请参考文章<https://github.com/alibaba/Chat2DB/blob/main/CHAT2DB_AI_SQL.md>进行配置";
+                    message =
+                            "AI无法正常访问，请参考文章<https://github.com/alibaba/Chat2DB/blob/main/CHAT2DB_AI_SQL.md>进行配置";
                 }
                 Message sseMessage = new Message();
                 sseMessage.setContent(message);
-                sseEmitter.send(SseEmitter.event()
-                    .id("[ERROR]")
-                    .data(sseMessage));
-                sseEmitter.send(SseEmitter.event()
-                    .id("[DONE]")
-                    .data("[DONE]"));
+                sseEmitter.send(SseEmitter.event().id("[ERROR]").data(sseMessage));
+                sseEmitter.send(SseEmitter.event().id("[DONE]").data("[DONE]"));
                 sseEmitter.complete();
                 return;
             }
@@ -107,12 +99,8 @@ public class OpenAIEventSourceListener extends EventSourceListener {
             eventSource.cancel();
             Message message = new Message();
             message.setContent("出现异常,请在帮助中查看详细日志：" + bodyString);
-            sseEmitter.send(SseEmitter.event()
-                .id("[ERROR]")
-                .data(message));
-            sseEmitter.send(SseEmitter.event()
-                .id("[DONE]")
-                .data("[DONE]"));
+            sseEmitter.send(SseEmitter.event().id("[ERROR]").data(message));
+            sseEmitter.send(SseEmitter.event().id("[DONE]").data("[DONE]"));
             sseEmitter.complete();
         } catch (Exception exception) {
             log.error("发送数据异常:", exception);

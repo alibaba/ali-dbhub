@@ -8,7 +8,6 @@ import com.alibaba.dbhub.server.web.api.controller.redis.request.KeyDeleteReques
 import com.alibaba.dbhub.server.web.api.controller.redis.request.KeyQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.redis.request.KeyUpdateRequest;
 import com.alibaba.dbhub.server.web.api.controller.redis.vo.KeyVO;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,11 +56,12 @@ public class RedisKeyManageController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/update",method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(
+            value = "/update",
+            method = {RequestMethod.POST, RequestMethod.PUT})
     public ActionResult update(@RequestBody KeyUpdateRequest request) {
         return null;
     }
-
 
     /**
      * 删除key

@@ -1,13 +1,11 @@
 package com.alibaba.dbhub.server.tools.base.wrapper.param;
 
+import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
+import com.alibaba.dbhub.server.tools.base.enums.OrderByDirectionEnum;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
-import com.alibaba.dbhub.server.tools.base.enums.OrderByDirectionEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,12 +22,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QueryParam implements Serializable {
-    @Serial
-    private static final long serialVersionUID = EasyToolsConstant.SERIAL_VERSION_UID;
+    @Serial private static final long serialVersionUID = EasyToolsConstant.SERIAL_VERSION_UID;
 
-    /**
-     * 排序
-     */
+    /** 排序 */
     private List<OrderBy> orderByList;
 
     /**
@@ -48,7 +43,7 @@ public class QueryParam implements Serializable {
      * 新增一个排序 并替换原有排序
      *
      * @param orderConditionName 排序字段
-     * @param direction          排序方向
+     * @param direction 排序方向
      * @return 排序参数
      */
     public QueryParam orderBy(String orderConditionName, OrderByDirectionEnum direction) {
@@ -80,7 +75,7 @@ public class QueryParam implements Serializable {
      * 新增一个排序
      *
      * @param orderConditionName 排序字段
-     * @param direction          排序方向
+     * @param direction 排序方向
      * @return 排序参数
      */
     public QueryParam andOrderBy(String orderConditionName, OrderByDirectionEnum direction) {
@@ -96,5 +91,4 @@ public class QueryParam implements Serializable {
     public QueryParam andOrderBy(OrderCondition orderCondition) {
         return andOrderBy(orderCondition.getOrderBy());
     }
-
 }

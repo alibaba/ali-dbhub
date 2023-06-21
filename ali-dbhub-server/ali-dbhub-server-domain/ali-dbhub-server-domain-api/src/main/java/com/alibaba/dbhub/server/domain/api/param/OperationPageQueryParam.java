@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.domain.api.param;
 
 import com.alibaba.dbhub.server.tools.base.wrapper.param.PageQueryParam;
-
 import lombok.Data;
 
 /**
@@ -12,28 +11,18 @@ import lombok.Data;
 @Data
 public class OperationPageQueryParam extends PageQueryParam {
 
-    /**
-     * 数据源连接ID
-     */
+    /** 数据源连接ID */
     private Long dataSourceId;
 
-    /**
-     * db名称
-     */
+    /** db名称 */
     private String databaseName;
 
-    /**
-     * ddl语句状态:DRAFT/RELEASE
-     */
+    /** ddl语句状态:DRAFT/RELEASE */
     private String status;
 
-    /**
-     * 搜索关键词
-     */
+    /** 搜索关键词 */
     private String searchKey;
 
-    /**
-     * 是否在tab中被打开,y表示打开,n表示未打开
-     */
+    /** 是否在tab中被打开,y表示打开,n表示未打开 */
     private String tabOpened;
 }

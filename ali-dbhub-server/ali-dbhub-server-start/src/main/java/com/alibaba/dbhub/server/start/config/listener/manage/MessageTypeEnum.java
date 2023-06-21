@@ -10,15 +10,9 @@ import lombok.Getter;
  */
 @Getter
 public enum MessageTypeEnum implements BaseEnum<String> {
-    /**
-     * 检查是否正常运行
-     */
+    /** 检查是否正常运行 */
     HEARTBEAT,
-
-
     ;
-
-
 
     @Override
     public String getCode() {

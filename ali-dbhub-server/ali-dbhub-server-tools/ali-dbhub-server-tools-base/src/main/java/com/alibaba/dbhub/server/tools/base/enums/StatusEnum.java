@@ -10,16 +10,11 @@ import lombok.Getter;
 @Getter
 public enum StatusEnum implements BaseEnum<String> {
 
-    /**
-     * 草稿
-     */
+    /** 草稿 */
     DRAFT("草稿"),
 
-    /**
-     * 发布
-     */
+    /** 发布 */
     RELEASE("发布"),
-
     ;
 
     final String description;

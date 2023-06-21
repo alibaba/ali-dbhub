@@ -1,15 +1,10 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.test.domain.data.service.dialect;
-
-import java.util.Date;
-
-import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @version : SQLITEDialectProperties.java
  */
 @Component
-public class SQLITEDialectProperties implements DialectProperties{
+public class SQLITEDialectProperties implements DialectProperties {
     @Override
     public DbTypeEnum getDbType() {
         return DbTypeEnum.SQLITE;
@@ -51,16 +46,24 @@ public class SQLITEDialectProperties implements DialectProperties{
 
     @Override
     public String getCrateTableSql(String tableName) {
-        return "CREATE TABLE `" + tableName + "`\n\t"
-            + "(\n\t"
-            + "    `id`     bigint PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT '主键自增',\n\t"
-            + "    `date`   datetime(3)                          not null COMMENT '日期',\n\t"
-            + "    `number` bigint COMMENT '长整型',\n\t"
-            + "    `string` VARCHAR(100) default 'DATA' COMMENT '名字',\n\t"
-            + "    index " + tableName + "_idx_date (date desc) comment '日期索引',\n\t"
-            + "    unique " + tableName + "_uk_number (number) comment '唯一索引',\n\t"
-            + "    index " + tableName + "_idx_number_string (number, date) comment '联合索引'\n\t"
-            + ") COMMENT ='测试表';";
+        return "CREATE TABLE `"
+                + tableName
+                + "`\n\t"
+                + "(\n\t"
+                + "    `id`     bigint PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT '主键自增',\n\t"
+                + "    `date`   datetime(3)                          not null COMMENT '日期',\n\t"
+                + "    `number` bigint COMMENT '长整型',\n\t"
+                + "    `string` VARCHAR(100) default 'DATA' COMMENT '名字',\n\t"
+                + "    index "
+                + tableName
+                + "_idx_date (date desc) comment '日期索引',\n\t"
+                + "    unique "
+                + tableName
+                + "_uk_number (number) comment '唯一索引',\n\t"
+                + "    index "
+                + tableName
+                + "_idx_number_string (number, date) comment '联合索引'\n\t"
+                + ") COMMENT ='测试表';";
     }
 
     @Override
@@ -70,21 +73,25 @@ public class SQLITEDialectProperties implements DialectProperties{
 
     @Override
     public String getInsertSql(String tableName, Date date, Long number, String string) {
-        return "INSERT INTO `" + tableName + "` (date,number,string) VALUES ('" + DateUtil.format(date,
-            DatePattern.NORM_DATETIME_MS_FORMAT) + "','" + number + "','" + string + "');";
+        return "INSERT INTO `"
+                + tableName
+                + "` (date,number,string) VALUES ('"
+                + DateUtil.format(date, DatePattern.NORM_DATETIME_MS_FORMAT)
+                + "','"
+                + number
+                + "','"
+                + string
+                + "');";
     }
 
     @Override
     public String getSelectSqlById(String tableName, Long id) {
-        return "select *\n\t"
-            + "from " + tableName + "\n\t"
-            + "where `id` = '" + id + "';";
+        return "select *\n\t" + "from " + tableName + "\n\t" + "where `id` = '" + id + "';";
     }
 
     @Override
     public String getTableNotFoundSqlById(String tableName) {
-        return "select *\n"
-            + "from " + tableName + "_notfound;";
+        return "select *\n" + "from " + tableName + "_notfound;";
     }
 
     @Override

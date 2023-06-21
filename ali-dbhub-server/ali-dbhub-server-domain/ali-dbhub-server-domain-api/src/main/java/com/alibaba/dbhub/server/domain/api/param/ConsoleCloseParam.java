@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.domain.api.param;
 
 import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,15 +17,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class ConsoleCloseParam {
 
-    /**
-     * 对应数据库存储的来源id
-     */
-    @NotNull
-    private Long dataSourceId;
+    /** 对应数据库存储的来源id */
+    @NotNull private Long dataSourceId;
 
-    /**
-     * 控制台的id ，确保全局唯一
-     */
-    @NotNull
-    private Long consoleId;
+    /** 控制台的id ，确保全局唯一 */
+    @NotNull private Long consoleId;
 }

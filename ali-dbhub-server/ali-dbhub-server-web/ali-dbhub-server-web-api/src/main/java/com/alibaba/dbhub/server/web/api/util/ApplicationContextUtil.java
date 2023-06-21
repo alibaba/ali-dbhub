@@ -1,7 +1,4 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.web.api.util;
 
 import org.springframework.beans.BeansException;
@@ -16,9 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationContextUtil implements ApplicationContextAware {
 
-    /**
-     * 上下文对象实例
-     */
+    /** 上下文对象实例 */
     private static ApplicationContext applicationContext;
 
     @Override
@@ -70,6 +65,7 @@ public class ApplicationContextUtil implements ApplicationContextAware {
 
     /**
      * 获取配置文件中的值
+     *
      * @param key
      * @return
      */

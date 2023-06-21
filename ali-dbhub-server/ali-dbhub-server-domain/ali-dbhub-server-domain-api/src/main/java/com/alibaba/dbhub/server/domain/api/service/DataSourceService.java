@@ -1,9 +1,5 @@
 package com.alibaba.dbhub.server.domain.api.service;
 
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
@@ -15,8 +11,8 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
-
-import com.jcraft.jsch.JSchException;
+import java.util.List;
+import javax.validation.constraints.NotNull;
 
 /**
  * 数据源管理服务
@@ -82,7 +78,7 @@ public interface DataSourceService {
      * @param ids
      * @return
      */
-    ListResult<DataSource> queryByIds(List<Long>ids);
+    ListResult<DataSource> queryByIds(List<Long> ids);
 
     /**
      * 数据源连接测试
@@ -107,5 +103,4 @@ public interface DataSourceService {
      * @return
      */
     ActionResult close(Long id);
-
 }

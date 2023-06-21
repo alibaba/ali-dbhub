@@ -9,9 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <p>
  * 我的执行记录表
- * </p>
  *
  * @author ali-dbhub
  * @since 2022-12-28
@@ -23,44 +21,28 @@ public class OperationLogDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
+    /** 主键 */
     @TableId(value = "ID", type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 创建时间
-     */
+    /** 创建时间 */
     private LocalDateTime gmtCreate;
 
-    /**
-     * 修改时间
-     */
+    /** 修改时间 */
     private LocalDateTime gmtModified;
 
-    /**
-     * 数据源连接ID
-     */
+    /** 数据源连接ID */
     private Long dataSourceId;
 
-    /**
-     * db名称
-     */
+    /** db名称 */
     private String databaseName;
 
-    /**
-     * 数据库类型
-     */
+    /** 数据库类型 */
     private String type;
 
-    /**
-     * ddl内容
-     */
+    /** ddl内容 */
     private String ddl;
 
-    /**
-     * 用户id
-     */
+    /** 用户id */
     private Long userId;
 }

@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.ai.enums;
 
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
-
 import lombok.Getter;
 
 /**
@@ -12,14 +11,10 @@ import lombok.Getter;
 @Getter
 public enum GptVersionType implements BaseEnum {
 
-    /**
-     * GPT-3
-     */
+    /** GPT-3 */
     GPT3("GPT-3"),
 
-    /**
-     * GPT-3-5
-     */
+    /** GPT-3-5 */
     GPT35("GPT-3.5"),
     ;
 

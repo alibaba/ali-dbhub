@@ -1,12 +1,9 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.request;
 
-import java.io.Serial;
-
-import javax.validation.constraints.NotNull;
-
 import com.alibaba.dbhub.server.tools.base.wrapper.request.PageQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequestInfo;
-
+import java.io.Serial;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -17,26 +14,15 @@ import lombok.Data;
 @Data
 public class TableBriefQueryRequest extends PageQueryRequest implements DataSourceBaseRequestInfo {
 
-    @Serial
-    private static final long serialVersionUID = -364547173428396332L;
-    /**
-     * 数据源id
-     */
-    @NotNull
-    private Long dataSourceId;
-    /**
-     * DB名称
-     */
-    @NotNull
-    private String databaseName;
+    @Serial private static final long serialVersionUID = -364547173428396332L;
+    /** 数据源id */
+    @NotNull private Long dataSourceId;
+    /** DB名称 */
+    @NotNull private String databaseName;
 
-    /**
-     * 表所在空间，pg,oracle需要，mysql不需要
-     */
+    /** 表所在空间，pg,oracle需要，mysql不需要 */
     private String schemaName;
 
-    /**
-     * 模糊搜索词
-     */
+    /** 模糊搜索词 */
     private String searchKey;
 }

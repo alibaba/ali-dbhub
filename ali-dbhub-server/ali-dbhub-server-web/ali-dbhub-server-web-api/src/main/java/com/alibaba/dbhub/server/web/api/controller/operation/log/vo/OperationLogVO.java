@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.operation.log.vo;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-
 import lombok.Data;
 
 /**
@@ -12,38 +11,27 @@ import lombok.Data;
 @Data
 public class OperationLogVO {
 
-    /**
-     * 主键
-     */
+    /** 主键 */
     private Long id;
 
-    /**
-     * 文件别名
-     */
+    /** 文件别名 */
     private String name;
 
-    /**
-     * 数据源id
-     */
+    /** 数据源id */
     private Long dataSourceId;
 
-    /**
-     * 数据源名称
-     */
+    /** 数据源名称 */
     private String dataSourceName;
 
-    /**
-     * 是否可连接
-     */
+    /** 是否可连接 */
     private Boolean connectable;
 
-    /**
-     * DB名称
-     */
+    /** DB名称 */
     private String databaseName;
 
     /**
      * ddl语言类型
+     *
      * @see DbTypeEnum
      */
     private String type;

@@ -3,10 +3,10 @@ package com.alibaba.dbhub.server.tools.base.enums;
 /**
  * 基础的枚举
  *
- * 由于java枚举继承的限制，枚举基类只能设计为接口，请自行保证子类一定是枚举类型。
+ * <p>由于java枚举继承的限制，枚举基类只能设计为接口，请自行保证子类一定是枚举类型。
  *
  * @author Jiaju Zhuang
- **/
+ */
 public interface BaseEnum<T> {
 
     /**
@@ -22,5 +22,4 @@ public interface BaseEnum<T> {
      * @return description
      */
     String getDescription();
-
 }

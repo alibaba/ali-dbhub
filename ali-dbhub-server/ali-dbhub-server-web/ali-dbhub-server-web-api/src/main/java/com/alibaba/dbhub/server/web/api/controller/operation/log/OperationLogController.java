@@ -1,7 +1,5 @@
 package com.alibaba.dbhub.server.web.api.controller.operation.log;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.api.model.OperationLog;
 import com.alibaba.dbhub.server.domain.api.param.OperationLogCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationLogPageQueryParam;
@@ -14,7 +12,7 @@ import com.alibaba.dbhub.server.web.api.controller.operation.log.converter.Opera
 import com.alibaba.dbhub.server.web.api.controller.operation.log.request.OperationLogCreateRequest;
 import com.alibaba.dbhub.server.web.api.controller.operation.log.request.OperationLogQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.operation.log.vo.OperationLogVO;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,11 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class OperationLogController {
 
-    @Autowired
-    private OperationLogService operationLogService;
+    @Autowired private OperationLogService operationLogService;
 
-    @Autowired
-    private OperationLogWebConverter operationLogWebConverter;
+    @Autowired private OperationLogWebConverter operationLogWebConverter;
 
     /**
      * 查询执行记录
@@ -51,7 +47,8 @@ public class OperationLogController {
         OperationLogPageQueryParam param = operationLogWebConverter.req2param(request);
         PageResult<OperationLog> result = operationLogService.queryPage(param);
         List<OperationLogVO> operationLogVOList = operationLogWebConverter.dto2vo(result.getData());
-        return WebPageResult.of(operationLogVOList, result.getTotal(), result.getPageNo(), result.getPageSize());
+        return WebPageResult.of(
+                operationLogVOList, result.getTotal(), result.getPageNo(), result.getPageSize());
     }
 
     /**
@@ -65,5 +62,4 @@ public class OperationLogController {
         OperationLogCreateParam param = operationLogWebConverter.createReq2param(request);
         return operationLogService.create(param);
     }
-
 }

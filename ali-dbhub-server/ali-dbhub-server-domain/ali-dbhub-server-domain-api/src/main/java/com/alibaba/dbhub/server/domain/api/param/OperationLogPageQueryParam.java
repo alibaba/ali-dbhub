@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.domain.api.param;
 
 import com.alibaba.dbhub.server.tools.base.wrapper.param.PageQueryParam;
-
 import lombok.Data;
 
 /**
@@ -12,8 +11,6 @@ import lombok.Data;
 @Data
 public class OperationLogPageQueryParam extends PageQueryParam {
 
-    /**
-     * 搜索关键词
-     */
+    /** 搜索关键词 */
     private String searchKey;
 }

@@ -1,20 +1,19 @@
 package com.alibaba.dbhub.server.domain.api.service;
 
-import java.util.List;
-
-import com.alibaba.dbhub.server.domain.support.model.Sql;
-import com.alibaba.dbhub.server.domain.support.model.Table;
-import com.alibaba.dbhub.server.domain.support.model.TableColumn;
-import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.api.param.DropParam;
 import com.alibaba.dbhub.server.domain.api.param.ShowCreateTableParam;
 import com.alibaba.dbhub.server.domain.api.param.TablePageQueryParam;
 import com.alibaba.dbhub.server.domain.api.param.TableQueryParam;
 import com.alibaba.dbhub.server.domain.api.param.TableSelector;
+import com.alibaba.dbhub.server.domain.support.model.Sql;
+import com.alibaba.dbhub.server.domain.support.model.Table;
+import com.alibaba.dbhub.server.domain.support.model.TableColumn;
+import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
+import java.util.List;
 
 /**
  * 数据源管理服务
@@ -84,6 +83,7 @@ public interface TableService {
 
     /**
      * 查询表包含的字段
+     *
      * @param param
      * @return
      */
@@ -91,6 +91,7 @@ public interface TableService {
 
     /**
      * 查询表索引
+     *
      * @param param
      * @return
      */

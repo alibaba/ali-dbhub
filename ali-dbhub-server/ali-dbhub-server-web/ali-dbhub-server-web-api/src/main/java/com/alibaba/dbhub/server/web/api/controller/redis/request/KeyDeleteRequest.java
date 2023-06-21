@@ -1,8 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.redis.request;
 
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-
 import lombok.Data;
 
 /**
@@ -13,9 +11,6 @@ import lombok.Data;
 @Data
 public class KeyDeleteRequest extends DataSourceBaseRequest {
 
-    /**
-     * key名称
-     */
+    /** key名称 */
     private String keyName;
-
 }

@@ -1,12 +1,9 @@
 package com.alibaba.dbhub.server.tools.base.wrapper.request;
 
+import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
 import java.io.Serial;
 import java.io.Serializable;
-
 import javax.validation.constraints.NotNull;
-
-import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -22,19 +19,16 @@ import org.hibernate.validator.constraints.Range;
 @SuperBuilder
 @AllArgsConstructor
 public class PageQueryRequest implements Serializable {
-    @Serial
-    private static final long serialVersionUID = EasyToolsConstant.SERIAL_VERSION_UID;
-    /**
-     * 页码
-     */
+    @Serial private static final long serialVersionUID = EasyToolsConstant.SERIAL_VERSION_UID;
+    /** 页码 */
     @NotNull(message = "分页页码不能为空")
     private Integer pageNo;
-    /**
-     * 分页条数
-     */
+    /** 分页条数 */
     @NotNull(message = "分页大小不能为空")
-    @Range(min = 1, max = EasyToolsConstant.MAX_PAGE_SIZE,
-        message = "分页大小必须在1-" + EasyToolsConstant.MAX_PAGE_SIZE + "之间")
+    @Range(
+            min = 1,
+            max = EasyToolsConstant.MAX_PAGE_SIZE,
+            message = "分页大小必须在1-" + EasyToolsConstant.MAX_PAGE_SIZE + "之间")
     private Integer pageSize;
 
     public PageQueryRequest() {

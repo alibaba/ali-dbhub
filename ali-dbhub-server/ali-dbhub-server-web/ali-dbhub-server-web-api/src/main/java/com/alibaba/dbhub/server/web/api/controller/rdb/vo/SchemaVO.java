@@ -1,7 +1,4 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
 
 import lombok.Data;
@@ -12,8 +9,6 @@ import lombok.Data;
  */
 @Data
 public class SchemaVO {
-    /**
-     * 数据名字
-     */
+    /** 数据名字 */
     private String name;
 }

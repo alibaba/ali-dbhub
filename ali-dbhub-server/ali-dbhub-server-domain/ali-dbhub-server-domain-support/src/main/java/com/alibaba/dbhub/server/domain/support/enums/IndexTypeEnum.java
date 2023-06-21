@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.domain.support.enums;
 
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
-
 import lombok.Getter;
 
 /**
@@ -11,19 +10,13 @@ import lombok.Getter;
  */
 @Getter
 public enum IndexTypeEnum implements BaseEnum<String> {
-    /**
-     * 主键
-     */
+    /** 主键 */
     PRIMARY_KEY("主键"),
 
-    /**
-     * 普通索引
-     */
+    /** 普通索引 */
     NORMAL("普通索引"),
 
-    /**
-     * 唯一索引
-     */
+    /** 唯一索引 */
     UNIQUE("唯一索引"),
     ;
 

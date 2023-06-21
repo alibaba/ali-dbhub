@@ -1,7 +1,4 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.web.api.aspect;
 
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
@@ -13,7 +10,6 @@ import com.alibaba.dbhub.server.tools.base.excption.SystemException;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequestInfo;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceConsoleRequestInfo;
-
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -30,9 +26,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ConnectionInfoHandler {
 
-    @Autowired
-    private DataSourceService dataSourceService;
-
+    @Autowired private DataSourceService dataSourceService;
 
     @Around("within(@com.alibaba.dbhub.server.web.api.aspect.ConnectionInfoAspect *)")
     public Object connectionInfoHandler(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -42,13 +36,14 @@ public class ConnectionInfoHandler {
                 for (int i = 0; i < params.length; i++) {
                     Object param = params[i];
                     if (param instanceof DataSourceConsoleRequestInfo) {
-                        Long dataSourceId = ((DataSourceConsoleRequestInfo)param).getDataSourceId();
-                        Long consoleId = ((DataSourceConsoleRequestInfo)param).getConsoleId();
-                        String database = ((DataSourceConsoleRequestInfo)param).getDatabaseName();
+                        Long dataSourceId =
+                                ((DataSourceConsoleRequestInfo) param).getDataSourceId();
+                        Long consoleId = ((DataSourceConsoleRequestInfo) param).getConsoleId();
+                        String database = ((DataSourceConsoleRequestInfo) param).getDatabaseName();
                         DbhubContext.putContext(toInfo(dataSourceId, database, consoleId));
                     } else if (param instanceof DataSourceBaseRequestInfo) {
-                        Long dataSourceId = ((DataSourceBaseRequestInfo)param).getDataSourceId();
-                        String database = ((DataSourceBaseRequestInfo)param).getDatabaseName();
+                        Long dataSourceId = ((DataSourceBaseRequestInfo) param).getDataSourceId();
+                        String database = ((DataSourceBaseRequestInfo) param).getDatabaseName();
                         DbhubContext.putContext(toInfo(dataSourceId, database));
                     }
                 }
@@ -81,7 +76,8 @@ public class ConnectionInfoHandler {
         connectInfo.setJdbc(dataSource.getJdbc());
         connectInfo.setExtendInfo(dataSource.getExtendInfo());
         connectInfo.setUrl(dataSource.getUrl());
-        connectInfo.setPort(dataSource.getPort() != null ? Integer.parseInt(dataSource.getPort()) : null);
+        connectInfo.setPort(
+                dataSource.getPort() != null ? Integer.parseInt(dataSource.getPort()) : null);
         connectInfo.setHost(dataSource.getHost());
         return connectInfo;
     }

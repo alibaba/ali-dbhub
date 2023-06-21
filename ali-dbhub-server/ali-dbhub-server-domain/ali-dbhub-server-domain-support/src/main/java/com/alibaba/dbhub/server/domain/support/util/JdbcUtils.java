@@ -1,5 +1,17 @@
 package com.alibaba.dbhub.server.domain.support.util;
 
+import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
+import com.alibaba.dbhub.server.domain.support.model.Cell;
+import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
+import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
+import com.alibaba.dbhub.server.domain.support.sql.IDriverManager;
+import com.alibaba.dbhub.server.domain.support.sql.SSHManager;
+import com.alibaba.dbhub.server.tools.common.util.EasyOptionalUtils;
+import com.alibaba.druid.DbType;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -13,20 +25,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Map;
-
-import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
-import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.enums.DriverTypeEnum;
-import com.alibaba.dbhub.server.domain.support.model.Cell;
-import com.alibaba.dbhub.server.domain.support.model.DataSourceConnect;
-import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
-import com.alibaba.dbhub.server.domain.support.sql.IDriverManager;
-import com.alibaba.dbhub.server.domain.support.sql.SSHManager;
-import com.alibaba.dbhub.server.tools.common.util.EasyOptionalUtils;
-import com.alibaba.druid.DbType;
-
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -71,26 +69,27 @@ public class JdbcUtils {
         }
 
         if (obj instanceof Blob) {
-            Blob blob = (Blob)obj;
+            Blob blob = (Blob) obj;
             cell.setType(CellTypeEnum.BYTE.getCode());
-            cell.setByteValue(blob.getBytes(1, (int)blob.length()));
+            cell.setByteValue(blob.getBytes(1, (int) blob.length()));
             return cell;
         }
         if (obj instanceof Clob) {
-            Clob clob = (Clob)obj;
+            Clob clob = (Clob) obj;
             cell.setType(CellTypeEnum.STRING.getCode());
-            cell.setStringValue(clob.getSubString(1, (int)clob.length()));
+            cell.setStringValue(clob.getSubString(1, (int) clob.length()));
             return cell;
         }
         if (obj instanceof Timestamp) {
-            Timestamp timestamp = (Timestamp)obj;
+            Timestamp timestamp = (Timestamp) obj;
             cell.setType(CellTypeEnum.DATE.getCode());
             cell.setDateValue(EasyOptionalUtils.mapTo(timestamp, Timestamp::getTime));
             return cell;
         }
 
         String className = obj.getClass().getName();
-        if ("oracle.sql.TIMESTAMP".equals(className) || "oracle.sql.TIMESTAMPTZ".equals(className)) {
+        if ("oracle.sql.TIMESTAMP".equals(className)
+                || "oracle.sql.TIMESTAMPTZ".equals(className)) {
             cell.setType(CellTypeEnum.DATE.getCode());
             cell.setDateValue(EasyOptionalUtils.mapTo(rs.getTimestamp(index), Timestamp::getTime));
             return cell;
@@ -98,8 +97,10 @@ public class JdbcUtils {
         if (className.startsWith("oracle.sql.DATE")) {
             String metaDataClassName = rs.getMetaData().getColumnClassName(index);
             cell.setType(CellTypeEnum.DATE.getCode());
-            if ("java.sql.Timestamp".equals(metaDataClassName) || "oracle.sql.TIMESTAMP".equals(metaDataClassName)) {
-                cell.setDateValue(EasyOptionalUtils.mapTo(rs.getTimestamp(index), Timestamp::getTime));
+            if ("java.sql.Timestamp".equals(metaDataClassName)
+                    || "oracle.sql.TIMESTAMP".equals(metaDataClassName)) {
+                cell.setDateValue(
+                        EasyOptionalUtils.mapTo(rs.getTimestamp(index), Timestamp::getTime));
             } else {
                 cell.setDateValue(EasyOptionalUtils.mapTo(rs.getDate(index), Date::getTime));
             }
@@ -111,21 +112,22 @@ public class JdbcUtils {
                 cell.setDateValue(EasyOptionalUtils.mapTo(rs.getDate(index), Date::getTime));
                 return cell;
             }
-            Date date = (Date)obj;
+            Date date = (Date) obj;
             cell.setType(CellTypeEnum.DATE.getCode());
             cell.setDateValue(date.getTime());
             return cell;
         }
         if (obj instanceof LocalDateTime) {
-            LocalDateTime localDateTime = (LocalDateTime)obj;
+            LocalDateTime localDateTime = (LocalDateTime) obj;
             cell.setType(CellTypeEnum.DATE.getCode());
             cell.setDateValue(localDateTime.toInstant(ZoneOffset.ofHours(+8)).toEpochMilli());
             return cell;
         }
         if (obj instanceof LocalDate) {
-            LocalDate localDate = (LocalDate)obj;
+            LocalDate localDate = (LocalDate) obj;
             cell.setType(CellTypeEnum.DATE.getCode());
-            cell.setDateValue(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
+            cell.setDateValue(
+                    localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
             return cell;
         }
         if (obj instanceof Number) {
@@ -141,18 +143,24 @@ public class JdbcUtils {
     /**
      * 测试数据库连接
      *
-     * @param url      数据库连接
+     * @param url 数据库连接
      * @param userName 用户名
      * @param password 密码
-     * @param dbType   数据库类型
+     * @param dbType 数据库类型
      * @return
      */
-    public static DataSourceConnect testConnect(String url, String host, String port,
-        String userName, String password, DbTypeEnum dbType,
-        String jdbc, SSHInfo ssh, Map<String, Object> properties) {
-        DataSourceConnect dataSourceConnect = DataSourceConnect.builder()
-            .success(Boolean.TRUE)
-            .build();
+    public static DataSourceConnect testConnect(
+            String url,
+            String host,
+            String port,
+            String userName,
+            String password,
+            DbTypeEnum dbType,
+            String jdbc,
+            SSHInfo ssh,
+            Map<String, Object> properties) {
+        DataSourceConnect dataSourceConnect =
+                DataSourceConnect.builder().success(Boolean.TRUE).build();
         Session session = null;
         Connection connection = null;
         // 加载驱动
@@ -162,8 +170,13 @@ public class JdbcUtils {
                 url = url.replace(host, "127.0.0.1").replace(port, ssh.getLocalPort());
             }
             // 创建连接
-            connection = IDriverManager.getConnection(url, userName, password,
-                DriverTypeEnum.getDriver(dbType, jdbc), properties);
+            connection =
+                    IDriverManager.getConnection(
+                            url,
+                            userName,
+                            password,
+                            DriverTypeEnum.getDriver(dbType, jdbc),
+                            properties);
         } catch (Exception e) {
             log.error("connection fail:", e);
             dataSourceConnect.setSuccess(Boolean.FALSE);
@@ -193,5 +206,4 @@ public class JdbcUtils {
         dataSourceConnect.setDescription("成功");
         return dataSourceConnect;
     }
-
 }

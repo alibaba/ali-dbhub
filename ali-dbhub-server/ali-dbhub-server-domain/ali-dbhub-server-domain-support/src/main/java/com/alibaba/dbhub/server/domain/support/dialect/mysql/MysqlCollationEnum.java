@@ -1,8 +1,7 @@
 package com.alibaba.dbhub.server.domain.support.dialect.mysql;
 
-import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
 import com.alibaba.dbhub.server.domain.support.dialect.common.enums.BaseCollationEnum;
-
+import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
 import lombok.Getter;
 
 /**
@@ -12,13 +11,9 @@ import lombok.Getter;
  */
 @Getter
 public enum MysqlCollationEnum implements BaseCollationEnum {
-    /**
-     * ASC
-     */
+    /** ASC */
     ASC("A", CollationEnum.ASC),
-    /**
-     * DESC
-     */
+    /** DESC */
     DESC("D", CollationEnum.DESC),
     ;
 
@@ -34,5 +29,4 @@ public enum MysqlCollationEnum implements BaseCollationEnum {
     public String getDescription() {
         return getCode();
     }
-
 }

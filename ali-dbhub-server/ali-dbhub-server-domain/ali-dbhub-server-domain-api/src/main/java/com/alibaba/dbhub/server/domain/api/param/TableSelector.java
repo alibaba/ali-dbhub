@@ -15,14 +15,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TableSelector {
-    /**
-     * 列列表
-     */
+    /** 列列表 */
     private Boolean columnList;
 
-    /**
-     * 索引列表
-     */
+    /** 索引列表 */
     private Boolean indexList;
-
 }

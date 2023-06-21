@@ -10,13 +10,9 @@ import lombok.Data;
 @Data
 public class EnvVO {
 
-    /**
-     * 环境code
-     */
+    /** 环境code */
     private String code;
 
-    /**
-     * 环境名称
-     */
+    /** 环境名称 */
     private String name;
 }

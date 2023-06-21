@@ -1,18 +1,13 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect.sqlite;
-
-import java.sql.SQLException;
-import java.util.List;
 
 import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchema;
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
-
 import com.google.common.collect.Lists;
+import java.sql.SQLException;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,18 +24,23 @@ public class SQLiteMetaSchemaSupport extends BaseMetaSchema implements MetaSchem
 
     @Override
     public String tableDDL(String databaseName, String schemaName, String tableName) {
-        String sql = "SELECT sql FROM sqlite_master WHERE type='table' AND name='" + tableName + "'";
-        return SQLExecutor.getInstance().executeSql(sql, resultSet -> {
-            try {
-                if (resultSet.next()) {
-                    return resultSet.getString("sql");
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            return null;
-        });
+        String sql =
+                "SELECT sql FROM sqlite_master WHERE type='table' AND name='" + tableName + "'";
+        return SQLExecutor.getInstance()
+                .executeSql(
+                        sql,
+                        resultSet -> {
+                            try {
+                                if (resultSet.next()) {
+                                    return resultSet.getString("sql");
+                                }
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                            return null;
+                        });
     }
+
     @Override
     public List<String> databases() {
         return Lists.newArrayList("main");

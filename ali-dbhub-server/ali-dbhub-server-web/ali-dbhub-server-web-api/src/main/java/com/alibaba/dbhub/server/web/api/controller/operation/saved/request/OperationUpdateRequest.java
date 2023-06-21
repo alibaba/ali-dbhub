@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.operation.saved.request;
 
 import javax.validation.constraints.NotNull;
-
 import lombok.Data;
 
 /**
@@ -12,30 +11,18 @@ import lombok.Data;
 @Data
 public class OperationUpdateRequest {
 
-    /**
-     * 主键
-     */
-    @NotNull
-    private Long id;
+    /** 主键 */
+    @NotNull private Long id;
 
-    /**
-     * 文件别名
-     */
+    /** 文件别名 */
     private String name;
 
-    /**
-     * ddl内容
-     */
-    @NotNull
-    private String ddl;
+    /** ddl内容 */
+    @NotNull private String ddl;
 
-    /**
-     * 更新状态 DRAFT/RELEASE
-     */
+    /** 更新状态 DRAFT/RELEASE */
     private String status;
 
-    /**
-     * 是否在tab中被打开,y表示打开,n表示未打开
-     */
+    /** 是否在tab中被打开,y表示打开,n表示未打开 */
     private String tabOpened;
 }

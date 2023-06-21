@@ -1,17 +1,11 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.sql;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import static com.alibaba.dbhub.server.domain.support.util.ResultSetUtils.buildColumn;
+import static com.alibaba.dbhub.server.domain.support.util.ResultSetUtils.buildFunction;
+import static com.alibaba.dbhub.server.domain.support.util.ResultSetUtils.buildProcedure;
+import static com.alibaba.dbhub.server.domain.support.util.ResultSetUtils.buildTable;
+import static com.alibaba.dbhub.server.domain.support.util.ResultSetUtils.buildTableIndexColumn;
 
 import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Cell;
@@ -22,31 +16,29 @@ import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
 import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
-
 import com.google.common.collect.Lists;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import static com.alibaba.dbhub.server.domain.support.util.ResultSetUtils.buildColumn;
-import static com.alibaba.dbhub.server.domain.support.util.ResultSetUtils.buildFunction;
-import static com.alibaba.dbhub.server.domain.support.util.ResultSetUtils.buildProcedure;
-import static com.alibaba.dbhub.server.domain.support.util.ResultSetUtils.buildTable;
-import static com.alibaba.dbhub.server.domain.support.util.ResultSetUtils.buildTableIndexColumn;
-
 /**
- * Dbhub 统一数据库连接管理
- * TODO 长时间不用连接可以关闭，待优化
+ * Dbhub 统一数据库连接管理 TODO 长时间不用连接可以关闭，待优化
  *
  * @author jipengfei
  * @version : DbhubDataSource.java
  */
 @Slf4j
 public class SQLExecutor {
-    /**
-     * 全局单例
-     */
+    /** 全局单例 */
     private static final SQLExecutor INSTANCE = new SQLExecutor();
 
     private SQLExecutor() {}
@@ -59,8 +51,7 @@ public class SQLExecutor {
         return DbhubContext.getConnection();
     }
 
-    public void close() {
-    }
+    public void close() {}
 
     /**
      * 执行sql
@@ -69,7 +60,6 @@ public class SQLExecutor {
      * @param function
      * @return
      */
-
     public <R> R executeSql(String sql, Function<ResultSet, R> function) {
         if (StringUtils.isEmpty(sql)) {
             return null;
@@ -113,11 +103,13 @@ public class SQLExecutor {
      * @return
      * @throws SQLException
      */
-    public ExecuteResult execute(final String sql, Integer pageSize, Connection connection) throws SQLException {
+    public ExecuteResult execute(final String sql, Integer pageSize, Connection connection)
+            throws SQLException {
         Assert.notNull(sql, "SQL must not be null");
         log.info("execute:{}", sql);
 
-        ExecuteResult executeResult = ExecuteResult.builder().sql(sql).success(Boolean.TRUE).build();
+        ExecuteResult executeResult =
+                ExecuteResult.builder().sql(sql).success(Boolean.TRUE).build();
         Statement stmt = null;
         try {
             stmt = connection.createStatement();
@@ -136,8 +128,11 @@ public class SQLExecutor {
                     List<Cell> headerList = Lists.newArrayListWithExpectedSize(col);
                     executeResult.setHeaderList(headerList);
                     for (int i = 1; i <= col; i++) {
-                        headerList.add(Cell.builder().type(CellTypeEnum.STRING.getCode())
-                            .stringValue(resultSetMetaData.getColumnName(i)).build());
+                        headerList.add(
+                                Cell.builder()
+                                        .type(CellTypeEnum.STRING.getCode())
+                                        .stringValue(resultSetMetaData.getColumnName(i))
+                                        .build());
                     }
 
                     // 获取数据信息
@@ -154,7 +149,9 @@ public class SQLExecutor {
                         List<Cell> row = Lists.newArrayListWithExpectedSize(col);
                         dataList.add(row);
                         for (int i = 1; i <= col; i++) {
-                            row.add(com.alibaba.dbhub.server.domain.support.util.JdbcUtils.getResultSetValue(rs, i));
+                            row.add(
+                                    com.alibaba.dbhub.server.domain.support.util.JdbcUtils
+                                            .getResultSetValue(rs, i));
                         }
                         rsSize++;
                         // 到达下一页了
@@ -210,17 +207,15 @@ public class SQLExecutor {
                 }
             }
             case ORACLE, H2, SQLITE -> {
-
             }
             case POSTGRESQL -> {
-                //close();
+                // close();
                 info.setDatabase(database);
                 try {
                     getConnection();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-
             }
             case REDIS -> {
                 try {
@@ -230,7 +225,6 @@ public class SQLExecutor {
                 }
             }
             default -> {
-
             }
         }
     }
@@ -266,7 +260,8 @@ public class SQLExecutor {
     public List<String> schemas(String databaseName, String schemaName) {
         List<String> schemaList = Lists.newArrayList();
         try {
-            ResultSet resultSet = getConnection().getMetaData().getSchemas(databaseName, schemaName);
+            ResultSet resultSet =
+                    getConnection().getMetaData().getSchemas(databaseName, schemaName);
             if (resultSet != null) {
                 while (resultSet.next()) {
                     schemaList.add(resultSet.getString("TABLE_SCHEM"));
@@ -288,11 +283,14 @@ public class SQLExecutor {
      * @param types
      * @return
      */
-    public List<Table> tables(String databaseName, String schemaName, String tableName, String types[]) {
+    public List<Table> tables(
+            String databaseName, String schemaName, String tableName, String types[]) {
         List<Table> tables = Lists.newArrayList();
         try {
-            ResultSet resultSet = getConnection().getMetaData().getTables(databaseName, schemaName, tableName,
-                types);
+            ResultSet resultSet =
+                    getConnection()
+                            .getMetaData()
+                            .getTables(databaseName, schemaName, tableName, types);
             if (resultSet != null) {
                 while (resultSet.next()) {
                     tables.add(buildTable(resultSet));
@@ -314,11 +312,14 @@ public class SQLExecutor {
      * @param columnName
      * @return
      */
-    public List<TableColumn> columns(String databaseName, String schemaName, String tableName, String columnName) {
+    public List<TableColumn> columns(
+            String databaseName, String schemaName, String tableName, String columnName) {
         List<TableColumn> tableColumns = Lists.newArrayList();
         try {
-            ResultSet resultSet = getConnection().getMetaData().getColumns(databaseName, schemaName, tableName,
-                columnName);
+            ResultSet resultSet =
+                    getConnection()
+                            .getMetaData()
+                            .getColumns(databaseName, schemaName, tableName, columnName);
             if (resultSet != null) {
                 while (resultSet.next()) {
                     tableColumns.add(buildColumn(resultSet));
@@ -343,26 +344,32 @@ public class SQLExecutor {
         List<TableIndex> tableIndices = Lists.newArrayList();
         try {
             List<TableIndexColumn> tableIndexColumns = Lists.newArrayList();
-            ResultSet resultSet = getConnection().getMetaData().getIndexInfo(databaseName, schemaName, tableName, false,
-                false);
+            ResultSet resultSet =
+                    getConnection()
+                            .getMetaData()
+                            .getIndexInfo(databaseName, schemaName, tableName, false, false);
 
             while (resultSet != null && resultSet.next()) {
                 tableIndexColumns.add(buildTableIndexColumn(resultSet));
             }
 
-            tableIndexColumns.stream().filter(c -> c.getIndexName() != null).collect(
-                    Collectors.groupingBy(TableIndexColumn::getIndexName)).entrySet()
-                .stream().forEach(entry -> {
-                    TableIndex tableIndex = new TableIndex();
-                    TableIndexColumn column = entry.getValue().get(0);
-                    tableIndex.setName(entry.getKey());
-                    tableIndex.setTableName(column.getTableName());
-                    tableIndex.setSchemaName(column.getSchemaName());
-                    tableIndex.setDatabaseName(column.getDatabaseName());
-                    tableIndex.setUnique(!column.getNonUnique());
-                    tableIndex.setColumnList(entry.getValue());
-                    tableIndices.add(tableIndex);
-                });
+            tableIndexColumns.stream()
+                    .filter(c -> c.getIndexName() != null)
+                    .collect(Collectors.groupingBy(TableIndexColumn::getIndexName))
+                    .entrySet()
+                    .stream()
+                    .forEach(
+                            entry -> {
+                                TableIndex tableIndex = new TableIndex();
+                                TableIndexColumn column = entry.getValue().get(0);
+                                tableIndex.setName(entry.getKey());
+                                tableIndex.setTableName(column.getTableName());
+                                tableIndex.setSchemaName(column.getSchemaName());
+                                tableIndex.setDatabaseName(column.getDatabaseName());
+                                tableIndex.setUnique(!column.getNonUnique());
+                                tableIndex.setColumnList(entry.getValue());
+                                tableIndices.add(tableIndex);
+                            });
         } catch (SQLException e) {
             close();
             throw new RuntimeException(e);
@@ -377,11 +384,13 @@ public class SQLExecutor {
      * @param schemaName
      * @return
      */
-    public List<com.alibaba.dbhub.server.domain.support.model.Function> functions(String databaseName,
-        String schemaName) {
-        List<com.alibaba.dbhub.server.domain.support.model.Function> functions = Lists.newArrayList();
+    public List<com.alibaba.dbhub.server.domain.support.model.Function> functions(
+            String databaseName, String schemaName) {
+        List<com.alibaba.dbhub.server.domain.support.model.Function> functions =
+                Lists.newArrayList();
         try {
-            ResultSet resultSet = getConnection().getMetaData().getFunctions(databaseName, schemaName, null);
+            ResultSet resultSet =
+                    getConnection().getMetaData().getFunctions(databaseName, schemaName, null);
             while (resultSet != null && resultSet.next()) {
                 functions.add(buildFunction(resultSet));
             }
@@ -402,7 +411,8 @@ public class SQLExecutor {
     public List<Procedure> procedures(String databaseName, String schemaName) {
         List<Procedure> procedures = Lists.newArrayList();
         try {
-            ResultSet resultSet = getConnection().getMetaData().getProcedures(databaseName, schemaName, null);
+            ResultSet resultSet =
+                    getConnection().getMetaData().getProcedures(databaseName, schemaName, null);
             while (resultSet != null && resultSet.next()) {
                 procedures.add(buildProcedure(resultSet));
             }
@@ -412,5 +422,4 @@ public class SQLExecutor {
         }
         return procedures;
     }
-
 }

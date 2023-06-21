@@ -1,12 +1,5 @@
-/**
- * Alipay.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect;
-
-import java.util.List;
-
-import javax.validation.constraints.NotEmpty;
 
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.Function;
@@ -15,6 +8,8 @@ import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
 import com.alibaba.dbhub.server.domain.support.model.Trigger;
+import java.util.List;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * @author jipengfei
@@ -37,27 +32,29 @@ public interface MetaSchema<T extends BaseMapper> {
 
     /**
      * 修改数据库名称
+     *
      * @param databaseName
      * @param newDatabaseName
      */
     void modifyDatabase(String databaseName, String newDatabaseName);
 
-
     /**
      * 创建数据库
+     *
      * @param databaseName
      */
     void createDatabase(String databaseName);
 
-
     /**
      * 删除数据库
+     *
      * @param databaseName
      */
     void dropDatabase(String databaseName);
 
     /**
      * 查询 DB 下schemas
+     *
      * @param databaseName
      * @return
      */
@@ -65,6 +62,7 @@ public interface MetaSchema<T extends BaseMapper> {
 
     /**
      * 创建schema
+     *
      * @param databaseName
      * @param schemaName
      */
@@ -72,6 +70,7 @@ public interface MetaSchema<T extends BaseMapper> {
 
     /**
      * 删除schema
+     *
      * @param databaseName
      * @param schemaName
      */
@@ -79,6 +78,7 @@ public interface MetaSchema<T extends BaseMapper> {
 
     /**
      * 修改schema
+     *
      * @param databaseName
      * @param schemaName
      * @param newSchemaName
@@ -109,7 +109,7 @@ public interface MetaSchema<T extends BaseMapper> {
      * @param databaseName
      * @return
      */
-    List<Table> tables(@NotEmpty String databaseName, String schemaName,String tableName);
+    List<Table> tables(@NotEmpty String databaseName, String schemaName, String tableName);
 
     /**
      * 查询所有视图
@@ -154,9 +154,8 @@ public interface MetaSchema<T extends BaseMapper> {
      * @param tableName
      * @return
      */
-    List<? extends TableColumn> columns(@NotEmpty String databaseName, String schemaName,
-        @NotEmpty String tableName);
-
+    List<? extends TableColumn> columns(
+            @NotEmpty String databaseName, String schemaName, @NotEmpty String tableName);
 
     /**
      * 查询database下所有的列信息
@@ -167,18 +166,18 @@ public interface MetaSchema<T extends BaseMapper> {
      * @param columnName
      * @return
      */
-    List<? extends TableColumn> columns(@NotEmpty String databaseName, String schemaName,String tableName, String columnName);
+    List<? extends TableColumn> columns(
+            @NotEmpty String databaseName, String schemaName, String tableName, String columnName);
 
     /**
      * 查询列的信息
      *
      * @param databaseName
-     * @param tableName    * @return
+     * @param tableName * @return
      */
-    List<? extends TableIndex> indexes(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName);
+    List<? extends TableIndex> indexes(
+            @NotEmpty String databaseName, String schemaName, @NotEmpty String tableName);
 
-
-
-    //T  getMapper();
+    // T  getMapper();
 
 }

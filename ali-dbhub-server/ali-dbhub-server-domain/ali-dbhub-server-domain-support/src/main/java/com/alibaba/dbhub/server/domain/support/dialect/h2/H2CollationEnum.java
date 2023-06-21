@@ -1,8 +1,7 @@
 package com.alibaba.dbhub.server.domain.support.dialect.h2;
 
-import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
 import com.alibaba.dbhub.server.domain.support.dialect.common.enums.BaseCollationEnum;
-
+import com.alibaba.dbhub.server.domain.support.enums.CollationEnum;
 import lombok.Getter;
 
 /**
@@ -12,13 +11,9 @@ import lombok.Getter;
  */
 @Getter
 public enum H2CollationEnum implements BaseCollationEnum {
-    /**
-     * ASC
-     */
+    /** ASC */
     ASC("ASC", CollationEnum.ASC),
-    /**
-     * DESC
-     */
+    /** DESC */
     DESC("DESC", CollationEnum.DESC),
     ;
 
@@ -34,5 +29,4 @@ public enum H2CollationEnum implements BaseCollationEnum {
     public String getDescription() {
         return getCode();
     }
-
 }

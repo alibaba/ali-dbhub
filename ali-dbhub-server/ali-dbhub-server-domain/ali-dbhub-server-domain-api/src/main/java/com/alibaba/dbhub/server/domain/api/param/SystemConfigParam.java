@@ -1,12 +1,8 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.api.param;
 
 import java.io.Serial;
 import java.io.Serializable;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,22 +17,14 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SystemConfigParam implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 7969235263543844658L;
+    @Serial private static final long serialVersionUID = 7969235263543844658L;
 
-    /**
-     * 配置项code
-     */
+    /** 配置项code */
     private String code;
 
-    /**
-     * 配置项内容
-     */
+    /** 配置项内容 */
     private String content;
 
-    /**
-     * 配置摘要
-     */
+    /** 配置摘要 */
     private String summary;
-
 }

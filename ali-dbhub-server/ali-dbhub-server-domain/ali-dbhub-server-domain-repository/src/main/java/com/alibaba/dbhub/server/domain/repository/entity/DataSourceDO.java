@@ -9,9 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <p>
  * 数据源连接表
- * </p>
  *
  * @author ali-dbhub
  * @since 2022-12-28
@@ -23,95 +21,58 @@ public class DataSourceDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
+    /** 主键 */
     @TableId(value = "ID", type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 创建时间
-     */
+    /** 创建时间 */
     private LocalDateTime gmtCreate;
 
-    /**
-     * 修改时间
-     */
+    /** 修改时间 */
     private LocalDateTime gmtModified;
 
-    /**
-     * 数据源名称
-     */
+    /** 数据源名称 */
     private String alias;
 
-    /**
-     * 连接地址
-     */
+    /** 连接地址 */
     private String url;
 
-    /**
-     * 用户名
-     */
+    /** 用户名 */
     private String userName;
 
-    /**
-     * 密码
-     */
+    /** 密码 */
     private String password;
 
-    /**
-     * 数据库类型
-     */
+    /** 数据库类型 */
     private String type;
 
-    /**
-     * 环境类型
-     */
+    /** 环境类型 */
     private String envType;
 
-    /**
-     * 用户id
-     */
+    /** 用户id */
     private Long userId;
 
-    /**
-     * host
-     */
+    /** host */
     private String host;
 
-    /**
-     * port
-     */
+    /** port */
     private String port;
 
-    /**
-     * ssh
-     */
+    /** ssh */
     private String ssh;
 
-    /**
-     * ssh
-     */
+    /** ssh */
     private String ssl;
 
-    /**
-     * sid
-     */
+    /** sid */
     private String sid;
 
-    /**
-     * driver
-     */
+    /** driver */
     private String driver;
 
-    /**
-     * jdbc版本
-     */
+    /** jdbc版本 */
     private String jdbc;
 
-    /**
-     * 扩展信息
-     */
+    /** 扩展信息 */
     private String extendInfo;
-
 }

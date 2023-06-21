@@ -1,9 +1,7 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.support.enums.IndexTypeEnum;
-
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -14,14 +12,10 @@ import lombok.Data;
 @Data
 public class IndexVO {
 
-    /**
-     * 包含列
-     */
+    /** 包含列 */
     private String columns;
 
-    /**
-     * 索引名称
-     */
+    /** 索引名称 */
     private String name;
 
     /**
@@ -31,13 +25,9 @@ public class IndexVO {
      */
     private String type;
 
-    /**
-     * 注释
-     */
+    /** 注释 */
     private String comment;
 
-    /**
-     * 索引包含的列
-     */
+    /** 索引包含的列 */
     private List<ColumnVO> columnList;
 }

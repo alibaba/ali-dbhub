@@ -1,7 +1,4 @@
-/**
- * Alipay.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect.postgresql.model;
 
 import lombok.AllArgsConstructor;

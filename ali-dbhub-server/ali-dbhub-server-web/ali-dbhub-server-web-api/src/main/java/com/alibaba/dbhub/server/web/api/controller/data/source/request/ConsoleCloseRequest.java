@@ -8,10 +8,9 @@ import lombok.Data;
  * @date 2022/10/30
  */
 @Data
-public class ConsoleCloseRequest extends DataSourceBaseRequest implements DataSourceConsoleRequestInfo{
+public class ConsoleCloseRequest extends DataSourceBaseRequest
+        implements DataSourceConsoleRequestInfo {
 
-    /**
-     * 控制台id
-     */
+    /** 控制台id */
     private Long consoleId;
 }

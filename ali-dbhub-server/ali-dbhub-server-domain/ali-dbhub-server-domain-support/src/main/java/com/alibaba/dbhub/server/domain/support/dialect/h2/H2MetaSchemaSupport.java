@@ -1,9 +1,10 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect.h2;
 
+import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchema;
+import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
+import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
+import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -11,14 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.validation.constraints.NotEmpty;
-
-import com.alibaba.dbhub.server.domain.support.dialect.BaseMetaSchema;
-import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
-import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.sql.SQLExecutor;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,20 +25,20 @@ public class H2MetaSchemaSupport extends BaseMetaSchema implements MetaSchema {
     @Override
     public DbTypeEnum dbType() {
         return DbTypeEnum.H2;
-
     }
 
     @Override
-    public String tableDDL(@NotEmpty String databaseName, String schemaName, @NotEmpty String tableName) {
+    public String tableDDL(
+            @NotEmpty String databaseName, String schemaName, @NotEmpty String tableName) {
         return getDDL(databaseName, schemaName, tableName);
     }
-
 
     private String getDDL(String databaseName, String schemaName, String tableName) {
         try {
             Connection connection = SQLExecutor.getInstance().getConnection();
             // 查询表结构信息
-            ResultSet columns = connection.getMetaData().getColumns(databaseName, schemaName, tableName, null);
+            ResultSet columns =
+                    connection.getMetaData().getColumns(databaseName, schemaName, tableName, null);
             List<String> columnDefinitions = new ArrayList<>();
             while (columns.next()) {
                 String columnName = columns.getString("COLUMN_NAME");
@@ -52,7 +46,10 @@ public class H2MetaSchemaSupport extends BaseMetaSchema implements MetaSchema {
                 int columnSize = columns.getInt("COLUMN_SIZE");
                 String remarks = columns.getString("REMARKS");
                 String defaultValue = columns.getString("COLUMN_DEF");
-                String nullable = columns.getInt("NULLABLE") == ResultSetMetaData.columnNullable ? "NULL" : "NOT NULL";
+                String nullable =
+                        columns.getInt("NULLABLE") == ResultSetMetaData.columnNullable
+                                ? "NULL"
+                                : "NOT NULL";
                 StringBuilder columnDefinition = new StringBuilder();
                 columnDefinition.append(columnName).append(" ").append(columnType);
                 if (columnSize != 0) {
@@ -69,8 +66,10 @@ public class H2MetaSchemaSupport extends BaseMetaSchema implements MetaSchema {
             }
 
             // 查询表索引信息
-            ResultSet indexes = connection.getMetaData().getIndexInfo(databaseName, schemaName, tableName, false,
-                false);
+            ResultSet indexes =
+                    connection
+                            .getMetaData()
+                            .getIndexInfo(databaseName, schemaName, tableName, false, false);
             Map<String, List<String>> indexMap = new HashMap<>();
             while (indexes.next()) {
                 String indexName = indexes.getString("INDEX_NAME");
@@ -96,8 +95,9 @@ public class H2MetaSchemaSupport extends BaseMetaSchema implements MetaSchema {
                 String indexName = entry.getKey();
                 List<String> columnList = entry.getValue();
                 String indexColumns = String.join(", ", columnList);
-                String createIndexDDL = String.format("CREATE INDEX %s ON %s (%s);", indexName, tableName,
-                    indexColumns);
+                String createIndexDDL =
+                        String.format(
+                                "CREATE INDEX %s ON %s (%s);", indexName, tableName, indexColumns);
                 System.out.println(createIndexDDL);
                 createTableDDL.append(createIndexDDL);
             }

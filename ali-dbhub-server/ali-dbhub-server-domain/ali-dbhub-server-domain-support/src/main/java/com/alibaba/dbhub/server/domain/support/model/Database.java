@@ -15,8 +15,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Database {
-    /**
-     * 数据名字
-     */
+    /** 数据名字 */
     private String name;
 }

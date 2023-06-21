@@ -1,15 +1,12 @@
 package com.alibaba.dbhub.server.tools.base.wrapper.result;
 
-import java.io.Serializable;
-import java.util.function.Function;
-
-import javax.validation.constraints.NotNull;
-
 import com.alibaba.dbhub.server.tools.base.constant.EasyToolsConstant;
 import com.alibaba.dbhub.server.tools.base.enums.BaseErrorEnum;
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.Result;
-
+import java.io.Serializable;
+import java.util.function.Function;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -29,8 +26,7 @@ public class DataResult<T> implements Serializable, Result<T> {
      *
      * @mock true
      */
-    @NotNull
-    private Boolean success;
+    @NotNull private Boolean success;
 
     /**
      * 错误编码
@@ -39,19 +35,13 @@ public class DataResult<T> implements Serializable, Result<T> {
      */
     private String errorCode;
 
-    /**
-     * 错误信息
-     */
+    /** 错误信息 */
     private String errorMessage;
 
-    /**
-     * 数据信息
-     */
+    /** 数据信息 */
     private T data;
 
-    /**
-     * traceId
-     */
+    /** traceId */
     private String traceId;
 
     public DataResult() {
@@ -67,7 +57,7 @@ public class DataResult<T> implements Serializable, Result<T> {
      * 构建返回对象
      *
      * @param data 需要构建的对象
-     * @param <T>  需要构建的对象类型
+     * @param <T> 需要构建的对象类型
      * @return 返回的结果
      */
     public static <T> DataResult<T> of(T data) {
@@ -87,9 +77,9 @@ public class DataResult<T> implements Serializable, Result<T> {
     /**
      * 构建异常返回
      *
-     * @param errorCode    错误编码
+     * @param errorCode 错误编码
      * @param errorMessage 错误信息
-     * @param <T>          需要构建的对象类型
+     * @param <T> 需要构建的对象类型
      * @return 返回的结果
      */
     public static <T> DataResult<T> error(String errorCode, String errorMessage) {
@@ -104,7 +94,7 @@ public class DataResult<T> implements Serializable, Result<T> {
      * 构建异常返回
      *
      * @param errorEnum 错误枚举
-     * @param <T>       需要构建的对象类型
+     * @param <T> 需要构建的对象类型
      * @return 返回的结果
      */
     public static <T> DataResult<T> error(BaseErrorEnum errorEnum) {
@@ -125,7 +115,7 @@ public class DataResult<T> implements Serializable, Result<T> {
      * 将当前的类型转换成另外一个类型
      *
      * @param mapper 转换的方法
-     * @param <R>    返回的类型
+     * @param <R> 返回的类型
      * @return 返回的结果
      */
     public <R> DataResult<R> map(Function<T, R> mapper) {

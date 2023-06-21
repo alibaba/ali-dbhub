@@ -1,10 +1,6 @@
-/**
- * Alipay.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect.postgresql.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -16,5 +12,4 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class PostgresqlResemble {
-}
+public class PostgresqlResemble {}

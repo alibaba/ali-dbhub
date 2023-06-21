@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.tools.base.excption;
 
 import com.alibaba.dbhub.server.tools.base.enums.BaseErrorEnum;
-
 import lombok.Data;
 
 /**
@@ -12,9 +11,7 @@ import lombok.Data;
  */
 @Data
 public class BusinessException extends RuntimeException {
-    /**
-     * 异常的编码
-     */
+    /** 异常的编码 */
     private String code;
 
     public BusinessException(String message) {

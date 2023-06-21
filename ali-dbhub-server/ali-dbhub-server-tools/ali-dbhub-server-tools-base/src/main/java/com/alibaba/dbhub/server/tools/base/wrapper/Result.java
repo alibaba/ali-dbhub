@@ -4,7 +4,7 @@ package com.alibaba.dbhub.server.tools.base.wrapper;
  * @author qiuyuyu
  * @date 2022/01/20
  */
-public interface Result<T> extends Traceable{
+public interface Result<T> extends Traceable {
     /**
      * 是否成功
      *
@@ -41,7 +41,6 @@ public interface Result<T> extends Traceable{
      * @return
      */
     String errorMessage();
-
 
     /**
      * 设置错误信息

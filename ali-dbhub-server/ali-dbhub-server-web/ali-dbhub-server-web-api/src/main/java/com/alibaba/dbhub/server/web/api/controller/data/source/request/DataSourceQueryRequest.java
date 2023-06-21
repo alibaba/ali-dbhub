@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.data.source.request;
 
 import com.alibaba.dbhub.server.tools.base.wrapper.request.PageQueryRequest;
-
 import lombok.Data;
 
 /**
@@ -12,8 +11,6 @@ import lombok.Data;
 @Data
 public class DataSourceQueryRequest extends PageQueryRequest {
 
-    /**
-     * 别名模糊搜索词
-     */
+    /** 别名模糊搜索词 */
     private String searchKey;
 }

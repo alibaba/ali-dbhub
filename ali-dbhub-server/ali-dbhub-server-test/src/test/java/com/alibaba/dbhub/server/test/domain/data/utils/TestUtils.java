@@ -1,11 +1,9 @@
 package com.alibaba.dbhub.server.test.domain.data.utils;
 
-import java.util.concurrent.atomic.AtomicLong;
-
-import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import com.alibaba.dbhub.server.domain.support.sql.ConnectInfo;
+import com.alibaba.dbhub.server.domain.support.sql.DbhubContext;
 import com.alibaba.dbhub.server.test.domain.data.service.dialect.DialectProperties;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 测试工具类
@@ -26,8 +24,7 @@ public class TestUtils {
     }
 
     /**
-     * 如果默认值类似于 'DATA'
-     * 则需要把'' 去掉
+     * 如果默认值类似于 'DATA' 则需要把'' 去掉
      *
      * @param defaultValue
      * @return
@@ -48,7 +45,8 @@ public class TestUtils {
         return defaultValue;
     }
 
-    public static void buildContext(DialectProperties dialectProperties,Long dataSourceId,Long consoleId){
+    public static void buildContext(
+            DialectProperties dialectProperties, Long dataSourceId, Long consoleId) {
         ConnectInfo connectInfo = new ConnectInfo();
         connectInfo.setUser(dialectProperties.getUsername());
         connectInfo.setConsoleId(consoleId);
@@ -61,7 +59,7 @@ public class TestUtils {
         DbhubContext.putContext(connectInfo);
     }
 
-    public static void remove(){
+    public static void remove() {
         DbhubContext.removeContext();
     }
 }

@@ -1,15 +1,13 @@
 package com.alibaba.dbhub.server.web.api.controller.data.source.converter;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
-import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
-import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
-import com.alibaba.dbhub.server.domain.support.model.Database;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleCloseParam;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePageQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
+import com.alibaba.dbhub.server.domain.support.model.Database;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleCloseRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.ConsoleConnectRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceCreateRequest;
@@ -18,7 +16,7 @@ import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourc
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceUpdateRequest;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DataSourceVO;
 import com.alibaba.dbhub.server.web.api.controller.data.source.vo.DatabaseVO;
-
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -37,9 +35,7 @@ public abstract class DataSourceWebConverter {
      * @param request
      * @return
      */
-    @Mappings({
-        @Mapping(source = "user", target = "userName")
-    })
+    @Mappings({@Mapping(source = "user", target = "userName")})
     public abstract DataSourceCreateParam createReq2param(DataSourceCreateRequest request);
 
     /**
@@ -48,9 +44,7 @@ public abstract class DataSourceWebConverter {
      * @param request
      * @return
      */
-    @Mappings({
-        @Mapping(source = "user", target = "userName")
-    })
+    @Mappings({@Mapping(source = "user", target = "userName")})
     public abstract DataSourceUpdateParam updateReq2param(DataSourceUpdateRequest request);
 
     /**
@@ -67,9 +61,7 @@ public abstract class DataSourceWebConverter {
      * @param dataSource
      * @return
      */
-    @Mappings({
-        @Mapping(target = "user", source = "userName")
-    })
+    @Mappings({@Mapping(target = "user", source = "userName")})
     public abstract DataSourceVO dto2vo(DataSource dataSource);
 
     /**

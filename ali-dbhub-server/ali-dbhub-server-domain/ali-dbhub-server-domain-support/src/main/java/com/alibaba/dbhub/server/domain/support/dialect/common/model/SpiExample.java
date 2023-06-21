@@ -15,14 +15,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SpiExample {
-    /**
-     * 建表语句
-     */
+    /** 建表语句 */
     private String createTable;
 
-    /**
-     * 修改表结构
-     */
+    /** 修改表结构 */
     private String alterTable;
 }
-

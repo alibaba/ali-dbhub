@@ -1,16 +1,12 @@
 package com.alibaba.dbhub.server.web.api.controller.data.source.request;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.constraints.NotNull;
-
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
 import com.alibaba.dbhub.server.domain.support.model.KeyValue;
 import com.alibaba.dbhub.server.domain.support.model.SSHInfo;
 import com.alibaba.dbhub.server.domain.support.model.SSLInfo;
 import com.alibaba.dbhub.server.tools.base.enums.EnvTypeEnum;
-
+import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -21,84 +17,56 @@ import lombok.Data;
 @Data
 public class DataSourceUpdateRequest {
 
-    /**
-     * 主键id
-     */
-    @NotNull
-    private Long id;
+    /** 主键id */
+    @NotNull private Long id;
 
-    /**
-     * 连接别名
-     */
+    /** 连接别名 */
     private String alias;
 
-    /**
-     * 连接地址
-     */
+    /** 连接地址 */
     private String url;
 
-    /**
-     * 连接用户
-     */
+    /** 连接用户 */
     private String user;
 
-    /**
-     * 密码
-     */
+    /** 密码 */
     private String password;
 
     /**
      * 连接类型
+     *
      * @see DbTypeEnum
      */
     private String type;
 
     /**
      * 环境类型
+     *
      * @see EnvTypeEnum
      */
     private String envType;
 
-
-
-    /**
-     * host
-     */
+    /** host */
     private String host;
 
-    /**
-     * port
-     */
+    /** port */
     private String port;
 
-    /**
-     * ssh
-     */
+    /** ssh */
     private SSHInfo ssh;
 
-    /**
-     * ssh
-     */
+    /** ssh */
     private SSLInfo ssl;
 
-    /**
-     * sid
-     */
+    /** sid */
     private String sid;
 
-    /**
-     * driver
-     */
+    /** driver */
     private String driver;
 
-
-    /**
-     * jdbc版本
-     */
+    /** jdbc版本 */
     private String jdbc;
 
-    /**
-     * 扩展信息
-     */
+    /** 扩展信息 */
     private List<KeyValue> extendInfo;
 }

@@ -1,8 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.redis.request;
 
 import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-
 import lombok.Data;
 
 /**
@@ -13,13 +11,9 @@ import lombok.Data;
 @Data
 public class KeyQueryRequest extends DataSourceBaseRequest {
 
-    /**
-     * 缓存key名称
-     */
+    /** 缓存key名称 */
     private String keyName;
 
-    /**
-     * 搜索关键词
-     */
+    /** 搜索关键词 */
     private String searchKey;
 }

@@ -1,11 +1,9 @@
 package com.alibaba.dbhub.server.domain.core.converter;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.api.model.OperationLog;
 import com.alibaba.dbhub.server.domain.api.param.OperationLogCreateParam;
 import com.alibaba.dbhub.server.domain.repository.entity.OperationLogDO;
-
+import java.util.List;
 import org.mapstruct.Mapper;
 
 /**

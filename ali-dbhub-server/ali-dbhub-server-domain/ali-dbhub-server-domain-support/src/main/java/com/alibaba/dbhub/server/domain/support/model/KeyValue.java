@@ -1,13 +1,9 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.model;
 
+import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -17,14 +13,10 @@ import org.apache.commons.collections4.CollectionUtils;
  */
 @Data
 public class KeyValue {
-    /**
-     * 属性名
-     */
+    /** 属性名 */
     private String key;
 
-    /**
-     * 属性值
-     */
+    /** 属性值 */
     private Object value;
 
     public static Map<String, Object> toMap(List<KeyValue> keyValues) {
@@ -32,7 +24,8 @@ public class KeyValue {
             return Maps.newHashMap();
         } else {
             Map<String, Object> map = Maps.newHashMap();
-            keyValues.forEach(keyValue -> map.put(keyValue.getKey(), String.valueOf(keyValue.getValue())));
+            keyValues.forEach(
+                    keyValue -> map.put(keyValue.getKey(), String.valueOf(keyValue.getValue())));
             return map;
         }
     }

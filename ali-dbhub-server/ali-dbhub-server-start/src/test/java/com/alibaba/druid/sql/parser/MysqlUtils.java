@@ -1,10 +1,9 @@
 package com.alibaba.druid.sql.parser;
 
+import com.alibaba.druid.DbType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.alibaba.druid.DbType;
 
 public class MysqlUtils extends SQLParserUtils {
 
@@ -14,12 +13,9 @@ public class MysqlUtils extends SQLParserUtils {
         Lexer lexer = createLexer(sql, dbType);
         lexer.nextToken();
 
-
-
         for (; lexer.token != Token.EOF; ) {
             switch (lexer.token) {
                 case SEMI:
-
                     System.out.println(lexer.token);
 
                     break;
@@ -28,13 +24,10 @@ public class MysqlUtils extends SQLParserUtils {
             }
 
             lexer.nextToken();
-
         }
-
 
         return new ArrayList<>(tables);
     }
-
 
     public static List<String> splitAndRemoveComment(String sql, DbType dbType) {
         if (dbType == null) {
@@ -49,8 +42,8 @@ public class MysqlUtils extends SQLParserUtils {
 
             while (lexer.token != Token.EOF) {
                 if (lexer.token == Token.LINE_COMMENT
-                    || lexer.token == Token.MULTI_LINE_COMMENT
-                    || lexer.token == Token.SEMI) {
+                        || lexer.token == Token.MULTI_LINE_COMMENT
+                        || lexer.token == Token.SEMI) {
                     containsCommentAndSemi = true;
                     break;
                 }
@@ -90,10 +83,10 @@ public class MysqlUtils extends SQLParserUtils {
                 int len = lexer.startPos - start;
                 if (len > 0) {
                     String lineSql = sql.substring(start, lexer.startPos);
-                    String splitSql = set
-                        ? removeLeftComment(lineSql, dbType)
-                        : removeComment(lineSql, dbType
-                        ).trim();
+                    String splitSql =
+                            set
+                                    ? removeLeftComment(lineSql, dbType)
+                                    : removeComment(lineSql, dbType).trim();
                     if (!splitSql.isEmpty()) {
                         list.add(splitSql);
                     }
@@ -103,10 +96,8 @@ public class MysqlUtils extends SQLParserUtils {
             } else if (token == Token.MULTI_LINE_COMMENT) {
                 int len = lexer.startPos - start;
                 if (len > 0) {
-                    String splitSql = removeComment(
-                        sql.substring(start, lexer.startPos),
-                        dbType
-                    ).trim();
+                    String splitSql =
+                            removeComment(sql.substring(start, lexer.startPos), dbType).trim();
                     if (!splitSql.isEmpty()) {
                         list.add(splitSql);
                     }
@@ -140,8 +131,8 @@ public class MysqlUtils extends SQLParserUtils {
                 token = lexer.token;
                 continue;
             } else if (dbType == DbType.odps
-                && lexer.ch != '.'
-                && (lexer.identifierEquals("pai") || lexer.identifierEquals("jar"))) {
+                    && lexer.ch != '.'
+                    && (lexer.identifierEquals("pai") || lexer.identifierEquals("jar"))) {
                 paiOrJar = true;
             }
 
@@ -187,5 +178,4 @@ public class MysqlUtils extends SQLParserUtils {
 
         return list;
     }
-
 }

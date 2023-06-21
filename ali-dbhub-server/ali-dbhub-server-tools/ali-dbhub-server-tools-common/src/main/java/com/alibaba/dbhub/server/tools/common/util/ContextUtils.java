@@ -3,7 +3,6 @@ package com.alibaba.dbhub.server.tools.common.util;
 import com.alibaba.dbhub.server.tools.common.exception.NeedLoggedInBusinessException;
 import com.alibaba.dbhub.server.tools.common.model.Context;
 import com.alibaba.dbhub.server.tools.common.model.LoginUser;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -14,9 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ContextUtils {
 
-    /**
-     * 存储context
-     */
+    /** 存储context */
     private static final ThreadLocal<Context> CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
     /**
@@ -79,9 +76,7 @@ public class ContextUtils {
         CONTEXT_THREAD_LOCAL.set(context);
     }
 
-    /**
-     * 移除上下文
-     */
+    /** 移除上下文 */
     public static void removeContext() {
         CONTEXT_THREAD_LOCAL.remove();
     }

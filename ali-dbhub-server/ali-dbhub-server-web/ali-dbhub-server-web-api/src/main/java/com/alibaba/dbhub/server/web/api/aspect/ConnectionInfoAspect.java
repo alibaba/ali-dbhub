@@ -1,7 +1,4 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.web.api.aspect;
 
 import java.lang.annotation.Documented;
@@ -17,5 +14,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-public @interface ConnectionInfoAspect {
-}
+public @interface ConnectionInfoAspect {}

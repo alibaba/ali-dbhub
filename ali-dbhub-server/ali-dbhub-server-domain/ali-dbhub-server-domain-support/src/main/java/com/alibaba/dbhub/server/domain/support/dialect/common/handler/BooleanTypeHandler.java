@@ -1,16 +1,11 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect.common.handler;
 
+import com.alibaba.dbhub.server.tools.base.enums.YesOrNoEnum;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import com.alibaba.dbhub.server.tools.base.enums.YesOrNoEnum;
-
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
@@ -21,8 +16,8 @@ import org.apache.ibatis.type.TypeHandler;
 public class BooleanTypeHandler implements TypeHandler<Boolean> {
 
     @Override
-    public void setParameter(PreparedStatement ps, int i, Boolean parameter, JdbcType jdbcType) throws SQLException {
-    }
+    public void setParameter(PreparedStatement ps, int i, Boolean parameter, JdbcType jdbcType)
+            throws SQLException {}
 
     @Override
     public Boolean getResult(ResultSet rs, String columnName) throws SQLException {
@@ -32,7 +27,6 @@ public class BooleanTypeHandler implements TypeHandler<Boolean> {
     @Override
     public Boolean getResult(ResultSet rs, int columnIndex) throws SQLException {
         return parse(rs.getString(columnIndex));
-
     }
 
     @Override
@@ -46,5 +40,4 @@ public class BooleanTypeHandler implements TypeHandler<Boolean> {
         }
         return Boolean.FALSE;
     }
-
 }

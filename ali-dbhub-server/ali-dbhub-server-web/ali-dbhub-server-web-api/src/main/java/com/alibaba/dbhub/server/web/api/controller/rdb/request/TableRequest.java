@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.request;
 
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,23 +16,15 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TableRequest {
-    /**
-     * 表名称
-     */
+    /** 表名称 */
     private String name;
 
-    /**
-     * 表描述
-     */
+    /** 表描述 */
     private String comment;
 
-    /**
-     * 列
-     */
+    /** 列 */
     private List<ColumnRequest> columnList;
 
-    /**
-     * 索引
-     */
+    /** 索引 */
     private List<IndexRequest> indexList;
 }

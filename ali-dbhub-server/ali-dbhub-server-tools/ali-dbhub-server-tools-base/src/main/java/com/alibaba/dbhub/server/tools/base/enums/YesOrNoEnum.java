@@ -10,15 +10,10 @@ import lombok.Getter;
 @Getter
 public enum YesOrNoEnum implements BaseEnum<String> {
 
-    /**
-     * 是
-     */
+    /** 是 */
     YES("是", true),
-    /**
-     * 未读
-     */
+    /** 未读 */
     NO("否", false),
-
     ;
 
     final String description;
@@ -49,5 +44,4 @@ public enum YesOrNoEnum implements BaseEnum<String> {
         }
         return YesOrNoEnum.NO;
     }
-
 }

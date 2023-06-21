@@ -1,8 +1,5 @@
 package com.alibaba.dbhub.server.domain.core.impl;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceCloseParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
@@ -28,10 +25,11 @@ import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ListResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
 import com.alibaba.dbhub.server.tools.common.util.EasyCollectionUtils;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +43,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataSourceServiceImpl implements DataSourceService {
 
-    @Autowired
-    private DataSourceMapper dataSourceMapper;
+    @Autowired private DataSourceMapper dataSourceMapper;
 
-    @Autowired
-    private DataSourceConverter dataSourceConverter;
+    @Autowired private DataSourceConverter dataSourceConverter;
 
     @Override
     public DataResult<Long> create(DataSourceCreateParam param) {
@@ -93,7 +89,8 @@ public class DataSourceServiceImpl implements DataSourceService {
     }
 
     @Override
-    public PageResult<DataSource> queryPage(DataSourcePageQueryParam param, DataSourceSelector selector) {
+    public PageResult<DataSource> queryPage(
+            DataSourcePageQueryParam param, DataSourceSelector selector) {
         QueryWrapper<DataSourceDO> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(param.getSearchKey())) {
             queryWrapper.like("alias", param.getSearchKey());
@@ -114,15 +111,22 @@ public class DataSourceServiceImpl implements DataSourceService {
     }
 
     @Override
-    public ActionResult preConnect(DataSourcePreConnectParam param)  {
-        DataSourceTestParam testParam
-            = dataSourceConverter.param2param(param);
-        DataSourceConnect dataSourceConnect = JdbcUtils.testConnect(testParam.getUrl(), testParam.getHost(),
-            testParam.getPort(),
-            testParam.getUsername(), testParam.getPassword(), DbTypeEnum.getByName(testParam.getDbType()),
-            param.getJdbc(), param.getSsh(), KeyValue.toMap(param.getExtendInfo()));
+    public ActionResult preConnect(DataSourcePreConnectParam param) {
+        DataSourceTestParam testParam = dataSourceConverter.param2param(param);
+        DataSourceConnect dataSourceConnect =
+                JdbcUtils.testConnect(
+                        testParam.getUrl(),
+                        testParam.getHost(),
+                        testParam.getPort(),
+                        testParam.getUsername(),
+                        testParam.getPassword(),
+                        DbTypeEnum.getByName(testParam.getDbType()),
+                        param.getJdbc(),
+                        param.getSsh(),
+                        KeyValue.toMap(param.getExtendInfo()));
         if (BooleanUtils.isNotTrue(dataSourceConnect.getSuccess())) {
-            return ActionResult.fail(dataSourceConnect.getMessage(), dataSourceConnect.getDescription());
+            return ActionResult.fail(
+                    dataSourceConnect.getMessage(), dataSourceConnect.getDescription());
         }
         return ActionResult.isSuccess();
     }
@@ -132,7 +136,9 @@ public class DataSourceServiceImpl implements DataSourceService {
         DatabaseQueryAllParam queryAllParam = new DatabaseQueryAllParam();
         queryAllParam.setDataSourceId(id);
         List<String> databases = DbhubContext.getMetaSchema().databases();
-        return ListResult.of(EasyCollectionUtils.toList(databases, name -> Database.builder().name(name).build()));
+        return ListResult.of(
+                EasyCollectionUtils.toList(
+                        databases, name -> Database.builder().name(name).build()));
     }
 
     @Override
@@ -142,5 +148,4 @@ public class DataSourceServiceImpl implements DataSourceService {
         SQLExecutor.getInstance().close();
         return ActionResult.isSuccess();
     }
-
 }

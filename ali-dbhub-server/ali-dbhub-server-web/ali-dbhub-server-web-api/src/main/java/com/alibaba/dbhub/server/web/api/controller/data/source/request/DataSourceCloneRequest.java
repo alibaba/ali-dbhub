@@ -1,6 +1,5 @@
 package com.alibaba.dbhub.server.web.api.controller.data.source.request;
 
-
 import lombok.Data;
 
 /**
@@ -11,9 +10,6 @@ import lombok.Data;
 @Data
 public class DataSourceCloneRequest {
 
-    /**
-     * 主键id
-     */
+    /** 主键id */
     private Long id;
-
 }

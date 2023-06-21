@@ -1,12 +1,8 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.request;
 
+import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
 import java.util.List;
-
 import javax.validation.constraints.NotNull;
-
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-
 import lombok.Data;
 
 /**
@@ -17,20 +13,12 @@ import lombok.Data;
 @Data
 public class DataExportRequest extends DataSourceBaseRequest {
 
-    /**
-     * 导出sql语句
-     */
-    @NotNull
-    private String sql;
+    /** 导出sql语句 */
+    @NotNull private String sql;
 
-    /**
-     * 控制台id
-     */
-    @NotNull
-    private Long consoleId;
+    /** 控制台id */
+    @NotNull private Long consoleId;
 
-    /**
-     * 导出行ID列表
-     */
+    /** 导出行ID列表 */
     private List<Long> exportIds;
 }

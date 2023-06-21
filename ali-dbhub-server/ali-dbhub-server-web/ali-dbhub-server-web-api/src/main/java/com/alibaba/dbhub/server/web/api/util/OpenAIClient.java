@@ -1,19 +1,14 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.web.api.util;
-
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.util.Objects;
 
 import com.alibaba.dbhub.server.domain.api.model.Config;
 import com.alibaba.dbhub.server.domain.api.service.ConfigService;
-
 import com.google.common.collect.Lists;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.constant.OpenAIConst;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
@@ -27,19 +22,13 @@ public class OpenAIClient {
 
     public static final String OPENAI_KEY = "chatgpt.apiKey";
 
-    /**
-     * OPENAI接口域名
-     */
+    /** OPENAI接口域名 */
     public static final String OPENAI_HOST = "chatgpt.apiHost";
 
-    /**
-     * 代理IP
-     */
+    /** 代理IP */
     public static final String PROXY_HOST = "chatgpt.proxy.host";
 
-    /**
-     * 代理端口
-     */
+    /** 代理端口 */
     public static final String PROXY_PORT = "chatgpt.proxy.port";
 
     private static OpenAiStreamClient OPEN_AI_STREAM_CLIENT;
@@ -86,8 +75,10 @@ public class OpenAIClient {
         if (hostConfig != null) {
             host = hostConfig.getContent();
         }
-        Integer port = Objects.nonNull(System.getProperty("http.proxyPort")) ? Integer.valueOf(
-            System.getProperty("http.proxyPort")) : null;
+        Integer port =
+                Objects.nonNull(System.getProperty("http.proxyPort"))
+                        ? Integer.valueOf(System.getProperty("http.proxyPort"))
+                        : null;
         Config portConfig = configService.find(PROXY_PORT).getData();
         if (portConfig != null && StringUtils.isNotBlank(portConfig.getContent())) {
             port = Integer.valueOf(portConfig.getContent());
@@ -96,11 +87,18 @@ public class OpenAIClient {
         if (Objects.nonNull(host) && Objects.nonNull(port)) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
             OkHttpClient okHttpClient = new OkHttpClient.Builder().proxy(proxy).build();
-            OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(apiHost).apiKey(
-                Lists.newArrayList(apikey)).okHttpClient(okHttpClient).build();
+            OPEN_AI_STREAM_CLIENT =
+                    OpenAiStreamClient.builder()
+                            .apiHost(apiHost)
+                            .apiKey(Lists.newArrayList(apikey))
+                            .okHttpClient(okHttpClient)
+                            .build();
         } else {
-            OPEN_AI_STREAM_CLIENT = OpenAiStreamClient.builder().apiHost(apiHost).apiKey(
-                Lists.newArrayList(apikey)).build();
+            OPEN_AI_STREAM_CLIENT =
+                    OpenAiStreamClient.builder()
+                            .apiHost(apiHost)
+                            .apiKey(Lists.newArrayList(apikey))
+                            .build();
         }
         apiKey = apikey;
     }

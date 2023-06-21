@@ -10,13 +10,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Base64;
-
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.IvParameterSpec;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 
@@ -27,75 +25,55 @@ import org.apache.logging.log4j.util.Strings;
  */
 public class DesUtil {
 
-    /**
-     * CFB
-     */
+    /** CFB */
     public static final String CFB = "CFB";
 
-    /**
-     * OFB
-     */
+    /** OFB */
     public static final String OFB = "OFB";
 
-    /**
-     * CBC
-     */
+    /** CBC */
     public static final String CBC = "CBC";
 
-    /**
-     * iv向量
-     */
-    private static final byte[] DESIV = { (byte) 0xCE, (byte) 0x35, (byte) 0x5,
-        (byte) 0xD, (byte) 0x98, (byte) 0x91, (byte) 0x8, (byte) 0xA };
+    /** iv向量 */
+    private static final byte[] DESIV = {
+        (byte) 0xCE,
+        (byte) 0x35,
+        (byte) 0x5,
+        (byte) 0xD,
+        (byte) 0x98,
+        (byte) 0x91,
+        (byte) 0x8,
+        (byte) 0xA
+    };
 
-    /**
-     * AlgorithmParameterSpec
-     */
+    /** AlgorithmParameterSpec */
     private static AlgorithmParameterSpec IV = null;
 
-    /**
-     * SHA1PRNG
-     */
+    /** SHA1PRNG */
     private static final String SHA1PRNG = "SHA1PRNG";
 
-    /**
-     * DES默认模式
-     */
+    /** DES默认模式 */
     private static final String DES = "DES";
 
-    /**
-     * CBC加密模式
-     */
+    /** CBC加密模式 */
     private static final String DES_CBC_PKCS5PADDING = "DES/CBC/PKCS5Padding";
 
-    /**
-     * OFB加密模式
-     */
+    /** OFB加密模式 */
     private static final String DES_OFB_PKCS5PADDING = "DES/OFB/PKCS5Padding";
 
-    /**
-     * CFB加密模式
-     */
+    /** CFB加密模式 */
     private static final String DES_CFB_PKCS5_PADDING = "DES/CFB/PKCS5Padding";
 
-    /**
-     * 加密模式
-     */
+    /** 加密模式 */
     private static final int ENCRYPT_MODE = 1;
 
-    /**
-     * des key
-     */
+    /** des key */
     public static final String DES_KEY = "dbhub";
 
-    /**
-     * 解密模式
-     */
+    /** 解密模式 */
     private static final int DECRYPT_MODE = 2;
 
-    /**
-     * 密钥
-     */
+    /** 密钥 */
     private Key key;
 
     public DesUtil(String str) {
@@ -112,6 +90,7 @@ public class DesUtil {
 
     /**
      * 通过密钥获得key
+     *
      * @param secretKey 密钥
      * @author sucb
      * @date 2017年2月28日下午1:17:58
@@ -128,7 +107,6 @@ public class DesUtil {
             generator.init(secureRandom);
             IV = new IvParameterSpec(DESIV);
 
-
             this.key = generator.generateKey();
             generator = null;
 
@@ -139,6 +117,7 @@ public class DesUtil {
 
     /**
      * 字符串des加密
+     *
      * @param data 需要加密的字符串
      * @param encryptType 加密模式 (ECB/CBC/OFB/CFB)
      * @return 加密结果
@@ -154,8 +133,9 @@ public class DesUtil {
 
     /**
      * 字符串des解密
+     *
      * @param data 需要解密的字符串
-     * @param decryptType  解密模式 (ECB/CBC/OFB/CFB)
+     * @param decryptType 解密模式 (ECB/CBC/OFB/CFB)
      * @return 解密结果
      * @throws Exception 异常
      * @author sucb
@@ -172,7 +152,8 @@ public class DesUtil {
 
     /**
      * 初始化cipher
-     * @param type  加密/解密模式 (ECB/CBC/OFB/CFB)
+     *
+     * @param type 加密/解密模式 (ECB/CBC/OFB/CFB)
      * @param cipherMode cipher工作模式 1：加密； 2：解密
      * @return cipher
      * @throws Exception 异常
@@ -181,20 +162,20 @@ public class DesUtil {
      */
     private Cipher getPattern(String type, int cipherMode) throws Exception {
         Cipher cipher;
-        switch (type){
-            case CBC :
+        switch (type) {
+            case CBC:
                 cipher = Cipher.getInstance(DES_CBC_PKCS5PADDING);
                 cipher.init(cipherMode, key, IV);
                 break;
-            case OFB :
+            case OFB:
                 cipher = Cipher.getInstance(DES_OFB_PKCS5PADDING);
                 cipher.init(cipherMode, key, IV);
                 break;
-            case CFB :
+            case CFB:
                 cipher = Cipher.getInstance(DES_CFB_PKCS5_PADDING);
                 cipher.init(cipherMode, key, IV);
                 break;
-            default :
+            default:
                 cipher = Cipher.getInstance(DES);
                 cipher.init(cipherMode, key);
                 break;
@@ -204,10 +185,11 @@ public class DesUtil {
 
     /**
      * 文件 file 进行加密并保存目标文件 destFile 中
+     *
      * @param file 要加密的文件 如 c:/test/file.txt
      * @param destFile 加密后存放的文件名 如 c:/ 加密后文件 .txt
      * @param encryptType 加密模式 (ECB/CBC/OFB/CFB)
-     * @return 加密结果   0：异常 1：加密成功； 5：未找到需要加密的文件
+     * @return 加密结果 0：异常 1：加密成功； 5：未找到需要加密的文件
      * @author sucb
      * @date 2017年3月2日下午7:56:08
      */
@@ -237,6 +219,7 @@ public class DesUtil {
 
     /**
      * 文件 file 进行解密并保存目标文件 destFile 中
+     *
      * @param file 要解密的文件 如 c:/test/file.txt
      * @param destFile 解密后存放的文件名 如 c:/ 解密后文件 .txt
      * @param decryptType 解密模式 (ECB/CBC/OFB/CFB)
@@ -260,9 +243,9 @@ public class DesUtil {
             out.close();
             is.close();
             result = 1;
-        }catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             result = 5;
-        }  catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;

@@ -1,8 +1,7 @@
 package com.alibaba.dbhub.server.test.temp;
 
-import com.alibaba.dbhub.server.test.common.BaseTest;
-
 import cn.hutool.crypto.digest.DigestUtil;
+import com.alibaba.dbhub.server.test.common.BaseTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 

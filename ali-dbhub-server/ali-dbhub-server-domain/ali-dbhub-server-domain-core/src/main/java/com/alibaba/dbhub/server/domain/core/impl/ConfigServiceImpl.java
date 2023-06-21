@@ -1,10 +1,5 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.core.impl;
-
-import java.time.LocalDateTime;
 
 import com.alibaba.dbhub.server.domain.api.model.Config;
 import com.alibaba.dbhub.server.domain.api.param.SystemConfigParam;
@@ -14,8 +9,8 @@ import com.alibaba.dbhub.server.domain.repository.entity.SystemConfigDO;
 import com.alibaba.dbhub.server.domain.repository.mapper.SystemConfigMapper;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
-
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +21,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConfigServiceImpl implements ConfigService {
 
-    @Autowired
-    private SystemConfigMapper systemConfigMapper;
+    @Autowired private SystemConfigMapper systemConfigMapper;
 
-    @Autowired
-    private ConfigConverter configConverter;
+    @Autowired private ConfigConverter configConverter;
 
     @Override
     public ActionResult create(SystemConfigParam param) {
@@ -52,8 +45,9 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public ActionResult createOrUpdate(SystemConfigParam param) {
-        SystemConfigDO systemConfigDO = systemConfigMapper.selectOne(
-            new UpdateWrapper<SystemConfigDO>().eq("code", param.getCode()));
+        SystemConfigDO systemConfigDO =
+                systemConfigMapper.selectOne(
+                        new UpdateWrapper<SystemConfigDO>().eq("code", param.getCode()));
         if (systemConfigDO == null) {
             return create(param);
         } else {
@@ -63,8 +57,8 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public DataResult<Config> find(String code) {
-        SystemConfigDO systemConfigDO = systemConfigMapper.selectOne(
-            new UpdateWrapper<SystemConfigDO>().eq("code", code));
+        SystemConfigDO systemConfigDO =
+                systemConfigMapper.selectOne(new UpdateWrapper<SystemConfigDO>().eq("code", code));
         return DataResult.of(configConverter.do2model(systemConfigDO));
     }
 

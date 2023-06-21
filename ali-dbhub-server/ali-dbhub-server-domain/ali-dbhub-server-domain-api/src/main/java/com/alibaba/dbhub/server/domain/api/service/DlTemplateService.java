@@ -20,5 +20,4 @@ public interface DlTemplateService {
      * @return
      */
     ListResult<ExecuteResult> execute(DlExecuteParam param);
-
 }

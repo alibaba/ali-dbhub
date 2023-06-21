@@ -16,19 +16,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class DataSourceConnect {
 
-    /**
-     * 是否成功标志位
-     */
+    /** 是否成功标志位 */
     private Boolean success;
 
-    /**
-     * 失败消息提示
-     * 只有失败的情况下会有
-     */
+    /** 失败消息提示 只有失败的情况下会有 */
     private String message;
 
-    /**
-     * 描述
-     */
+    /** 描述 */
     private String description;
 }

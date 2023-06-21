@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.data.source.request;
 
 import javax.validation.constraints.NotNull;
-
 import lombok.Data;
 
 /**
@@ -10,21 +9,14 @@ import lombok.Data;
  * @date 2022/09/18
  */
 @Data
-public class DataSourceBaseRequest implements DataSourceBaseRequestInfo{
+public class DataSourceBaseRequest implements DataSourceBaseRequestInfo {
 
-    /**
-     * 数据源id
-     */
-    @NotNull
-    private Long dataSourceId;
+    /** 数据源id */
+    @NotNull private Long dataSourceId;
 
-    /**
-     * DB名称
-     */
+    /** DB名称 */
     private String databaseName;
 
-    /**
-     * 表所在空间
-     */
+    /** 表所在空间 */
     private String schemaName;
 }

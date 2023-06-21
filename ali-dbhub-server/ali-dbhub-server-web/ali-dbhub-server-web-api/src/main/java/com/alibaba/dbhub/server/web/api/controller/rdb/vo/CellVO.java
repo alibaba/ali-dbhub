@@ -1,9 +1,7 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
 
-import java.math.BigDecimal;
-
 import com.alibaba.dbhub.server.domain.support.enums.CellTypeEnum;
-
+import java.math.BigDecimal;
 import lombok.Data;
 
 /**
@@ -21,24 +19,15 @@ public class CellVO {
      */
     private String type;
 
-    /**
-     * 字符串数据
-     */
+    /** 字符串数据 */
     private String stringValue;
 
-    /**
-     * 数字
-     */
+    /** 数字 */
     private BigDecimal bigDecimalValue;
 
-    /**
-     * 日期数据
-     */
+    /** 日期数据 */
     private Long dateValue;
 
-    /**
-     * 二进制流
-     */
+    /** 二进制流 */
     private byte[] byteValue;
-
 }

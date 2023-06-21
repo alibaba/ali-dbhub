@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.domain.support.model;
 
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,57 +17,33 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class ExecuteResult {
 
-    /**
-     * 是否成功标志位
-     */
+    /** 是否成功标志位 */
     private Boolean success;
 
-    /**
-     * 失败消息提示
-     * 只有失败的情况下会有
-     */
+    /** 失败消息提示 只有失败的情况下会有 */
     private String message;
 
-    /**
-     * 执行的sql
-     */
+    /** 执行的sql */
     private String sql;
 
-    /**
-     * 描述
-     */
+    /** 描述 */
     private String description;
 
-    /**
-     * 修改行数 查询sql不会返回
-     */
+    /** 修改行数 查询sql不会返回 */
     private Integer updateCount;
 
-    /**
-     * 展示头的列表
-     */
+    /** 展示头的列表 */
     private List<Cell> headerList;
 
-    /**
-     * 数据的列表
-     */
+    /** 数据的列表 */
     private List<List<Cell>> dataList;
 
-    /**
-     * 是否存在下一页
-     * 只有select语句才有
-     */
+    /** 是否存在下一页 只有select语句才有 */
     private Boolean hasNextPage;
 
-    /**
-     * 分页编码
-     * 只有select语句才有
-     */
+    /** 分页编码 只有select语句才有 */
     private Integer pageNo;
 
-    /**
-     * 分页大小
-     * 只有select语句才有
-     */
+    /** 分页大小 只有select语句才有 */
     private Integer pageSize;
 }

@@ -1,14 +1,9 @@
-/**
- * Alipay.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect.postgresql.model;
 
+import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import java.io.Serial;
 import java.io.Serializable;
-
-import com.alibaba.dbhub.server.domain.support.model.TableColumn;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,8 +18,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostgresqlColumn extends TableColumn implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 6895029737377229332L;
+    @Serial private static final long serialVersionUID = 6895029737377229332L;
     private Integer ordinalPosition;
     private boolean isArray;
     private Integer precision;

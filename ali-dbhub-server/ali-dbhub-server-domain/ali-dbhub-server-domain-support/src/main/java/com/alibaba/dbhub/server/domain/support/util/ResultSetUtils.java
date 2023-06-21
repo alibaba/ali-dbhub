@@ -1,16 +1,12 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.util;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import com.alibaba.dbhub.server.domain.support.model.Procedure;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * @author jipengfei
@@ -18,9 +14,10 @@ import com.alibaba.dbhub.server.domain.support.model.TableIndexColumn;
  */
 public class ResultSetUtils {
 
-    public static com.alibaba.dbhub.server.domain.support.model.Function buildFunction(ResultSet resultSet) {
-        com.alibaba.dbhub.server.domain.support.model.Function function
-            = new com.alibaba.dbhub.server.domain.support.model.Function();
+    public static com.alibaba.dbhub.server.domain.support.model.Function buildFunction(
+            ResultSet resultSet) {
+        com.alibaba.dbhub.server.domain.support.model.Function function =
+                new com.alibaba.dbhub.server.domain.support.model.Function();
         try {
             function.setDatabaseName(resultSet.getString("FUNCTION_CAT"));
             function.setSchemaName(resultSet.getString("FUNCTION_SCHEM"));
@@ -81,7 +78,7 @@ public class ResultSetUtils {
         tableColumn.setNullable(resultSet.getInt("NULLABLE") == 1);
         tableColumn.setOrdinalPosition(resultSet.getInt("ORDINAL_POSITION"));
         tableColumn.setAutoIncrement("YES".equals(resultSet.getString("IS_AUTOINCREMENT")));
-        //tableColumn.setGeneratedColumn("YES".equals(resultSet.getString("IS_GENERATEDCOLUMN")));
+        // tableColumn.setGeneratedColumn("YES".equals(resultSet.getString("IS_GENERATEDCOLUMN")));
         tableColumn.setOrdinalPosition(resultSet.getInt("ORDINAL_POSITION"));
         tableColumn.setDecimalDigits(resultSet.getInt("DECIMAL_DIGITS"));
         tableColumn.setNumPrecRadix(resultSet.getInt("NUM_PREC_RADIX"));

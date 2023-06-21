@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.vo;
 
 import java.util.List;
-
 import lombok.Data;
 
 /**
@@ -12,33 +11,21 @@ import lombok.Data;
 @Data
 public class ExecuteResultVO {
 
-    /**
-     * 执行的sql
-     */
+    /** 执行的sql */
     private String sql;
 
-    /**
-     * 描述
-     */
+    /** 描述 */
     private String description;
 
-    /**
-     * 失败消息提示
-     */
+    /** 失败消息提示 */
     private String message;
 
-    /**
-     * 是否成功标志位
-     */
+    /** 是否成功标志位 */
     private Boolean success;
 
-    /**
-     * 展示头的列表
-     */
+    /** 展示头的列表 */
     private List<CellVO> headerList;
 
-    /**
-     * 数据的列表
-     */
+    /** 数据的列表 */
     private List<List<CellVO>> dataList;
 }

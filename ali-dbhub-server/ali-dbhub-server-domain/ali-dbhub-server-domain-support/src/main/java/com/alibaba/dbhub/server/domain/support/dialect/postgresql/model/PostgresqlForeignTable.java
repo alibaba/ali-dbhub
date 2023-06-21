@@ -1,12 +1,8 @@
-/**
- * Alipay.com Inc.
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
+/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.support.dialect.postgresql.model;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostgresqlForeignTable extends PostgresqlTable{
+public class PostgresqlForeignTable extends PostgresqlTable {
     private PostgresqlForeignServer server;
     private Map<String, String> foreignTableOptions = new LinkedHashMap();
 }

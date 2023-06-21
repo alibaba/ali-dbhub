@@ -1,9 +1,7 @@
 package com.alibaba.dbhub.server.domain.support.model;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.support.enums.DbTypeEnum;
-
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,46 +18,27 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class Table {
 
-    /**
-     * 表名
-     */
+    /** 表名 */
     private String name;
 
-    /**
-     * 描述
-     */
+    /** 描述 */
     private String comment;
 
-    /**
-     * DB 名
-     */
+    /** DB 名 */
     private String schemaName;
 
-    /**
-     * 列列表
-     */
+    /** 列列表 */
     private List<TableColumn> columnList;
 
-    /**
-     * 索引列表
-     */
+    /** 索引列表 */
     private List<TableIndex> indexList;
 
-    /**
-     * DB类型
-     */
+    /** DB类型 */
     private DbTypeEnum dbType;
 
-    /**
-     * 数据库名
-     */
+    /** 数据库名 */
     private String databaseName;
 
-    /**
-     * 表类型
-     */
+    /** 表类型 */
     private String type;
-
-
 }
-

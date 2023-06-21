@@ -1,7 +1,5 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.api.param.DlExecuteParam;
 import com.alibaba.dbhub.server.domain.api.service.DlTemplateService;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
@@ -13,7 +11,7 @@ import com.alibaba.dbhub.server.web.api.controller.rdb.converter.RdbWebConverter
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DataExportRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DmlRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.ExecuteResultVO;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,11 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RdbDmlController {
 
-    @Autowired
-    private RdbWebConverter rdbWebConverter;
+    @Autowired private RdbWebConverter rdbWebConverter;
 
-    @Autowired
-    private DlTemplateService dlTemplateService;
+    @Autowired private DlTemplateService dlTemplateService;
 
     /**
      * 导出结果集Excel
@@ -79,12 +75,13 @@ public class RdbDmlController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/execute",method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(
+            value = "/execute",
+            method = {RequestMethod.POST, RequestMethod.PUT})
     public ListResult<ExecuteResultVO> manage(@RequestBody DmlRequest request) {
         DlExecuteParam param = rdbWebConverter.request2param(request);
         ListResult<ExecuteResult> resultDTOListResult = dlTemplateService.execute(param);
         List<ExecuteResultVO> resultVOS = rdbWebConverter.dto2vo(resultDTOListResult.getData());
         return ListResult.of(resultVOS);
     }
-
 }

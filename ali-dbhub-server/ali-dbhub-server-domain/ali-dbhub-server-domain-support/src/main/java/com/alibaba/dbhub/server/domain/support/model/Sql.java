@@ -16,9 +16,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class Sql {
 
-    /**
-     * sql
-     */
+    /** sql */
     private String sql;
-
 }

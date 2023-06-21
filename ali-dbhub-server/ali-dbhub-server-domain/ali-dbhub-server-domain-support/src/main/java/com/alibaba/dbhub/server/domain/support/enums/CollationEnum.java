@@ -3,7 +3,6 @@ package com.alibaba.dbhub.server.domain.support.enums;
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
 import com.alibaba.dbhub.server.tools.common.util.EasyEnumUtils;
 import com.alibaba.druid.sql.ast.SQLOrderingSpecification;
-
 import lombok.Getter;
 
 /**
@@ -13,16 +12,11 @@ import lombok.Getter;
  */
 @Getter
 public enum CollationEnum implements BaseEnum<String> {
-    /**
-     * ASC
-     */
+    /** ASC */
     ASC("asc", SQLOrderingSpecification.ASC),
 
-    /**
-     * DESC
-     */
+    /** DESC */
     DESC("desc", SQLOrderingSpecification.DESC),
-
     ;
 
     final String description;
@@ -40,8 +34,9 @@ public enum CollationEnum implements BaseEnum<String> {
     }
 
     public static boolean equals(String collation1, String collation2) {
-        return equals(EasyEnumUtils.getEnum(CollationEnum.class, collation1),
-            EasyEnumUtils.getEnum(CollationEnum.class, collation2));
+        return equals(
+                EasyEnumUtils.getEnum(CollationEnum.class, collation1),
+                EasyEnumUtils.getEnum(CollationEnum.class, collation2));
     }
 
     public static boolean equals(CollationEnum collation1, CollationEnum collation2) {

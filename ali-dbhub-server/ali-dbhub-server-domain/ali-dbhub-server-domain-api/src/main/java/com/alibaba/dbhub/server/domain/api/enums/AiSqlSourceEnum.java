@@ -1,11 +1,9 @@
 package com.alibaba.dbhub.server.domain.api.enums;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.alibaba.dbhub.server.domain.support.dialect.MetaSchema;
 import com.alibaba.dbhub.server.tools.base.enums.BaseEnum;
-
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
 
 /**
@@ -15,16 +13,11 @@ import lombok.Getter;
  */
 @Getter
 public enum AiSqlSourceEnum implements BaseEnum<String> {
-    /**
-     * 使用OPENAI接口
-     */
-    OPENAI( "使用OPENAI接口"),
+    /** 使用OPENAI接口 */
+    OPENAI("使用OPENAI接口"),
 
-    /**
-     * 自定义RESTAI接口
-     */
+    /** 自定义RESTAI接口 */
     RESTAI("自定义RESTAI接口"),
-
     ;
 
     final String description;
@@ -54,5 +47,4 @@ public enum AiSqlSourceEnum implements BaseEnum<String> {
     public String getCode() {
         return this.name();
     }
-
 }

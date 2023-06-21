@@ -1,7 +1,5 @@
 package com.alibaba.dbhub.server.domain.api.service;
 
-import javax.validation.constraints.NotNull;
-
 import com.alibaba.dbhub.server.domain.api.model.Operation;
 import com.alibaba.dbhub.server.domain.api.param.OperationPageQueryParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationSavedParam;
@@ -9,6 +7,7 @@ import com.alibaba.dbhub.server.domain.api.param.OperationUpdateParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.PageResult;
+import javax.validation.constraints.NotNull;
 
 /**
  * 用户保存ddl

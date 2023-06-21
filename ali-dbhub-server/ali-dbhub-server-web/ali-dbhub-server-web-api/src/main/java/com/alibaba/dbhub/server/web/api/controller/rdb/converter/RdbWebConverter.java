@@ -1,8 +1,10 @@
 package com.alibaba.dbhub.server.web.api.controller.rdb.converter;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.api.param.DlExecuteParam;
+import com.alibaba.dbhub.server.domain.api.param.DropParam;
+import com.alibaba.dbhub.server.domain.api.param.ShowCreateTableParam;
+import com.alibaba.dbhub.server.domain.api.param.TablePageQueryParam;
+import com.alibaba.dbhub.server.domain.api.param.TableQueryParam;
 import com.alibaba.dbhub.server.domain.support.model.Cell;
 import com.alibaba.dbhub.server.domain.support.model.ExecuteResult;
 import com.alibaba.dbhub.server.domain.support.model.Schema;
@@ -10,10 +12,6 @@ import com.alibaba.dbhub.server.domain.support.model.Sql;
 import com.alibaba.dbhub.server.domain.support.model.Table;
 import com.alibaba.dbhub.server.domain.support.model.TableColumn;
 import com.alibaba.dbhub.server.domain.support.model.TableIndex;
-import com.alibaba.dbhub.server.domain.api.param.DropParam;
-import com.alibaba.dbhub.server.domain.api.param.ShowCreateTableParam;
-import com.alibaba.dbhub.server.domain.api.param.TablePageQueryParam;
-import com.alibaba.dbhub.server.domain.api.param.TableQueryParam;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DdlExportRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DdlRequest;
 import com.alibaba.dbhub.server.web.api.controller.rdb.request.DmlRequest;
@@ -28,7 +26,7 @@ import com.alibaba.dbhub.server.web.api.controller.rdb.vo.IndexVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.SchemaVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.SqlVO;
 import com.alibaba.dbhub.server.web.api.controller.rdb.vo.TableVO;
-
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -64,7 +62,6 @@ public abstract class RdbWebConverter {
      * @return
      */
     public abstract TableQueryParam tableRequest2param(TableDetailQueryRequest request);
-
 
     /**
      * 参数转换
@@ -159,9 +156,7 @@ public abstract class RdbWebConverter {
      * @param dto
      * @return
      */
-    @Mappings({
-        @Mapping(source = "columnList", target = "columnList")
-    })
+    @Mappings({@Mapping(source = "columnList", target = "columnList")})
     public abstract IndexVO indexDto2vo(TableIndex dto);
 
     /**
@@ -194,6 +189,7 @@ public abstract class RdbWebConverter {
 
     /**
      * 模型转换
+     *
      * @param tableColumns
      * @return
      */
@@ -201,6 +197,7 @@ public abstract class RdbWebConverter {
 
     /**
      * 模型转换
+     *
      * @param dto
      * @return
      */

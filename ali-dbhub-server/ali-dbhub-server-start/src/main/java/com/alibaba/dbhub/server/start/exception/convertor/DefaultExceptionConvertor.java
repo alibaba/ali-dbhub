@@ -4,8 +4,7 @@ import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 
 /**
- * 默认的异常处理
- * 直接抛出系统异常
+ * 默认的异常处理 直接抛出系统异常
  *
  * @author 是仪
  */

@@ -16,8 +16,7 @@ public class IntegerWrapper extends Number implements Serializable {
         value = initialValue;
     }
 
-    public IntegerWrapper() {
-    }
+    public IntegerWrapper() {}
 
     public final int get() {
         return value;

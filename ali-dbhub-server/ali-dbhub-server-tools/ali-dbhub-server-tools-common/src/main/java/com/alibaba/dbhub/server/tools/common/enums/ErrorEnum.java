@@ -1,7 +1,6 @@
 package com.alibaba.dbhub.server.tools.common.enums;
 
 import com.alibaba.dbhub.server.tools.base.enums.BaseErrorEnum;
-
 import lombok.Getter;
 
 /**
@@ -11,31 +10,20 @@ import lombok.Getter;
  */
 @Getter
 public enum ErrorEnum implements BaseErrorEnum {
-    /**
-     * 当前数据源已经被关闭请重新打开数据源
-     */
+    /** 当前数据源已经被关闭请重新打开数据源 */
     DATA_SOURCE_NOT_FOUND,
 
-    /**
-     * 请先创建一个控制台服务
-     */
+    /** 请先创建一个控制台服务 */
     CONSOLE_NOT_FOUND,
 
-    /**
-     * 需要登录
-     */
+    /** 需要登录 */
     NEED_LOGGED_IN,
 
-    /**
-     * 未登录
-     */
+    /** 未登录 */
     NOT_LOGGED_IN,
 
-    /**
-     * 重定向
-     */
+    /** 重定向 */
     REDIRECT,
-
     ;
 
     @Override
@@ -47,5 +35,4 @@ public enum ErrorEnum implements BaseErrorEnum {
     public String getDescription() {
         return this.name();
     }
-
 }

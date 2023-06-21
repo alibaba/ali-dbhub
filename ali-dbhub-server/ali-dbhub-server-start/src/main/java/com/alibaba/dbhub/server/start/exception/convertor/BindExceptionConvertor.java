@@ -2,7 +2,6 @@ package com.alibaba.dbhub.server.start.exception.convertor;
 
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
-
 import org.springframework.validation.BindException;
 
 /**

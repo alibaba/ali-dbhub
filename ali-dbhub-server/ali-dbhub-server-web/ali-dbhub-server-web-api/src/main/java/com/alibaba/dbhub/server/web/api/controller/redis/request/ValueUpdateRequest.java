@@ -1,10 +1,7 @@
 package com.alibaba.dbhub.server.web.api.controller.redis.request;
 
+import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
 import javax.validation.constraints.NotNull;
-
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-import com.alibaba.dbhub.server.web.api.controller.data.source.request.DataSourceBaseRequest;
-
 import lombok.Data;
 
 /**
@@ -15,22 +12,12 @@ import lombok.Data;
 @Data
 public class ValueUpdateRequest extends DataSourceBaseRequest {
 
-    /**
-     * key名称
-     */
-    @NotNull
-    private String key;
+    /** key名称 */
+    @NotNull private String key;
 
-    /**
-     * 原始key值
-     */
-    @NotNull
-    private Object originalValue;
+    /** 原始key值 */
+    @NotNull private Object originalValue;
 
-    /**
-     * 更新后key值
-     */
-    @NotNull
-    private Object updateValue;
-
+    /** 更新后key值 */
+    @NotNull private Object updateValue;
 }

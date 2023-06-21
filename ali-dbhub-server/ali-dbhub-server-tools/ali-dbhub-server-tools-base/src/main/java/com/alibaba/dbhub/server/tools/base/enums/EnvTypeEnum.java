@@ -10,16 +10,11 @@ import lombok.Getter;
 @Getter
 public enum EnvTypeEnum implements BaseEnum<String> {
 
-    /**
-     * 日常环境
-     */
+    /** 日常环境 */
     DAILY("日常环境"),
 
-    /**
-     * 生产环境
-     */
+    /** 生产环境 */
     PRODUCT("生产环境"),
-
     ;
 
     final String description;

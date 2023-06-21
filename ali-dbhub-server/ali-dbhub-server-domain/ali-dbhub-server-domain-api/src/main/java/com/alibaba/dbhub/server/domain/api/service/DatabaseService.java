@@ -28,12 +28,11 @@ public interface DatabaseService {
 
     /**
      * 查询某个database下的schema
+     *
      * @param param
      * @return
      */
     ListResult<Schema> querySchema(SchemaQueryParam param);
-
-
 
     /**
      * 删除数据库
@@ -56,7 +55,7 @@ public interface DatabaseService {
      *
      * @return
      */
-    public ActionResult modifyDatabase( DatabaseOperationParam param) ;
+    public ActionResult modifyDatabase(DatabaseOperationParam param);
 
     /**
      * 删除schema
@@ -64,7 +63,7 @@ public interface DatabaseService {
      * @param param
      * @return
      */
-    public ActionResult deleteSchema(SchemaOperationParam param) ;
+    public ActionResult deleteSchema(SchemaOperationParam param);
 
     /**
      * 创建schema
@@ -72,7 +71,7 @@ public interface DatabaseService {
      * @param param
      * @return
      */
-    public ActionResult createSchema( SchemaOperationParam param);
+    public ActionResult createSchema(SchemaOperationParam param);
 
     /**
      * 修改schema
@@ -80,5 +79,5 @@ public interface DatabaseService {
      * @param request
      * @return
      */
-    public ActionResult modifySchema( SchemaOperationParam request);
+    public ActionResult modifySchema(SchemaOperationParam request);
 }

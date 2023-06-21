@@ -1,15 +1,11 @@
-/**
- * alibaba.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** alibaba.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.alibaba.dbhub.server.domain.api.service;
-
-import javax.validation.constraints.NotNull;
 
 import com.alibaba.dbhub.server.domain.api.model.Config;
 import com.alibaba.dbhub.server.domain.api.param.SystemConfigParam;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.DataResult;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author jipengfei
@@ -35,6 +31,7 @@ public interface ConfigService {
 
     /**
      * 插入或者更新
+     *
      * @param param
      * @return
      */

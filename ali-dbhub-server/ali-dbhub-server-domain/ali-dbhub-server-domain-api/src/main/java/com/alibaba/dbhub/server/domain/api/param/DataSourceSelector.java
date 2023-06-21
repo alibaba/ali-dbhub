@@ -8,6 +8,4 @@ import lombok.Data;
  * @date 2022/09/23
  */
 @Data
-public class DataSourceSelector {
-
-}
+public class DataSourceSelector {}

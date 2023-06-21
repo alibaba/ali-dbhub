@@ -1,17 +1,15 @@
 package com.alibaba.dbhub.server.domain.core.converter;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.api.model.DataSource;
-import com.alibaba.dbhub.server.domain.api.param.DataSourceTestParam;
-import com.alibaba.dbhub.server.domain.core.util.DesUtil;
-import com.alibaba.dbhub.server.domain.api.param.ConsoleCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.ConsoleConnectParam;
+import com.alibaba.dbhub.server.domain.api.param.ConsoleCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceCreateParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourcePreConnectParam;
+import com.alibaba.dbhub.server.domain.api.param.DataSourceTestParam;
 import com.alibaba.dbhub.server.domain.api.param.DataSourceUpdateParam;
+import com.alibaba.dbhub.server.domain.core.util.DesUtil;
 import com.alibaba.dbhub.server.domain.repository.entity.DataSourceDO;
-
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
@@ -33,15 +31,22 @@ public abstract class DataSourceConverter {
      * @param param
      * @return
      */
-
     @Mapping(target = "password", expression = "java(encryptString(param))")
-    @Mapping(target = "ssh",
-        expression = "java(param.getSsh()==null?null: com.alibaba.fastjson2.JSON.toJSONString(param.getSsh()))")
-    @Mapping(target = "ssl",
-        expression = "java(param.getSsl()==null?null: com.alibaba.fastjson2.JSON.toJSONString(param.getSsl()))")
-    @Mapping(target = "extendInfo",
-        expression = "java(param.getExtendInfo()==null?null: com.alibaba.fastjson2.JSON.toJSONString(param"
-            + ".getExtendInfo()))")
+    @Mapping(
+            target = "ssh",
+            expression =
+                    "java(param.getSsh()==null?null:"
+                            + " com.alibaba.fastjson2.JSON.toJSONString(param.getSsh()))")
+    @Mapping(
+            target = "ssl",
+            expression =
+                    "java(param.getSsl()==null?null:"
+                            + " com.alibaba.fastjson2.JSON.toJSONString(param.getSsl()))")
+    @Mapping(
+            target = "extendInfo",
+            expression =
+                    "java(param.getExtendInfo()==null?null:"
+                            + " com.alibaba.fastjson2.JSON.toJSONString(param.getExtendInfo()))")
     public abstract DataSourceDO param2do(DataSourceCreateParam param);
 
     /**
@@ -108,13 +113,21 @@ public abstract class DataSourceConverter {
      */
     @Mappings({
         @Mapping(target = "password", expression = "java(encryptString(param))"),
-        @Mapping(target = "ssh",
-            expression = "java(param.getSsh()==null?null: com.alibaba.fastjson2.JSON.toJSONString(param.getSsh()))"),
-        @Mapping(target = "ssl",
-            expression = "java(param.getSsl()==null?null: com.alibaba.fastjson2.JSON.toJSONString(param.getSsl()))"),
-        @Mapping(target = "extendInfo",
-            expression = "java(param.getExtendInfo()==null?null: com.alibaba.fastjson2.JSON.toJSONString(param"
-                + ".getExtendInfo()))")
+        @Mapping(
+                target = "ssh",
+                expression =
+                        "java(param.getSsh()==null?null:"
+                                + " com.alibaba.fastjson2.JSON.toJSONString(param.getSsh()))"),
+        @Mapping(
+                target = "ssl",
+                expression =
+                        "java(param.getSsl()==null?null:"
+                                + " com.alibaba.fastjson2.JSON.toJSONString(param.getSsl()))"),
+        @Mapping(
+                target = "extendInfo",
+                expression =
+                        "java(param.getExtendInfo()==null?null:"
+                            + " com.alibaba.fastjson2.JSON.toJSONString(param.getExtendInfo()))")
     })
     public abstract DataSourceDO param2do(DataSourceUpdateParam param);
 
@@ -137,7 +150,7 @@ public abstract class DataSourceConverter {
         @Mapping(source = "user", target = "username")
     })
     public abstract DataSourceTestParam param2param(
-        DataSourcePreConnectParam dataSourcePreConnectParam);
+            DataSourcePreConnectParam dataSourcePreConnectParam);
 
     /**
      * 模型转换
@@ -145,18 +158,21 @@ public abstract class DataSourceConverter {
      * @param dataSourceDO
      * @return
      */
-
     @Mapping(target = "password", expression = "java(decryptString(dataSourceDO))")
-    @Mapping(target = "ssh",
-        expression = "java(com.alibaba.fastjson2.JSON.parseObject(dataSourceDO.getSsh(),com.alibaba.dbhub.server"
-            + ".domain.support.model.SSHInfo.class))")
-    @Mapping(target = "ssl",
-        expression =
-            "java(com.alibaba.fastjson2.JSON.parseObject(dataSourceDO.getSsl(),com.alibaba.dbhub.server.domain"
-                + ".support.model.SSLInfo"
-                + ".class))")
-    @Mapping(target = "extendInfo",
-        expression = "java(com.alibaba.fastjson2.JSON.parseArray(dataSourceDO.getExtendInfo(),KeyValue.class))")
+    @Mapping(
+            target = "ssh",
+            expression =
+                    "java(com.alibaba.fastjson2.JSON.parseObject(dataSourceDO.getSsh(),com.alibaba.dbhub.server"
+                        + ".domain.support.model.SSHInfo.class))")
+    @Mapping(
+            target = "ssl",
+            expression =
+                    "java(com.alibaba.fastjson2.JSON.parseObject(dataSourceDO.getSsl(),com.alibaba.dbhub.server.domain"
+                        + ".support.model.SSLInfo.class))")
+    @Mapping(
+            target = "extendInfo",
+            expression =
+                    "java(com.alibaba.fastjson2.JSON.parseArray(dataSourceDO.getExtendInfo(),KeyValue.class))")
     public abstract DataSource do2dto(DataSourceDO dataSourceDO);
 
     /**

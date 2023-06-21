@@ -2,10 +2,9 @@ package com.alibaba.dbhub.server.start.exception.convertor;
 
 import com.alibaba.dbhub.server.tools.base.excption.CommonErrorEnum;
 import com.alibaba.dbhub.server.tools.base.wrapper.result.ActionResult;
+
 /**
- * 参数异常 目前包括
- * ConstraintViolationException
- * MissingServletRequestParameterException
+ * 参数异常 目前包括 ConstraintViolationException MissingServletRequestParameterException
  * IllegalArgumentException
  *
  * @author 是仪

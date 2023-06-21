@@ -1,7 +1,5 @@
 package com.alibaba.dbhub.server.web.api.controller.operation.saved;
 
-import java.util.List;
-
 import com.alibaba.dbhub.server.domain.api.model.Operation;
 import com.alibaba.dbhub.server.domain.api.param.OperationPageQueryParam;
 import com.alibaba.dbhub.server.domain.api.param.OperationSavedParam;
@@ -17,7 +15,7 @@ import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.Opera
 import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.OperationQueryRequest;
 import com.alibaba.dbhub.server.web.api.controller.operation.saved.request.OperationUpdateRequest;
 import com.alibaba.dbhub.server.web.api.controller.operation.saved.vo.OperationVO;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,11 +38,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class OperationSavedController {
 
-    @Autowired
-    private OperationService operationService;
+    @Autowired private OperationService operationService;
 
-    @Autowired
-    private OperationWebConverter operationWebConverter;
+    @Autowired private OperationWebConverter operationWebConverter;
 
     /**
      * 查询我的保存
@@ -57,7 +53,8 @@ public class OperationSavedController {
         OperationPageQueryParam param = operationWebConverter.queryReq2param(request);
         PageResult<Operation> dtoPageResult = operationService.queryPage(param);
         List<OperationVO> operationVOS = operationWebConverter.dto2vo(dtoPageResult.getData());
-        return WebPageResult.of(operationVOS, dtoPageResult.getTotal(), request.getPageNo(), request.getPageSize());
+        return WebPageResult.of(
+                operationVOS, dtoPageResult.getTotal(), request.getPageNo(), request.getPageSize());
     }
 
     /**
@@ -91,7 +88,9 @@ public class OperationSavedController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/update", method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(
+            value = "/update",
+            method = {RequestMethod.POST, RequestMethod.PUT})
     public ActionResult update(@RequestBody OperationUpdateRequest request) {
         OperationUpdateParam param = operationWebConverter.updateReq2param(request);
         return operationService.update(param);

@@ -22,6 +22,7 @@ public interface UserService {
 
     /**
      * gen
+     *
      * @param userName
      * @return
      */
@@ -37,6 +38,7 @@ public interface UserService {
 
     /**
      * 更新用户信息
+     *
      * @param user
      * @return
      */
@@ -44,6 +46,7 @@ public interface UserService {
 
     /**
      * 删除用户
+     *
      * @param id
      * @return
      */
@@ -51,6 +54,7 @@ public interface UserService {
 
     /**
      * 创建一个用户
+     *
      * @param user
      * @return
      */
