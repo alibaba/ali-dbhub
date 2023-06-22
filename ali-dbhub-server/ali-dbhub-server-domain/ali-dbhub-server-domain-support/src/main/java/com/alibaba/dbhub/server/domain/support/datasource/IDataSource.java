@@ -27,7 +27,7 @@ public class IDataSource extends DruidDataSource {
         return connectInfo;
     }
 
-    private ConnectInfo connectInfo;
+    private final ConnectInfo connectInfo;
 
     public IDataSource(ConnectInfo connectInfo, DriverTypeEnum driverTypeEnum, ClassLoader classLoader) {
         this.connectInfo = connectInfo;
