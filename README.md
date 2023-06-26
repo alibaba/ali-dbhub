@@ -59,7 +59,7 @@ Languages： English | [中文](README_CN.md)
 | Oracle        | ✅       |       
 | PostgreSQL    | ✅       |                                                                                                                
 | SQLServer     | ✅       |   
-| SQLLite       | ✅       |   
+| SQLite        | ✅       |   
 | MariaDB       | ✅       |   
 | ClickHouse    | ✅       |   
 | DM            | ✅       |   
