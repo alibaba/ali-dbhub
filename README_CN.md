@@ -218,12 +218,6 @@ $ # 注：前端页面完全赖服务，所以前端同学调试也需要把后�
 
 <a><img src="https://oss-chat2db.alibaba.com/static/%E5%85%AC%E4%BC%97%E5%8F%B7.jpg" width="30%"/></a>
 
-<a><img src="https://chat2db.oss-accelerate.aliyuncs.com/static/weichat_3.PNG" width="30%"/></a>
-
-钉钉：33285019116
-
-QQ:863576619
-
 
 
 ## ❤️ 致谢
