@@ -1,1 +1,0 @@
-docker run --rm -ti -p 10824:10824  chat2db/chat2db:latest
